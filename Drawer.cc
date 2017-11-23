@@ -299,8 +299,6 @@ void Drawer::drawConnector(const Polar& from, const Polar& to,
 	_cr->set_line_width(prop.lineWidth());
 
 	_cr->stroke();
-
-
 }
 
 void Drawer::finish()

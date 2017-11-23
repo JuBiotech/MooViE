@@ -14,73 +14,117 @@
 #include <sstream>
 #include "DrawerProperties.h"
 
+/** A Label is a formatted text that is stored as a text string
+ * and a TextProperties object.
+ * @brief The Label class
+ */
 class Label
 {
 public:
-	Label(const std::string& text, const TextProperties& prop)
-			: _text(text), _prop(prop)
-	{
-	}
-	const std::string& text() const
-	{
-		return _text;
-	}
-	const TextProperties& prop() const
-	{
-		return _prop;
-	}
+    /**
+     * @brief Label
+     * @param text
+     * @param prop
+     */
+    Label(const std::string& text, const TextProperties& prop)
+    : _text(text), _prop(prop)
+    {
+    }
+
+    /** Access function for this Label's text.
+     * @brief text
+     * @return a reference to text
+     */
+    const std::string& text() const
+    {
+        return _text;
+    }
+
+    /** Access function for this Label's TextProperties.
+     * @brief prop
+     * @return a reference to prop
+     */
+    const TextProperties& prop() const
+    {
+        return _prop;
+    }
 private:
-	std::string _text;
-	TextProperties _prop;
+    /** The text of this Label */
+    std::string _text;
+    /** The TextProperties of this Label */
+    TextProperties _prop;
 };
 
+/** Ticks are the .
+ * @brief The Ticks class
+ */
 class Ticks
 {
 public:
-	Ticks(size_t ticks_major, size_t ticks_minor,
-			const std::pair<double, double>& extreme_vals,
-			const TextProperties& label_prop, const std::string& label_suffix = "")
-			: _ticks_major(ticks_major), _ticks_minor(ticks_minor), _extreme_vals(
-					extreme_vals), _label_prop(label_prop), _label_suffix(label_suffix)
-	{
-	}
+    /**
+     * @brief Ticks
+     * @param ticks_major
+     * @param ticks_minor
+     * @param extreme_vals
+     * @param label_prop
+     * @param label_suffix
+     */
+    Ticks(size_t ticks_major, size_t ticks_minor,
+          const std::pair<double, double>& extreme_vals,
+          const TextProperties& label_prop, const std::string& label_suffix = "")
+    : _ticks_major(ticks_major), _ticks_minor(ticks_minor), _extreme_vals(extreme_vals),
+      _label_prop(label_prop), _label_suffix(label_suffix)
+    {
+    }
 
-	virtual ~Ticks()
-	{
-	}
-	;
+    virtual ~Ticks() {}
 
-	const std::pair<double, double>& extreme_vals() const
-	{
-		return _extreme_vals;
-	}
+    /** Access function for the Ticks extreme values.
+     * @brief extreme_vals
+     * @return a reference to extreme_vals
+     */
+    const std::pair<double, double>& extreme_vals() const
+    {
+        return _extreme_vals;
+    }
 
-	std::vector<Label> label() const
-	{
-		std::vector<Label> label;
-		label.reserve(ticksmajor() + 1);
-		double step = (extreme_vals().second - extreme_vals().first)
-				/ double(ticksmajor());
-		for (size_t i = 0; i <= _ticks_major; ++i)
-		{
-			double val = extreme_vals().first + i * step;
-			std::stringstream ss;
-			ss << val << _label_suffix;
-			label.push_back(Label(ss.str(), _label_prop));
-		}
-		return label;
-	}
+    /**
+     * @brief label
+     * @return
+     */
+    std::vector<Label> label() const
+    {
+        std::vector<Label> label;
+        label.reserve(ticksmajor() + 1);
+        double step = (extreme_vals().second - extreme_vals().first)
+                        / double(ticksmajor());
+        for (size_t i = 0; i <= _ticks_major; ++i)
+        {
+                double val = extreme_vals().first + i * step;
+                std::stringstream ss;
+                ss << val << _label_suffix;
+                label.push_back(Label(ss.str(), _label_prop));
+        }
+        return label;
+    }
 
-	size_t ticksmajor() const
-	{
-		return _ticks_major;
-	}
+    /**
+     * @brief ticksmajor
+     * @return
+     */
+    size_t ticksmajor() const
+    {
+        return _ticks_major;
+    }
 
-	size_t ticksminor() const
-	{
-		return _ticks_minor;
-	}
-
+    /**
+     * @brief ticksminor
+     * @return
+     */
+    size_t ticksminor() const
+    {
+        return _ticks_minor;
+    }
 private:
 	size_t _ticks_major;
 	size_t _ticks_minor;
@@ -89,6 +133,12 @@ private:
 	std::string _label_suffix;
 };
 
+/**
+ * @brief create_axis
+ * @param min
+ * @param max
+ * @return
+ */
 inline std::pair<double,double> create_axis(double min, double max)
 {
 	if (max > min)

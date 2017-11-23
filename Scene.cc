@@ -44,7 +44,7 @@ Scene::Scene(Drawer& drawer,
 		_input_mapper.push_back(Mapper(extreme_vals, std::make_pair(start_angle.get(), end_angle.get())));
 
 		Ticks tick(10,10, extreme_vals, config::TICK_LABEL);
-		Label label(var.label, config::VAR_LABEL);
+		Label label(var.name, config::VAR_LABEL);
 		DrawerProperties<> prop(config::STROKE_WIDTH, Color::BLACK, Color::SET3.at(num_inputs, i));
 
 		_drawer.drawAxis(config::INPUT_INNER_RADIUS, config::INPUT_THICKNESS,
@@ -59,6 +59,6 @@ Scene::Scene(Drawer& drawer,
 			properties, Drawer::Direction::DECREASING);
 }
 
-void Scene::drawDatapoint(std::vector<double> data)
+void Scene::drawDataVector(std::vector<double> data)
 {
 }

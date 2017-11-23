@@ -7,9 +7,9 @@
 
 #include <string>
 #include <iostream>
-#include <cairommconfig.h>
-#include <cairomm/context.h>
-#include <cairomm/surface.h>
+#include "cairommconfig.h"
+#include "cairomm/context.h"
+#include "cairomm/surface.h"
 
 #include <cmath>
 #include <sstream>
@@ -24,7 +24,7 @@ int main()
 {
 #ifdef CAIRO_HAS_SVG_SURFACE
 
-	std::string filename = "image.svg";
+	std::string filename = "/home/stratmann/MooViE/image.svg";
 	double width = 800;
 	double height = 800;
 //	Cairo::RefPtr<Cairo::SvgSurface> surface = Cairo::SvgSurface::create(
@@ -124,8 +124,7 @@ int main()
 
 #else
 
-	std::cout << "You must compile cairo with SVG support for this example to work."
-	<< std::endl;
+	std::cout << "You must compile cairo with SVG support for this example to work." << std::endl;
 	return 1;
 
 #endif

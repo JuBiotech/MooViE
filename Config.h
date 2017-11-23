@@ -11,6 +11,10 @@
 #include "Color.h"
 #include "DrawerProperties.h"
 
+/** Style configurations for MooViE.
+ * Definition namespace for constants like radii,
+ * stroke withs, thicknesses and TextProperties.
+ */
 namespace config
 {
 	static const double STROKE_WIDTH = 1;
