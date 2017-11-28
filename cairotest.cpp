@@ -14,6 +14,7 @@
 
 #include <cmath>
 #include <sstream>
+#include <fstream>
 
 #include "Scene.h"
 #include "PolarCartesian.h"
@@ -127,16 +128,26 @@ int cairo_test_02(int argc, char const * argv[])
 {
 	try
 	{
-		const MooViEArgs & args = MooViEArgs::parse_from_commandline(argc,
-				argv);
+		const MooViEArgs & args =
+				MooViEArgs::parse_from_commandline(argc, argv);
 
-		/** TODO: implement CSV parser */
-		std::vector<Var> ivars = { Var(0, 100, "Usage of production capacity") };
-		std::vector<Var> ovars = { Var(0, 1000000, "Total production"), Var(0,
-				500, "Employees needed"), Var(-10000, 10000000, "Profit") };
+		/** TODO: implement CSV parser
+		std::vector<DefVar> ivars = { DefVar(0, 100, "Usage of production capacity") };
+		std::vector<DefVar> ovars = { DefVar(0, 1000000, "Total production"), DefVar(0,
+				500, "Employees needed"), DefVar(-10000, 10000000, "Profit") };
+		*/
+
+		std::ifstream in(args.input_file());
+		DefDataSet set = DataSet<double>::parse_from_csv(std::string(std::istreambuf_iterator<char>(in),
+				std::istream_iterator<char>()));
 
 		Drawer drawer(args.output_file(), args.width(), args.height());
 		Scene mainScene(drawer, ivars, ovars);
+
+		for (DefDataRow row: set)
+		{
+			mainScene.drawDataVector(row);
+		}
 
 		return 0;
 	} catch (MooViEArgs::ParseException & e)

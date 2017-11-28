@@ -9,8 +9,8 @@
 #include "Config.h"
 
 Scene::Scene(Drawer& drawer,
-		const std::vector<Var>& inputs,
-		const std::vector<Var>& outputs)
+		const std::vector<DefVar>& inputs,
+		const std::vector<DefVar>& outputs)
 : _drawer(drawer)
 {
 	size_t num_inputs = inputs.size();
@@ -36,7 +36,7 @@ Scene::Scene(Drawer& drawer,
 		Angle start_angle(angle_helper::deg_to_rad(start_angle_val));
 		Angle end_angle(angle_helper::deg_to_rad(end_angle_val));
 
-		const Var& var = inputs.at(i);
+		const DefVar& var = inputs.at(i);
 
 		std::pair<double,double> extreme_vals = create_axis(var.min, var.max);
 
@@ -59,6 +59,6 @@ Scene::Scene(Drawer& drawer,
 			properties, Drawer::Direction::DECREASING);
 }
 
-void Scene::drawDataVector(std::vector<double> data)
+void Scene::drawDataVector(DefDataRow data)
 {
 }
