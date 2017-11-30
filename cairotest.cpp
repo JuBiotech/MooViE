@@ -23,8 +23,9 @@
 #include "DrawerProperties.h"
 #include "Config.h"
 #include "MooViEArgs.h"
+#include "Utils.h"
 
-int cairo_test_01(void)
+int drawer_test(void)
 {
 	std::string filename = "/home/stratmann/MooViE/image.svg";
 	double width = 800;
@@ -124,31 +125,20 @@ int cairo_test_01(void)
 	return 0;
 }
 
-int cairo_test_02(int argc, char const * argv[])
+int MooViEArgs_test(int argc, char const * argv[])
 {
 	try
 	{
 		const MooViEArgs & args =
 				MooViEArgs::parse_from_commandline(argc, argv);
 
-		/** TODO: implement CSV parser
-		std::vector<DefVar> ivars = { DefVar(0, 100, "Usage of production capacity") };
-		std::vector<DefVar> ovars = { DefVar(0, 1000000, "Total production"), DefVar(0,
-				500, "Employees needed"), DefVar(-10000, 10000000, "Profit") };
-		*/
-
-		std::ifstream in(args.input_file());
-		DefDataSet set = DataSet<double>::parse_from_csv(std::string(std::istreambuf_iterator<char>(in),
-				std::istream_iterator<char>()));
-
-		Drawer drawer(args.output_file(), args.width(), args.height());
-		Scene mainScene(drawer, ivars, ovars);
-
-		for (DefDataRow row: set)
-		{
-			mainScene.drawDataVector(row);
-		}
-
+		if (args.help())
+			std::cout << MooViEArgs::HELP_STRING << std::endl;
+		else
+			std::cout << "Given MooViE arguments:" << std::endl <<
+			"Width: " << args.width() << ", Height: " << args.height() << std::endl <<
+			"Output file: " << args.output_file() << ", input file: " << args.input_file() << std::endl <<
+			"Input file format: " << args.file_type() << std::endl;
 		return 0;
 	} catch (MooViEArgs::ParseException & e)
 	{
@@ -157,11 +147,41 @@ int cairo_test_02(int argc, char const * argv[])
 	}
 }
 
+int DefDataSet_test(void)
+{
+	DefDataSet set = DefDataSet::parse_from_csv(Util::read_file("/home/stratmann/MooViE/testfiles/input.csv"), 4);
+
+	for (DefDataRow row: set)
+	{
+		for (DefCell cell: row)
+		{
+			std::cout << cell.value << ", ";
+		}
+		std::cout << std::endl;
+	}
+
+	return 0;
+}
+
+int Scene_test(void)
+{
+
+	const DefDataSet & set = DefDataSet::parse_from_csv(Util::read_file("./test/input.csv"), 4);
+
+	Drawer drawer("image.svg", 800, 800);
+	Scene mainScene(drawer, set.input_variables(), set.output_variables());
+
+	for (DefDataRow row : set)
+	{
+		mainScene.drawDataVector(row);
+	}
+	return 0;
+}
 
 int main(int argc, char const * argv[])
 {
 #ifdef CAIRO_HAS_SVG_SURFACE
-	return cairo_test_02(argc, argv);
+	return DefDataSet_test();
 #else
 	std::cout << "You must compile cairo with SVG support for this example to work." << std::endl;
 	return 1;

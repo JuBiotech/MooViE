@@ -26,7 +26,7 @@ public:
      * @param inputs the input variables
      * @param outputs the output variables
      */
-    Scene(Drawer& drawer, const std::vector<DefVar>& inputs, const std::vector<DefVar>& outputs);
+    Scene(Drawer & drawer, const std::vector<DefVar> & inputs, const std::vector<DefVar> & outputs);
 
     /** Draws a data vector to the data diagram.
      * @brief drawDatapoint
@@ -40,7 +40,7 @@ private:
     Drawer& _drawer;
     /** Maps the input extrem values to a circle segment */
     std::vector<Mapper> _input_mapper;
-    /** ??? */
+    /** Maps the output extreme value to a circle segment */
     std::vector<Mapper> _output_mapper;
 };
 

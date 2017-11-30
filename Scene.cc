@@ -8,9 +8,9 @@
 #include "Scene.h"
 #include "Config.h"
 
-Scene::Scene(Drawer& drawer,
-		const std::vector<DefVar>& inputs,
-		const std::vector<DefVar>& outputs)
+Scene::Scene(Drawer & drawer,
+		const std::vector<DefVar> & inputs,
+		const std::vector<DefVar> & outputs)
 : _drawer(drawer)
 {
 	size_t num_inputs = inputs.size();
@@ -61,4 +61,5 @@ Scene::Scene(Drawer& drawer,
 
 void Scene::drawDataVector(DefDataRow data)
 {
+
 }

@@ -7,6 +7,17 @@
 
 #include "MooViEArgs.h"
 
+const std::string MooViEArgs::HELP_STRING =
+		"MooViE is a tool to display multi-dimensional data (R^n -> R^m) in a "
+		"clear circular chart.\n"
+		"usage: moovie [OPTION] [OPTION <PARAMETER>] DATAFILE\n"
+		"List of MooViE options:\n"
+		"-w, --width <WIDTH>\t\tSet width for output image.\n"
+		"-h, --height <HEIGHT>\t\tSet height for output image.\n"
+		"-o, --output <PATH>\t\tStore the output image under this path.\n"
+		"-f, --file-type <FTYPE>\t\tReads data from a file of the given format.\n"
+		"--help\t\t\t\tPrints help string.";
+
 const std::string MooViEArgs::SOPT_WIDTH = "-w";
 const std::string MooViEArgs::LOPT_WIDTH = "--width";
 const std::string MooViEArgs::SOPT_HEIGHT = "-h";
@@ -15,6 +26,7 @@ const std::string MooViEArgs::SOPT_OUTPUT = "-o";
 const std::string MooViEArgs::LOPT_OUTPUT = "--output";
 const std::string MooViEArgs::SOPT_FILE_T = "-f";
 const std::string MooViEArgs::LOPT_FILE_T = "--file-type";
+const std::string MooViEArgs::LOPT_HELP = "--help";
 const std::regex MooViEArgs::OPT_REGEX("-[-]?\\S+");
 
 MooViEArgs MooViEArgs::parse_from_commandline(int argc, char const * argv[])
@@ -22,10 +34,12 @@ MooViEArgs MooViEArgs::parse_from_commandline(int argc, char const * argv[])
 	int width, height;
 	std::string output_file, input_file;
 	File_t file_type;
+	bool help = false;
 
-	bool widthSet = false, heightSet = false, outputFSet = false, inputFSet = false, ftypeSet = false;
+	bool widthSet = false, heightSet = false, outputFSet = false,
+			inputFSet = false, ftypeSet = false, helpSet = false;
 
-	for (std::size_t i = 1; i < argc; ++i) {
+	for (int i = 1; i < argc; ++i) {
 		if (argv[i] == SOPT_WIDTH or argv[i] == LOPT_WIDTH) {
 			if (widthSet) {
 				throw ParseException(
@@ -87,6 +101,14 @@ MooViEArgs MooViEArgs::parse_from_commandline(int argc, char const * argv[])
 				}
 				ftypeSet = true;
 			}
+		} else if (argv[i] == LOPT_HELP)
+		{
+			if (helpSet)
+			{
+				throw ParseException("help option was tried to set multiple times.");
+			} else {
+				help = true;
+			}
 		} else if (std::regex_match(argv[i], OPT_REGEX)) {
 			throw ParseException("Unknown option");
 		} else {
@@ -100,6 +122,6 @@ MooViEArgs MooViEArgs::parse_from_commandline(int argc, char const * argv[])
 		}
 	}
 
-	return MooViEArgs(width, height, output_file, input_file, file_type);
+	return MooViEArgs(width, height, output_file, input_file, file_type, help);
 }
 

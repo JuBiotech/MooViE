@@ -17,6 +17,8 @@
  *
  */
 class MooViEArgs {
+public:
+	static const std::string HELP_STRING;
 private:
 	static const std::string SOPT_WIDTH;
 	static const std::string LOPT_WIDTH;
@@ -26,6 +28,8 @@ private:
 	static const std::string LOPT_OUTPUT;
 	static const std::string SOPT_FILE_T;
 	static const std::string LOPT_FILE_T;
+	static const std::string SOPT_HELP;
+	static const std::string LOPT_HELP;
 	static const std::regex OPT_REGEX;
 public:
 	enum File_t {
@@ -47,15 +51,18 @@ public:
 	inline const std::string & output_file() const { return _output_file; }
 	inline const std::string & input_file() const { return _input_file; }
 	inline File_t file_type() const { return _file_type; }
+	inline bool help() const { return _help; }
 
 private:
 	MooViEArgs(int width, int height, const std::string & output_file,
-			const std::string & input_file, File_t file_type)
-	: _width(width), _height(height), _output_file(output_file), _input_file(input_file), _file_type(file_type)
+			const std::string & input_file, File_t file_type, bool help)
+	: _width(width), _height(height), _output_file(output_file),
+	  _input_file(input_file), _file_type(file_type), _help(help)
 	{}
 	const int 			_width, _height;
 	const std::string 	_output_file, _input_file;
 	const File_t		_file_type;
+	bool				_help;
 };
 
 #endif /* MOOVIEARGS_H_ */

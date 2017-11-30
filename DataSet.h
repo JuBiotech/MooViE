@@ -14,6 +14,8 @@
 #include <cfloat>
 #include <stdexcept>
 
+#include "Utils.h"
+
 /** DataSet stores data. It is accessible
  * via iterator, but cannot be modified.
  * @brief the DataSet class
@@ -107,10 +109,9 @@ public:
 		}
 		bool operator!=(const iterator & other) const
 		{
-			return _it != other.__it;
+			return _it != other._it;
 		}
-		const T &
-		operator*() const
+		const DataRow & operator*() const
 		{
 			return *_it;
 		}
@@ -121,12 +122,23 @@ public:
 	typedef const iterator const_iterator;
 public:
 	/** Returns a data table parsed from a csv encoded string
-	 * and encapsulated in a DataSet object.
+	 * and encapsulated in a DataSet object. The table must have the
+	 * form:
+	 *  ║ input1 │ ... │ inputN ║ output1 │ ... │ outputM ║
+	 *  ╟────────┼─────┼────────╫─────────┼─────┼─────────╢
+	 *  ║  ...	 │     │  ...   ║   ...   │     │  	...   ║
+	 *  ╟────────┼─────┼────────╫─────────┼─────┼─────────╢
+	 *  ║  ...	 │     │  ...   ║   ...	  │   	│   ...	  ║
+	 *  ╟────────┼─────┼────────╫─────────┼─────┼─────────╢
 	 * @param cont the csv encoded string
+	 * @param num_ins the number of input variables
+	 * @param separator the column seperator used in this csv string
+	 * @param comment the comment indicator used in this csv string
+	 * @param newline the newline indicator used in this csv string
 	 * @return the DataSet object
 	 */
-	static DataSet
-	parse_from_csv(const std::string & cont);
+	static DataSet parse_from_csv(const std::string & cont, std::size_t num_ins,
+			std::string separator = ",", std::string comment = "#", std::string newline = "\n");
 
 	/** Returns the number of columns in this table.
 	 * @return the number of columns
@@ -154,16 +166,30 @@ public:
 		return _rows[i];
 	}
 
-	inline const std::vector<Var> &
-	variables(void) const
+	/** Returns a constant vector containing row (referred to
+	 * as variables) information like the name and min/max values
+	 * of the selected row.
+	 * @return the input variables
+	 */
+	inline const std::vector<Var> & input_variables(void) const
 	{
-		return _variables;
+		return _input_vars;
+	}
+
+	/** Returns a constant vector containing column (referred to
+	 * as variables) information like the name and min/max values
+	 * of the selected row.
+	 * @return the output variables
+	 */
+	inline const std::vector<Var> & output_variables(void) const
+	{
+		return _output_vars;
 	}
 
 	/** Returns a constant iterator pointing to the first DataRow.
 	 * @return a const_iterator
 	 */
-	const_iterator begin()
+	const_iterator begin() const
 	{
 		return iterator(_rows.begin());
 	}
@@ -172,7 +198,7 @@ public:
 	 * DataRow storage.
 	 * @return a const_iterator
 	 */
-	const_iterator end()
+	const_iterator end() const
 	{
 		return iterator(_rows.end());
 	}
@@ -180,51 +206,26 @@ private:
 	/** Creates a DataSet from a vector of DataRows.
 	 * @param rows the rows of the table
 	 */
-	DataSet(const std::vector<Var> variables, const std::vector<DataRow> & rows) :
-			_number_rows(rows.size()), _number_cols(variables.size()),
-			_variables(variables), _rows(rows)
+	DataSet(const std::vector<Var> input_vars, const std::vector<Var> output_vars,
+			const std::vector<DataRow> & rows) :
+			_number_rows(rows.size()), _number_cols(input_vars.size()),
+			_input_vars(input_vars), _output_vars(output_vars), _rows(rows)
 	{
 	}
 
-	/** Splits a given string expression using the given delimiter string.
-	 * @param expr the string to divide
-	 * @param delims the delimiter string
-	 */
-	static std::vector<std::string> split(const std::string & expr,
-			const std::string delims)
-	{
-		std::vector<std::string> res;
-		std::size_t prev = 0;
-
-		for (std::size_t i = 0; i < expr.length(); ++i)
-		{
-			if (i + delims.length() >= expr.length() &&
-					expr.substr(i, delims.length()).compare(i,
-							delims.length(), delims, 0,
-							delims.length()) == 0)
-			{
-				res.push_back(expr.substr(i, i - prev));
-				prev = i + 1;
-			}
-		}
-		if (prev < expr.length())
-		{
-			res.push_back(expr.substr(prev, expr.length() - prev));
-		}
-
-		return res;
-	}
-private:
 	/** The row and column numbers */
 	const std::size_t _number_rows, _number_cols;
 	/** The column names and extremes of this table */
-	const std::vector<Var> _variables;
+	const std::vector<Var> _input_vars;
+	/** The input names and extremes of this table */
+	const std::vector<Var> _output_vars;
 	/** The rows of this data table */
 	const std::vector<DataRow> _rows;
 };
 
 template<typename T>
-DataSet<T> DataSet<T>::parse_from_csv(const std::string & cont)
+DataSet<T> DataSet<T>::parse_from_csv(const std::string & cont, std::size_t num_ins,
+		std::string separator, std::string comment, std::string newline)
 {
 	static_assert(true, "Should not be compiled.");
 }

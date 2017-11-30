@@ -8,32 +8,64 @@
 #include "DataSet.h"
 
 template<>
-DataSet<double> DataSet<double>::parse_from_csv(const std::string & cont)
+DataSet<double> DataSet<double>::parse_from_csv(const std::string & cont, std::size_t num_ins,
+		std::string separator, std::string comment, std::string newline)
 {
-	std::vector<DefVar> variables;
+	std::vector<DefVar> input_vars, output_vars;
 	std::vector<DefDataRow> rows;
-	const std::vector<std::string> & lines = DataSet::split(cont, "\n");
+	const std::vector<std::string> & lines = Util::split(cont, newline);
 
-	for (std::string varname : DataSet::split(lines[0], ","))
+	const std::vector<std::string> & header = Util::split(lines[0], separator);
+
+	// Add input variables from table header
+	for (std::size_t i = 0; i < num_ins; ++i)
 	{
-		variables.push_back(Var(DBL_MAX, DBL_MIN, varname));
+		input_vars.push_back(DefVar(DBL_MAX, DBL_MIN, Util::strip(header[i])));
 	}
+
+	// Add output variables from table header
+	for (std::size_t i = num_ins; i < header.size(); ++i)
+	{
+		output_vars.push_back(DefVar(DBL_MAX, DBL_MIN, Util::strip(header[i])));
+	}
+
+	// Add values from table body
 	for (std::size_t i = 1; i < lines.size(); ++i)
 	{
+		// Remove empty/comment lines
 		if (lines[i].find_first_not_of(' ', 0) != std::string::npos
-				|| lines[i][lines[i].find_first_not_of(' ', 0)] == '#')
+				|| lines[i].find_first_of(comment, lines[i].find_first_not_of(' ', 0)) == 0)
 		{
 			DefDataRow row;
-			const std::vector<std::string> & cells = DataSet::split(lines[0], ",");
-			for (std::size_t i = 0; i < cells.size(); ++i)
+			const std::vector<std::string> & cells = Util::split(lines[0], ",");
+
+			// Add input variable values from this table line
+			for (std::size_t i = 0; i < num_ins; ++i)
 			{
 				try
 				{
-					DefCell cell(std::stod(cells[i]));
-					if (cell.value < variables[i].min)
-						variables[i].min = cell.value;
-					if (cell.value > variables[i].max)
-						variables[i].max = cell.value;
+					DefCell cell(std::stod(Util::strip(cells[i])));
+					if (cell.value < input_vars[i].min)
+						input_vars[i].min = cell.value;
+					if (cell.value > input_vars[i].max)
+						input_vars[i].max = cell.value;
+					row.push_back(cell);
+				} catch (std::invalid_argument & e)
+				{
+					row.push_back(DefCell());
+				}
+			}
+
+			// Add output variables values from this table line
+			for (std::size_t i = num_ins; i < cells.size(); ++i)
+			{
+				try
+				{
+					DefCell cell(std::stod(Util::strip(cells[i])));
+					if (cell.value < output_vars[i].min)
+						output_vars[i].min = cell.value;
+					if (cell.value > output_vars[i].max)
+						output_vars[i].max = cell.value;
 					row.push_back(cell);
 				} catch (std::invalid_argument & e)
 				{
@@ -44,6 +76,6 @@ DataSet<double> DataSet<double>::parse_from_csv(const std::string & cont)
 		}
 	}
 
-	return DataSet(variables, rows);
+	return DataSet(input_vars, output_vars, rows);
 }
 
