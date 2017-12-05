@@ -22,7 +22,7 @@ namespace angle_helper
      */
     inline double deg_to_rad(double deg)
     {
-        return deg/180.0 * M_PIl;
+        return deg / 180.0 * M_PIl;
     }
 
     /** Converts radian to degree value.
@@ -32,7 +32,7 @@ namespace angle_helper
      */
     inline double rad_to_deg(double rad)
     {
-        return rad/M_PIl * 180.0;
+        return rad / M_PIl * 180.0;
     }
 }
 

@@ -175,9 +175,9 @@ int DefDataSet_test(void)
 int Scene_test(void)
 {
 
-	const DefDataSet & set = DefDataSet::parse_from_csv(Util::read_file("./test/input.csv"), 3);
+	const DefDataSet & set = DefDataSet::parse_from_csv(Util::read_file("/home/stratmann/MooViE/testfiles/input.csv"), 3);
 
-	Drawer drawer("image.svg", 800, 800);
+	Drawer drawer("/home/stratmann/MooViE/image.svg", 800, 800);
 	Scene mainScene(drawer, set.input_variables(), set.output_variables());
 
 	for (DefDataRow row : set)

@@ -52,11 +52,18 @@ Scene::Scene(Drawer & drawer,
 
 	}
 
+	// Print output background
+	Angle begin(angle_helper::deg_to_rad(config::OUTPUT_BEGIN_ANGLE)),
+			end(angle_helper::deg_to_rad(config::OUTPUT_END_ANGLE));
 	DrawerProperties<std::array<Color, 10>> properties(config::STROKE_WIDTH, Color::BLACK, Color::GLOW_10);
+	DrawerProperties<> thin_line(config::THIN_STROKE_WIDTH, Color::BLACK, Color::BLACK);
+	DrawerProperties<> thick_line(config::THICK_STROKE_WIDTH, Color::BLACK, Color::BLACK);
+	double grid_begin = config::OUTPUT_INNER_RADIUS + config::OUTPUT_THICKNESS;
+
 	_drawer.drawSplitAxis(config::OUTPUT_INNER_RADIUS, config::OUTPUT_THICKNESS,
-			Angle(angle_helper::deg_to_rad(config::OUTPUT_BEGIN_ANGLE)),
-			Angle(angle_helper::deg_to_rad(config::OUTPUT_END_ANGLE)),
-			properties, Drawer::Direction::DECREASING);
+			begin, end, properties, Drawer::Direction::DECREASING);
+	_drawer.drawCoordGrid(Polar(grid_begin, begin), Polar(grid_begin + config::GRID_SIZE, end),
+			Drawer::Direction::INCREASING, 2, thin_line, thick_line);
 }
 
 void Scene::drawDataVector(DefDataRow data)

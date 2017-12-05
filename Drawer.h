@@ -53,11 +53,13 @@ public:
     void drawAxis(double radius, double thickness, const Angle& begin, 
 		  const Angle& end, const DrawerProperties<>& prop, 
 		  Direction dir, const Ticks& ticks, const Label& label);
-	//draws an axis composed of sub axis in a choord diagram
+
+    //draws an axis composed of sub axis in a choord diagram
     void drawSplitAxis(double inner_radius, double thickness,
 			const Angle& begin, const Angle& end,
 			const DrawerProperties<std::array<Color, 10>>& prop, Direction dir);
-	//draws a polar coordinate grid
+
+    //draws a polar coordinate grid
     void drawCoordGrid(const Polar& lower_left, const Polar& upper_right, Direction dir, size_t ys,
 			const DrawerProperties<>& prop_thin, const DrawerProperties<>& prop_thick);
 

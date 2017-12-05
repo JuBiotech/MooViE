@@ -111,11 +111,14 @@ void Drawer::drawCoordGrid(const Polar& lower_left, const Polar& upper_right,
 
 	Angle span = max_angle - min_angle;
 
+	// warum nach Direction abfragen?
+	/**
 	if ((max_angle < min_angle && dir == Direction::DECREASING)
 			|| (min_angle > max_angle && dir == Direction::INCREASING))
 	{
 		span = min_angle - max_angle;
 	}
+	*/
 
 	static const size_t NUM_SEGMENTS = 100;
 	static const size_t THICK_LINES = 10;
@@ -133,7 +136,7 @@ void Drawer::drawCoordGrid(const Polar& lower_left, const Polar& upper_right,
 
 	for (size_t i = 1; i <= ys; ++i)
 	{
-		drawArc(min_radius + i * y_dist, min_angle, max_angle, dir);
+		drawArc(min_radius + i * y_dist, max_angle, min_angle, dir);
 		_cr->set_source_rgba(prop_thin.lineColor().r(),
 				prop_thin.lineColor().g(), prop_thin.lineColor().b(),
 				prop_thin.lineColor().a());
