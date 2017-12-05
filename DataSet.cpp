@@ -15,7 +15,11 @@ DataSet<double> DataSet<double>::parse_from_csv(const std::string & cont, std::s
 	std::vector<DefDataRow> rows;
 	const std::vector<std::string> & lines = Util::split(cont, newline);
 
-	const std::vector<std::string> & header = Util::split(lines[0], separator);
+	std::size_t header_pos = 0;
+	while (lines[header_pos].find_first_not_of(' ') == std::string::npos ||
+			lines[header_pos][lines[header_pos].find_first_not_of(' ')] == '#')
+		++header_pos;
+	const std::vector<std::string> & header = Util::split(lines[header_pos], separator);
 
 	// Add input variables from table header
 	for (std::size_t i = 0; i < num_ins; ++i)
@@ -30,14 +34,14 @@ DataSet<double> DataSet<double>::parse_from_csv(const std::string & cont, std::s
 	}
 
 	// Add values from table body
-	for (std::size_t i = 1; i < lines.size(); ++i)
+	for (std::size_t i = header_pos + 1; i < lines.size(); ++i)
 	{
 		// Remove empty/comment lines
-		if (lines[i].find_first_not_of(' ', 0) != std::string::npos
-				|| lines[i].find_first_of(comment, lines[i].find_first_not_of(' ', 0)) == 0)
+		if (lines[i].find_first_not_of(' ') != std::string::npos
+				|| lines[i].find_first_of(comment) == lines[i].find_first_not_of(' ') + 1)
 		{
 			DefDataRow row;
-			const std::vector<std::string> & cells = Util::split(lines[0], ",");
+			const std::vector<std::string> & cells = Util::split(lines[i], ",");
 
 			// Add input variable values from this table line
 			for (std::size_t i = 0; i < num_ins; ++i)
@@ -62,10 +66,10 @@ DataSet<double> DataSet<double>::parse_from_csv(const std::string & cont, std::s
 				try
 				{
 					DefCell cell(std::stod(Util::strip(cells[i])));
-					if (cell.value < output_vars[i].min)
-						output_vars[i].min = cell.value;
-					if (cell.value > output_vars[i].max)
-						output_vars[i].max = cell.value;
+					if (cell.value < output_vars[i - num_ins].min)
+						output_vars[i - num_ins].min = cell.value;
+					if (cell.value > output_vars[i - num_ins].max)
+						output_vars[i - num_ins].max = cell.value;
 					row.push_back(cell);
 				} catch (std::invalid_argument & e)
 				{

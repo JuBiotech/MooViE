@@ -149,11 +149,20 @@ int MooViEArgs_test(int argc, char const * argv[])
 
 int DefDataSet_test(void)
 {
-	DefDataSet set = DefDataSet::parse_from_csv(Util::read_file("/home/stratmann/MooViE/testfiles/input.csv"), 4);
+	DefDataSet set = DefDataSet::parse_from_csv(Util::read_file("/home/stratmann/MooViE/testfiles/input.csv"), 3);
 
-	for (DefDataRow row: set)
+	for (DefDataSet::Var var : set.input_variables())
 	{
-		for (DefCell cell: row)
+		std::cout << var.name << ": min(" << var.min << "), max(" << var.max << ")" << std::endl;
+	}
+	for (DefDataSet::Var var : set.output_variables())
+	{
+		std::cout << var.name << ": min(" << var.min << "), max(" << var.max << ")" << std::endl;
+	}
+	std::cout << "Values: " << std::endl;
+	for (DefDataRow row : set)
+	{
+		for (DefCell cell : row)
 		{
 			std::cout << cell.value << ", ";
 		}
@@ -166,7 +175,7 @@ int DefDataSet_test(void)
 int Scene_test(void)
 {
 
-	const DefDataSet & set = DefDataSet::parse_from_csv(Util::read_file("./test/input.csv"), 4);
+	const DefDataSet & set = DefDataSet::parse_from_csv(Util::read_file("./test/input.csv"), 3);
 
 	Drawer drawer("image.svg", 800, 800);
 	Scene mainScene(drawer, set.input_variables(), set.output_variables());
@@ -181,7 +190,7 @@ int Scene_test(void)
 int main(int argc, char const * argv[])
 {
 #ifdef CAIRO_HAS_SVG_SURFACE
-	return DefDataSet_test();
+	return Scene_test();
 #else
 	std::cout << "You must compile cairo with SVG support for this example to work." << std::endl;
 	return 1;

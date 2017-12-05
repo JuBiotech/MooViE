@@ -26,7 +26,7 @@ std::string read_file(const std::string & fpath);
  * @param delims the delimiter string
  */
 std::vector<std::string> split(const std::string & expr,
-		const std::string delims);
+		const std::string & delims, bool remove_empty=true);
 
 /** Removes leading and trailing blanks of this string.
  * @param the string to strip
