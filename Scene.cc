@@ -11,7 +11,7 @@
 Scene::Scene(Drawer & drawer,
 		const std::vector<DefVar> & inputs,
 		const std::vector<DefVar> & outputs)
-: _drawer(drawer)
+: _drawer(drawer), _prop(config::THIN_STROKE_WIDTH, Color::BLACK, Color::BLACK)
 {
 	size_t num_inputs = inputs.size();
 	size_t num_outputs = outputs.size();
@@ -66,7 +66,12 @@ Scene::Scene(Drawer & drawer,
 			Drawer::Direction::INCREASING, 2, thin_line, thick_line);
 }
 
-void Scene::drawDataVector(DefDataRow data)
+void Scene::drawDataVector(DefDataRow data, std::size_t index)
 {
-
+	for (DefCell cell: data)
+	{
+		Polar begin(config::INPUT_INNER_RADIUS, _input_mapper[index].map(cell.value));
+		Polar end(config::OUTPUT_INNER_RADIUS, _output_mapper[index].map(cell.value));
+		_drawer.drawConnector(begin, end, _prop);
+	}
 }

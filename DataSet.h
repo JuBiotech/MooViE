@@ -189,7 +189,7 @@ public:
 	/** Returns a constant iterator pointing to the first DataRow.
 	 * @return a const_iterator
 	 */
-	const_iterator begin() const
+	inline const_iterator begin() const
 	{
 		return iterator(_rows.begin());
 	}
@@ -198,7 +198,7 @@ public:
 	 * DataRow storage.
 	 * @return a const_iterator
 	 */
-	const_iterator end() const
+	inline const_iterator end() const
 	{
 		return iterator(_rows.end());
 	}

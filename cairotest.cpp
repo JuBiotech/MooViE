@@ -180,9 +180,9 @@ int Scene_test(void)
 	Drawer drawer("/home/stratmann/MooViE/image.svg", 800, 800);
 	Scene mainScene(drawer, set.input_variables(), set.output_variables());
 
-	for (DefDataRow row : set)
+	for (std::size_t i = 0; i < set.rows(); ++i)
 	{
-		mainScene.drawDataVector(row);
+		mainScene.drawDataVector(set[i], i);
 	}
 	return 0;
 }

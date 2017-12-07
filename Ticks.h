@@ -148,14 +148,15 @@ inline std::pair<double,double> create_axis(double min, double max)
 	}
 	else
 	{
+		// Double inputs < 1 result in NAN return, probably just for integer numbers?
 		size_t digits_in_dif = std::floor(std::log10(std::abs(max-min)));
-		size_t power_of_ten = std::pow(10,digits_in_dif);
+		size_t power_of_ten = std::pow(10, digits_in_dif);
 		bool shift = false;
 
 		if (std::abs(std::abs(max - min) - power_of_ten) < 1.5 * power_of_ten)
 		{
 			digits_in_dif -= 1;
-			power_of_ten = std::pow(10,digits_in_dif);
+			power_of_ten = std::pow(10, digits_in_dif);
 			shift = true;
 		}
 

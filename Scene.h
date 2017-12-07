@@ -32,7 +32,9 @@ public:
      * @brief drawDatapoint
      * @param data the data vector
      */
-    void drawDataVector(DefDataRow data);
+    void drawDataVector(DefDataRow data, std::size_t);
+
+    DrawerProperties<> & data_properties() { return _prop; }
 
     virtual ~Scene() {}
 private:
@@ -42,6 +44,8 @@ private:
     std::vector<Mapper> _input_mapper;
     /** Maps the output extreme value to a circle segment */
     std::vector<Mapper> _output_mapper;
+    /** Drawer properties for link drawing */
+    DrawerProperties<> _prop;
 };
 
 #endif /* SCENE_H_ */

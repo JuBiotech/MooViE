@@ -136,6 +136,7 @@ void Drawer::drawCoordGrid(const Polar& lower_left, const Polar& upper_right,
 
 	for (size_t i = 1; i <= ys; ++i)
 	{
+		// Changed max_angle <-> min_angle. Whether fix or not depends on meaning of dir
 		drawArc(min_radius + i * y_dist, max_angle, min_angle, dir);
 		_cr->set_source_rgba(prop_thin.lineColor().r(),
 				prop_thin.lineColor().g(), prop_thin.lineColor().b(),

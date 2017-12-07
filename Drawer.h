@@ -42,6 +42,11 @@ public:
         _cr = Cairo::Context::create(ptr);
     }
 
+    /** Writes and closes file correctly on destruction of this Drawer.
+     * @brief ~Drawer
+     */
+    ~Drawer() { this->finish(); }
+
     /** Draws a given link on the surface.
      * @brief drawLink
      * @param link the link to draw
