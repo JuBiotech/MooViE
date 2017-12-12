@@ -36,11 +36,6 @@ public:
      */
     void draw_scene(void) const;
 
-    /** Access function for data properties.
-     * @brief data_properties
-     */
-    DrawerProperties<> & data_properties() { return _prop; }
-
     virtual ~Scene() {}
 private:
     /** Radius of the diagram */
@@ -62,8 +57,8 @@ private:
 	Drawer& _drawer;
 	/** Drawer properties for link drawing */
 	DrawerProperties<> _prop;
-	/** Drawer properties for VarAxis drawing */
-	DrawerProperties<std::array<Color, 10>> _link_prop;
+	/** Drawer properties for SplitAxis drawing */
+	DrawerProperties<std::array<Color, 10>> _split_prop;
 };
 
 #endif /* SCENE_H_ */

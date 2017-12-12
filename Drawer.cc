@@ -17,8 +17,8 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, double radius,
 
 	Angle span = grid.end - grid.start;
 
-	static const size_t NUM_SEGMENTS = 100;
-	static const size_t THICK_LINES = 10;
+	std::size_t NUM_SEGMENTS = grid.major_ticks * grid.minor_ticks;
+	std::size_t THICK_LINES = grid.major_ticks;
 
 	for (size_t i = 0; i <= NUM_SEGMENTS; ++i)
 	{
@@ -44,18 +44,44 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, double radius,
 }
 
 void Drawer::draw_var_axis(const VarAxis & axis, double radius,
-		const DrawerProperties<std::array<Color, 10>> & prop_var)
+		const DrawerProperties<> & prop_var)
 {
 	_cr->set_identity_matrix();
-	size_t num_of_splits = 10;
-	Angle segment_size = (axis.start - axis.end) / num_of_splits;
-	for (size_t i = 0; i < num_of_splits; ++i)
+	drawWegdeSegment(radius, axis.height, axis.start, axis.end, prop_var, Direction::DECREASING);
+
+	Angle span = axis.end - axis.start;
+	std::cout << "Begin: " << axis.start << " End: " << axis.end << " Span: " << span
+			<< std::endl;
+
+	double start_radius = radius + axis.height;
+	double end_radius_major = start_radius + 0.25 * axis.height;
+	double end_radius_mimor = start_radius + 0.125 * axis.height;
+	double radius_tick_label = end_radius_major + 0.25 * axis.height;
+	double radius_label = end_radius_major + 2 * axis.height;
+
+	std::vector<Label> tick_label = axis.ticks.label();
+	size_t label_pos = 0;
+
+	size_t num_segments = axis.ticks.ticksmajor() * axis.ticks.ticksminor();
+
+	TextProperties text_prop("Liberation Serif", 12);
+
+	for (size_t i = 0; i <= num_segments; ++i)
 	{
-		DrawerProperties<> inner_prop(prop_var.lineWidth(), prop_var.lineColor(),
-				prop_var.fillColor().at(i));
-		drawWegdeSegment(radius, axis.height, axis.start + segment_size * i,
-				axis.start + segment_size * (i + 1), inner_prop, Direction::INCREASING);
+		Angle a((axis.start + span * (double(i) / double(num_segments))));
+		if (i % axis.ticks.ticksmajor())
+			drawLine(Polar(start_radius, a), Polar(end_radius_mimor, a),
+					prop_var.halfLineWidth());
+		else
+		{
+			drawLine(Polar(start_radius, a), Polar(end_radius_major, a), prop_var);
+			drawTextParallel(tick_label.at(label_pos),
+					Polar(radius_tick_label, a));
+			++label_pos;
+		}
 	}
+
+	drawTextOrthogonal(axis.label, Polar(radius_label, Angle::center(axis.start, axis.end)));
 }
 
 void Drawer::draw_data_link(const DataLink & link, const CoordGrid & grid,

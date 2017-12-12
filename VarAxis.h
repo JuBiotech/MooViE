@@ -35,7 +35,7 @@ public:
 	Mapper _input_mapper;
 
 	/** */
-	TextProperties prop;
+	Label label;
 };
 
 #endif /* VARAXIS_H_ */

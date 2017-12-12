@@ -48,7 +48,7 @@ public:
     		const DrawerProperties<> & prop_thick, const DrawerProperties<> & prop_thin);
 
     void draw_var_axis(const VarAxis & axis, double radius,
-    		const DrawerProperties<std::array<Color, 10>> & prop_var);
+    		const DrawerProperties<> & prop_var);
 
     void draw_data_link(const DataLink & link, const CoordGrid & grid, double radius,
     		const DrawerProperties<> & prop_link);
