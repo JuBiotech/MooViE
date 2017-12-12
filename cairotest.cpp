@@ -57,7 +57,7 @@ int drawer_test(void)
 
 	drawer.drawSplitAxis(200, 20, Angle(angle_helper::deg_to_rad(-80.0)),
 			Angle(angle_helper::deg_to_rad(80.0)), properteis,
-			Drawer::Direction::INCREASING);
+			Direction::INCREASING);
 
 	//	cr->set_line_width(2.0);
 	//	cr->set_source_rgba(black.r(), black.g(), black.b(), black.a());
@@ -80,13 +80,13 @@ int drawer_test(void)
 
 	drawer.drawAxis(180, 20, Angle(angle_helper::deg_to_rad(-93.0)),
 			Angle(angle_helper::deg_to_rad(-149.0)), prop1,
-			Drawer::Direction::DECREASING, tick, Label("var1", label_prop));
+			Direction::DECREASING, tick, Label("var1", label_prop));
 	drawer.drawAxis(180, 20, Angle(angle_helper::deg_to_rad(-152.0)),
 			Angle(angle_helper::deg_to_rad(152.0)), prop2,
-			Drawer::Direction::DECREASING, tick, Label("var2", label_prop));
+			Direction::DECREASING, tick, Label("var2", label_prop));
 	drawer.drawAxis(180, 20, Angle(angle_helper::deg_to_rad(149.0)),
 			Angle(angle_helper::deg_to_rad(93.0)), prop3,
-			Drawer::Direction::DECREASING, tick, Label("var3", label_prop));
+			Direction::DECREASING, tick, Label("var3", label_prop));
 
 	double min_radius = 220;
 	double max_radius = 375;
@@ -96,7 +96,7 @@ int drawer_test(void)
 
 	drawer.drawCoordGrid(Polar(min_radius, angle_helper::deg_to_rad(-80.0)),
 			Polar(max_radius, angle_helper::deg_to_rad(80.0)),
-			Drawer::Direction::INCREASING, 2, thin_line, thick_line);
+			Direction::INCREASING, 2, thin_line, thick_line);
 	//grids at r=282 and r=344
 
 	DrawerProperties<> prop4 { 1, Color::GLOW_10[3],
@@ -178,12 +178,8 @@ int Scene_test(void)
 	const DefDataSet & set = DefDataSet::parse_from_csv(Util::read_file("/home/stratmann/MooViE/testfiles/input.csv"), 3);
 
 	Drawer drawer("/home/stratmann/MooViE/image.svg", 800, 800);
-	Scene mainScene(drawer, set.input_variables(), set.output_variables());
+	Scene mainScene(drawer, config::INPUT_INNER_RADIUS, set);
 
-	for (std::size_t i = 0; i < set.rows(); ++i)
-	{
-		mainScene.drawDataVector(set[i], i);
-	}
 	return 0;
 }
 

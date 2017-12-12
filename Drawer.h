@@ -5,6 +5,9 @@
 #include "DrawerProperties.h"
 #include "Link.h"
 #include "Ticks.h"
+#include "CoordGrid.h"
+#include "VarAxis.h"
+#include "DataLink.h"
 #include <cairommconfig.h>
 #include <cairomm/context.h>
 #include <cairomm/surface.h>
@@ -19,12 +22,6 @@
 class Drawer
 {
 public:
-    /** A enum for drawer direction */
-    enum Direction
-    {
-        INCREASING, DECREASING
-    };
-
     /** Creates a Drawer wich draws to a file with the given path on
      * a surface from (0,0) with the given width and height.
      * Drawer uses polar coordinate inputs which are transformed into
@@ -46,6 +43,19 @@ public:
      * @brief ~Drawer
      */
     ~Drawer() { this->finish(); }
+
+    void draw_coord_grid(const CoordGrid & grid, double radius,
+    		const DrawerProperties<> & prop_thick, const DrawerProperties<> & prop_thin);
+
+    void draw_var_axis(const VarAxis & axis, double radius,
+    		const DrawerProperties<std::array<Color, 10>> & prop_var);
+
+    void draw_data_link(const DataLink & link, const CoordGrid & grid, double radius,
+    		const DrawerProperties<> & prop_link);
+
+    void draw_link(const Polar & origin1, const Polar & origin2,
+    		const Polar & target1, const Polar & target2,
+    		const DrawerProperties<>& prop);
 
     /** Draws a given link on the surface.
      * @brief drawLink
@@ -124,7 +134,7 @@ public:
      * @param height the height
      * @param prop the drawer properties
      */
-    void drawCoordPoint(const Polar& coord, const Angle& width, double height, DrawerProperties<>& prop);
+    void drawCoordPoint(const Polar& coord, const Angle& width, double height, const DrawerProperties<>& prop);
 
     /** Draws a connection between to given polar coordinates. The connection is a bezier curve
      * which is controlled by automatically generated control points.
@@ -133,7 +143,7 @@ public:
      * @param to the end Polar
      * @param prop the Drawer properties
      */
-    void drawConnector(const Polar& from, const Polar& to, DrawerProperties<>& prop);
+    void drawConnector(const Polar& from, const Polar& to, const DrawerProperties<>& prop);
 
     /** Save and show the Drawer's result.
      * @brief finish

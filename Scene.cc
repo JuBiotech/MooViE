@@ -9,74 +9,45 @@
 #include "Config.h"
 
 Scene::Scene(Drawer & drawer,
-		const std::vector<DefVar> & inputs,
-		const std::vector<DefVar> & outputs)
-: _drawer(drawer), _prop(config::THIN_STROKE_WIDTH, Color::BLACK, Color::BLACK)
+		double radius,
+		const DefDataSet & set)
+: _radius(radius),
+  _grid(10, 10, 90, 160, config::GRID_SIZE, Direction::INCREASING, set.output_variables()),  // TODO: replace with configuration values
+  _set(set),
+  _drawer(drawer), _prop(config::THIN_STROKE_WIDTH, Color::BLACK, Color::BLACK),
+  _link_prop(1, Color::BLACK, Color::GLOW_10)
 {
-	size_t num_inputs = inputs.size();
-	size_t num_outputs = outputs.size();
-
-	DrawerProperties<std::array<Color, 10>> properteis(1, Color::BLACK, Color::GLOW_10);
-
-	_drawer.drawSplitAxis(200, 20, Angle(angle_helper::deg_to_rad(config::OUTPUT_BEGIN_ANGLE)),
-			Angle(angle_helper::deg_to_rad(config::OUTPUT_END_ANGLE)), properteis,
-			Drawer::Direction::DECREASING);
-
-	_input_mapper.reserve(num_inputs);
-	_output_mapper.reserve(num_outputs);
-
-	double input_width = 180.0/(num_inputs) - config::INPUT_SEPERATION_ANGLE;
-
-	for (size_t i = 0; i < num_inputs; ++i)
+	double angle = 180 / set.input_variables().size() - config::INPUT_SEPERATION_ANGLE;
+	double start = 0, end = angle;
+	for (DefVar var: set.input_variables())
 	{
-		double start_angle_val = 90.0 + 0.5 * config::INPUT_SEPERATION_ANGLE +
-				i * (input_width + config::INPUT_SEPERATION_ANGLE);
-		double end_angle_val = start_angle_val + input_width;
-
-		Angle start_angle(angle_helper::deg_to_rad(start_angle_val));
-		Angle end_angle(angle_helper::deg_to_rad(end_angle_val));
-
-		const DefVar& var = inputs.at(i);
-
-		std::pair<double,double> extreme_vals = create_axis(var.min, var.max);
-
-		//Angles will screw up the mapping :-(
-		_input_mapper.push_back(Mapper(extreme_vals, std::make_pair(start_angle.get(), end_angle.get())));
-
-		Ticks tick(10, 10, extreme_vals, config::TICK_LABEL);
-		Label label(var.name, config::VAR_LABEL);
-		DrawerProperties<> prop(config::STROKE_WIDTH, Color::BLACK, Color::SET3.at(num_inputs, i));
-
-		_drawer.drawAxis(config::INPUT_INNER_RADIUS, config::INPUT_THICKNESS,
-				start_angle, end_angle, prop, Drawer::Direction::INCREASING, tick, label);
-
+		_axis.push_back(VarAxis(Ticks(10,10,std::make_pair(var.min, var.max), TextProperties("Liberation Serif", 8), "%"),
+				config::INPUT_THICKNESS, start, end, config::VAR_LABEL, var));
+		start += angle + config::INPUT_SEPERATION_ANGLE;
+		end += angle + config::INPUT_SEPERATION_ANGLE;
 	}
 
-	// Print output background
-	Angle begin(angle_helper::deg_to_rad(config::OUTPUT_BEGIN_ANGLE)),
-			end(angle_helper::deg_to_rad(config::OUTPUT_END_ANGLE));
-	DrawerProperties<std::array<Color, 10>> properties(config::STROKE_WIDTH, Color::BLACK, Color::GLOW_10);
-	DrawerProperties<> thin_line(config::THIN_STROKE_WIDTH, Color::BLACK, Color::BLACK);
-	DrawerProperties<> thick_line(config::THICK_STROKE_WIDTH, Color::BLACK, Color::BLACK);
-	double grid_begin = config::OUTPUT_INNER_RADIUS + config::OUTPUT_THICKNESS;
-
-	_drawer.drawSplitAxis(config::OUTPUT_INNER_RADIUS, config::OUTPUT_THICKNESS,
-			begin, end, properties, Drawer::Direction::DECREASING);
-	_drawer.drawCoordGrid(Polar(grid_begin, begin), Polar(grid_begin + config::GRID_SIZE, end),
-			Drawer::Direction::INCREASING, num_outputs, thin_line, thick_line);
-
-	for (std::size_t i = 0; i < num_outputs; ++i)
+	for (DefDataRow row: set)
 	{
-		_output_mapper.push_back(Mapper());
+		std::vector<Polar> in, out;
+		for (std::size_t i = 0; i < _axis.size(); ++i)
+			in.push_back(_axis[i].get_coord(row[i].value, _radius)); // TODO: Throw null value exception
+		Polar connector(_radius, _grid.get_coord(row[0].value, _radius, 0).phi());
+		for (std::size_t i = 0; i < _grid.outputs; ++i)
+			out.push_back(_grid.get_coord(row[i].value, _radius, i)); // TODO: Throw null value exception
+		_links.push_back(DataLink(in, connector, out));
 	}
+
+	draw_scene();
 }
 
-void Scene::drawDataVector(DefDataRow data, std::size_t index)
+void Scene::draw_scene(void) const
 {
-	for (DefCell cell: data)
-	{
-		Polar begin(config::INPUT_INNER_RADIUS, _input_mapper[index].map(cell.value));
-		Polar end(config::OUTPUT_INNER_RADIUS, _output_mapper[index].map(cell.value));
-		_drawer.drawConnector(begin, end, _prop);
-	}
+	_drawer.draw_coord_grid(_grid, _radius, _prop, _prop); // TODO: Replace properties with configuration properties
+
+	for (VarAxis axis: _axis)
+		_drawer.draw_var_axis(axis, _radius, _link_prop); // TODO: Replace properties with configuration properties
+
+	for (DataLink link: _links)
+		_drawer.draw_data_link(link, _grid, _radius, _prop); // TODO:: Replace properties with configuration properties
 }
