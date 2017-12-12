@@ -54,17 +54,43 @@ public:
      */
     void drawLink(const Link& link, const DrawerProperties<>& prop);
 
-    //Draws an axis in choord diagram
+    /** Draws a circle segment which is used to display input data.
+     * @param radius radius of the axis
+     * @param thinkness width of the split axis
+     * @param begin angle of the segments begin
+     * @param end angle of the segments end
+     * @param prop Drawer properties
+     * @param dir direction of the axis' values
+     * @param ticks intersections
+     * @param label name of the axis
+     */
     void drawAxis(double radius, double thickness, const Angle& begin, 
 		  const Angle& end, const DrawerProperties<>& prop, 
 		  Direction dir, const Ticks& ticks, const Label& label);
 
-    //draws an axis composed of sub axis in a choord diagram
+    /** Draws a circle segment which is itself divided in colored segments.
+     * @brief drawSplitAxis
+     * @param inner_radius inner radius of the split axis
+     * @param thickness width of the split axis
+     * @param begin angle of the segments begin
+     * @param end angle of the segments end
+     * @param prop color
+     * @param dir direction of the split axis' colors
+     */
     void drawSplitAxis(double inner_radius, double thickness,
 			const Angle& begin, const Angle& end,
 			const DrawerProperties<std::array<Color, 10>>& prop, Direction dir);
 
-    //draws a polar coordinate grid
+    /** Draws a coordinate grid from two given coordinates. Direction of the values, number of
+     * segments and thin/thick line style are specifiable.
+     * @brief drawCoordGrid
+     * @param lower_left the lower left coordinate of the grid
+     * @param upper_right the upper right coordinate of the grid
+     * @param dir direction of the grid's value
+     * @param ys segments of the grid
+     * @param prop_thin thin line properties
+     * @param prop_thick thick line properties
+     */
     void drawCoordGrid(const Polar& lower_left, const Polar& upper_right, Direction dir, size_t ys,
 			const DrawerProperties<>& prop_thin, const DrawerProperties<>& prop_thick);
 

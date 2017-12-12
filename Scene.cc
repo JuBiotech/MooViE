@@ -43,7 +43,7 @@ Scene::Scene(Drawer & drawer,
 		//Angles will screw up the mapping :-(
 		_input_mapper.push_back(Mapper(extreme_vals, std::make_pair(start_angle.get(), end_angle.get())));
 
-		Ticks tick(10,10, extreme_vals, config::TICK_LABEL);
+		Ticks tick(10, 10, extreme_vals, config::TICK_LABEL);
 		Label label(var.name, config::VAR_LABEL);
 		DrawerProperties<> prop(config::STROKE_WIDTH, Color::BLACK, Color::SET3.at(num_inputs, i));
 
@@ -63,7 +63,12 @@ Scene::Scene(Drawer & drawer,
 	_drawer.drawSplitAxis(config::OUTPUT_INNER_RADIUS, config::OUTPUT_THICKNESS,
 			begin, end, properties, Drawer::Direction::DECREASING);
 	_drawer.drawCoordGrid(Polar(grid_begin, begin), Polar(grid_begin + config::GRID_SIZE, end),
-			Drawer::Direction::INCREASING, 2, thin_line, thick_line);
+			Drawer::Direction::INCREASING, num_outputs, thin_line, thick_line);
+
+	for (std::size_t i = 0; i < num_outputs; ++i)
+	{
+		_output_mapper.push_back(Mapper());
+	}
 }
 
 void Scene::drawDataVector(DefDataRow data, std::size_t index)

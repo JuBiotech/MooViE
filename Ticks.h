@@ -81,9 +81,9 @@ public:
 
     /** Access function for the Ticks extreme values.
      * @brief extreme_vals
-     * @return a reference to extreme_vals
+     * @return a reference to the extreme values
      */
-    const std::pair<double, double>& extreme_vals() const
+    const std::pair<double,double> & extreme_vals() const
     {
         return _extreme_vals;
     }
