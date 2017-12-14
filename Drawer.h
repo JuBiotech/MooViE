@@ -8,6 +8,7 @@
 #include "CoordGrid.h"
 #include "VarAxis.h"
 #include "DataLink.h"
+#include "Config.h"
 #include <cairommconfig.h>
 #include <cairomm/context.h>
 #include <cairomm/surface.h>
@@ -44,13 +45,12 @@ public:
      */
     ~Drawer() { this->finish(); }
 
-    void draw_coord_grid(const CoordGrid & grid, double radius,
-    		const DrawerProperties<> & prop_thick, const DrawerProperties<> & prop_thin);
+    void draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & prop_thick,
+    		const DrawerProperties<> & prop_thin);
 
-    void draw_var_axis(const VarAxis & axis, double radius,
-    		const DrawerProperties<> & prop_var);
+    void draw_var_axis(const VarAxis & axis, const DrawerProperties<> & prop_var);
 
-    void draw_data_link(const DataLink & link, const CoordGrid & grid, double radius,
+    void draw_data_link(const DataLink & link, const CoordGrid & grid,
     		const DrawerProperties<> & prop_link);
 
     void draw_link(const Polar & origin1, const Polar & origin2,

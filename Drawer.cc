@@ -8,12 +8,14 @@
 #include "Drawer.h"
 #include <iostream>
 
-void Drawer::draw_coord_grid(const CoordGrid & grid, double radius,
-		const DrawerProperties<> & prop_thick, const DrawerProperties<> & prop_thin)
+void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & prop_thick,
+		const DrawerProperties<> & prop_thin)
 {
+	drawSplitAxis(grid.radius, config::INPUT_THICKNESS, grid.start, grid.end, DrawerProperties<std::array<Color, 10>>(1, Color::BLACK,
+			Color::GLOW_10), Direction::INCREASING);
 	_cr->set_identity_matrix();
-	double min_radius = radius;
-	double max_radius = radius + grid.height;
+	double min_radius = grid.radius + config::INPUT_THICKNESS;
+	double max_radius = grid.radius + +config::INPUT_THICKNESS + grid.height;
 
 	Angle span = grid.end - grid.start;
 
@@ -43,17 +45,16 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, double radius,
 	}
 }
 
-void Drawer::draw_var_axis(const VarAxis & axis, double radius,
-		const DrawerProperties<> & prop_var)
+void Drawer::draw_var_axis(const VarAxis & axis, const DrawerProperties<> & prop_var)
 {
 	_cr->set_identity_matrix();
-	drawWegdeSegment(radius, axis.height, axis.start, axis.end, prop_var, Direction::DECREASING);
+	drawWegdeSegment(axis.radius, axis.height, axis.start, axis.end, prop_var, Direction::DECREASING);
 
 	Angle span = axis.end - axis.start;
 	std::cout << "Begin: " << axis.start << " End: " << axis.end << " Span: " << span
 			<< std::endl;
 
-	double start_radius = radius + axis.height;
+	double start_radius = axis.radius + axis.height;
 	double end_radius_major = start_radius + 0.25 * axis.height;
 	double end_radius_mimor = start_radius + 0.125 * axis.height;
 	double radius_tick_label = end_radius_major + 0.25 * axis.height;
@@ -85,16 +86,16 @@ void Drawer::draw_var_axis(const VarAxis & axis, double radius,
 }
 
 void Drawer::draw_data_link(const DataLink & link, const CoordGrid & grid,
-		double radius, const DrawerProperties<> & prop_link)
+		const DrawerProperties<> & prop_link)
 {
 	Polar from = link.connector_coord();
-	Polar target1(radius, from.phi() - 0.5),
-			target2(radius, from.phi() + 0.5); // TODO: Subtract other values
+	Polar target1(from.r(), from.phi() - 0.5),
+			target2(from.r(), from.phi() + 0.5); // TODO: Subtract other values
 	// Draw links
 	for (Polar in: link.input_coords())
 	{
-		Polar origin1(radius, in.phi() - 0.5),
-				origin2(radius, in.phi() + 0.5); // TODO: Subtract other values
+		Polar origin1(in.r(), in.phi() - 0.5),
+				origin2(in.r(), in.phi() + 0.5); // TODO: Subtract other values
 		draw_link(origin1, origin2, target1, target2, prop_link);
 	}
 

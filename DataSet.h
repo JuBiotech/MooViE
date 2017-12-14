@@ -206,7 +206,7 @@ private:
 	/** Creates a DataSet from a vector of DataRows.
 	 * @param rows the rows of the table
 	 */
-	DataSet(const std::vector<Var> input_vars, const std::vector<Var> output_vars,
+	DataSet(const std::vector<Var> & input_vars, const std::vector<Var> & output_vars,
 			const std::vector<DataRow> & rows) :
 			_number_rows(rows.size()), _number_cols(input_vars.size()),
 			_input_vars(input_vars), _output_vars(output_vars), _rows(rows)

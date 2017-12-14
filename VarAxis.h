@@ -17,15 +17,18 @@
 class VarAxis
 {
 public:
-	VarAxis(Ticks ticks_, std::size_t height_, const Angle & start_, const Angle & end_,
+	VarAxis(Ticks ticks_, const Angle & start_, const Angle & end_,
+			double radius_, std::size_t height_,
 			TextProperties prop_, DefVar var_);
 
-	Polar get_coord(double val, double radius) const;
+	Polar get_coord(double val) const;
 public:
 	/** */
 	Ticks ticks;
 	/** */
 	Angle start, end;
+	/** */
+	double radius;
 	/** */
 	std::size_t height;
 

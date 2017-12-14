@@ -29,7 +29,7 @@ public:
      * @param inputs the input variables
      * @param outputs the output variables
      */
-    Scene(Drawer & drawer, double radius, const DefDataSet & set);
+    Scene(Drawer & drawer, const DefDataSet & set);
 
     /** Draws the Scene with CoordGrid, VarAxis' and DataLinks.
      * @brief draw_scene
@@ -38,8 +38,6 @@ public:
 
     virtual ~Scene() {}
 private:
-    /** Radius of the diagram */
-    double _radius;
     /** Converter between polar and cartesian coordinates */
     // PolarCartesian _pc_converter;
 

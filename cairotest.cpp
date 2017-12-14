@@ -178,7 +178,7 @@ int Scene_test(void)
 	const DefDataSet & set = DefDataSet::parse_from_csv(Util::read_file("/home/stratmann/MooViE/testfiles/input.csv"), 3);
 
 	Drawer drawer("/home/stratmann/MooViE/image.svg", 800, 800);
-	Scene mainScene(drawer, config::INPUT_INNER_RADIUS, set);
+	Scene mainScene(drawer, set);
 
 	return 0;
 }

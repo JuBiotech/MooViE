@@ -9,10 +9,8 @@
 #include "Config.h"
 
 Scene::Scene(Drawer & drawer,
-		double radius,
 		const DefDataSet & set)
-: _radius(radius),
-  _grid(10, 10, angle_helper::deg_to_rad(-50), angle_helper::deg_to_rad(50), config::GRID_SIZE, Direction::DECREASING, set.output_variables()),  // TODO: replace with configuration values
+: _grid(10, 10, angle_helper::deg_to_rad(-50), angle_helper::deg_to_rad(50), config::OUTPUT_INNER_RADIUS, config::GRID_SIZE, Direction::DECREASING, set.output_variables()),  // TODO: replace with configuration values
   _set(set),
   _drawer(drawer), _prop(config::THIN_STROKE_WIDTH, Color::BLACK, Color::BLACK),
   _split_prop(1, Color::BLACK, Color::GLOW_10)
@@ -22,7 +20,8 @@ Scene::Scene(Drawer & drawer,
 	for (DefVar var: set.input_variables())
 	{
 		_axis.push_back(VarAxis(Ticks(10,10,std::make_pair(var.min, var.max), TextProperties("Liberation Serif", 8), "cm"),
-				config::INPUT_THICKNESS, angle_helper::deg_to_rad(start), angle_helper::deg_to_rad(end), config::VAR_LABEL, var));
+				angle_helper::deg_to_rad(start), angle_helper::deg_to_rad(end), config::INPUT_INNER_RADIUS, config::INPUT_THICKNESS,
+				config::VAR_LABEL, var));
 		start -= angle + config::INPUT_SEPERATION_ANGLE;
 		end -= angle + config::INPUT_SEPERATION_ANGLE;
 	}
@@ -31,10 +30,10 @@ Scene::Scene(Drawer & drawer,
 	{
 		std::vector<Polar> in, out;
 		for (std::size_t i = 0; i < _axis.size(); ++i)
-			in.push_back(_axis[i].get_coord(row[i].value, _radius)); // TODO: Throw null value exception
-		Polar connector(_radius, _grid.get_coord(row[0].value, _radius, 0).phi());
+			in.push_back(_axis[i].get_coord(row[i].value)); // TODO: Throw null value exception
+		Polar connector(_grid.get_coord(row[0].value, 0));
 		for (std::size_t i = 0; i < _grid.outputs; ++i)
-			out.push_back(_grid.get_coord(row[i].value, _radius, i)); // TODO: Throw null value exception
+			out.push_back(_grid.get_coord(row[i].value, i)); // TODO: Throw null value exception
 		_links.push_back(DataLink(in, connector, out));
 	}
 
@@ -43,10 +42,11 @@ Scene::Scene(Drawer & drawer,
 
 void Scene::draw_scene(void) const
 {
-	_drawer.draw_coord_grid(_grid, _radius, _prop, _prop); // TODO: Replace properties with configuration properties
+	_drawer.draw_coord_grid(_grid, _prop, _prop); // TODO: Replace properties with configuration properties
 
+	size_t i = 0;
 	for (VarAxis axis: _axis)
-		_drawer.draw_var_axis(axis, _radius, _prop); // TODO: Replace properties with configuration properties
+		_drawer.draw_var_axis(axis, DrawerProperties<>(1, Color::BLACK, Color::SET3.at(_axis.size(), i++))); // TODO: Replace properties with configuration properties
 
 	/*
 	for (DataLink link: _links)

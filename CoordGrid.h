@@ -48,12 +48,12 @@ public:
      */
     CoordGrid(std::size_t major_ticks_, std::size_t minor_ticks_,
     		const Angle & start_, const Angle & end_,
-    		double height_, Direction dir_,
+			double radius_, double height_, Direction dir_,
 			const std::vector<DefVar> output_vars);
 
     virtual ~CoordGrid() {};
 
-	Polar get_coord(double val, std::size_t radius, std::size_t num_output) const;
+	Polar get_coord(double val, std::size_t num_output) const;
 
 public:
     /** The number of outputs. */
@@ -64,10 +64,11 @@ public:
 
     /** Start and end angle for drawing the CoordGrid */
     Angle start, end;
-
+    /** Radius of the CoordGrid */
+    double radius;
     /** Height of the CoordGrid */
     double height;
-
+    /** Direction of the CoordGrid's values */
     Direction dir;
 
 private:
