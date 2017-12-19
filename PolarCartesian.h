@@ -33,6 +33,11 @@ namespace angle_helper
     {
         return rad / M_PIl * 180.0;
     }
+
+    inline double rad_dist(double rad0, double rad1)
+    {
+    	return (rad0 > rad1) ? (2 * M_PIl - rad0 + rad1) : (rad1 - rad0);
+    }
 }
 
 /** Angle is a wrapper class for angle values. Angles are stored as radian values.

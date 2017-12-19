@@ -18,14 +18,14 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 	double min_radius = grid.radius + config::INPUT_THICKNESS;
 	double max_radius = grid.radius + +config::INPUT_THICKNESS + grid.height;
 
-	Angle span = grid.end - grid.start;
+	double span = angle_helper::rad_dist(grid.start.get(), grid.end.get());
 
 	std::size_t NUM_SEGMENTS = grid.major_ticks * grid.minor_ticks;
 	std::size_t THICK_LINES = grid.major_ticks;
 
 	for (size_t i = 0; i <= NUM_SEGMENTS; ++i)
 	{
-		Angle a((grid.start.get() + i * span.get() / NUM_SEGMENTS));
+		Angle a((grid.start.get() + i * span / NUM_SEGMENTS));
 		if (i % THICK_LINES)
 			drawLine(Polar(min_radius, a), Polar(max_radius, a), prop_thin);
 		else
@@ -37,7 +37,7 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 	for (size_t i = 1; i <= grid.outputs; ++i)
 	{
 		// Changed max_angle <-> min_angle. Whether fix or not depends on meaning of dir
-		drawArc(min_radius + i * y_dist, grid.end, grid.start, grid.dir);
+		drawArc(min_radius + i * y_dist, grid.start, grid.end, grid.dir);
 		_cr->set_source_rgba(prop_thin.lineColor().r(),
 				prop_thin.lineColor().g(), prop_thin.lineColor().b(),
 				prop_thin.lineColor().a());
@@ -219,10 +219,9 @@ void Drawer::drawSplitAxis(double inner_radius, double thickness,
 {
 	_cr->set_identity_matrix();
 	size_t num_of_splits = 10;
-	Angle segment_size = std::abs(end.get() - begin.get()) / num_of_splits;
+	Angle segment_size = angle_helper::rad_dist(begin.get(), end.get()) / num_of_splits;
 	for (size_t i = 0; i < num_of_splits; ++i)
 	{
-		std::cout << begin + segment_size * i << std::endl;
 		DrawerProperties<> inner_prop(prop.lineWidth(), prop.lineColor(), prop.fillColor().at(i));
 		drawWegdeSegment(inner_radius, thickness, begin + segment_size * i,
 				begin + segment_size * (i + 1), inner_prop, dir);

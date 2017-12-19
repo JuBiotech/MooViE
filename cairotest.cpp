@@ -197,7 +197,7 @@ int Scene_test(void)
 int main(int argc, char const * argv[])
 {
 #ifdef CAIRO_HAS_SVG_SURFACE
-	return Angle_test();
+	return Scene_test();
 #else
 	std::cout << "You must compile cairo with SVG support for this example to work." << std::endl;
 	return 1;
