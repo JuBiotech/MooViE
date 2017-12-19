@@ -8,6 +8,8 @@
 #ifndef MAPPER_H_
 #define MAPPER_H_
 
+#include <iostream>
+
 /** Mapper represent a mapping of from one
  * interval to another: [a,b] -> [c,d]. It solves
  * the linear equations
@@ -39,7 +41,7 @@ public:
      */
     double map(const double& out) const
     {
-        return transform(_out, _in, out);
+        return transform(_in, _out, out);
     }
 
     /** Returns the value associated to the given input using the inverse
@@ -50,7 +52,7 @@ public:
      */
     double inverse(const double& in) const
     {
-        return transform(_in, _out, in);
+        return transform(_out, _in, in);
     }
 private:
     /** Performs the actual linear transformation between two given intervals.

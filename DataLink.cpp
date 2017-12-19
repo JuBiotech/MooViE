@@ -7,7 +7,9 @@
 
 #include "DataLink.h"
 
-DataLink::DataLink(const std::vector<Polar> & input_coords, const Polar & connector_coord, const std::vector<Polar> & output_coords)
-: _input_coords(input_coords), _connector_coord(connector_coord), _output_coords(output_coords)
+DataLink::DataLink(const std::vector<Polar> & input_coords, const Polar & connector_coord,
+		const std::vector<Polar> & output_coords, const DrawerProperties<> & connector_prop)
+: _input_coords(input_coords), _connector_coord(connector_coord), _output_coords(output_coords),
+  _connector_prop(connector_prop)
 {}
 

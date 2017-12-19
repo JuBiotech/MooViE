@@ -8,10 +8,10 @@
 #include "VarAxis.h"
 
 VarAxis::VarAxis(Ticks ticks_, const Angle & start_, const Angle & end_,
-		double radius_, std::size_t height_,
-		TextProperties prop_, DefVar var_)
+		double radius_, std::size_t height_, DefVar var_,
+		const DrawerProperties<> & prop_, const TextProperties & text_prop_)
 : ticks(ticks_), start(start_), end(end_),radius(radius_),  height(height_), var(var_),
-  _input_mapper(create_axis(var.min, var.max), std::make_pair(start.get(), end.get())), label(var.name, prop_) {}
+  _input_mapper(std::make_pair(var.min, var.max), std::make_pair(start.get(), end.get())), label(var.name, text_prop_), prop(prop_) {}
 
 Polar VarAxis::get_coord(double val) const
 {

@@ -48,10 +48,9 @@ public:
     void draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & prop_thick,
     		const DrawerProperties<> & prop_thin);
 
-    void draw_var_axis(const VarAxis & axis, const DrawerProperties<> & prop_var);
+    void draw_var_axis(const VarAxis & axis);
 
-    void draw_data_link(const DataLink & link, const CoordGrid & grid,
-    		const DrawerProperties<> & prop_link);
+    void draw_data_link(const DataLink & link);
 
     void draw_link(const Polar & origin1, const Polar & origin2,
     		const Polar & target1, const Polar & target2,

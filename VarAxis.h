@@ -18,8 +18,8 @@ class VarAxis
 {
 public:
 	VarAxis(Ticks ticks_, const Angle & start_, const Angle & end_,
-			double radius_, std::size_t height_,
-			TextProperties prop_, DefVar var_);
+			double radius_, std::size_t height_, DefVar var_,
+			const DrawerProperties<> & prop_, const TextProperties & text_prop_);
 
 	Polar get_coord(double val) const;
 public:
@@ -39,6 +39,8 @@ public:
 
 	/** */
 	Label label;
+	/** */
+	DrawerProperties<> prop;
 };
 
 #endif /* VARAXIS_H_ */

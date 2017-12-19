@@ -16,7 +16,7 @@ CoordGrid::CoordGrid(std::size_t major_ticks_, std::size_t minor_ticks_,
 	{
 		for (DefVar var: output_vars)
 		{
-			_output_mappers.push_back(Mapper(create_axis(var.min, var.max),
+			_output_mappers.push_back(Mapper(std::make_pair(var.min, var.max),
 					std::make_pair(start.get(), end.get())));
 		}
 	}

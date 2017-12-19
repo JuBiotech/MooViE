@@ -45,10 +45,10 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 	}
 }
 
-void Drawer::draw_var_axis(const VarAxis & axis, const DrawerProperties<> & prop_var)
+void Drawer::draw_var_axis(const VarAxis & axis)
 {
 	_cr->set_identity_matrix();
-	drawWegdeSegment(axis.radius, axis.height, axis.start, axis.end, prop_var, Direction::DECREASING);
+	drawWegdeSegment(axis.radius, axis.height, axis.start, axis.end, axis.prop, Direction::DECREASING);
 
 	Angle span = axis.end - axis.start;
 	std::cout << "Begin: " << axis.start << " End: " << axis.end << " Span: " << span
@@ -56,8 +56,8 @@ void Drawer::draw_var_axis(const VarAxis & axis, const DrawerProperties<> & prop
 
 	double start_radius = axis.radius + axis.height;
 	double end_radius_major = start_radius + 0.25 * axis.height;
-	double end_radius_mimor = start_radius + 0.125 * axis.height;
-	double radius_tick_label = end_radius_major + 0.25 * axis.height;
+	double end_radius_minor = start_radius + 0.125 * axis.height;
+	double radius_tick_label = end_radius_major + 0.75 * axis.height;
 	double radius_label = end_radius_major + 2 * axis.height;
 
 	std::vector<Label> tick_label = axis.ticks.label();
@@ -71,11 +71,11 @@ void Drawer::draw_var_axis(const VarAxis & axis, const DrawerProperties<> & prop
 	{
 		Angle a((axis.start + span * (double(i) / double(num_segments))));
 		if (i % axis.ticks.ticksmajor())
-			drawLine(Polar(start_radius, a), Polar(end_radius_mimor, a),
-					prop_var.halfLineWidth());
+			drawLine(Polar(start_radius, a), Polar(end_radius_minor, a),
+					axis.prop.halfLineWidth());
 		else
 		{
-			drawLine(Polar(start_radius, a), Polar(end_radius_major, a), prop_var);
+			drawLine(Polar(start_radius, a), Polar(end_radius_major, a), axis.prop);
 			drawTextParallel(tick_label.at(label_pos),
 					Polar(radius_tick_label, a));
 			++label_pos;
@@ -85,24 +85,27 @@ void Drawer::draw_var_axis(const VarAxis & axis, const DrawerProperties<> & prop
 	drawTextOrthogonal(axis.label, Polar(radius_label, Angle::center(axis.start, axis.end)));
 }
 
-void Drawer::draw_data_link(const DataLink & link, const CoordGrid & grid,
-		const DrawerProperties<> & prop_link)
+void Drawer::draw_data_link(const DataLink & link)
 {
 	Polar from = link.connector_coord();
-	Polar target1(from.r(), from.phi() - 0.5),
-			target2(from.r(), from.phi() + 0.5); // TODO: Subtract other values
+	Polar target1(from.r(), from.phi() - 0.001),
+			target2(from.r(), from.phi() + 0.001); // TODO: Subtract other values
+
+	Polar origin1(link.input_coords()[0].r(), link.input_coords()[0].phi() - 0.001),
+					origin2(link.input_coords()[0].r(), link.input_coords()[0].phi() + 0.001);
+	std::size_t i = 0;
 	// Draw links
 	for (Polar in: link.input_coords())
 	{
-		Polar origin1(in.r(), in.phi() - 0.5),
-				origin2(in.r(), in.phi() + 0.5); // TODO: Subtract other values
-		draw_link(origin1, origin2, target1, target2, prop_link);
+		Polar origin1(in.r(), in.phi() - 0.001),
+				origin2(in.r(), in.phi() + 0.001); // TODO: Subtract other values
+		draw_link(origin1, origin2, target1, target2, link.get_link_prop(i++));
 	}
 
 	// Draw connector on coord grid
 	for (Polar out: link.output_coords())
 	{
-		drawConnector(from, out, prop_link);
+		drawConnector(from, out, link.connector_prop());
 		from = out;
 	}
 }
@@ -138,14 +141,14 @@ void Drawer::draw_link(const Polar & origin1, const Polar & origin2,
 			orig2.x(), orig2.y());
 	//circle segment from origin2 to origin1
 	drawArc(origin1.r(), origin2.phi(), origin1.phi(),
-			Direction::INCREASING);
+			Direction::DECREASING);
 
 	_cr->set_source_rgba(prop.fillColor().r(), prop.fillColor().g(),
 			prop.fillColor().b(), prop.fillColor().a());
 	_cr->fill_preserve();
 
-	_cr->set_source_rgba(prop.lineColor().r(), prop.lineColor().g(),
-			prop.lineColor().b(), prop.lineColor().a());
+	_cr->set_source_rgba(prop.fillColor().r(), prop.fillColor().g(),
+			prop.fillColor().b(), prop.fillColor().a());
 	_cr->set_line_width(prop.lineWidth());
 	_cr->stroke(); //draw outline, but preserve path
 }
