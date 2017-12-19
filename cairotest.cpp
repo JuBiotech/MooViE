@@ -132,7 +132,7 @@ int Angle_test()
 	double height = 800;
 	Drawer drawer(filename, width, height);
 	DrawerProperties<> prop(1, Color::BLACK, Color::BLACK);
-	drawer.drawLine(Polar(100, angle_helper::deg_to_rad(50)), Polar(100, angle_helper::deg_to_rad(310)), prop);
+	drawer.drawLine(Polar(100, angle_helper::deg_to_rad(90)), Polar(100, angle_helper::deg_to_rad(145)), prop);
 	return 0;
 }
 

@@ -148,6 +148,7 @@ public:
      * @brief finish
      */
     void finish();
+
 private:
 	/** Draws a simple edge segment around the center of its coordinate system between
 	 * the two given Angles and with the given radius.
@@ -160,18 +161,18 @@ private:
 	void drawArc(double inner_radius, const Angle& start, const Angle& end,
 			Direction dir);
 
-    /** Draws a filled edge segment around the center of its coordinate system between
-     * the two given Angles and with the given radius.
-     * @brief drawWegdeSegment
-     * @param radius the radius
-     * @param thickness the thinkness of the edge segment
-     * @param begin the begin Angle
-     * @param end the end Angle
-     * @param prop the Drawer properties
-     * @param dir the direction
-     */
-    void drawWegdeSegment(double radius, double thickness, const Angle& begin,
-                        const Angle& end, const DrawerProperties<>& prop, Direction dir);
+	/** Draws a filled edge segment around the center of its coordinate system between
+	 * the two given Angles and with the given radius.
+	 * @brief drawWegdeSegment
+	 * @param radius the radius
+	 * @param thickness the thinkness of the edge segment
+	 * @param begin the begin Angle
+	 * @param end the end Angle
+	 * @param prop the Drawer properties
+	 * @param dir the direction
+	 */
+	void drawWegdeSegment(double radius, double thickness, const Angle& begin,
+			const Angle& end, const DrawerProperties<>& prop, Direction dir);
 
     /** ???
      * @brief createLinkControlPoint

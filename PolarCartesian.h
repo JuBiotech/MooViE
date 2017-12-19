@@ -518,7 +518,7 @@ public:
     {
 
             double x { from.r() * std::cos(from.phi().get()) };
-            double y { from.r() * std::sin(from.phi().get()) };
+            double y { -from.r() * std::sin(from.phi().get()) };
             to.x() = x + center_x;
             to.y() = y + center_y;
     }

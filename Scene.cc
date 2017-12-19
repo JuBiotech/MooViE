@@ -69,9 +69,9 @@ void Scene::draw_scene(void) const
 	for (VarAxis axis: _axis)
 		_drawer.draw_var_axis(axis); // TODO: Replace properties with configuration properties
 
-	_drawer.draw_data_link(_links[1]);
-	/*
+	//_drawer.draw_data_link(_links[1]);
+
 	for (DataLink link: _links)
 		_drawer.draw_data_link(link); // TODO:: Replace properties with configuration properties
-		*/
+
 }

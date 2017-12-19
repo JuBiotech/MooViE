@@ -59,7 +59,7 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 	double end_radius_major = start_radius + 0.25 * axis.height;
 	double end_radius_minor = start_radius + 0.125 * axis.height;
 	double radius_tick_label = end_radius_major + 0.75 * axis.height;
-	double radius_label = end_radius_major + 2 * axis.height;
+	double radius_label = end_radius_major + 3 * axis.height;
 
 	std::vector<Label> tick_label = axis.ticks.label();
 	size_t label_pos = 0;
@@ -77,8 +77,7 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 		else
 		{
 			drawLine(Polar(start_radius, a), Polar(end_radius_major, a), axis.prop);
-			drawTextParallel(tick_label.at(label_pos),
-					Polar(radius_tick_label, a));
+			drawTextParallel(tick_label.at(label_pos), Polar(radius_tick_label, a));
 			++label_pos;
 		}
 	}
@@ -92,14 +91,14 @@ void Drawer::draw_data_link(const DataLink & link)
 	Polar target1(from.r() - 2, from.phi() - 0.001),
 			target2(from.r() - 2, from.phi() + 0.001); // TODO: Subtract other values
 
-	Polar origin1(link.input_coords()[0].r(), link.input_coords()[0].phi() - 0.001),
-					origin2(link.input_coords()[0].r(), link.input_coords()[0].phi() + 0.001);
+	Polar origin1(link.input_coords()[0].r(), link.input_coords()[0].phi() - 0.0001),
+					origin2(link.input_coords()[0].r(), link.input_coords()[0].phi() + 0.0001);
 	std::size_t i = 0;
 	// Draw links
 	for (Polar in: link.input_coords())
 	{
-		Polar origin1(in.r() - 2, in.phi() - 0.001),
-				origin2(in.r() - 2, in.phi() + 0.001); // TODO: Subtract other values
+		Polar origin1(in.r() - 2, in.phi() - 0.0001),
+				origin2(in.r() - 2, in.phi() + 0.0001); // TODO: Subtract other values
 		draw_link(origin1, origin2, target1, target2, link.get_link_prop(i++));
 	}
 
@@ -135,15 +134,8 @@ void Drawer::draw_link(const Polar & origin1, const Polar & origin2,
 	//bezier curve from origin1 to target1
 	_cr->curve_to(origin1_c.x(), origin1_c.y(), target1_c.x(), target1_c.y(),
 			targ1.x(), targ1.y());
-	//circle segment from target1 to target2
-	drawArc(target1.r(), target1.phi(), target2.phi(),
-			Direction::INCREASING);
-	//bezier curve from target2 back to origin2
 	_cr->curve_to(target2_c.x(), target2_c.y(), origin2_c.x(), origin2_c.y(),
 			orig2.x(), orig2.y());
-	//circle segment from origin2 to origin1
-	drawArc(origin1.r(), origin2.phi(), origin1.phi(),
-			Direction::DECREASING);
 
 	_cr->set_source_rgba(prop.fillColor().r(), prop.fillColor().g(),
 			prop.fillColor().b(), prop.fillColor().a());
@@ -309,14 +301,14 @@ void Drawer::drawTextOrthogonal(const Label& label, const Polar& start)
 	std::string message { label.text() };
 	_cr->get_text_extents(message, t_exts);
 
-	Angle cairo_angle = start.phi() + M_PI_2;
+	Angle cairo_angle = M_PI_2 - start.phi();
 
 	_cr->set_identity_matrix();
 	_cr->begin_new_path();
 	_cr->translate(_pc.center().x(), _pc.center().y());
 	_cr->rotate(cairo_angle.get());
 	_cr->translate(0, -start.r());
-	if (start.phi().get() > 0)
+	if (start.phi().get() > M_PI)
 		_cr->rotate_degrees(180);
 	_cr->translate(-0.5 * t_exts.width, 0.5 * t_exts.height);
 
@@ -341,14 +333,17 @@ void Drawer::drawWegdeSegment(double inner_radius, double thickness,
 	_cr->set_identity_matrix();
 	_cr->begin_new_path();
 
-	drawArc(inner_radius, begin, end, dir);
+	const Angle beginn = 2 * M_PI - end;
+	const Angle endn = 2 * M_PI - begin;
+
+	drawArc(inner_radius, beginn, endn, dir);
 	switch (dir)
 	{
 	case Direction::INCREASING:
-		drawArc(inner_radius + thickness, end, begin, Direction::DECREASING);
+		drawArc(inner_radius + thickness, endn, beginn, Direction::DECREASING);
 		break;
 	case Direction::DECREASING:
-		drawArc(inner_radius + thickness, end, begin, Direction::INCREASING);
+		drawArc(inner_radius + thickness, endn, beginn, Direction::INCREASING);
 		break;
 	}
 
@@ -380,7 +375,7 @@ void Drawer::drawTextParallel(const Label& label, const Polar& start)
 	std::string message { label.text() };
 	_cr->get_text_extents(message, t_exts);
 
-	Angle cairo_angle = start.phi() + M_PI_2;
+	Angle cairo_angle = M_PI_2 - start.phi();
 
 	_cr->set_identity_matrix();
 	_cr->begin_new_path();
@@ -388,7 +383,7 @@ void Drawer::drawTextParallel(const Label& label, const Polar& start)
 	_cr->rotate(cairo_angle.get());
 	_cr->translate(0, -start.r());
 	_cr->rotate_degrees(90);
-	if ((start.phi() + M_PI_2).get() > 0)
+	if ((M_PI_2 - start.phi()).get() > 0)
 		_cr->rotate_degrees(180);
 	_cr->translate(-0.5 * t_exts.width, 0.5 * t_exts.height);
 
