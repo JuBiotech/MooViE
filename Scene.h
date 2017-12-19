@@ -38,9 +38,6 @@ public:
 
     virtual ~Scene() {}
 private:
-    /** Converter between polar and cartesian coordinates */
-    // PolarCartesian _pc_converter;
-
     /** Output data section of the diagram */
     CoordGrid _grid;
     /** Variable axis */

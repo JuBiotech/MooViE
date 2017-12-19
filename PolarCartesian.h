@@ -10,7 +10,6 @@
 
 #include <cmath>
 #include <ostream>
-#include <iostream>
 
 /** A namespace for converter functions. */
 namespace angle_helper
@@ -278,7 +277,7 @@ private:
 	void wrap()
 	{
 //		double old = _angle;
-		_angle = std::remainder(_angle, 2.0 * M_PI);
+		_angle = std::fmod(_angle, 2.0 * M_PI);
 //		if (old != _angle)
 //			std::cout << "wrap: " << angle_helper::rad_to_deg(old) << " -> " << angle_helper::rad_to_deg(_angle) << std::endl;
 	}
@@ -512,6 +511,7 @@ public:
      */
     inline void convert(const Polar& from, Cartesian& to) const
     {
+
             double x { from.r() * std::cos(from.phi().get()) };
             double y { from.r() * std::sin(from.phi().get()) };
             to.x() = x + center_x;

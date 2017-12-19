@@ -7,12 +7,13 @@
 
 #include "Drawer.h"
 #include <iostream>
+#include <cmath>
 
 void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & prop_thick,
 		const DrawerProperties<> & prop_thin)
 {
 	drawSplitAxis(grid.radius, config::INPUT_THICKNESS, grid.start, grid.end, DrawerProperties<std::array<Color, 10>>(1, Color::BLACK,
-			Color::GLOW_10), Direction::INCREASING);
+			Color::GLOW_10), grid.dir);
 	_cr->set_identity_matrix();
 	double min_radius = grid.radius + config::INPUT_THICKNESS;
 	double max_radius = grid.radius + +config::INPUT_THICKNESS + grid.height;
@@ -48,7 +49,7 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 void Drawer::draw_var_axis(const VarAxis & axis)
 {
 	_cr->set_identity_matrix();
-	drawWegdeSegment(axis.radius, axis.height, axis.start, axis.end, axis.prop, Direction::DECREASING);
+	drawWegdeSegment(axis.radius, axis.height, axis.start, axis.end, axis.prop, Direction::INCREASING);
 
 	Angle span = axis.end - axis.start;
 	std::cout << "Begin: " << axis.start << " End: " << axis.end << " Span: " << span
@@ -88,8 +89,8 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 void Drawer::draw_data_link(const DataLink & link)
 {
 	Polar from = link.connector_coord();
-	Polar target1(from.r(), from.phi() - 0.001),
-			target2(from.r(), from.phi() + 0.001); // TODO: Subtract other values
+	Polar target1(from.r() - 2, from.phi() - 0.001),
+			target2(from.r() - 2, from.phi() + 0.001); // TODO: Subtract other values
 
 	Polar origin1(link.input_coords()[0].r(), link.input_coords()[0].phi() - 0.001),
 					origin2(link.input_coords()[0].r(), link.input_coords()[0].phi() + 0.001);
@@ -97,11 +98,12 @@ void Drawer::draw_data_link(const DataLink & link)
 	// Draw links
 	for (Polar in: link.input_coords())
 	{
-		Polar origin1(in.r(), in.phi() - 0.001),
-				origin2(in.r(), in.phi() + 0.001); // TODO: Subtract other values
+		Polar origin1(in.r() - 2, in.phi() - 0.001),
+				origin2(in.r() - 2, in.phi() + 0.001); // TODO: Subtract other values
 		draw_link(origin1, origin2, target1, target2, link.get_link_prop(i++));
 	}
 
+	from = Polar(from.r() + 2, from.phi());
 	// Draw connector on coord grid
 	for (Polar out: link.output_coords())
 	{
@@ -217,9 +219,10 @@ void Drawer::drawSplitAxis(double inner_radius, double thickness,
 {
 	_cr->set_identity_matrix();
 	size_t num_of_splits = 10;
-	Angle segment_size = (end - begin) / num_of_splits;
+	Angle segment_size = std::abs(end.get() - begin.get()) / num_of_splits;
 	for (size_t i = 0; i < num_of_splits; ++i)
 	{
+		std::cout << begin + segment_size * i << std::endl;
 		DrawerProperties<> inner_prop(prop.lineWidth(), prop.lineColor(), prop.fillColor().at(i));
 		drawWegdeSegment(inner_radius, thickness, begin + segment_size * i,
 				begin + segment_size * (i + 1), inner_prop, dir);

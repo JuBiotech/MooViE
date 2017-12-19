@@ -149,15 +149,15 @@ public:
      */
     void finish();
 private:
-    /** Draws a simple edge segment around the center of its coordinate system between
-     * the two given Angles and with the given radius.
-     * @brief drawArc
-     * @param inner_radius the inner radius
-     * @param start the start Angle
-     * @param end the end Angle
-     * @param dir the direction
-     */
-    void drawArc(double inner_radius, const Angle& start, const Angle& end,
+	/** Draws a simple edge segment around the center of its coordinate system between
+	 * the two given Angles and with the given radius.
+	 * @brief drawArc
+	 * @param inner_radius the inner radius
+	 * @param start the start Angle
+	 * @param end the end Angle
+	 * @param dir the direction
+	 */
+	void drawArc(double inner_radius, const Angle& start, const Angle& end,
 			Direction dir);
 
     /** Draws a filled edge segment around the center of its coordinate system between

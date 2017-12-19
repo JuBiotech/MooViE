@@ -7,19 +7,23 @@
 
 #include "Scene.h"
 #include "Config.h"
+#include <iostream>
 
 Scene::Scene(Drawer & drawer,
 		const DefDataSet & set)
-: _grid(10, 10, angle_helper::deg_to_rad(-50), angle_helper::deg_to_rad(50), config::OUTPUT_INNER_RADIUS, config::GRID_SIZE, Direction::DECREASING, set.output_variables()),  // TODO: replace with configuration values
+: _grid(10, 10, angle_helper::deg_to_rad(310), angle_helper::deg_to_rad(50), config::OUTPUT_INNER_RADIUS, config::GRID_SIZE, Direction::INCREASING, set.output_variables()),  // TODO: replace with configuration values
   _set(set),
   _drawer(drawer), _prop(config::THIN_STROKE_WIDTH, Color::BLACK, Color::BLACK),
   _split_prop(1, Color::BLACK, Color::GLOW_10)
 {
 	double angle = 180 / set.input_variables().size() - config::INPUT_SEPERATION_ANGLE;
-	double start = -90, end = start-angle;
+	double start = 90, end = start+angle;
 	std::size_t i = 0;
 	for (DefVar var: set.input_variables())
 	{
+		Polar p(config::INPUT_INNER_RADIUS, angle_helper::deg_to_rad(end));
+		Cartesian c; PolarCartesian pc(800, 800); pc.convert(p, c);
+		std::cout << p << " to " << c << std::endl;
 		_axis.push_back(
 				VarAxis(
 						Ticks(10, 10, std::make_pair(var.min, var.max),
@@ -31,19 +35,23 @@ Scene::Scene(Drawer & drawer,
 						DrawerProperties<>(1, Color::BLACK,
 								Color::SET3.at(set.input_variables().size(), i++)),
 						config::VAR_LABEL));
-		start -= angle + config::INPUT_SEPERATION_ANGLE;
-		end -= angle + config::INPUT_SEPERATION_ANGLE;
+		start += angle + config::INPUT_SEPERATION_ANGLE;
+		end += angle + config::INPUT_SEPERATION_ANGLE;
 	}
 
 	for (DefDataRow row: set)
 	{
 		std::vector<Polar> in, out;
-		for (std::size_t i = 0; i < _axis.size(); ++i)
-			in.push_back(_axis[i].get_coord(row[i].value)); // TODO: Throw null value exception
+		for (std::size_t k = 0; k < _axis.size(); ++k)
+		{
+			in.push_back(_axis[k].get_coord(row[k].value)); // TODO: Throw null value exception
+		}
 		Polar connector(_grid.get_coord(row[_axis.size()].value, 0));
-		for (std::size_t i = 0; i < _grid.outputs; ++i)
-			out.push_back(_grid.get_coord(row[_axis.size() + i].value, i)); // TODO: Throw null value exception
-		DataLink link(in, connector, out, _prop);
+		for (std::size_t k = 0; k < _grid.outputs; ++k)
+		{
+			out.push_back(_grid.get_coord(row[_axis.size() + k].value, k)); // TODO: Throw null value exception
+		}
+		DataLink link(in, connector, out, DrawerProperties<>(2, Color(100, 100, 100), Color(100, 100, 100)));
 		for(const VarAxis & va: _axis)
 		{
 			link.add_link_prop(va.prop);
@@ -61,7 +69,9 @@ void Scene::draw_scene(void) const
 	for (VarAxis axis: _axis)
 		_drawer.draw_var_axis(axis); // TODO: Replace properties with configuration properties
 
-	//_drawer.draw_data_link(_links[0]);
+	_drawer.draw_data_link(_links[1]);
+	/*
 	for (DataLink link: _links)
 		_drawer.draw_data_link(link); // TODO:: Replace properties with configuration properties
+		*/
 }

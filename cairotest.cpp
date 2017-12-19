@@ -25,7 +25,7 @@
 #include "MooViEArgs.h"
 #include "Utils.h"
 
-int drawer_test(void)
+int Drawer_test(void)
 {
 	std::string filename = "/home/stratmann/MooViE/image.svg";
 	double width = 800;
@@ -125,6 +125,17 @@ int drawer_test(void)
 	return 0;
 }
 
+int Angle_test()
+{
+	std::string filename = "/home/stratmann/MooViE/image.svg";
+	double width = 800;
+	double height = 800;
+	Drawer drawer(filename, width, height);
+	DrawerProperties<> prop(1, Color::BLACK, Color::BLACK);
+	drawer.drawLine(Polar(100, angle_helper::deg_to_rad(50)), Polar(100, angle_helper::deg_to_rad(310)), prop);
+	return 0;
+}
+
 int MooViEArgs_test(int argc, char const * argv[])
 {
 	try
@@ -186,7 +197,7 @@ int Scene_test(void)
 int main(int argc, char const * argv[])
 {
 #ifdef CAIRO_HAS_SVG_SURFACE
-	return Scene_test();
+	return Angle_test();
 #else
 	std::cout << "You must compile cairo with SVG support for this example to work." << std::endl;
 	return 1;
