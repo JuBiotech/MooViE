@@ -5,9 +5,9 @@
  *      Author: IBT\stratmann
  */
 
-#include "MooViEArgs.h"
+#include "Args.h"
 
-const std::string MooViEArgs::HELP_STRING =
+const std::string Args::HELP_STRING =
 		"MooViE is a tool to display multi-dimensional data (R^n -> R^m) in a "
 		"clear circular chart.\n"
 		"usage: moovie [OPTION] [OPTION <PARAMETER>] DATAFILE\n"
@@ -18,18 +18,18 @@ const std::string MooViEArgs::HELP_STRING =
 		"-f, --file-type <FTYPE>\t\tReads data from a file of the given format.\n"
 		"--help\t\t\t\tPrints help string.";
 
-const std::string MooViEArgs::SOPT_WIDTH = "-w";
-const std::string MooViEArgs::LOPT_WIDTH = "--width";
-const std::string MooViEArgs::SOPT_HEIGHT = "-h";
-const std::string MooViEArgs::LOPT_HEIGHT = "--height";
-const std::string MooViEArgs::SOPT_OUTPUT = "-o";
-const std::string MooViEArgs::LOPT_OUTPUT = "--output";
-const std::string MooViEArgs::SOPT_FILE_T = "-f";
-const std::string MooViEArgs::LOPT_FILE_T = "--file-type";
-const std::string MooViEArgs::LOPT_HELP = "--help";
-const std::regex MooViEArgs::OPT_REGEX("-[-]?\\S+");
+const std::string Args::SOPT_WIDTH = "-w";
+const std::string Args::LOPT_WIDTH = "--width";
+const std::string Args::SOPT_HEIGHT = "-h";
+const std::string Args::LOPT_HEIGHT = "--height";
+const std::string Args::SOPT_OUTPUT = "-o";
+const std::string Args::LOPT_OUTPUT = "--output";
+const std::string Args::SOPT_FILE_T = "-f";
+const std::string Args::LOPT_FILE_T = "--file-type";
+const std::string Args::LOPT_HELP = "--help";
+const std::regex Args::OPT_REGEX("-[-]?\\S+");
 
-MooViEArgs MooViEArgs::parse_from_commandline(int argc, char const * argv[])
+Args Args::parse_from_commandline(int argc, char const * argv[])
 {
 	int width, height;
 	std::string output_file, input_file;
@@ -95,7 +95,7 @@ MooViEArgs MooViEArgs::parse_from_commandline(int argc, char const * argv[])
 			} else {
 				size_t pos = ++i;
 				if (argv[pos] == std::string("csv")) {
-					file_type = MooViEArgs::File_t::CSV;
+					file_type = Args::File_t::CSV;
 				} else {
 					throw ParseException("Given file type is not supported.");
 				}
@@ -122,6 +122,6 @@ MooViEArgs MooViEArgs::parse_from_commandline(int argc, char const * argv[])
 		}
 	}
 
-	return MooViEArgs(width, height, output_file, input_file, file_type, help);
+	return Args(width, height, output_file, input_file, file_type, help);
 }
 

@@ -5,8 +5,8 @@
  *      Author: IBT\stratmann
  */
 
-#ifndef MOOVIEARGS_H_
-#define MOOVIEARGS_H_
+#ifndef ARGS_H_
+#define ARGS_H_
 
 #include <string>
 #include <cstring>
@@ -16,7 +16,7 @@
 /** Argument storage for MooViE.
  *
  */
-class MooViEArgs {
+class Args {
 public:
 	static const std::string HELP_STRING;
 private:
@@ -45,7 +45,7 @@ public:
 	};
 
 public:
-	static MooViEArgs parse_from_commandline(int argc, char const * argv[]);
+	static Args parse_from_commandline(int argc, char const * argv[]);
 	inline int width() const { return _width; }
 	inline int height() const { return _height; }
 	inline const std::string & output_file() const { return _output_file; }
@@ -54,7 +54,7 @@ public:
 	inline bool help() const { return _help; }
 
 private:
-	MooViEArgs(int width, int height, const std::string & output_file,
+	Args(int width, int height, const std::string & output_file,
 			const std::string & input_file, File_t file_type, bool help)
 	: _width(width), _height(height), _output_file(output_file),
 	  _input_file(input_file), _file_type(file_type), _help(help)
@@ -65,4 +65,4 @@ private:
 	bool				_help;
 };
 
-#endif /* MOOVIEARGS_H_ */
+#endif /* ARGS_H_ */

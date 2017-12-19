@@ -1,3 +1,4 @@
+
 /* M_PI is defined in math.h in the case of Microsoft Visual C++, Solaris,
  * et. al.
  */
@@ -22,7 +23,7 @@
 #include "Drawer.h"
 #include "DrawerProperties.h"
 #include "Config.h"
-#include "MooViEArgs.h"
+#include "Args.h"
 #include "Utils.h"
 
 int Drawer_test(void)
@@ -136,22 +137,22 @@ int Angle_test()
 	return 0;
 }
 
-int MooViEArgs_test(int argc, char const * argv[])
+int Args_test(int argc, char const * argv[])
 {
 	try
 	{
-		const MooViEArgs & args =
-				MooViEArgs::parse_from_commandline(argc, argv);
+		const Args & args =
+				Args::parse_from_commandline(argc, argv);
 
 		if (args.help())
-			std::cout << MooViEArgs::HELP_STRING << std::endl;
+			std::cout << Args::HELP_STRING << std::endl;
 		else
 			std::cout << "Given MooViE arguments:" << std::endl <<
 			"Width: " << args.width() << ", Height: " << args.height() << std::endl <<
 			"Output file: " << args.output_file() << ", input file: " << args.input_file() << std::endl <<
 			"Input file format: " << args.file_type() << std::endl;
 		return 0;
-	} catch (MooViEArgs::ParseException & e)
+	} catch (Args::ParseException & e)
 	{
 		std::cout << e.what() << std::endl;
 		return 1;

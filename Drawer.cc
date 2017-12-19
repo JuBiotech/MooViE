@@ -52,8 +52,6 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 	drawWegdeSegment(axis.radius, axis.height, axis.start, axis.end, axis.prop, Direction::INCREASING);
 
 	Angle span = axis.end - axis.start;
-	std::cout << "Begin: " << axis.start << " End: " << axis.end << " Span: " << span
-			<< std::endl;
 
 	double start_radius = axis.radius + axis.height;
 	double end_radius_major = start_radius + 0.25 * axis.height;
@@ -423,7 +421,8 @@ void Drawer::drawConnector(const Polar& from, const Polar& to,
 
 	//TODO: nicer bezier solution!
 	double r_diff = radial_dist * p3;
-	double phi_diff = (to.phi() - from.phi()).get();
+	double d0 = angle_helper::rad_dist(from.phi().get(), to.phi().get()), d1 = angle_helper::rad_dist(to.phi().get(), from.phi().get());
+	double phi_diff = d0 <= d1 ? d0 : -d1;
 	size_t steps = 10;
 
 	for (size_t i = 0; i < steps - 1; ++i)

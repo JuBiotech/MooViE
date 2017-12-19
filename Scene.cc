@@ -46,7 +46,7 @@ Scene::Scene(Drawer & drawer,
 		{
 			in.push_back(_axis[k].get_coord(row[k].value)); // TODO: Throw null value exception
 		}
-		Polar connector(_grid.get_coord(row[_axis.size()].value, 0));
+		Polar connector(config::INPUT_INNER_RADIUS, _grid.get_coord(row[_axis.size()].value, 0).phi());
 		for (std::size_t k = 0; k < _grid.outputs; ++k)
 		{
 			out.push_back(_grid.get_coord(row[_axis.size() + k].value, k)); // TODO: Throw null value exception
@@ -68,8 +68,6 @@ void Scene::draw_scene(void) const
 
 	for (VarAxis axis: _axis)
 		_drawer.draw_var_axis(axis); // TODO: Replace properties with configuration properties
-
-	//_drawer.draw_data_link(_links[1]);
 
 	for (DataLink link: _links)
 		_drawer.draw_data_link(link); // TODO:: Replace properties with configuration properties

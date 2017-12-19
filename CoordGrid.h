@@ -14,6 +14,7 @@
 #include "PolarCartesian.h"
 #include "DataSet.h"
 #include "Ticks.h"
+#include "Config.h"
 
 /** A enum for drawer direction */
 enum Direction
