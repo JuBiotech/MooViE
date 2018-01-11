@@ -29,12 +29,12 @@ public:
      * @param inputs the input variables
      * @param outputs the output variables
      */
-    Scene(Drawer & drawer, const DefDataSet & set);
+    Scene(const std::string & fname, size_t width, size_t height, const DefDataSet & set);
 
     /** Draws the Scene with CoordGrid, VarAxis' and DataLinks.
      * @brief draw_scene
      */
-    void draw_scene(void) const;
+    void draw_scene(void);
 
     virtual ~Scene() {}
 private:
@@ -49,7 +49,7 @@ private:
     const DefDataSet & _set;
 
     /** Draws data to file */
-	Drawer& _drawer;
+	Drawer _drawer;
 	/** Drawer properties for link drawing */
 	DrawerProperties<> _prop;
 	/** Drawer properties for SplitAxis drawing */

@@ -189,8 +189,7 @@ int Scene_test(void)
 
 	const DefDataSet & set = DefDataSet::parse_from_csv(Util::read_file("/home/stratmann/MooViE/testfiles/input.csv"), 3);
 
-	Drawer drawer("/home/stratmann/MooViE/image.svg", 800, 800);
-	Scene mainScene(drawer, set);
+	Scene mainScene("/home/stratmann/MooViE/image.svg", 800, 800, set);
 
 	return 0;
 }
@@ -202,11 +201,7 @@ int main(int argc, char const * argv[])
 #else
 	std::cout << "You must compile cairo with SVG support for this example to work." << std::endl;
 	return 1;
-
 #endif
 }
-
-//const TextProperties config::TICK_LABEL = TextProperties("Liberation Serif", 8);
-//const TextProperties config::VAR_LABEL = TextProperties("Liberation Serif", 20);
 
 

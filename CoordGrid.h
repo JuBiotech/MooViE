@@ -56,6 +56,8 @@ public:
 
 	Polar get_coord(double val, std::size_t num_output) const;
 
+	Color get_color(double val) const;
+
 public:
     /** The number of outputs. */
     std::size_t outputs;

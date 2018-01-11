@@ -56,6 +56,9 @@ public:
     		const Polar & target1, const Polar & target2,
     		const DrawerProperties<>& prop);
 
+    void draw_connector(const Polar& from, const Polar& to,
+    		const DrawerProperties<>& prop);
+
     /** Draws a given link on the surface.
      * @brief drawLink
      * @param link the link to draw

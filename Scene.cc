@@ -9,11 +9,10 @@
 #include "Config.h"
 #include <iostream>
 
-Scene::Scene(Drawer & drawer,
-		const DefDataSet & set)
+Scene::Scene(const std::string & fname, size_t width, size_t height, const DefDataSet & set)
 : _grid(10, 10, angle_helper::deg_to_rad(310), angle_helper::deg_to_rad(50), config::OUTPUT_INNER_RADIUS, config::GRID_SIZE, Direction::INCREASING, set.output_variables()),  // TODO: replace with configuration values
   _set(set),
-  _drawer(drawer), _prop(config::THIN_STROKE_WIDTH, Color::BLACK, Color::BLACK),
+  _drawer(fname, width, height), _prop(config::THIN_STROKE_WIDTH, Color::BLACK, Color::BLACK),
   _split_prop(1, Color::BLACK, Color::GLOW_10)
 {
 	double angle = 180 / set.input_variables().size() - config::INPUT_SEPERATION_ANGLE;
@@ -46,12 +45,13 @@ Scene::Scene(Drawer & drawer,
 		{
 			in.push_back(_axis[k].get_coord(row[k].value)); // TODO: Throw null value exception
 		}
-		Polar connector(config::INPUT_INNER_RADIUS, _grid.get_coord(row[_axis.size()].value, 0).phi());
+		Polar connector(config::OUTPUT_INNER_RADIUS + config::INPUT_THICKNESS, _grid.get_coord(row[_axis.size()].value, 0).phi());
 		for (std::size_t k = 0; k < _grid.outputs; ++k)
 		{
 			out.push_back(_grid.get_coord(row[_axis.size() + k].value, k)); // TODO: Throw null value exception
 		}
-		DataLink link(in, connector, out, DrawerProperties<>(2, Color(100, 100, 100), Color(100, 100, 100)));
+		const Color & c = _grid.get_color(row[set.input_variables().size()].value);
+		DataLink link(in, connector, out, DrawerProperties<>(0.4, c, Color(c.r(), c.g(), c.b(), 0.5)));
 		for(const VarAxis & va: _axis)
 		{
 			link.add_link_prop(va.prop);
@@ -62,7 +62,7 @@ Scene::Scene(Drawer & drawer,
 	draw_scene();
 }
 
-void Scene::draw_scene(void) const
+void Scene::draw_scene(void)
 {
 	_drawer.draw_coord_grid(_grid, _prop, _prop); // TODO: Replace properties with configuration properties
 

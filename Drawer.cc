@@ -16,7 +16,7 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 			Color::GLOW_10), grid.dir);
 	_cr->set_identity_matrix();
 	double min_radius = grid.radius + config::INPUT_THICKNESS;
-	double max_radius = grid.radius + +config::INPUT_THICKNESS + grid.height;
+	double max_radius = grid.radius + config::INPUT_THICKNESS + grid.height;
 
 	double span = angle_helper::rad_dist(grid.start.get(), grid.end.get());
 
@@ -32,7 +32,7 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 			drawLine(Polar(min_radius, a), Polar(max_radius, a), prop_thick);
 	}
 
-	double y_dist = (max_radius - min_radius) / (grid.outputs + 0.5);
+	double y_dist = grid.height / (grid.outputs + 0.5);
 
 	for (size_t i = 1; i <= grid.outputs; ++i)
 	{
@@ -106,6 +106,7 @@ void Drawer::draw_data_link(const DataLink & link)
 	{
 		drawConnector(from, out, link.connector_prop());
 		from = out;
+		drawCoordPoint(from, 0.01, 10, link.connector_prop());
 	}
 }
 
@@ -143,6 +144,64 @@ void Drawer::draw_link(const Polar & origin1, const Polar & origin2,
 			prop.fillColor().b(), prop.fillColor().a());
 	_cr->set_line_width(prop.lineWidth());
 	_cr->stroke(); //draw outline, but preserve path
+}
+
+void Drawer::draw_connector(const Polar& from, const Polar& to,
+		const DrawerProperties<>& prop)
+{
+	const double p1 = 0.1;
+	const double p2 = 0.1;
+	const double p3 = 0.6;
+	const double p4 = 0.1;
+	const double p5 = 0.1;
+
+	double radial_dist = to.r() - from.r();
+	Polar real_from {from.r() + p1 * radial_dist, from.phi()};
+	Polar real_to {to.r() - p5 * radial_dist, to.phi()};
+	Polar intermediate1 {real_from.r() + p2 * radial_dist, real_from.phi() };
+	Polar intermediate2 {real_to.r() - p4 * radial_dist, real_to.phi() };
+
+
+	Cartesian real_from_c;
+	Cartesian real_to_c;
+	Cartesian intermediate1_c;
+	Cartesian intermediate2_c;
+
+	_pc.convert(real_from, real_from_c);
+	_pc.convert(real_to, real_to_c);
+	_pc.convert(intermediate1, intermediate1_c);
+	_pc.convert(intermediate2, intermediate2_c);
+
+	_cr->set_identity_matrix();
+	_cr->begin_new_path();
+	_cr->move_to(real_from_c.x(), real_from_c.y());
+	_cr->line_to(intermediate1_c.x(), intermediate1_c.y());
+
+	//TODO: nicer bezier solution!
+	double r_diff = radial_dist * p3;
+	double d0 = angle_helper::rad_dist(from.phi().get(), to.phi().get()), d1 = angle_helper::rad_dist(to.phi().get(), from.phi().get());
+	double phi_diff = d0 <= d1 ? d0 : -d1;
+	size_t steps = 10;
+
+	for (size_t i = 0; i < steps - 1; ++i)
+	{
+		double r = intermediate1.r() + i * r_diff / steps;
+		double phi = intermediate1.phi().get() + i * phi_diff / steps;
+		Polar next(r,phi);
+		Cartesian next_c;
+		_pc.convert(next,next_c);
+		_cr->line_to(next_c.x(), next_c.y());
+	}
+
+
+	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
+	_cr->line_to(real_to_c.x(), real_to_c.y());
+
+	_cr->set_source_rgba(prop.lineColor().r(), prop.lineColor().g(), prop.lineColor().b(),
+			prop.lineColor().a());
+	_cr->set_line_width(prop.lineWidth());
+
+	_cr->stroke();
 }
 
 void Drawer::drawLink(const Link& link, const DrawerProperties<>& prop)
