@@ -10,7 +10,7 @@
 const std::string Args::HELP_STRING =
 		"MooViE is a tool to display multi-dimensional data (R^n -> R^m) in a "
 		"clear circular chart.\n"
-		"usage: moovie [OPTION] [OPTION <PARAMETER>] DATAFILE\n"
+		"usage: moovie [OPTION] [OPTION <PARAMETER>] DATAFILE INPUT_NUMBER\n"
 		"List of MooViE options:\n"
 		"-w, --width <WIDTH>\t\tSet width for output image.\n"
 		"-h, --height <HEIGHT>\t\tSet height for output image.\n"
@@ -34,16 +34,17 @@ const std::regex Args::OPT_REGEX("-[-]?\\S+");
 Args Args::parse_from_commandline(int argc, char const * argv[])
 {
 	int width, height;
+	std::size_t inputs;
 	std::string output_file, input_file, config_file;
 	File_t file_type;
 	bool help = false;
 
-	bool widthSet = false, heightSet = false, outputFSet = false,
-			inputFSet = false, configFSet = false, ftypeSet = false, helpSet = false;
+	bool width_set = false, height_set = false, inputs_set = false, outputf_set = false,
+			inputf_set = false, configf_set = false, ftype_set = false, help_set = false;
 
 	for (int i = 1; i < argc; ++i) {
 		if (argv[i] == SOPT_WIDTH or argv[i] == LOPT_WIDTH) {
-			if (widthSet) {
+			if (width_set) {
 				throw ParseException(
 						"width parameter was tried to set multiple times.");
 			} else if (i + 1 >= argc) {
@@ -53,11 +54,11 @@ Args Args::parse_from_commandline(int argc, char const * argv[])
 				throw ParseException(
 						"width option expected an positional parameter, but found option.");
 			} else {
-				width = std::stoi(argv[++i]);
-				widthSet = true;
+				width = Util::string_to_int(argv[++i]);
+				width_set = true;
 			}
 		} else if (argv[i] == SOPT_HEIGHT or argv[i] == LOPT_HEIGHT) {
-			if (heightSet) {
+			if (height_set) {
 				throw ParseException(
 						"height parameter was tried to set multiple times.");
 			} else if (i + 1 >= argc) {
@@ -67,11 +68,11 @@ Args Args::parse_from_commandline(int argc, char const * argv[])
 				throw ParseException(
 						"height option expected an positional parameter, but found option.");
 			} else {
-				height = std::stoi(argv[++i]);
-				heightSet = true;
+				height = Util::string_to_int(argv[++i]);
+				height_set = true;
 			}
 		} else if (argv[i] == SOPT_OUTPUT or argv[i] == LOPT_OUTPUT) {
-			if (outputFSet) {
+			if (outputf_set) {
 				throw ParseException(
 						"output file parameter was tried to set multiple times.");
 			} else if (i + 1 >= argc) {
@@ -82,10 +83,10 @@ Args Args::parse_from_commandline(int argc, char const * argv[])
 						"output file option expected an positional parameter, but found option.");
 			} else {
 				output_file = argv[++i];
-				outputFSet = true;
+				outputf_set = true;
 			}
 		} else if (argv[i] == SOPT_CONFIG or argv[i] == LOPT_CONFIG) {
-			if (configFSet) {
+			if (configf_set) {
 				throw ParseException(
 						"configuration file parameter was tried to set multiple times.");
 			} else if (i + 1 >= argc) {
@@ -96,10 +97,10 @@ Args Args::parse_from_commandline(int argc, char const * argv[])
 						"configuration file option expected an positional parameter, but found option.");
 			} else {
 				config_file = argv[++i];
-				configFSet = true;
+				configf_set = true;
 			}
 		} else if (argv[i] == SOPT_FILE_T or argv[i] == LOPT_FILE_T) {
-			if (ftypeSet) {
+			if (ftype_set) {
 				throw ParseException(
 						"file type parameter was tried to set multiple times.");
 			} else if (i + 1 >= argc) {
@@ -115,11 +116,11 @@ Args Args::parse_from_commandline(int argc, char const * argv[])
 				} else {
 					throw ParseException("Given file type is not supported.");
 				}
-				ftypeSet = true;
+				ftype_set = true;
 			}
 		} else if (argv[i] == LOPT_HELP)
 		{
-			if (helpSet)
+			if (help_set)
 			{
 				throw ParseException("help option was tried to set multiple times.");
 			} else {
@@ -128,19 +129,22 @@ Args Args::parse_from_commandline(int argc, char const * argv[])
 		} else if (std::regex_match(argv[i], OPT_REGEX)) {
 			throw ParseException("Unknown option");
 		} else {
-			if (inputFSet) {
-				throw ParseException(
-						"Expected only one non-positional parameter.");
-			} else {
+			if (!inputf_set) {
 				input_file = argv[i];
-				inputFSet = true;
+				inputf_set = true;
+			}
+			else if (!inputs_set) {
+				inputs = Util::string_to_int(argv[i]);
+				inputs_set = true;
+			} else {
+				throw ParseException("Expected only two non-positional parameter.");
 			}
 		}
 	}
 
-	if (!inputFSet) throw ParseException("Expected one non-positional parameter.");
+	if (!inputf_set || !inputs_set) throw ParseException("Expected two non-positional parameters.");
 
-	return Args(width, height, output_file, input_file, config_file, file_type, help,
-			widthSet, heightSet, outputFSet, configFSet, ftypeSet);
+	return Args(width, height, inputs, output_file, input_file, config_file, file_type, help,
+			width_set, height_set, outputf_set, configf_set, ftype_set);
 }
 

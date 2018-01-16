@@ -12,6 +12,7 @@
 #include <cstring>
 #include <exception>
 #include <regex>
+#include "Utils.h"
 
 /** Argument storage for MooViE.
  *
@@ -37,22 +38,16 @@ public:
 	enum File_t {
 		CSV, NOT_SUPPORTED
 	};
-	class ParseException : public std::exception
-	{
-	public:
-		ParseException(const std::string & msg) : _msg(msg) {}
-		virtual char const * what() { return _msg.c_str(); }
-	private:
-		const std::string _msg;
-	};
 
 public:
 	static Args parse_from_commandline(int argc, char const * argv[]);
 
 	inline int width() const { return _width; }
 	inline int height() const { return _height; }
+	inline std::size_t inputs() const { return _inputs; };
 	inline const std::string & output_file() const { return _output_file; }
 	inline const std::string & input_file() const { return _input_file; }
+	inline const std::string & config_file() const { return _config_file; };
 	inline File_t file_type() const { return _file_type; }
 	inline bool help() const { return _help; }
 
@@ -63,20 +58,20 @@ public:
 	inline bool has_file_type() const { return _has_file_type; };
 
 private:
-	Args(int width, int height, const std::string & output_file,
-			const std::string & input_file, const std::string & config_file,
-			File_t file_type, bool help,
+	Args(int width, int height, std::size_t inputs,
+			const std::string & output_file, const std::string & input_file,
+			const std::string & config_file, File_t file_type, bool help,
 			bool has_width, bool has_height, bool has_output_file,
 			bool has_config_file, bool has_file_type)
-	: _width(width), _height(height), _output_file(output_file),
-	  _input_file(input_file), _config_file(config_file),
-	  _file_type(file_type), _help(help),
-	  _has_width(has_width), _has_height(has_height),
-	  _has_output_file(has_output_file), _has_config_file(has_config_file),
-	  _has_file_type(has_file_type)
+	: _width(width), _height(height), _inputs(inputs),
+	  _output_file(output_file), _input_file(input_file),
+	  _config_file(config_file), _file_type(file_type), _help(help),
+	  _has_width(has_width), _has_height(has_height), _has_output_file(has_output_file),
+	  _has_config_file(has_config_file), _has_file_type(has_file_type)
 	{}
 
 	const int 			_width, _height;
+	std::size_t			_inputs;
 	const std::string 	_output_file, _input_file, _config_file;
 	const File_t		_file_type;
 	bool				_help;

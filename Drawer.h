@@ -9,6 +9,7 @@
 #include "VarAxis.h"
 #include "DataLink.h"
 #include "Config.h"
+#include "Configuration.h"
 #include <cairommconfig.h>
 #include <cairomm/context.h>
 #include <cairomm/surface.h>
@@ -33,72 +34,12 @@ public:
      * @param width the drawing surface width
      * @param height the drawing surface height
      */
-    Drawer(const std::string& filename, size_t width, size_t height)
-    : _pc {width, height}
-    {
-    	const Cairo::RefPtr<Cairo::Surface>& ptr = Cairo::SvgSurface::create(filename, width, height); // TODO: find error
-        _cr = Cairo::Context::create(ptr);
-    }
+    Drawer(const Configuration & config);
 
     /** Writes and closes file correctly on destruction of this Drawer.
      * @brief ~Drawer
      */
     ~Drawer() { this->finish(); }
-
-    void draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & prop_thick,
-    		const DrawerProperties<> & prop_thin);
-
-    void draw_var_axis(const VarAxis & axis);
-
-    void draw_data_link(const DataLink & link);
-
-    void draw_link(const Polar & origin1, const Polar & origin2,
-    		const Polar & target1, const Polar & target2,
-    		const DrawerProperties<>& prop);
-
-    /** Draws a connection between to given polar coordinates. The connection is a bezier curve
-     * which is controlled by automatically generated control points.
-     * @brief drawConnection
-     * @param from the start Polar
-     * @param to the end Polar
-     * @param prop the Drawer properties
-    */
-    void draw_connector(const Polar& from, const Polar& to,
-    		const DrawerProperties<>& prop);
-
-    /** Draws a given link on the surface.
-     * @brief drawLink
-     * @param link the link to draw
-     * @param prop the Drawer properties to use
-     */
-    void drawLink(const Link& link, const DrawerProperties<>& prop);
-
-    /** Draws a circle segment which is used to display input data.
-     * @param radius radius of the axis
-     * @param thinkness width of the split axis
-     * @param begin angle of the segments begin
-     * @param end angle of the segments end
-     * @param prop Drawer properties
-     * @param dir direction of the axis' values
-     * @param ticks intersections
-     * @param label name of the axis
-     */
-    void drawAxis(double radius, double thickness, const Angle& begin, 
-		  const Angle& end, const DrawerProperties<>& prop, 
-		  Direction dir, const Ticks& ticks, const Label& label);
-
-    /** Draws a circle segment which is itself divided in colored segments.
-     * @brief drawSplitAxis
-     * @param inner_radius inner radius of the split axis
-     * @param thickness width of the split axis
-     * @param begin angle of the segments begin
-     * @param end angle of the segments end
-     * @param prop color
-     * @param dir direction of the split axis' colors
-     */
-    void drawSplitAxis(double inner_radius, double thickness,
-			const Angle& begin, const Angle& end,
-			const DrawerProperties<std::array<Color, 10>>& prop, Direction dir);
 
     /** Draws a coordinate grid from two given coordinates. Direction of the values, number of
      * segments and thin/thick line style are specifiable.
@@ -109,41 +50,13 @@ public:
      * @param ys segments of the grid
      * @param prop_thin thin line properties
      * @param prop_thick thick line properties
-     */
-    void drawCoordGrid(const Polar& lower_left, const Polar& upper_right, Direction dir, size_t ys,
-			const DrawerProperties<>& prop_thin, const DrawerProperties<>& prop_thick);
+    */
+    void draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & prop_thick,
+    		const DrawerProperties<> & prop_thin);
 
-    /** Draws the given label orthogonal to the angle of the given
-     * coordinate's angle.
-     * @brief drawTextOrthogonal
-     * @param label the label to draw
-     * @param start the coordinate to adjust to
-     */
-    void drawTextOrthogonal(const Label& label, const Polar& start);
+    void draw_var_axis(const VarAxis & axis);
 
-    /** Draws the given label with the same angle like the given coordinate.
-     * @brief drawTextOrthogonal
-     * @param label the label to draw
-     * @param start the coordinate to adjust to
-     */
-    void drawTextParallel(const Label& label, const Polar& start);
-
-    /** Draws a line from a given starting vertice to a given end vertice.
-     * @brief drawLine
-     * @param from the starting coordinates
-     * @param to the end coordinates
-     * @param prop the Drawer properties to use
-     */
-    void drawLine(const Polar& from, const Polar& to, const DrawerProperties<>& prop);
-
-    /** Draws a coordinate point with given height and with.
-     * @brief drawCoordPoint
-     * @param coord the polar coordinate to draw
-     * @param width the width
-     * @param height the height
-     * @param prop the drawer properties
-     */
-    void drawCoordPoint(const Polar& coord, const Angle& width, double height, const DrawerProperties<>& prop);
+    void draw_data_link(const DataLink & link);
 
     /** Save and show the Drawer's result.
      * @brief finish
@@ -151,6 +64,67 @@ public:
     void finish();
 
 private:
+	void draw_link(const Polar & origin1, const Polar & origin2,
+			const Polar & target1, const Polar & target2,
+			const DrawerProperties<>& prop);
+
+	/** Draws a connection between to given polar coordinates. The connection is a bezier curve
+	 * which is controlled by automatically generated control points.
+	 * @brief drawConnection
+	 * @param from the start Polar
+	 * @param to the end Polar
+	 * @param prop the Drawer properties
+	 */
+	void draw_connector(const Polar& from, const Polar& to,
+			const DrawerProperties<>& prop);
+
+	/** Draws a circle segment which is itself divided in colored segments.
+	 * @brief drawSplitAxis
+	 * @param inner_radius inner radius of the split axis
+	 * @param thickness width of the split axis
+	 * @param begin angle of the segments begin
+	 * @param end angle of the segments end
+	 * @param prop color
+	 * @param dir direction of the split axis' colors
+	 */
+	void draw_split_axis(double inner_radius, double thickness,
+			const Angle& begin, const Angle& end,
+			const DrawerProperties<std::array<Color, 10>>& prop, Direction dir);
+
+	/** Draws the given label orthogonal to the angle of the given
+	 * coordinate's angle.
+	 * @brief drawTextOrthogonal
+	 * @param label the label to draw
+	 * @param start the coordinate to adjust to
+	 */
+	void draw_text_orthogonal(const Label& label, const Polar& start);
+
+	/** Draws the given label with the same angle like the given coordinate.
+	 * @brief drawTextOrthogonal
+	 * @param label the label to draw
+	 * @param start the coordinate to adjust to
+	 */
+	void draw_text_parallel(const Label& label, const Polar& start);
+
+	/** Draws a line from a given starting vertice to a given end vertice.
+	 * @brief drawLine
+	 * @param from the starting coordinates
+	 * @param to the end coordinates
+	 * @param prop the Drawer properties to use
+	 */
+	void draw_line(const Polar& from, const Polar& to,
+			const DrawerProperties<>& prop);
+
+	/** Draws a coordinate point with given height and with.
+	 * @brief drawCoordPoint
+	 * @param coord the polar coordinate to draw
+	 * @param width the width
+	 * @param height the height
+	 * @param prop the drawer properties
+	 */
+	void draw_coord_point(const Polar& coord, const Angle& width, double height,
+			const DrawerProperties<>& prop);
+
 	/** Draws a simple edge segment around the center of its coordinate system between
 	 * the two given Angles and with the given radius.
 	 * @brief drawArc
@@ -159,7 +133,7 @@ private:
 	 * @param end the end Angle
 	 * @param dir the direction
 	 */
-	void drawArc(double inner_radius, const Angle& start, const Angle& end,
+	void draw_arc(double inner_radius, const Angle& start, const Angle& end,
 			Direction dir);
 
 	/** Draws a filled edge segment around the center of its coordinate system between
@@ -172,20 +146,25 @@ private:
 	 * @param prop the Drawer properties
 	 * @param dir the direction
 	 */
-	void drawWegdeSegment(double radius, double thickness, const Angle& begin,
+	void draw_torus_segment(double radius, double thickness, const Angle& begin,
 			const Angle& end, const DrawerProperties<>& prop, Direction dir);
 
-    /** ???
-     * @brief createLinkControlPoint
-     * @param point
-     * @return
-     */
-    Cartesian createLinkControlPoint(const Polar& point);
+	/** ???
+	 * @brief createLinkControlPoint
+	 * @param point
+	 * @return
+	 */
+	Cartesian createLinkControlPoint(const Polar& point);
+
+private:
+    /** MooViE configuration */
+    const Configuration & _config;
 
     /** Polar-Cartesian converting */
     const PolarCartesian _pc;
     /** Cairo reference pointer, the interface for calling Cairo functions. */
     Cairo::RefPtr<Cairo::Context> _cr;
+
     /** ??? */
     double _linkControlStrength = 100.0;
 

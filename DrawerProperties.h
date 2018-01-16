@@ -24,9 +24,9 @@ public:
     /** Creates a DrawerProperties instance storing the given line thinkness,
      * stroke and fill color of a Drawer.
      * @brief DrawerProperties
-     * @param lineWidth the line width
-     * @param lineColor the line color
-     * @param fillColor the fill color
+     * @param _line_width the line width
+     * @param _line_color the line color
+     * @param _fill_color the fill color
      */
     DrawerProperties(double _line_width, const Color & _line_color, const FILL& _fill_color)
     : line_width(_line_width), line_color(_line_color), fill_color(_fill_color)
@@ -80,7 +80,7 @@ public:
      * @brief fontname
      * @return a constant reference to the font name
      */
-    const std::string& fontname() const
+    const std::string & fontname() const
     {
         return _font_name;
     }
@@ -98,7 +98,7 @@ public:
      * @brief color
      * @return a constant reference to the text color
      */
-    const Color& color() const
+    const Color & color() const
     {
         return _color;
     }

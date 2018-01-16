@@ -12,7 +12,20 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <iostream>
+#include <stdexcept>
+#include <climits>
+#include <cstdlib>
 #include "PolarCartesian.h"
+
+class ParseException : public std::exception
+{
+public:
+	ParseException(const std::string & msg) : _msg(msg) {}
+	virtual char const * what() { return _msg.c_str(); }
+private:
+	const std::string _msg;
+};
 
 namespace Util {
 
@@ -34,6 +47,34 @@ std::vector<std::string> split(const std::string & str,
  * @param str the string to strip
  */
 std::string strip(const std::string & str);
+
+/** Tries to parse an integer from the given string.
+ * @param str the string to convert
+ */
+inline int string_to_int(const std::string & str) throw(ParseException)
+{
+	try
+	{
+		return std::stoi(str);
+	} catch (std::invalid_argument & ia)
+	{
+		throw ParseException("Invalid integer value.");
+	}
+}
+
+/** Tries to parse an double from the given string.
+ * @param str the string to convert
+ */
+inline int string_to_double(const std::string & str) throw(ParseException)
+{
+	try
+	{
+		return std::stod(str);
+	} catch (std::invalid_argument & ia)
+	{
+		throw ParseException("Invalid integer value.");
+	}
+}
 
 /** Calculates a Polar coordinate for the beginning of a connector
  * between 'from' and 'to'. If the resulting coordinate is passed to

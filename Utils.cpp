@@ -8,10 +8,10 @@
 #include "Utils.h"
 
 namespace Util {
+
 std::string read_file(const std::string & fpath)
 {
 	std::ifstream in(fpath);
-
 	if (in)
 	{
 		std::ostringstream content;

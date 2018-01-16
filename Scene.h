@@ -24,22 +24,25 @@
 class Scene
 {
 public:
-    /** Creates a new Scene from a given Configuration and DataSet.
+    /** Creates a new Scene from a given Configuration.
      * @brief Scene
      * @param config the MooViE configuration
-     * @param set the set of data to display
      */
-    Scene(const Configuration & config, const DefDataSet & set);
+    Scene(const Configuration & config);
 
     /** Draws the Scene with CoordGrid, VarAxis' and DataLinks.
      * @brief draw_scene
      */
     void draw_scene(void);
-
-    virtual ~Scene() {}
 private:
     /** MooViE configuration */
     const Configuration & _config;
+
+    /** Data set */
+    DefDataSet _set;
+
+    /** Draws data to file */
+	Drawer _drawer;
 
     /** Output data section of the diagram */
     CoordGrid _grid;
@@ -48,11 +51,6 @@ private:
     /** Data links */
     std::vector<DataLink> _links;
 
-    /** Data set */
-    const DefDataSet & _set;
-
-    /** Draws data to file */
-	Drawer _drawer;
 	/** Drawer properties for SplitAxis drawing */
 	DrawerProperties<std::array<Color, 10>> _split_prop;
 };
