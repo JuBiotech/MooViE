@@ -61,5 +61,5 @@ std::string strip(const std::string & str)
 			trailing = str.find_last_not_of(' ');
 	return str.substr(leading, trailing - leading + 1);
 }
-}
 
+}

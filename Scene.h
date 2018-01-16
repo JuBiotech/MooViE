@@ -14,6 +14,7 @@
 #include "DataLink.h"
 #include "Mapper.h"
 #include "DataSet.h"
+#include "Configuration.h"
 
 /** Scene constructs a diagram that displays data vectors
  * @brief The Scene class
@@ -23,13 +24,12 @@
 class Scene
 {
 public:
-    /** Creates a new Scene from a given drawer, input and output variable.
+    /** Creates a new Scene from a given Configuration and DataSet.
      * @brief Scene
-     * @param drawer the drawer
-     * @param inputs the input variables
-     * @param outputs the output variables
+     * @param config the MooViE configuration
+     * @param set the set of data to display
      */
-    Scene(const std::string & fname, size_t width, size_t height, const DefDataSet & set);
+    Scene(const Configuration & config, const DefDataSet & set);
 
     /** Draws the Scene with CoordGrid, VarAxis' and DataLinks.
      * @brief draw_scene
@@ -38,6 +38,9 @@ public:
 
     virtual ~Scene() {}
 private:
+    /** MooViE configuration */
+    const Configuration & _config;
+
     /** Output data section of the diagram */
     CoordGrid _grid;
     /** Variable axis */
@@ -50,8 +53,6 @@ private:
 
     /** Draws data to file */
 	Drawer _drawer;
-	/** Drawer properties for link drawing */
-	DrawerProperties<> _prop;
 	/** Drawer properties for SplitAxis drawing */
 	DrawerProperties<std::array<Color, 10>> _split_prop;
 };

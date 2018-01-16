@@ -56,6 +56,13 @@ public:
     		const Polar & target1, const Polar & target2,
     		const DrawerProperties<>& prop);
 
+    /** Draws a connection between to given polar coordinates. The connection is a bezier curve
+     * which is controlled by automatically generated control points.
+     * @brief drawConnection
+     * @param from the start Polar
+     * @param to the end Polar
+     * @param prop the Drawer properties
+    */
     void draw_connector(const Polar& from, const Polar& to,
     		const DrawerProperties<>& prop);
 
@@ -137,15 +144,6 @@ public:
      * @param prop the drawer properties
      */
     void drawCoordPoint(const Polar& coord, const Angle& width, double height, const DrawerProperties<>& prop);
-
-    /** Draws a connection between to given polar coordinates. The connection is a bezier curve
-     * which is controlled by automatically generated control points.
-     * @brief drawConnection
-     * @param from the start Polar
-     * @param to the end Polar
-     * @param prop the Drawer properties
-     */
-    void drawConnector(const Polar& from, const Polar& to, const DrawerProperties<>& prop);
 
     /** Save and show the Drawer's result.
      * @brief finish

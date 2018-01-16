@@ -24,6 +24,8 @@ const std::string Args::SOPT_HEIGHT = "-h";
 const std::string Args::LOPT_HEIGHT = "--height";
 const std::string Args::SOPT_OUTPUT = "-o";
 const std::string Args::LOPT_OUTPUT = "--output-file";
+const std::string Args::SOPT_CONFIG = "-c";
+const std::string Args::LOPT_CONFIG = "--configuration-file";
 const std::string Args::SOPT_FILE_T = "-f";
 const std::string Args::LOPT_FILE_T = "--file-type";
 const std::string Args::LOPT_HELP = "--help";
@@ -32,12 +34,12 @@ const std::regex Args::OPT_REGEX("-[-]?\\S+");
 Args Args::parse_from_commandline(int argc, char const * argv[])
 {
 	int width, height;
-	std::string output_file, input_file;
+	std::string output_file, input_file, config_file;
 	File_t file_type;
 	bool help = false;
 
 	bool widthSet = false, heightSet = false, outputFSet = false,
-			inputFSet = false, ftypeSet = false, helpSet = false;
+			inputFSet = false, configFSet = false, ftypeSet = false, helpSet = false;
 
 	for (int i = 1; i < argc; ++i) {
 		if (argv[i] == SOPT_WIDTH or argv[i] == LOPT_WIDTH) {
@@ -74,13 +76,27 @@ Args Args::parse_from_commandline(int argc, char const * argv[])
 						"output file parameter was tried to set multiple times.");
 			} else if (i + 1 >= argc) {
 				throw ParseException(
-						"output option expected an positional parameter, but none was given.");
+						"output file option expected an positional parameter, but none was given.");
 			} else if (std::regex_match(argv[i + 1], OPT_REGEX)) {
 				throw ParseException(
-						"output option expected an positional parameter, but found option.");
+						"output file option expected an positional parameter, but found option.");
 			} else {
 				output_file = argv[++i];
 				outputFSet = true;
+			}
+		} else if (argv[i] == SOPT_CONFIG or argv[i] == LOPT_CONFIG) {
+			if (configFSet) {
+				throw ParseException(
+						"configuration file parameter was tried to set multiple times.");
+			} else if (i + 1 >= argc) {
+				throw ParseException(
+						"configuration file option expected an positional parameter, but none was given.");
+			} else if (std::regex_match(argv[i + 1], OPT_REGEX)) {
+				throw ParseException(
+						"configuration file option expected an positional parameter, but found option.");
+			} else {
+				config_file = argv[++i];
+				configFSet = true;
 			}
 		} else if (argv[i] == SOPT_FILE_T or argv[i] == LOPT_FILE_T) {
 			if (ftypeSet) {
@@ -122,6 +138,9 @@ Args Args::parse_from_commandline(int argc, char const * argv[])
 		}
 	}
 
-	return Args(width, height, output_file, input_file, file_type, help);
+	if (!inputFSet) throw ParseException("Expected one non-positional parameter.");
+
+	return Args(width, height, output_file, input_file, config_file, file_type, help,
+			widthSet, heightSet, outputFSet, configFSet, ftypeSet);
 }
 

@@ -25,6 +25,7 @@
 #include "Config.h"
 #include "Args.h"
 #include "Utils.h"
+#include "Configuration.h"
 
 int Drawer_test(void)
 {
@@ -107,7 +108,7 @@ int Drawer_test(void)
 
 	Polar start(282, angle_helper::deg_to_rad(-20));
 	Polar end(344, angle_helper::deg_to_rad(20));
-	drawer.drawConnector(start, end, prop4);
+	drawer.draw_connector(start, end, prop4);
 
 	srand(1000);
 	for (size_t i = 0; i < 100; ++i) {
@@ -116,7 +117,7 @@ int Drawer_test(void)
 		double angle1 = -80.0 + f1 * 160;
 		double angle2 = -80.0 + f2 * 160;
 
-		drawer.drawConnector(
+		drawer.draw_connector(
 				Polar(282, Angle(angle_helper::deg_to_rad(angle1))),
 				Polar(375, Angle(angle_helper::deg_to_rad(angle2))), prop4);
 
@@ -189,7 +190,25 @@ int Scene_test(void)
 
 	const DefDataSet & set = DefDataSet::parse_from_csv(Util::read_file("/home/stratmann/MooViE/testfiles/input.csv"), 3);
 
-	Scene mainScene("/home/stratmann/MooViE/image.svg", 800, 800, set);
+	Configuration config;
+	config.fname = "/home/stratmann/MooViE/image.svg";
+	Scene mainScene(config, set);
+
+	return 0;
+}
+
+int Configuration_test(void)
+{
+	Configuration conf("/home/stratmann/MooViE/testfiles/moovie.conf");
+
+	std::cout << "fname: " << conf.fname << std::endl
+			<< "width: " << conf.width << std::endl
+			<< "height: " << conf.height << std::endl
+			<< "input inner radius: " << conf.input_inner_radius << std::endl
+			<< "output thickness: " << conf.input_thickness << std::endl
+			<< "output inner radius: " << conf.output_inner_radius << std::endl
+			<< "output thickness: " << conf.output_thickness << std::endl
+			<< "grid size: " << conf.grid_size << std::endl;
 
 	return 0;
 }

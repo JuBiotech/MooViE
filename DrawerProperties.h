@@ -28,36 +28,9 @@ public:
      * @param lineColor the line color
      * @param fillColor the fill color
      */
-    DrawerProperties(const double& lineWidth, const Color& lineColor, const FILL& fillColor)
-    : _lineWidth { lineWidth }, _lineColor { lineColor }, _fillColor { fillColor }
+    DrawerProperties(double _line_width, const Color & _line_color, const FILL& _fill_color)
+    : line_width(_line_width), line_color(_line_color), fill_color(_fill_color)
     {
-    }
-
-    /** Getter function for the line width.
-     * @brief lineWidth
-     * @return the line width
-     */
-    double lineWidth() const
-    {
-            return _lineWidth;
-    }
-
-    /** Readonly access function for the line color.
-     * @brief lineColor
-     * @return a constant reference to the line color
-     */
-    const Color& lineColor() const
-    {
-        return _lineColor;
-    }
-
-    /** Readonly access function for the fill color.
-     * @brief fillColor
-     * @return a constant reference to the fill color
-     */
-    const FILL& fillColor() const
-    {
-        return _fillColor;
     }
 
     /** Creates a DrawerProperties instance with half the line width of this
@@ -65,18 +38,18 @@ public:
      * @brief halfLineWidth
      * @return the new DrawerProperties
      */
-    DrawerProperties halfLineWidth() const
+    DrawerProperties half_line_width() const
     {
-        return DrawerProperties(lineWidth() * 0.5, lineColor(), fillColor());
+        return DrawerProperties(line_width * 0.5, line_color, fill_color);
     }
 
-private:
+public:
     /** The line width */
-    const double _lineWidth;
+    double line_width;
     /** Line color */
-    const Color _lineColor;
+    Color line_color;
     /** Fill color(s) */
-    const FILL _fillColor;
+    FILL fill_color;
 };
 
 

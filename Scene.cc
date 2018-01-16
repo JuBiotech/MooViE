@@ -9,11 +9,12 @@
 #include "Config.h"
 #include <iostream>
 
-Scene::Scene(const std::string & fname, size_t width, size_t height, const DefDataSet & set)
-: _grid(10, 10, angle_helper::deg_to_rad(310), angle_helper::deg_to_rad(50), config::OUTPUT_INNER_RADIUS, config::GRID_SIZE, Direction::INCREASING, set.output_variables()),  // TODO: replace with configuration values
+Scene::Scene(const Configuration & config, const DefDataSet & set)
+: _config(config),
+  _grid(10, 10, angle_helper::deg_to_rad(310), angle_helper::deg_to_rad(50), config.output_inner_radius, config.grid_size, Direction::INCREASING, set.output_variables()),  // TODO: add output angle calculation
   _set(set),
-  _drawer(fname, width, height), _prop(config::THIN_STROKE_WIDTH, Color::BLACK, Color::BLACK),
-  _split_prop(1, Color::BLACK, Color::GLOW_10)
+  _drawer(config.fname, config.width, config.height),
+  _split_prop(config.prop_thick.line_width, Color::BLACK, Color::GLOW_10)
 {
 	double angle = 180 / set.input_variables().size() - config::INPUT_SEPERATION_ANGLE;
 	double start = 90, end = start+angle;
@@ -64,12 +65,12 @@ Scene::Scene(const std::string & fname, size_t width, size_t height, const DefDa
 
 void Scene::draw_scene(void)
 {
-	_drawer.draw_coord_grid(_grid, _prop, _prop); // TODO: Replace properties with configuration properties
+	_drawer.draw_coord_grid(_grid, _config.prop_thick, _config.prop_thin); // TODO: Replace properties with configuration properties
 
 	for (VarAxis axis: _axis)
-		_drawer.draw_var_axis(axis); // TODO: Replace properties with configuration properties
+		_drawer.draw_var_axis(axis);
 
 	for (DataLink link: _links)
-		_drawer.draw_data_link(link); // TODO:: Replace properties with configuration properties
+		_drawer.draw_data_link(link);
 
 }

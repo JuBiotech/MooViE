@@ -38,10 +38,10 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 	{
 		// Changed max_angle <-> min_angle. Whether fix or not depends on meaning of dir
 		drawArc(min_radius + i * y_dist, grid.start, grid.end, grid.dir);
-		_cr->set_source_rgba(prop_thin.lineColor().r(),
-				prop_thin.lineColor().g(), prop_thin.lineColor().b(),
-				prop_thin.lineColor().a());
-		_cr->set_line_width(prop_thin.lineWidth());
+		_cr->set_source_rgba(prop_thin.line_color.r(),
+				prop_thin.line_color.g(), prop_thin.line_color.b(),
+				prop_thin.line_color.a());
+		_cr->set_line_width(prop_thin.line_width);
 		_cr->stroke();
 	}
 }
@@ -71,7 +71,7 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 		Angle a((axis.start + span * (double(i) / double(num_segments))));
 		if (i % axis.ticks.ticksmajor())
 			drawLine(Polar(start_radius, a), Polar(end_radius_minor, a),
-					axis.prop.halfLineWidth());
+					axis.prop.half_line_width());
 		else
 		{
 			drawLine(Polar(start_radius, a), Polar(end_radius_major, a), axis.prop);
@@ -150,13 +150,13 @@ void Drawer::draw_link(const Polar & origin1, const Polar & origin2,
 	_cr->curve_to(target2_c.x(), target2_c.y(), origin2_c.x(), origin2_c.y(),
 			orig2.x(), orig2.y());
 
-	_cr->set_source_rgba(prop.fillColor().r(), prop.fillColor().g(),
-			prop.fillColor().b(), prop.fillColor().a());
+	_cr->set_source_rgba(prop.fill_color.r(), prop.fill_color.g(),
+			prop.fill_color.b(), prop.fill_color.a());
 	_cr->fill_preserve();
 
-	_cr->set_source_rgba(prop.fillColor().r(), prop.fillColor().g(),
-			prop.fillColor().b(), prop.fillColor().a());
-	_cr->set_line_width(prop.lineWidth());
+	_cr->set_source_rgba(prop.fill_color.r(), prop.fill_color.g(),
+			prop.fill_color.b(), prop.fill_color.a());
+	_cr->set_line_width(prop.line_width);
 	_cr->stroke(); //draw outline, but preserve path
 }
 
@@ -206,9 +206,9 @@ void Drawer::draw_connector(const Polar& from, const Polar& to,
 	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
 	_cr->line_to(real_to_c.x(), real_to_c.y());
 
-	_cr->set_source_rgba(prop.lineColor().r(), prop.lineColor().g(), prop.lineColor().b(),
-			prop.lineColor().a());
-	_cr->set_line_width(prop.lineWidth());
+	_cr->set_source_rgba(prop.line_color.r(), prop.line_color.g(), prop.line_color.b(),
+			prop.line_color.a());
+	_cr->set_line_width(prop.line_width);
 
 	_cr->stroke();
 }
@@ -244,13 +244,13 @@ void Drawer::drawLink(const Link& link, const DrawerProperties<>& prop)
 	drawArc(link.origin1().r(), link.origin2().phi(), link.origin1().phi(),
 			Direction::INCREASING);
 
-	_cr->set_source_rgba(prop.fillColor().r(), prop.fillColor().g(),
-			prop.fillColor().b(), prop.fillColor().a());
+	_cr->set_source_rgba(prop.fill_color.r(), prop.fill_color.g(),
+			prop.fill_color.b(), prop.fill_color.a());
 	_cr->fill_preserve();
 
-	_cr->set_source_rgba(prop.lineColor().r(), prop.lineColor().g(),
-			prop.lineColor().b(), prop.lineColor().a());
-	_cr->set_line_width(prop.lineWidth());
+	_cr->set_source_rgba(prop.line_color.r(), prop.line_color.g(),
+			prop.line_color.b(), prop.line_color.a());
+	_cr->set_line_width(prop.line_width);
 	_cr->stroke(); //draw outline, but preserve path
 }
 
@@ -280,7 +280,7 @@ void Drawer::drawSplitAxis(double inner_radius, double thickness,
 	Angle segment_size = angle_helper::rad_dist(begin.get(), end.get()) / num_of_splits;
 	for (size_t i = 0; i < num_of_splits; ++i)
 	{
-		DrawerProperties<> inner_prop(prop.lineWidth(), prop.lineColor(), prop.fillColor().at(i));
+		DrawerProperties<> inner_prop(prop.line_width, prop.line_color, prop.fill_color.at(i));
 		drawWegdeSegment(inner_radius, thickness, begin + segment_size * i,
 				begin + segment_size * (i + 1), inner_prop, dir);
 	}
@@ -296,9 +296,9 @@ void Drawer::drawLine(const Polar& from, const Polar& to,
 	_pc.convert(to, to_c);
 	_cr->move_to(from_c.x(), from_c.y());
 	_cr->line_to(to_c.x(), to_c.y());
-	_cr->set_source_rgba(prop.lineColor().r(), prop.lineColor().g(),
-			prop.lineColor().b(), prop.lineColor().a());
-	_cr->set_line_width(prop.lineWidth());
+	_cr->set_source_rgba(prop.line_color.r(), prop.line_color.g(),
+			prop.line_color.b(), prop.line_color.a());
+	_cr->set_line_width(prop.line_width);
 	_cr->stroke();
 
 }
@@ -343,10 +343,10 @@ void Drawer::drawCoordGrid(const Polar& lower_left, const Polar& upper_right,
 	{
 		// Changed max_angle <-> min_angle. Whether fix or not depends on meaning of dir
 		drawArc(min_radius + i * y_dist, max_angle, min_angle, dir);
-		_cr->set_source_rgba(prop_thin.lineColor().r(),
-				prop_thin.lineColor().g(), prop_thin.lineColor().b(),
-				prop_thin.lineColor().a());
-		_cr->set_line_width(prop_thin.lineWidth());
+		_cr->set_source_rgba(prop_thin.line_color.r(),
+				prop_thin.line_color.g(), prop_thin.line_color.b(),
+				prop_thin.line_color.a());
+		_cr->set_line_width(prop_thin.line_width);
 		_cr->stroke();
 	}
 }
@@ -415,13 +415,13 @@ void Drawer::drawWegdeSegment(double inner_radius, double thickness,
 
 	_cr->close_path();
 
-	_cr->set_source_rgba(prop.fillColor().r(), prop.fillColor().g(),
-			prop.fillColor().b(), prop.fillColor().a());
+	_cr->set_source_rgba(prop.fill_color.r(), prop.fill_color.g(),
+			prop.fill_color.b(), prop.fill_color.a());
 	_cr->fill_preserve(); //fill, but preserve path
 
-	_cr->set_source_rgba(prop.lineColor().r(), prop.lineColor().g(),
-			prop.lineColor().b(), prop.lineColor().a());
-	_cr->set_line_width(prop.lineWidth());
+	_cr->set_source_rgba(prop.line_color.r(), prop.line_color.g(),
+			prop.line_color.b(), prop.line_color.a());
+	_cr->set_line_width(prop.line_width);
 	_cr->stroke();
 }
 
@@ -454,64 +454,6 @@ void Drawer::drawTextParallel(const Label& label, const Polar& start)
 	_cr->translate(-0.5 * t_exts.width, 0.5 * t_exts.height);
 
 	_cr->show_text(message);
-}
-
-void Drawer::drawConnector(const Polar& from, const Polar& to,
-		const DrawerProperties<>& prop)
-{
-	const double p1 = 0.1;
-	const double p2 = 0.1;
-	const double p3 = 0.6;
-	const double p4 = 0.1;
-	const double p5 = 0.1;
-
-	double radial_dist = to.r() - from.r();
-	Polar real_from {from.r() + p1 * radial_dist, from.phi()};
-	Polar real_to {to.r() - p5 * radial_dist, to.phi()};
-	Polar intermediate1 {real_from.r() + p2 * radial_dist, real_from.phi() };
-	Polar intermediate2 {real_to.r() - p4 * radial_dist, real_to.phi() };
-
-
-	Cartesian real_from_c;
-	Cartesian real_to_c;
-	Cartesian intermediate1_c;
-	Cartesian intermediate2_c;
-
-	_pc.convert(real_from, real_from_c);
-	_pc.convert(real_to, real_to_c);
-	_pc.convert(intermediate1, intermediate1_c);
-	_pc.convert(intermediate2, intermediate2_c);
-
-	_cr->set_identity_matrix();
-	_cr->begin_new_path();
-	_cr->move_to(real_from_c.x(), real_from_c.y());
-	_cr->line_to(intermediate1_c.x(), intermediate1_c.y());
-
-	//TODO: nicer bezier solution!
-	double r_diff = radial_dist * p3;
-	double d0 = angle_helper::rad_dist(from.phi().get(), to.phi().get()), d1 = angle_helper::rad_dist(to.phi().get(), from.phi().get());
-	double phi_diff = d0 <= d1 ? d0 : -d1;
-	size_t steps = 10;
-
-	for (size_t i = 0; i < steps - 1; ++i)
-	{
-		double r = intermediate1.r() + i * r_diff / steps;
-		double phi = intermediate1.phi().get() + i * phi_diff / steps;
-		Polar next(r,phi);
-		Cartesian next_c;
-		_pc.convert(next,next_c);
-		_cr->line_to(next_c.x(), next_c.y());
-	}
-
-
-	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
-	_cr->line_to(real_to_c.x(), real_to_c.y());
-
-	_cr->set_source_rgba(prop.lineColor().r(), prop.lineColor().g(), prop.lineColor().b(),
-			prop.lineColor().a());
-	_cr->set_line_width(prop.lineWidth());
-
-	_cr->stroke();
 }
 
 void Drawer::finish()
@@ -563,7 +505,7 @@ void Drawer::drawAxis(double inner_radius, double thickness, const Angle& begin,
 	{
 		Angle a((begin + span * (double(i) / double(num_segments))));
 		if (i % ticks.ticksmajor())
-			drawLine(Polar(start_radius, a), Polar(end_radius_mimor, a), prop.halfLineWidth());
+			drawLine(Polar(start_radius, a), Polar(end_radius_mimor, a), prop.half_line_width());
 		else
 		{
 			drawLine(Polar(start_radius, a), Polar(end_radius_major, a), prop);

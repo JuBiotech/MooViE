@@ -25,6 +25,7 @@ std::string read_file(const std::string & fpath);
 /** Splits a given string expression using the given delimiter string.
  * @param str the string to divide
  * @param delims the delimiter string
+ * @param remove_empty option to remove empty tokens
  */
 std::vector<std::string> split(const std::string & str,
 		const std::string & delims, bool remove_empty=true);
