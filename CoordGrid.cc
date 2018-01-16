@@ -23,8 +23,8 @@ CoordGrid::CoordGrid(std::size_t major_ticks_, std::size_t minor_ticks_,
 
 Polar CoordGrid::get_coord(double val, std::size_t num_output) const
 {
-	if (num_output >= outputs); // TODO: Write exception
-	return Polar(radius + config::INPUT_THICKNESS + (num_output + 1) * (height / (outputs + 0.5)),
+	if (num_output >= outputs); // TODO: throw exception
+	return Polar(radius + config::INPUT_THICKNESS + num_output * (height / (outputs - 0.5)),
 			_output_mappers[num_output].map(val));
 }
 

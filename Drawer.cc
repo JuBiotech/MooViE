@@ -32,9 +32,9 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 			drawLine(Polar(min_radius, a), Polar(max_radius, a), prop_thick);
 	}
 
-	double y_dist = grid.height / (grid.outputs + 0.5);
+	double y_dist = grid.height / (grid.outputs - 0.5);
 
-	for (size_t i = 1; i <= grid.outputs; ++i)
+	for (size_t i = 1; i < grid.outputs; ++i)
 	{
 		// Changed max_angle <-> min_angle. Whether fix or not depends on meaning of dir
 		drawArc(min_radius + i * y_dist, grid.start, grid.end, grid.dir);
@@ -86,8 +86,9 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 void Drawer::draw_data_link(const DataLink & link)
 {
 	Polar from = link.connector_coord();
-	Polar target1(from.r() - 2, from.phi() - 0.001),
-			target2(from.r() - 2, from.phi() + 0.001); // TODO: Subtract other values
+	// Subtract INPUT_THICKNESS to not draw into SplitAxis
+	Polar target1(from.r(), from.phi() - 0.001),
+			target2(from.r(), from.phi() + 0.001); // TODO: Subtract other values (from configuration?)
 
 	Polar origin1(link.input_coords()[0].r(), link.input_coords()[0].phi() - 0.0001),
 					origin2(link.input_coords()[0].r(), link.input_coords()[0].phi() + 0.0001);
@@ -96,17 +97,30 @@ void Drawer::draw_data_link(const DataLink & link)
 	for (Polar in: link.input_coords())
 	{
 		Polar origin1(in.r() - 2, in.phi() - 0.0001),
-				origin2(in.r() - 2, in.phi() + 0.0001); // TODO: Subtract other values
+				origin2(in.r() - 2, in.phi() + 0.0001); // TODO: Subtract other values (from configuration?)
 		draw_link(origin1, origin2, target1, target2, link.get_link_prop(i++));
 	}
 
-	from = Polar(from.r() + 2, from.phi());
-	// Draw connector on coord grid
-	for (Polar out: link.output_coords())
+	// draw line from connector to first input
+	Polar mod;
+	draw_connector(from, link.output_coords()[0], link.connector_prop());
+	from = link.output_coords()[0];
+	if (link.output_coords().size() > 1)
 	{
-		drawConnector(from, out, link.connector_prop());
+		const Polar & to = link.output_coords()[1];
+		mod = Util::get_connector_end(from, to);
+		draw_connector(from, mod, link.connector_prop());
+		from = to;
+		drawCoordPoint(from, 0.005, (to.r() - mod.r()) * 2, link.connector_prop());
+	}
+	// Draw connector point on coord grid
+	for (size_t i = 2; i < link.output_coords().size(); ++i)
+	{
+		const Polar out = link.output_coords()[i];
+		mod = Util::get_connector_end(from, out);
+		draw_connector(Util::get_connector_start(from, out), mod, link.connector_prop());
 		from = out;
-		drawCoordPoint(from, 0.01, 10, link.connector_prop());
+		drawCoordPoint(from, 0.005, (out.r() - mod.r()) * 2, link.connector_prop());
 	}
 }
 
@@ -149,26 +163,21 @@ void Drawer::draw_link(const Polar & origin1, const Polar & origin2,
 void Drawer::draw_connector(const Polar& from, const Polar& to,
 		const DrawerProperties<>& prop)
 {
-	const double p1 = 0.1;
-	const double p2 = 0.1;
+	const double p1 = 0.2;
+	const double p2 = 0.2;
 	const double p3 = 0.6;
-	const double p4 = 0.1;
-	const double p5 = 0.1;
 
 	double radial_dist = to.r() - from.r();
-	Polar real_from {from.r() + p1 * radial_dist, from.phi()};
-	Polar real_to {to.r() - p5 * radial_dist, to.phi()};
-	Polar intermediate1 {real_from.r() + p2 * radial_dist, real_from.phi() };
-	Polar intermediate2 {real_to.r() - p4 * radial_dist, real_to.phi() };
-
+	Polar intermediate1 {from.r() + p1 * radial_dist,from.phi() };
+	Polar intermediate2 {to.r() - p2 * radial_dist, to.phi() };
 
 	Cartesian real_from_c;
 	Cartesian real_to_c;
 	Cartesian intermediate1_c;
 	Cartesian intermediate2_c;
 
-	_pc.convert(real_from, real_from_c);
-	_pc.convert(real_to, real_to_c);
+	_pc.convert(from, real_from_c);
+	_pc.convert(to, real_to_c);
 	_pc.convert(intermediate1, intermediate1_c);
 	_pc.convert(intermediate2, intermediate2_c);
 

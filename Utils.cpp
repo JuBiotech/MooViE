@@ -24,18 +24,18 @@ std::string read_file(const std::string & fpath)
 	}
 }
 
-std::vector<std::string> split(const std::string & expr,
+std::vector<std::string> split(const std::string & str,
 		const std::string & delims, bool remove_empty)
 {
 	std::vector<std::string> res;
 	std::size_t prev = 0;
 
-	for (std::size_t i = 0; i < expr.length(); ++i)
+	for (std::size_t i = 0; i < str.length(); ++i)
 	{
-		if (i + delims.length() <= expr.length()
-				&& expr.compare(i, delims.length(), delims) == 0)
+		if (i + delims.length() <= str.length()
+				&& str.compare(i, delims.length(), delims) == 0)
 		{
-			const std::string & part = expr.substr(prev, i - prev);
+			const std::string & part = str.substr(prev, i - prev);
 			if (not (remove_empty && part.empty()))
 			{
 				res.push_back(part);
@@ -43,9 +43,9 @@ std::vector<std::string> split(const std::string & expr,
 			prev = i + delims.length();
 		}
 	}
-	if (prev < expr.length())
+	if (prev < str.length())
 	{
-		const std::string & part = expr.substr(prev, expr.length() - prev);
+		const std::string & part = str.substr(prev, str.length() - prev);
 		if (not (remove_empty && part.empty()))
 		{
 			res.push_back(part);
@@ -55,11 +55,11 @@ std::vector<std::string> split(const std::string & expr,
 	return res;
 }
 
-std::string strip(const std::string & expr)
+std::string strip(const std::string & str)
 {
-	std::size_t leading = expr.find_first_not_of(' '),
-			trailing = expr.find_last_not_of(' ');
-	return expr.substr(leading, trailing - leading + 1);
+	std::size_t leading = str.find_first_not_of(' '),
+			trailing = str.find_last_not_of(' ');
+	return str.substr(leading, trailing - leading + 1);
 }
 }
 
