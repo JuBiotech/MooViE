@@ -21,7 +21,7 @@ namespace angle_helper
      */
     inline double deg_to_rad(double deg)
     {
-        return deg / 180.0 * M_PIl;
+        return deg / 180.0 * M_PI;
     }
 
     /** Converts radian to degree value.
@@ -31,12 +31,12 @@ namespace angle_helper
      */
     inline double rad_to_deg(double rad)
     {
-        return rad / M_PIl * 180.0;
+        return rad / M_PI * 180.0;
     }
 
     inline double rad_dist(double rad0, double rad1)
     {
-    	return (rad0 > rad1) ? (2 * M_PIl - rad0 + rad1) : (rad1 - rad0);
+    	return (rad0 > rad1) ? (2 * M_PI - rad0 + rad1) : (rad1 - rad0);
     }
 }
 
@@ -101,7 +101,7 @@ public:
      */
     bool operator<(const Angle& rhs) const
     {
-        return ((*this - rhs).get() < 0) ;
+    	return this->get() < rhs.get();
     }
 
     /** Smaller than or equal to operator checking wether this Angle's
@@ -112,7 +112,7 @@ public:
      */
     bool operator<=(const Angle& rhs) const
     {
-        return ((*this - rhs).get() <= 0) ;
+    	return this->get() <= rhs.get();
     }
 
     /** Greater than operator checking wether this Angle's value
@@ -123,7 +123,7 @@ public:
      */
     bool operator>(const Angle& rhs) const
     {
-        return ((*this - rhs).get() > 0) ;
+    	return this->get() > rhs.get();
     }
 
     /** Greater than or equal to operator checking wether this Angle's
@@ -134,7 +134,7 @@ public:
      */
     bool operator>=(const Angle& rhs) const
 	{
-		return ((*this - rhs).get() >= 0) ;
+    	return this->get() >= rhs.get();
 	}
 
     /** Addition assignment operator increasing this Angle's value by
@@ -167,7 +167,7 @@ public:
     /** Subtraction assignment operator decreasing this Angle's value by
      * the other Angle's value. If necessary, the value is corrected
      * to be consistent.
-     * @brief operator +=
+     * @brief operator -=
      * @param rhs the other angle
      * @return a reference to this angle
      */
@@ -180,7 +180,7 @@ public:
 
     /** Friend addition operator returning an Angle equal to the return of rhs -= lhs.
      * It operates on a copy of lhs so that the original object is not changed.
-     * @brief operator +
+     * @brief operator -
      * @param lhs the left operand Angle
      * @param rhs the right operand Angle
      * @return a new Angle equal to lhs-=rhs
@@ -255,13 +255,7 @@ public:
     {
         //p has to be between 0 (p1) and 1(p2)
         double phi = (1-p) * a1.get() + p * a2.get();
-        Angle temp(phi);
-        if (std::abs((a1 - temp).get()) > std::abs((a1 - (temp + M_PI)).get()))
-        {
-                return temp + M_PI;
-        }
-        else
-                return temp;
+        return Angle(phi);
 	}
 
     /** Returns the Angle in the center of two given Angles.
@@ -281,10 +275,9 @@ private:
          */
 	void wrap()
 	{
-//		double old = _angle;
 		_angle = std::fmod(_angle, 2.0 * M_PI);
-//		if (old != _angle)
-//			std::cout << "wrap: " << angle_helper::rad_to_deg(old) << " -> " << angle_helper::rad_to_deg(_angle) << std::endl;
+		if (_angle < 0)
+			_angle += 2.0 * M_PI;
 	}
 
         /** The angle value in radian */
