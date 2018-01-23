@@ -15,7 +15,6 @@ Scene::Scene(const Configuration & config)
   _grid(10, 10, angle_helper::deg_to_rad(310), angle_helper::deg_to_rad(50), config.get_output_inner_radius(), config.get_grid_size(), Direction::INCREASING, _set.output_variables()),  // TODO: add output angle calculation
   _split_prop(config.get_prop_thick().line_width, Color::BLACK, Color::GLOW_10)
 {
-	std::cout << "here" << std::endl;
 	double angle = 180 / _set.input_variables().size() - config::INPUT_SEPERATION_ANGLE;
 	double start = 90, end = start+angle;
 	std::size_t i = 0;

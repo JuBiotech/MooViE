@@ -52,7 +52,7 @@ int Args_test(int argc, char const * argv[])
 
 int DefDataSet_test(void)
 {
-	DefDataSet set = DefDataSet::parse_from_csv(Util::read_file("/home/IBT/stratmann/MooViE/testfiles/input.csv"), 3);
+	DefDataSet set = DefDataSet::parse_from_csv(Util::read_file("/home/stratmann/MooViE/testfiles/input.csv"), 3);
 
 	for (DefDataSet::Var var : set.input_variables())
 	{
@@ -77,7 +77,8 @@ int DefDataSet_test(void)
 
 int Scene_test(void)
 {
-	Configuration config("/home/stratmann/MooViE/image.svg", 3);
+	Configuration config("/home/stratmann/MooViE/testfiles/input.csv", 3);
+	config.set_output_file("/home/stratmann/MooViE/image.svg");
 	Scene mainScene(config);
 
 	return 0;
@@ -85,9 +86,10 @@ int Scene_test(void)
 
 int Configuration_test(void)
 {
-	Configuration conf("/home/IBT/stratmann/MooViE/testfiles/moovie.conf", 3);
+	Configuration conf("/home/stratmann/MooViE/testfiles/input.csv", 3, "/home/stratmann/MooViE/testfiles/moovie.conf");
 
 	std::cout << "fname: " << conf.get_input_file() << std::endl
+			<< "output file: " << conf.get_output_file() << std::endl
 			<< "width: " << conf.get_width() << std::endl
 			<< "height: " << conf.get_width() << std::endl
 			<< "input inner radius: " << conf.get_input_inner_radius() << std::endl
@@ -132,7 +134,7 @@ int All_test(int argc, const char * argv[])
 int main(int argc, char const * argv[])
 {
 #ifdef CAIRO_HAS_SVG_SURFACE
-	return Scene_test();
+	return All_test(argc, argv);
 #else
 	std::cout << "You must compile cairo with SVG support for this example to work." << std::endl;
 	return 1;
