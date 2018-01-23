@@ -19,11 +19,11 @@ Drawer::Drawer(const Configuration & config)
 void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & prop_thick,
 		const DrawerProperties<> & prop_thin)
 {
-	draw_split_axis(grid.radius, config::INPUT_THICKNESS, grid.start, grid.end, DrawerProperties<std::array<Color, 10>>(1, Color::BLACK,
+	draw_split_axis(grid.radius, _config.get_input_thickness(), grid.start, grid.end, DrawerProperties<std::array<Color, 10>>(1, Color::BLACK,
 			Color::GLOW_10), grid.dir);
 	_cr->set_identity_matrix();
-	double min_radius = grid.radius + config::INPUT_THICKNESS;
-	double max_radius = grid.radius + config::INPUT_THICKNESS + grid.height;
+	double min_radius = grid.radius + _config.get_input_thickness();
+	double max_radius = grid.radius + _config.get_input_thickness() + grid.height;
 
 	double span = angle_helper::rad_dist(grid.start.get(), grid.end.get());
 
