@@ -220,23 +220,6 @@ void Drawer::draw_connector(const Polar& from, const Polar& to,
 	_cr->stroke();
 }
 
-void Drawer::draw_arc(double radius, const Angle& start, const Angle& end,
-		Direction dir)
-{
-	_cr->set_identity_matrix();
-	switch (dir)
-	{
-	case Direction::INCREASING:
-		_cr->arc(_pc.center().x(), _pc.center().y(), radius, start.get(),
-				end.get());
-		break;
-	case Direction::DECREASING:
-		_cr->arc_negative(_pc.center().x(), _pc.center().y(), radius,
-				start.get(), end.get());
-		break;
-	}
-}
-
 void Drawer::draw_split_axis(double inner_radius, double thickness,
 		const Angle& begin, const Angle& end,
 		const DrawerProperties<std::array<Color, 10>>& prop, Direction dir)
@@ -250,23 +233,6 @@ void Drawer::draw_split_axis(double inner_radius, double thickness,
 		draw_torus_segment(inner_radius, thickness, begin + segment_size * i,
 				begin + segment_size * (i + 1), inner_prop, dir);
 	}
-}
-
-void Drawer::draw_line(const Polar& from, const Polar& to,
-		const DrawerProperties<>& prop)
-{
-	_cr->set_identity_matrix();
-	_cr->begin_new_path();
-	Cartesian from_c, to_c;
-	_pc.convert(from, from_c);
-	_pc.convert(to, to_c);
-	_cr->move_to(from_c.x(), from_c.y());
-	_cr->line_to(to_c.x(), to_c.y());
-	_cr->set_source_rgba(prop.line_color.r(), prop.line_color.g(),
-			prop.line_color.b(), prop.line_color.a());
-	_cr->set_line_width(prop.line_width);
-	_cr->stroke();
-
 }
 
 void Drawer::draw_text_orthogonal(const Label& label, const Polar& start)
@@ -310,6 +276,23 @@ void Drawer::draw_coord_point(const Polar& coord, const Angle& width,
 			Direction::INCREASING);
 }
 
+void Drawer::draw_arc(double radius, const Angle& start, const Angle& end,
+		Direction dir)
+{
+	_cr->set_identity_matrix();
+	switch (dir)
+	{
+	case Direction::INCREASING:
+		_cr->arc(_pc.center().x(), _pc.center().y(), radius, start.get(),
+				end.get());
+		break;
+	case Direction::DECREASING:
+		_cr->arc_negative(_pc.center().x(), _pc.center().y(), radius,
+				start.get(), end.get());
+		break;
+	}
+}
+
 void Drawer::draw_torus_segment(double inner_radius, double thickness,
 		const Angle& begin, const Angle& end, const DrawerProperties<>& prop,
 		Direction dir)
@@ -341,6 +324,36 @@ void Drawer::draw_torus_segment(double inner_radius, double thickness,
 			prop.line_color.b(), prop.line_color.a());
 	_cr->set_line_width(prop.line_width);
 	_cr->stroke();
+}
+
+void Drawer::draw_arrow(const Polar & center, const Polar direction,
+			const DrawerProperties<> prop)
+{
+	_cr->set_identity_matrix();
+	_cr->begin_new_path();
+
+	Cartesian center_c, direction_c;
+	_pc.convert(center, center_c);
+	_pc.convert(direction, direction_c);
+
+	double factor = std::sqrt(std::pow(center_c.x() - direction_c.x(), 2) + std::pow(center_c.y() - direction_c.y(), 2));
+}
+
+void Drawer::draw_line(const Polar& from, const Polar& to,
+		const DrawerProperties<>& prop)
+{
+	_cr->set_identity_matrix();
+	_cr->begin_new_path();
+	Cartesian from_c, to_c;
+	_pc.convert(from, from_c);
+	_pc.convert(to, to_c);
+	_cr->move_to(from_c.x(), from_c.y());
+	_cr->line_to(to_c.x(), to_c.y());
+	_cr->set_source_rgba(prop.line_color.r(), prop.line_color.g(),
+			prop.line_color.b(), prop.line_color.a());
+	_cr->set_line_width(prop.line_width);
+	_cr->stroke();
+
 }
 
 void Drawer::draw_text_parallel(const Label& label, const Polar& start)

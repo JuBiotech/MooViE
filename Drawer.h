@@ -91,20 +91,26 @@ private:
 			const Angle& begin, const Angle& end,
 			const DrawerProperties<std::array<Color, 10>>& prop, Direction dir);
 
-	/** Draws the given label orthogonal to the angle of the given
-	 * coordinate's angle.
-	 * @brief drawTextOrthogonal
-	 * @param label the label to draw
-	 * @param start the coordinate to adjust to
+	/** Draws a filled edge segment around the center of its coordinate system between
+	 * the two given Angles and with the given radius.
+	 * @brief drawWegdeSegment
+	 * @param radius the radius
+	 * @param thickness the thinkness of the edge segment
+	 * @param begin the begin Angle
+	 * @param end the end Angle
+	 * @param prop the Drawer properties
+	 * @param dir the direction
 	 */
-	void draw_text_orthogonal(const Label& label, const Polar& start);
+	void draw_torus_segment(double radius, double thickness, const Angle& begin,
+			const Angle& end, const DrawerProperties<>& prop, Direction dir);
 
-	/** Draws the given label with the same angle like the given coordinate.
-	 * @brief drawTextOrthogonal
-	 * @param label the label to draw
-	 * @param start the coordinate to adjust to
+	/** Draws a arrow head from a given center coordinates pointing to the other
+	 * given coordinates.
+	 * @brief draw_torus_segment
+	 *
 	 */
-	void draw_text_parallel(const Label& label, const Polar& start);
+	void draw_arrow(const Polar & center, const Polar direction,
+			const DrawerProperties<> prop);
 
 	/** Draws a line from a given starting vertice to a given end vertice.
 	 * @brief drawLine
@@ -113,16 +119,6 @@ private:
 	 * @param prop the Drawer properties to use
 	 */
 	void draw_line(const Polar& from, const Polar& to,
-			const DrawerProperties<>& prop);
-
-	/** Draws a coordinate point with given height and with.
-	 * @brief drawCoordPoint
-	 * @param coord the polar coordinate to draw
-	 * @param width the width
-	 * @param height the height
-	 * @param prop the drawer properties
-	 */
-	void draw_coord_point(const Polar& coord, const Angle& width, double height,
 			const DrawerProperties<>& prop);
 
 	/** Draws a simple edge segment around the center of its coordinate system between
@@ -136,18 +132,30 @@ private:
 	void draw_arc(double inner_radius, const Angle& start, const Angle& end,
 			Direction dir);
 
-	/** Draws a filled edge segment around the center of its coordinate system between
-	 * the two given Angles and with the given radius.
-	 * @brief drawWegdeSegment
-	 * @param radius the radius
-	 * @param thickness the thinkness of the edge segment
-	 * @param begin the begin Angle
-	 * @param end the end Angle
-	 * @param prop the Drawer properties
-	 * @param dir the direction
+	/** Draws a coordinate point with given height and with.
+	 * @brief drawCoordPoint
+	 * @param coord the polar coordinate to draw
+	 * @param width the width
+	 * @param height the height
+	 * @param prop the drawer properties
 	 */
-	void draw_torus_segment(double radius, double thickness, const Angle& begin,
-			const Angle& end, const DrawerProperties<>& prop, Direction dir);
+	void draw_coord_point(const Polar& coord, const Angle& width, double height,
+					const DrawerProperties<>& prop);
+
+	/** Draws the given label with the same angle like the given coordinate.
+	 * @brief drawTextOrthogonal
+	 * @param label the label to draw
+	 * @param start the coordinate to adjust to
+	 */
+	void draw_text_parallel(const Label& label, const Polar& start);
+
+	/** Draws the given label orthogonal to the angle of the given
+	 * coordinate's angle.
+	 * @brief drawTextOrthogonal
+	 * @param label the label to draw
+	 * @param start the coordinate to adjust to
+	 */
+	void draw_text_orthogonal(const Label& label, const Polar& start);
 
 	/** ???
 	 * @brief createLinkControlPoint
