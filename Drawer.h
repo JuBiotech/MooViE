@@ -14,6 +14,7 @@
 #include <cairomm/context.h>
 #include <cairomm/surface.h>
 #include <array>
+#include <iostream>
 
 /** Drawer is a wrapper class for MooViE's basic drawing abilities
  * which are realized using Cairo.
@@ -101,16 +102,15 @@ private:
 	 * @param prop the Drawer properties
 	 * @param dir the direction
 	 */
-	void draw_torus_segment(double radius, double thickness, const Angle& begin,
+	void draw_ring_segment(double radius, double thickness, const Angle& begin,
 			const Angle& end, const DrawerProperties<>& prop, Direction dir);
 
 	/** Draws a arrow head from a given center coordinates pointing to the other
 	 * given coordinates.
-	 * @brief draw_torus_segment
+	 * @brief
 	 *
 	 */
-	void draw_arrow(const Polar & center, const Polar direction,
-			const DrawerProperties<> prop);
+	void draw_arrow(const Polar & center, const DrawerProperties<> prop);
 
 	/** Draws a line from a given starting vertice to a given end vertice.
 	 * @brief drawLine

@@ -56,7 +56,7 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 void Drawer::draw_var_axis(const VarAxis & axis)
 {
 	_cr->set_identity_matrix();
-	draw_torus_segment(axis.radius, axis.height, axis.start, axis.end, axis.prop, Direction::INCREASING);
+	draw_ring_segment(axis.radius, axis.height, axis.start, axis.end, axis.prop, Direction::INCREASING);
 
 	Angle span = axis.end - axis.start;
 
@@ -108,9 +108,10 @@ void Drawer::draw_data_link(const DataLink & link)
 		draw_link(origin1, origin2, target1, target2, link.get_link_prop(i++));
 	}
 
-	// draw line from connector to first input
+	// draw line from connector to first output
 	Polar mod;
 	draw_connector(from, link.output_coords()[0], link.connector_prop());
+	draw_arrow(from, link.connector_prop());
 	from = link.output_coords()[0];
 	if (link.output_coords().size() > 1)
 	{
@@ -230,39 +231,9 @@ void Drawer::draw_split_axis(double inner_radius, double thickness,
 	for (size_t i = 0; i < num_of_splits; ++i)
 	{
 		DrawerProperties<> inner_prop(prop.line_width, prop.line_color, prop.fill_color.at(i));
-		draw_torus_segment(inner_radius, thickness, begin + segment_size * i,
+		draw_ring_segment(inner_radius, thickness, begin + segment_size * i,
 				begin + segment_size * (i + 1), inner_prop, dir);
 	}
-}
-
-void Drawer::draw_text_orthogonal(const Label& label, const Polar& start)
-{
-	_cr->set_identity_matrix();
-	Cairo::RefPtr<Cairo::ToyFontFace> font = Cairo::ToyFontFace::create(
-			label.prop().fontname(),
-			label.prop().italic() ? Cairo::FONT_SLANT_ITALIC : Cairo::FONT_SLANT_NORMAL,
-					label.prop().bold() ? Cairo::FONT_WEIGHT_BOLD : Cairo::FONT_WEIGHT_NORMAL);
-	_cr->set_font_face(font);
-	_cr->set_font_size(label.prop().fontsize());
-	_cr->set_source_rgba(label.prop().color().r(), label.prop().color().g(), label.prop().color().b(),
-			label.prop().color().a());
-
-	Cairo::TextExtents t_exts;
-	std::string message { label.text() };
-	_cr->get_text_extents(message, t_exts);
-
-	Angle cairo_angle = M_PI_2 - start.phi();
-
-	_cr->set_identity_matrix();
-	_cr->begin_new_path();
-	_cr->translate(_pc.center().x(), _pc.center().y());
-	_cr->rotate(cairo_angle.get());
-	_cr->translate(0, -start.r());
-	if (start.phi().get() > M_PI)
-		_cr->rotate_degrees(180);
-	_cr->translate(-0.5 * t_exts.width, 0.5 * t_exts.height);
-
-	_cr->show_text(message);
 }
 
 void Drawer::draw_coord_point(const Polar& coord, const Angle& width,
@@ -272,7 +243,7 @@ void Drawer::draw_coord_point(const Polar& coord, const Angle& width,
 	double inner_radius = coord.r() - 0.5 * height;
 	Angle begin = coord.phi() - width * 0.5;
 	Angle end = coord.phi() + width * 0.5;
-	draw_torus_segment(inner_radius, height, begin, end, prop,
+	draw_ring_segment(inner_radius, height, begin, end, prop,
 			Direction::INCREASING);
 }
 
@@ -293,7 +264,7 @@ void Drawer::draw_arc(double radius, const Angle& start, const Angle& end,
 	}
 }
 
-void Drawer::draw_torus_segment(double inner_radius, double thickness,
+void Drawer::draw_ring_segment(double inner_radius, double thickness,
 		const Angle& begin, const Angle& end, const DrawerProperties<>& prop,
 		Direction dir)
 {
@@ -326,17 +297,39 @@ void Drawer::draw_torus_segment(double inner_radius, double thickness,
 	_cr->stroke();
 }
 
-void Drawer::draw_arrow(const Polar & center, const Polar direction,
-			const DrawerProperties<> prop)
+void Drawer::draw_arrow(const Polar & center, const DrawerProperties<> prop)
 {
 	_cr->set_identity_matrix();
 	_cr->begin_new_path();
 
-	Cartesian center_c, direction_c;
-	_pc.convert(center, center_c);
-	_pc.convert(direction, direction_c);
+	const double height = 5;
 
-	double factor = std::sqrt(std::pow(center_c.x() - direction_c.x(), 2) + std::pow(center_c.y() - direction_c.y(), 2));
+	Polar center_help(center.r() - height, center.phi()),
+			direction_help(center.r(), center.phi()),
+			left_help(center.r() - height, center.phi() - height / 1000),
+			right_help(center.r() - height, center.phi() + height / 1000);
+
+	Cartesian center_c, direction_c, left, right;
+	_pc.convert(center_help, center_c);
+	_pc.convert(direction_help, direction_c);
+	_pc.convert(left_help, left);
+	_pc.convert(right_help, right);
+
+	double p_x = center_c.x(), p_y = center_c.y(), d_x = direction_c.x(), d_y = direction_c.y();
+
+	double diff_len = std::sqrt(std::pow(d_x - p_x, 2) + std::pow(d_y - p_y, 2));
+
+	Cartesian head(p_x + height * (d_x - p_x) / diff_len, p_y + height * (d_y - p_y) / diff_len);
+
+
+	_cr->move_to(head.x(), head.y());
+	_cr->line_to(right.x(), right.y());
+	_cr->line_to(left.x(), left.y());
+	_cr->set_source_rgba(prop.line_color.r(), prop.line_color.g(),
+				prop.line_color.b(), prop.line_color.a());
+	_cr->set_line_width(prop.line_width);
+	_cr->fill_preserve();
+	_cr->stroke();
 }
 
 void Drawer::draw_line(const Polar& from, const Polar& to,
@@ -381,6 +374,36 @@ void Drawer::draw_text_parallel(const Label& label, const Polar& start)
 	_cr->translate(0, -start.r());
 	_cr->rotate_degrees(90);
 	if ((M_PI_2 - start.phi()).get() > 0)
+		_cr->rotate_degrees(180);
+	_cr->translate(-0.5 * t_exts.width, 0.5 * t_exts.height);
+
+	_cr->show_text(message);
+}
+
+void Drawer::draw_text_orthogonal(const Label& label, const Polar& start)
+{
+	_cr->set_identity_matrix();
+	Cairo::RefPtr<Cairo::ToyFontFace> font = Cairo::ToyFontFace::create(
+			label.prop().fontname(),
+			label.prop().italic() ? Cairo::FONT_SLANT_ITALIC : Cairo::FONT_SLANT_NORMAL,
+					label.prop().bold() ? Cairo::FONT_WEIGHT_BOLD : Cairo::FONT_WEIGHT_NORMAL);
+	_cr->set_font_face(font);
+	_cr->set_font_size(label.prop().fontsize());
+	_cr->set_source_rgba(label.prop().color().r(), label.prop().color().g(), label.prop().color().b(),
+			label.prop().color().a());
+
+	Cairo::TextExtents t_exts;
+	std::string message { label.text() };
+	_cr->get_text_extents(message, t_exts);
+
+	Angle cairo_angle = M_PI_2 - start.phi();
+
+	_cr->set_identity_matrix();
+	_cr->begin_new_path();
+	_cr->translate(_pc.center().x(), _pc.center().y());
+	_cr->rotate(cairo_angle.get());
+	_cr->translate(0, -start.r());
+	if (start.phi().get() > M_PI)
 		_cr->rotate_degrees(180);
 	_cr->translate(-0.5 * t_exts.width, 0.5 * t_exts.height);
 

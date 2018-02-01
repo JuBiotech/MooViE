@@ -14,7 +14,7 @@ VarAxis::VarAxis(Ticks ticks_, const Angle & start_, const Angle & end_,
 : ticks(ticks_), start(start_), end(end_),radius(radius_),  height(height_), var(var_),
   _input_mapper(std::make_pair(var.min, var.max), std::make_pair(start.get(), end.get())), label(var.name, text_prop_), prop(prop_)
 {
-	std::cout << "mapped " << var.min << ", " << var.max << " to " << start.get() << ", " << end.get() << std::endl;
+	// std::cout << "mapped " << var.min << ", " << var.max << " to " << start.get() << ", " << end.get() << std::endl;
 }
 
 Polar VarAxis::get_coord(double val) const
