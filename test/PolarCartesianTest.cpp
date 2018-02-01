@@ -1,6 +1,7 @@
-#include "PolarCartesian.h"
+#include "../PolarCartesian.h"
 #include <iostream>
 
+#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE PolarCartesian Tests
 #include <boost/test/unit_test.hpp>
 
