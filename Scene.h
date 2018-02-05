@@ -34,22 +34,23 @@ public:
      * @brief draw_scene
      */
     void draw_scene(void);
+
 private:
     /** MooViE configuration */
-    const Configuration & _config;
+    const Configuration & 					_config;
 
     /** Data set */
-    DefDataSet _set;
+    DefDataSet 								_set;
 
     /** Draws data to file */
-	Drawer _drawer;
+	Drawer 									_drawer;
 
     /** Output data section of the diagram */
-    CoordGrid _grid;
+    CoordGrid 								_grid;
     /** Variable axis */
-    std::vector<VarAxis> _axis;
+    std::vector<VarAxis> 					_axis;
     /** Data links */
-    std::vector<DataLink> _links;
+    std::vector<DataLink> 					_links;
 
 	/** Drawer properties for SplitAxis drawing */
 	DrawerProperties<std::array<Color, 10>> _split_prop;

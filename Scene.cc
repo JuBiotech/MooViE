@@ -11,11 +11,24 @@
 
 Scene::Scene(const Configuration & config)
 : _config(config),
-  _set(DataSet<double>::parse_from_csv(Util::read_file(config.get_input_file()), config.get_inputs())), _drawer(config),
-  _grid(10, 10, angle_helper::deg_to_rad(310), angle_helper::deg_to_rad(50), config.get_output_inner_radius(), config.get_grid_size(), Direction::INCREASING, _set.output_variables()),  // TODO: add output angle calculation
-  _split_prop(config.get_prop_thick().line_width, Color::BLACK, Color::GLOW_10)
+  _set(
+		  DataSet<double>::parse_from_csv(
+				  Util::read_file(config.get_input_file()),
+				  config.get_inputs())
+		  ),
+  _drawer(config),
+  _grid(
+		  10, 10,
+		  angle_helper::deg_to_rad(310), angle_helper::deg_to_rad(50),
+		  config.get_output_inner_radius(), config.get_grid_size(),
+		  Direction::INCREASING, _set.output_variables()
+		  ),  // TODO: add output angle calculation
+  _split_prop(
+		  config.get_prop_thick().line_width,
+		  Color::BLACK, Color::GLOW_10
+		  )
 {
-	double angle = 180 / _set.input_variables().size() - config::INPUT_SEPERATION_ANGLE;
+	double angle = 180 / _set.input_variables().size() - config.get_input_separation_angle();
 	double start = 90, end = start+angle;
 	std::size_t i = 0;
 	for (DefVar var: _set.input_variables())
@@ -31,11 +44,13 @@ Scene::Scene(const Configuration & config)
 						angle_helper::deg_to_rad(end),
 						config.get_input_inner_radius(), config.get_input_thickness(),
 						var,
-						DrawerProperties<>(1, Color::BLACK,
-								Color::SET3.at(_set.input_variables().size(), i++)),
+						DrawerProperties<>(
+								config.get_prop_thick().line_width,
+								Color::BLACK, Color::SET3.at(_set.input_variables().size(), i++)
+								),
 						config.get_var_label()));
-		start += angle + config::INPUT_SEPERATION_ANGLE;
-		end += angle + config::INPUT_SEPERATION_ANGLE;
+		start += angle + config.get_input_separation_angle();
+		end += angle + config.get_input_separation_angle();
 	}
 
 	for (DefDataRow row: _set)
@@ -64,12 +79,16 @@ Scene::Scene(const Configuration & config)
 
 void Scene::draw_scene(void)
 {
+	for (DataLink link: _links)
+	{
+		_drawer.draw_data_link(link);
+	}
+
 	_drawer.draw_coord_grid(_grid, _config.get_prop_thick(), _config.get_prop_thin());
 
 	for (VarAxis axis: _axis)
+	{
 		_drawer.draw_var_axis(axis);
-
-	for (DataLink link: _links)
-		_drawer.draw_data_link(link);
+	}
 
 }

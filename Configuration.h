@@ -14,6 +14,9 @@
 #include "Utils.h"
 #include "DrawerProperties.h"
 
+/**
+ *
+ */
 class Configuration {
 public:
 	Configuration(const std::string & fname, std::size_t inputs);
@@ -125,28 +128,38 @@ public:
 	}
 
 private:
+	/* Absolute file paths for data (input) and image (output) */
 	std::string 		_input_file;
-	std::string			_output_file = "image.svg";
+	std::string			_output_file 			= "image.svg";
 
+	/* Number of input variables in the data set */
 	std::size_t			_inputs;
 
-	int 				_width = 500;
-	int 				_height = 500;
+	/* Width and height of the output image */
+	int 				_width 					= 500;
+	int 				_height 				= 500;
 
-	double 				_input_inner_radius = 150;
-	double 				_input_thickness = 10;
+	/* VarAxis modification values */
+	double 				_input_inner_radius 	= 150;
+	double 				_input_thickness 		= 10;
 	double 				_input_separation_angle = 5;
 
-	double 				_output_inner_radius = 160;
-	double 				_output_thickness = 10;
-	double 				_grid_size = 150;
+	/* CoordGrid modification values */
+	double 				_output_inner_radius 	= 160;
+	double 				_output_thickness 		= 10;
+	double 				_grid_size 				= 150;
 
-	DrawerProperties<> 	_prop_thick = {1, Color::BLACK, Color::BLACK};
-	DrawerProperties<> 	_prop_thin = {0.5, Color::BLACK, Color::BLACK};
+	/* General line and fill styles */
+	DrawerProperties<> 	_prop_thick 			= {0.5, Color::BLACK, Color::BLACK};
+	DrawerProperties<> 	_prop_thin 				= {0.25, Color::BLACK, Color::BLACK};
 
-	TextProperties 		_tick_label = {"Liberation Serif", 8};
-	TextProperties 		_var_label = {"Liberation Serif", 20};
+	/* General font and font size */
+	TextProperties 		_tick_label 			= {"Liberation Serif", 8};
+	TextProperties 		_var_label 				= {"Liberation Serif", 20};
 
+	/* Regex for recognizing integer, floating point
+	 * and name constants
+	 */
 	const std::regex 	mooviec_int;
 	const std::regex 	mooviec_dbl;
 	const std::regex 	mooviec_name;
