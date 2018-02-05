@@ -168,8 +168,8 @@ void Drawer::draw_link(const Polar & origin1, const Polar & origin2,
 	_cr->stroke(); //draw outline, but preserve path
 }
 
-void Drawer::draw_connector(const Polar& from, const Polar& to,
-		const DrawerProperties<>& prop)
+void Drawer::draw_connector(const Polar & from, const Polar & to,
+		const DrawerProperties<> & prop)
 {
 	const double p1 = 0.2;
 	const double p2 = 0.2;
@@ -222,8 +222,8 @@ void Drawer::draw_connector(const Polar& from, const Polar& to,
 }
 
 void Drawer::draw_split_axis(double inner_radius, double thickness,
-		const Angle& begin, const Angle& end,
-		const DrawerProperties<std::array<Color, 10>>& prop, Direction dir)
+		const Angle & begin, const Angle & end,
+		const DrawerProperties<std::array<Color, 10>> & prop, Direction dir)
 {
 	_cr->set_identity_matrix();
 	size_t num_of_splits = 10;
@@ -247,7 +247,7 @@ void Drawer::draw_coord_point(const Polar& coord, const Angle& width,
 			Direction::INCREASING);
 }
 
-void Drawer::draw_arc(double radius, const Angle& start, const Angle& end,
+void Drawer::draw_arc(double radius, const Angle & start, const Angle & end,
 		Direction dir)
 {
 	_cr->set_identity_matrix();
@@ -265,7 +265,7 @@ void Drawer::draw_arc(double radius, const Angle& start, const Angle& end,
 }
 
 void Drawer::draw_ring_segment(double inner_radius, double thickness,
-		const Angle& begin, const Angle& end, const DrawerProperties<>& prop,
+		const Angle & begin, const Angle & end, const DrawerProperties<> & prop,
 		Direction dir)
 {
 	_cr->set_identity_matrix();
@@ -297,25 +297,25 @@ void Drawer::draw_ring_segment(double inner_radius, double thickness,
 	_cr->stroke();
 }
 
-void Drawer::draw_arrow(const Polar & center, const DrawerProperties<> prop)
+void Drawer::draw_arrow(const Polar & start, const DrawerProperties<> & prop)
 {
 	_cr->set_identity_matrix();
 	_cr->begin_new_path();
 
 	const double height = 5;
 
-	Polar center_help(center.r() - height, center.phi()),
-			direction_help(center.r(), center.phi()),
-			left_help(center.r() - height, center.phi() - height / 1000),
-			right_help(center.r() - height, center.phi() + height / 1000);
+	Polar start_help(start.r() - height, start.phi()),
+			direction_help(start.r(), start.phi()),
+			left_help(start.r() - height, start.phi() - height / 1000),
+			right_help(start.r() - height, start.phi() + height / 1000);
 
-	Cartesian center_c, direction_c, left, right;
-	_pc.convert(center_help, center_c);
+	Cartesian start_c, direction_c, left, right;
+	_pc.convert(start_help, start_c);
 	_pc.convert(direction_help, direction_c);
 	_pc.convert(left_help, left);
 	_pc.convert(right_help, right);
 
-	double p_x = center_c.x(), p_y = center_c.y(), d_x = direction_c.x(), d_y = direction_c.y();
+	double p_x = start_c.x(), p_y = start_c.y(), d_x = direction_c.x(), d_y = direction_c.y();
 
 	double diff_len = std::sqrt(std::pow(d_x - p_x, 2) + std::pow(d_y - p_y, 2));
 
@@ -349,7 +349,7 @@ void Drawer::draw_line(const Polar& from, const Polar& to,
 
 }
 
-void Drawer::draw_text_parallel(const Label& label, const Polar& start)
+void Drawer::draw_text_parallel(const Label& label, const Polar & start)
 {
 	_cr->set_identity_matrix();
 	Cairo::RefPtr<Cairo::ToyFontFace> font = Cairo::ToyFontFace::create(
@@ -380,7 +380,7 @@ void Drawer::draw_text_parallel(const Label& label, const Polar& start)
 	_cr->show_text(message);
 }
 
-void Drawer::draw_text_orthogonal(const Label& label, const Polar& start)
+void Drawer::draw_text_orthogonal(const Label & label, const Polar & start)
 {
 	_cr->set_identity_matrix();
 	Cairo::RefPtr<Cairo::ToyFontFace> font = Cairo::ToyFontFace::create(
@@ -416,7 +416,7 @@ void Drawer::finish()
 	_cr->show_page();
 }
 
-Cartesian Drawer::createLinkControlPoint(const Polar& point)
+Cartesian Drawer::createLinkControlPoint(const Polar & point)
 {
 	Polar p_control { point };
 	Cartesian c_control;
