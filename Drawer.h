@@ -104,7 +104,7 @@ private:
 	 * @param prop color
 	 * @param dir direction of the split axis' colors
 	 */
-	void draw_split_axis(double inner_radius, double thickness,
+	void draw_segment_axis(double inner_radius, double thickness,
 			const Angle & begin, const Angle & end,
 			const DrawerProperties<std::array<Color, 10>> & prop, Direction dir);
 
@@ -179,7 +179,7 @@ private:
 	 * @param point
 	 * @return
 	 */
-	Cartesian createLinkControlPoint(const Polar & point);
+	Cartesian create_control_point(const Polar & point);
 
 private:
     /** MooViE configuration */

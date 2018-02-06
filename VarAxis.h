@@ -24,23 +24,23 @@ public:
 	Polar get_coord(double val) const;
 public:
 	/** */
-	Ticks ticks;
+	Ticks 			ticks;
 	/** */
-	Angle start, end;
+	Angle 			start, end;
 	/** */
-	double radius;
+	double 			radius;
 	/** */
-	std::size_t height;
+	std::size_t 		height;
 
 	/** Variable info */
-	DefVar var;
+	DefVar 			var;
 	/** */
-	Mapper _input_mapper;
+	Mapper 			_input_mapper;
 
 	/** */
-	Label label;
+	Label 			label;
 	/** */
-	DrawerProperties<> prop;
+	DrawerProperties<> 	prop;
 };
 
 #endif /* VARAXIS_H_ */

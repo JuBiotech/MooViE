@@ -12,7 +12,7 @@ CoordGrid::CoordGrid(std::size_t major_ticks_, std::size_t minor_ticks_,
 		double radius_, double height_, Direction dir_,
 		const std::vector<DefVar> output_vars)
 	: outputs(output_vars.size()), major_ticks(major_ticks_), minor_ticks(minor_ticks_),
-	  start(start_), end(end_), radius(radius_), height(height_), dir(dir_)
+	  start(start_), end(end_), radius(radius_), height(height_), direction(dir_)
 	{
 		for (DefVar var: output_vars)
 		{

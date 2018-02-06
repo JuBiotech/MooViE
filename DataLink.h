@@ -89,8 +89,9 @@ public:
 
 private:
 	/* Coordinates for drawing the DataLink */
-	std::vector<Polar> 		_input_coords, _output_coords;
+	std::vector<Polar> 		_input_coords;
 	Polar 				_connector_coord;
+	std::vector<Polar>		_output_coords;
 
 	/* DrawerProperties for coloring the DataLink */
 	DrawerProperties<> 		_connector_prop;

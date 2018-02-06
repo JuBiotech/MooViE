@@ -72,7 +72,7 @@ public:
     /** Height of the CoordGrid */
     double 				height;
     /** Direction of the CoordGrid's values */
-    Direction 			dir;
+    Direction 			direction;
 
 private:
     /** Vector of mappings from actual values to cartesian coordinates */

@@ -92,12 +92,12 @@ public:
      * @brief label
      * @return
      */
-    std::vector<Label> label() const
+    std::vector<Label> get_labels() const
     {
         std::vector<Label> label;
-        label.reserve(ticksmajor() + 1);
+        label.reserve(get_major_ticks() + 1);
         double step = (extreme_vals().second - extreme_vals().first)
-                        / double(ticksmajor());
+                        / double(get_major_ticks());
         for (size_t i = 0; i <= _ticks_major; ++i)
         {
                 double val = extreme_vals().first + i * step;
@@ -112,7 +112,7 @@ public:
      * @brief ticksmajor
      * @return
      */
-    size_t ticksmajor() const
+    size_t get_major_ticks() const
     {
         return _ticks_major;
     }
@@ -121,7 +121,7 @@ public:
      * @brief ticksminor
      * @return
      */
-    size_t ticksminor() const
+    size_t get_minor_ticks() const
     {
         return _ticks_minor;
     }

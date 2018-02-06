@@ -19,35 +19,48 @@ Drawer::Drawer(const Configuration & config)
 void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & prop_thick,
 		const DrawerProperties<> & prop_thin)
 {
-	draw_split_axis(grid.radius, _config.get_input_thickness(), grid.start, grid.end, DrawerProperties<std::array<Color, 10>>(1, Color::BLACK,
-			Color::GLOW_10), grid.dir);
 	_cr->set_identity_matrix();
+
+	// Draw ring with colored segments which are used to color and distinguish the connectors
+	draw_segment_axis(grid.radius, _config.get_input_thickness(), grid.start, grid.end, DrawerProperties<std::array<Color, 10>>(1, Color::BLACK,
+				Color::GLOW_10), grid.direction);
+
+	// Calculate the inner and outer radius of the CoordGrid
 	double min_radius = grid.radius + _config.get_input_thickness();
 	double max_radius = grid.radius + _config.get_input_thickness() + grid.height;
 
+	// Radian distance (absolute!) between start and end angle
 	double span = angle_helper::rad_dist(grid.start.get(), grid.end.get());
 
-	std::size_t NUM_SEGMENTS = grid.major_ticks * grid.minor_ticks;
-	std::size_t THICK_LINES = grid.major_ticks;
+	// Calculate how the CoordGrid is separated into thin and thick lines (ticks)
+	const std::size_t NUM_SEGMENTS = grid.major_ticks * grid.minor_ticks;
+	const std::size_t NUM_THICK_LINES = grid.major_ticks;
 
+	// Draw the ticks of the CoordGrid
 	for (size_t i = 0; i <= NUM_SEGMENTS; ++i)
 	{
 		Angle a((grid.start.get() + i * span / NUM_SEGMENTS));
-		if (i % THICK_LINES)
+		if (i % NUM_THICK_LINES)
 			draw_line(Polar(min_radius, a), Polar(max_radius, a), prop_thin);
 		else
 			draw_line(Polar(min_radius, a), Polar(max_radius, a), prop_thick);
 	}
 
-	double y_dist = grid.height / (grid.outputs - 0.5);
+	// Adjusted difference between the radial lines of the CoordGrid (outputs)
+	double y_dist = grid.height / (grid.outputs - 0.5); // TODO: parameterize adjustment
 
+	// Draw the output lines of the CoordGrid
 	for (size_t i = 1; i < grid.outputs; ++i)
 	{
+		// TODO: add min/max values to each output
 		// Changed max_angle <-> min_angle. Whether fix or not depends on meaning of dir
-		draw_arc(min_radius + i * y_dist, grid.start, grid.end, grid.dir);
-		_cr->set_source_rgba(prop_thin.line_color.r(),
-				prop_thin.line_color.g(), prop_thin.line_color.b(),
-				prop_thin.line_color.a());
+		draw_arc(min_radius + i * y_dist, grid.start, grid.end, grid.direction);
+		_cr->set_source_rgba(
+		    prop_thin.line_color.r(),
+		    prop_thin.line_color.g(),
+		    prop_thin.line_color.b(),
+		    prop_thin.line_color.a()
+		    );
 		_cr->set_line_width(prop_thin.line_width);
 		_cr->stroke();
 	}
@@ -56,51 +69,60 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 void Drawer::draw_var_axis(const VarAxis & axis)
 {
 	_cr->set_identity_matrix();
-	draw_ring_segment(axis.radius, axis.height, axis.start, axis.end, axis.prop, Direction::INCREASING);
 
-	Angle span = axis.end - axis.start;
+	// Draw the base of the VarAxis: a filled ring segment
+	draw_ring_segment(axis.radius, axis.height, axis.start, axis.end, axis.prop, Direction::INCREASING); // TODO: Direction necessary?
 
+	// Radian distance (absolute!) between start and end angle
+	double span = angle_helper::rad_dist(axis.start.get(), axis.end.get());
+
+	// Calculate radii for ticks and labels
 	double start_radius = axis.radius + axis.height;
 	double end_radius_major = start_radius + 0.25 * axis.height;
 	double end_radius_minor = start_radius + 0.125 * axis.height;
 	double radius_tick_label = end_radius_major + 0.75 * axis.height;
 	double radius_label = end_radius_major + 3 * axis.height;
 
-	std::vector<Label> tick_label = axis.ticks.label();
-	size_t label_pos = 0;
+	// Tick values as strings
+	std::vector<Label> tick_labels = axis.ticks.get_labels();
+	std::size_t label_pos = 0;
 
-	size_t num_segments = axis.ticks.ticksmajor() * axis.ticks.ticksminor();
+	// Calculate how the VarAxis' ticks is separated into thin and thick lines (ticks)
+	const std::size_t NUM_SEGMENTS = axis.ticks.get_major_ticks() * axis.ticks.get_minor_ticks();
+	const std::size_t NUM_THICK_LINES = axis.ticks.get_major_ticks();
 
-	TextProperties text_prop("Liberation Serif", 12);
-
-	for (size_t i = 0; i <= num_segments; ++i)
+	// Draw the ticks and the associated values
+	for (size_t i = 0; i <= NUM_SEGMENTS; ++i)
 	{
-		Angle a((axis.start + span * (double(i) / double(num_segments))));
-		if (i % axis.ticks.ticksmajor())
-			draw_line(Polar(start_radius, a), Polar(end_radius_minor, a),
-					axis.prop.half_line_width());
+		Angle a((axis.start + span * (double(i) / double(NUM_SEGMENTS))));
+		if (i % NUM_THICK_LINES)
+		{
+			draw_line(
+			    Polar(start_radius, a),
+			    Polar(end_radius_minor, a),
+			    axis.prop.half_line_width()
+			    );
+		}
 		else
 		{
 			draw_line(Polar(start_radius, a), Polar(end_radius_major, a), axis.prop);
-			draw_text_parallel(tick_label.at(label_pos), Polar(radius_tick_label, a));
-			++label_pos;
+			draw_text_parallel(tick_labels[label_pos++], Polar(radius_tick_label, a));
 		}
 	}
 
+	// Draw the name of the Variable
 	draw_text_orthogonal(axis.label, Polar(radius_label, Angle::center(axis.start, axis.end)));
 }
 
 void Drawer::draw_data_link(const DataLink & link)
 {
+	// Calculate target from connector coordinate
 	Polar from = link.get_connector_coord();
-	// Subtract INPUT_THICKNESS to not draw into SplitAxis
 	Polar target1(from.r(), from.phi() - 0.001),
 			target2(from.r(), from.phi() + 0.001); // TODO: Subtract other values (from configuration?)
 
-	Polar origin1(link.get_input_coords()[0].r(), link.get_input_coords()[0].phi() - 0.0001),
-					origin2(link.get_input_coords()[0].r(), link.get_input_coords()[0].phi() + 0.0001);
-	std::size_t i = 0;
 	// Draw links
+	std::size_t i = 0;
 	for (Polar in: link.get_input_coords())
 	{
 		Polar origin1(in.r() - 2, in.phi() - 0.0001),
@@ -108,7 +130,7 @@ void Drawer::draw_data_link(const DataLink & link)
 		draw_link(origin1, origin2, target1, target2, link.get_link_prop(i++));
 	}
 
-	// draw line from connector to first output
+	// Draw line from connector to first output
 	Polar mod;
 	draw_connector(from, link.get_output_coords()[0], link.get_connector_prop());
 	draw_arrow(from, link.get_connector_prop());
@@ -121,7 +143,8 @@ void Drawer::draw_data_link(const DataLink & link)
 		from = to;
 		draw_coord_point(from, 0.005, (to.r() - mod.r()) * 2, link.get_connector_prop());
 	}
-	// Draw connector point on coord grid
+
+	// Draw connector on CoordGrid
 	for (size_t i = 2; i < link.get_output_coords().size(); ++i)
 	{
 		const Polar out = link.get_output_coords()[i];
@@ -137,35 +160,38 @@ void Drawer::draw_link(const Polar & origin1, const Polar & origin2,
 		const DrawerProperties<>& prop)
 {
 	_cr->set_identity_matrix();
-	Cartesian orig1, orig2, targ1, targ2;
-	_pc.convert(origin1, orig1);
-	_pc.convert(origin2, orig2);
-	_pc.convert(target1, targ1);
-	_pc.convert(target2, targ2);
 
-	Cartesian origin1_c = createLinkControlPoint(origin1);
-	Cartesian origin2_c = createLinkControlPoint(origin2);
-	Cartesian target1_c = createLinkControlPoint(target1);
-	Cartesian target2_c = createLinkControlPoint(target2);
+	// Convert given Polar to Cartesian coordinates
+	Cartesian origin1_c, origin2_c, target1_c, target2_c;
+	_pc.convert(origin1, origin1_c);
+	_pc.convert(origin2, origin2_c);
+	_pc.convert(target1, target1_c);
+	_pc.convert(target2, target2_c);
+
+	// Calculate control points for Bezier curve
+	Cartesian CTRL_ORIG1 = create_control_point(origin1);
+	Cartesian CTRL_ORIG2 = create_control_point(origin2);
+	Cartesian CTRL_TARG1 = create_control_point(target1);
+	Cartesian CTRL_TARG2 = create_control_point(target2);
 
 	_cr->begin_new_path();
+	_cr->move_to(origin1_c.x(), origin1_c.y());
 
-	//move to initial point
-	_cr->move_to(orig1.x(), orig1.y());
-	//bezier curve from origin1 to target1
-	_cr->curve_to(origin1_c.x(), origin1_c.y(), target1_c.x(), target1_c.y(),
-			targ1.x(), targ1.y());
-	_cr->curve_to(target2_c.x(), target2_c.y(), origin2_c.x(), origin2_c.y(),
-			orig2.x(), orig2.y());
+	// Draw first Bezier curve from origin to target
+	_cr->curve_to(CTRL_ORIG1.x(), CTRL_ORIG1.y(), CTRL_TARG1.x(), CTRL_TARG1.y(),
+			target1_c.x(), target1_c.y());
+	// Draw second Bezier curve from target to origin
+	_cr->curve_to(CTRL_TARG2.x(), CTRL_TARG2.y(), CTRL_ORIG2.x(), CTRL_ORIG2.y(),
+			origin2_c.x(), origin2_c.y());
 
+	// Set stroke and fill color and apply drawing
 	_cr->set_source_rgba(prop.fill_color.r(), prop.fill_color.g(),
 			prop.fill_color.b(), prop.fill_color.a());
 	_cr->fill_preserve();
-
 	_cr->set_source_rgba(prop.fill_color.r(), prop.fill_color.g(),
 			prop.fill_color.b(), prop.fill_color.a());
 	_cr->set_line_width(prop.line_width);
-	_cr->stroke(); //draw outline, but preserve path
+	_cr->stroke();
 }
 
 void Drawer::draw_connector(const Polar & from, const Polar & to,
@@ -221,14 +247,20 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 	_cr->stroke();
 }
 
-void Drawer::draw_split_axis(double inner_radius, double thickness,
+void Drawer::draw_segment_axis(double inner_radius, double thickness,
 		const Angle & begin, const Angle & end,
 		const DrawerProperties<std::array<Color, 10>> & prop, Direction dir)
 {
 	_cr->set_identity_matrix();
-	size_t num_of_splits = 10;
-	Angle segment_size = angle_helper::rad_dist(begin.get(), end.get()) / num_of_splits;
-	for (size_t i = 0; i < num_of_splits; ++i)
+
+	// Only draw axis with ten segments
+	const static std::size_t NUM_SPLITS = 10;
+
+	// Calculate segment size
+	double segment_size = angle_helper::rad_dist(begin.get(), end.get()) / NUM_SPLITS;
+
+	// Draw segments
+	for (size_t i = 0; i < NUM_SPLITS; ++i)
 	{
 		DrawerProperties<> inner_prop(prop.line_width, prop.line_color, prop.fill_color.at(i));
 		draw_ring_segment(inner_radius, thickness, begin + segment_size * i,
@@ -416,7 +448,7 @@ void Drawer::finish()
 	_cr->show_page();
 }
 
-Cartesian Drawer::createLinkControlPoint(const Polar & point)
+Cartesian Drawer::create_control_point(const Polar & point)
 {
 	Polar p_control { point };
 	Cartesian c_control;
