@@ -526,9 +526,9 @@ public:
     }
 private:
     /** Width and height of the coordinate system */
-    const size_t width, height;
+    const size_t 	width, height;
     /** Center coordinate of the coordinate system */
-    const double center_x, center_y;
+    const double 	center_x, center_y;
 };
 
 /* ostream operatoren */

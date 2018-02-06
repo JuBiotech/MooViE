@@ -293,7 +293,7 @@ BOOST_AUTO_TEST_CASE(multiplication_wrap)
 	double angle = 17;
 	double times = 33;
 	Angle a(angle);
-	BOOST_CHECK_EQUAL(a * times, Angle(angle * times));
+	BOOST_CHECK_CLOSE((a * times).get(), Angle(angle * times).get(), 0.000001);
 }
 
 BOOST_AUTO_TEST_CASE(multiplication_programatic)

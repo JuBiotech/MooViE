@@ -92,16 +92,16 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 
 void Drawer::draw_data_link(const DataLink & link)
 {
-	Polar from = link.connector_coord();
+	Polar from = link.get_connector_coord();
 	// Subtract INPUT_THICKNESS to not draw into SplitAxis
 	Polar target1(from.r(), from.phi() - 0.001),
 			target2(from.r(), from.phi() + 0.001); // TODO: Subtract other values (from configuration?)
 
-	Polar origin1(link.input_coords()[0].r(), link.input_coords()[0].phi() - 0.0001),
-					origin2(link.input_coords()[0].r(), link.input_coords()[0].phi() + 0.0001);
+	Polar origin1(link.get_input_coords()[0].r(), link.get_input_coords()[0].phi() - 0.0001),
+					origin2(link.get_input_coords()[0].r(), link.get_input_coords()[0].phi() + 0.0001);
 	std::size_t i = 0;
 	// Draw links
-	for (Polar in: link.input_coords())
+	for (Polar in: link.get_input_coords())
 	{
 		Polar origin1(in.r() - 2, in.phi() - 0.0001),
 				origin2(in.r() - 2, in.phi() + 0.0001); // TODO: Subtract other values (from configuration?)
@@ -110,25 +110,25 @@ void Drawer::draw_data_link(const DataLink & link)
 
 	// draw line from connector to first output
 	Polar mod;
-	draw_connector(from, link.output_coords()[0], link.connector_prop());
-	draw_arrow(from, link.connector_prop());
-	from = link.output_coords()[0];
-	if (link.output_coords().size() > 1)
+	draw_connector(from, link.get_output_coords()[0], link.get_connector_prop());
+	draw_arrow(from, link.get_connector_prop());
+	from = link.get_output_coords()[0];
+	if (link.get_output_coords().size() > 1)
 	{
-		const Polar & to = link.output_coords()[1];
+		const Polar & to = link.get_output_coords()[1];
 		mod = Util::get_connector_end(from, to);
-		draw_connector(from, mod, link.connector_prop());
+		draw_connector(from, mod, link.get_connector_prop());
 		from = to;
-		draw_coord_point(from, 0.005, (to.r() - mod.r()) * 2, link.connector_prop());
+		draw_coord_point(from, 0.005, (to.r() - mod.r()) * 2, link.get_connector_prop());
 	}
 	// Draw connector point on coord grid
-	for (size_t i = 2; i < link.output_coords().size(); ++i)
+	for (size_t i = 2; i < link.get_output_coords().size(); ++i)
 	{
-		const Polar out = link.output_coords()[i];
+		const Polar out = link.get_output_coords()[i];
 		mod = Util::get_connector_end(from, out);
-		draw_connector(Util::get_connector_start(from, out), mod, link.connector_prop());
+		draw_connector(Util::get_connector_start(from, out), mod, link.get_connector_prop());
 		from = out;
-		draw_coord_point(from, 0.005, (out.r() - mod.r()) * 2, link.connector_prop());
+		draw_coord_point(from, 0.005, (out.r() - mod.r()) * 2, link.get_connector_prop());
 	}
 }
 

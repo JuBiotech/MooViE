@@ -28,18 +28,16 @@ Scene::Scene(const Configuration & config)
 		  Color::BLACK, Color::GLOW_10
 		  )
 {
+	// Calculate
 	double angle = 180 / _set.input_variables().size() - config.get_input_separation_angle();
 	double start = 90, end = start+angle;
+
 	std::size_t i = 0;
 	for (DefVar var: _set.input_variables())
 	{
-		Polar p(config.get_input_inner_radius(), angle_helper::deg_to_rad(end));
-		Cartesian c; PolarCartesian pc(800, 800); pc.convert(p, c);
-		std::cout << p << " to " << c << std::endl;
 		_axis.push_back(
 				VarAxis(
-						Ticks(10, 10, std::make_pair(var.min, var.max),
-								TextProperties("Liberation Serif", 8), "cm"),
+						Ticks(10, 10, std::make_pair(var.min, var.max), config.get_tick_label(), "cm"),
 						angle_helper::deg_to_rad(start),
 						angle_helper::deg_to_rad(end),
 						config.get_input_inner_radius(), config.get_input_thickness(),
@@ -56,21 +54,27 @@ Scene::Scene(const Configuration & config)
 	for (DefDataRow row: _set)
 	{
 		std::vector<Polar> in, out;
+
 		for (std::size_t k = 0; k < _axis.size(); ++k)
 		{
 			in.push_back(_axis[k].get_coord(row[k].value)); // TODO: Throw null value exception
 		}
+
 		Polar connector(config.get_output_inner_radius(), _grid.get_coord(row[_axis.size()].value, 0).phi());
+
 		for (std::size_t k = 0; k < _grid.outputs; ++k)
 		{
 			out.push_back(_grid.get_coord(row[_axis.size() + k].value, k)); // TODO: Throw null value exception
 		}
+
 		const Color & c = _grid.get_color(row[_set.input_variables().size()].value);
 		DataLink link(in, connector, out, DrawerProperties<>(0.4, c, Color(c.r(), c.g(), c.b(), 0.5)));
+
 		for(const VarAxis & va: _axis)
 		{
 			link.add_link_prop(va.prop);
 		}
+
 		_links.push_back(link);
 	}
 

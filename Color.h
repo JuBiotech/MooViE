@@ -112,20 +112,20 @@ private:
 
 public:
     /** An array of Colors */
-    static const std::array<Color, 10> GLOW_10;
+    static const std::array<Color, 10> 	GLOW_10;
 
     /** A Triangular storage which contains i+1
      * matching colors at the i-th index.
      */
-    static const Triangle<Color, 12> SET3;
+    static const Triangle<Color, 12> 	SET3;
 
     /** A Color constant representing black (0,0,0,1) */
-    static const Color BLACK;
+    static const Color 					BLACK;
 
     /** Further color constants */
-    static const Color SET2_3_1;
-    static const Color SET2_3_2;
-    static const Color SET2_3_3;
+    static const Color 					SET2_3_1;
+    static const Color 					SET2_3_2;
+    static const Color 					SET2_3_3;
 
 };
 
