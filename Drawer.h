@@ -3,7 +3,6 @@
 
 #include "PolarCartesian.h"
 #include "DrawerProperties.h"
-#include "Link.h"
 #include "Ticks.h"
 #include "CoordGrid.h"
 #include "VarAxis.h"
@@ -79,7 +78,7 @@ private:
      * @param target2 second target coordinate
      * @param prop DrawerProperties for the link
      */
-	void draw_link(const Polar & origin1, const Polar & origin2,
+    void draw_link(const Polar & origin1, const Polar & origin2,
 			const Polar & target1, const Polar & target2,
 			const DrawerProperties<>& prop);
 

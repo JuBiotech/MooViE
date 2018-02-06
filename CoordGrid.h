@@ -60,22 +60,22 @@ public:
 
 public:
     /** The number of outputs. */
-    std::size_t 		outputs;
+    std::size_t 	outputs;
 
     /** The major and minor sections */
-    std::size_t 		major_ticks, minor_ticks;
+    std::size_t 	major_ticks, minor_ticks;
 
     /** Start and end angle for drawing the CoordGrid */
-    Angle 				start, end;
+    Angle 		start, end;
     /** Radius of the CoordGrid */
-    double 				radius;
+    double 		radius;
     /** Height of the CoordGrid */
-    double 				height;
+    double 		height;
     /** Direction of the CoordGrid's values */
-    Direction 			direction;
+    Direction 		direction;
 
 private:
-    /** Vector of mappings from actual values to cartesian coordinates */
+    /** Vector of mappings from actual values to radii */
     std::vector<Mapper> _output_mappers;
 };
 
