@@ -184,7 +184,7 @@ void Drawer::draw_link(const Polar & origin1, const Polar & origin2,
 	_cr->curve_to(CTRL_TARG2.x(), CTRL_TARG2.y(), CTRL_ORIG2.x(), CTRL_ORIG2.y(),
 			origin2_c.x(), origin2_c.y());
 
-	// Set stroke and fill color and apply drawing
+	// Set line and fill style and apply drawing
 	_cr->set_source_rgba(prop.fill_color.r(), prop.fill_color.g(),
 			prop.fill_color.b(), prop.fill_color.a());
 	_cr->fill_preserve();
@@ -197,32 +197,36 @@ void Drawer::draw_link(const Polar & origin1, const Polar & origin2,
 void Drawer::draw_connector(const Polar & from, const Polar & to,
 		const DrawerProperties<> & prop)
 {
-	const double p1 = 0.2;
-	const double p2 = 0.2;
-	const double p3 = 0.6;
+	_cr->set_identity_matrix();
+  	_cr->begin_new_path();
 
+	// Only use 0.2 as distance factor
+	const static double dist_factor = 0.2;
+
+	// Calculate to intermediate coordinates to draw the arc from
 	double radial_dist = to.r() - from.r();
-	Polar intermediate1 {from.r() + p1 * radial_dist,from.phi() };
-	Polar intermediate2 {to.r() - p2 * radial_dist, to.phi() };
+	Polar intermediate1 {from.r() + dist_factor * radial_dist,from.phi() };
+	Polar intermediate2 {to.r() - dist_factor * radial_dist, to.phi() };
 
+	// Convert to Cartesian coordinates
 	Cartesian real_from_c;
 	Cartesian real_to_c;
 	Cartesian intermediate1_c;
 	Cartesian intermediate2_c;
-
 	_pc.convert(from, real_from_c);
 	_pc.convert(to, real_to_c);
 	_pc.convert(intermediate1, intermediate1_c);
 	_pc.convert(intermediate2, intermediate2_c);
 
-	_cr->set_identity_matrix();
-	_cr->begin_new_path();
+	// Line from start to first intermediate
 	_cr->move_to(real_from_c.x(), real_from_c.y());
 	_cr->line_to(intermediate1_c.x(), intermediate1_c.y());
 
+	// Draw arc by approximating circle segments linearly
 	//TODO: nicer bezier solution!
-	double r_diff = radial_dist * p3;
-	double d0 = angle_helper::rad_dist(from.phi().get(), to.phi().get()), d1 = angle_helper::rad_dist(to.phi().get(), from.phi().get());
+	double r_diff = radial_dist * 0.6;
+	double d0 = angle_helper::rad_dist(from.phi().get(), to.phi().get()),
+	    d1 = angle_helper::rad_dist(to.phi().get(), from.phi().get());
 	double phi_diff = d0 <= d1 ? d0 : -d1;
 	size_t steps = 10;
 
@@ -236,14 +240,14 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 		_cr->line_to(next_c.x(), next_c.y());
 	}
 
-
+	// Line from second intermediate to end
 	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
 	_cr->line_to(real_to_c.x(), real_to_c.y());
 
+	// Set line style and apply drawing
 	_cr->set_source_rgba(prop.line_color.r(), prop.line_color.g(), prop.line_color.b(),
 			prop.line_color.a());
 	_cr->set_line_width(prop.line_width);
-
 	_cr->stroke();
 }
 
@@ -268,30 +272,45 @@ void Drawer::draw_segment_axis(double inner_radius, double thickness,
 	}
 }
 
-void Drawer::draw_coord_point(const Polar& coord, const Angle& width,
-		double height, const DrawerProperties<>& prop)
+void Drawer::draw_coord_point(const Polar & coord, const Angle & width,
+		double height, const DrawerProperties<> & prop)
 {
 	_cr->set_identity_matrix();
+
+	// Calculate the radius and the angles between the box should be drawn
 	double inner_radius = coord.r() - 0.5 * height;
 	Angle begin = coord.phi() - width * 0.5;
 	Angle end = coord.phi() + width * 0.5;
-	draw_ring_segment(inner_radius, height, begin, end, prop,
-			Direction::INCREASING);
+
+	// Draw segment
+	draw_ring_segment(inner_radius, height, begin, end, prop, Direction::INCREASING);
 }
 
 void Drawer::draw_arc(double radius, const Angle & start, const Angle & end,
 		Direction dir)
 {
 	_cr->set_identity_matrix();
+
+	// Draw arc begin->end or end->begin depending on direction
 	switch (dir)
 	{
 	case Direction::INCREASING:
-		_cr->arc(_pc.center().x(), _pc.center().y(), radius, start.get(),
-				end.get());
+		_cr->arc(
+		    _pc.center().x(),
+		    _pc.center().y(),
+		    radius,
+		    start.get(),
+		    end.get()
+		    );
 		break;
 	case Direction::DECREASING:
-		_cr->arc_negative(_pc.center().x(), _pc.center().y(), radius,
-				start.get(), end.get());
+		_cr->arc_negative(
+		    _pc.center().x(),
+		    _pc.center().y(),
+		    radius,
+		    start.get(),
+		    end.get()
+		    );
 		break;
 	}
 }
@@ -303,26 +322,23 @@ void Drawer::draw_ring_segment(double inner_radius, double thickness,
 	_cr->set_identity_matrix();
 	_cr->begin_new_path();
 
-	const Angle beginn = 2 * M_PI - end;
-	const Angle endn = 2 * M_PI - begin;
+	// Calculate cairo angles
+	const Angle & CAIRO_BEGIN = Util::get_cairo_angle(end);
+	const Angle & CAIRO_END = Util::get_cairo_angle(begin);
 
-	draw_arc(inner_radius, beginn, endn, dir);
-	switch (dir)
-	{
-	case Direction::INCREASING:
-		draw_arc(inner_radius + thickness, endn, beginn, Direction::DECREASING);
-		break;
-	case Direction::DECREASING:
-		draw_arc(inner_radius + thickness, endn, beginn, Direction::INCREASING);
-		break;
-	}
+	// Draw first arc
+	draw_arc(inner_radius, CAIRO_BEGIN, CAIRO_END, Direction::INCREASING);
+
+	// Draw second arc depending on first one
+	draw_arc(inner_radius + thickness, CAIRO_END, CAIRO_BEGIN,
+		 dir == Direction::INCREASING ? Direction::DECREASING : Direction::INCREASING);
 
 	_cr->close_path();
 
+	// Set line and fill color and apply drawing
 	_cr->set_source_rgba(prop.fill_color.r(), prop.fill_color.g(),
 			prop.fill_color.b(), prop.fill_color.a());
-	_cr->fill_preserve(); //fill, but preserve path
-
+	_cr->fill_preserve();
 	_cr->set_source_rgba(prop.line_color.r(), prop.line_color.g(),
 			prop.line_color.b(), prop.line_color.a());
 	_cr->set_line_width(prop.line_width);
@@ -334,26 +350,28 @@ void Drawer::draw_arrow(const Polar & start, const DrawerProperties<> & prop)
 	_cr->set_identity_matrix();
 	_cr->begin_new_path();
 
-	const double height = 5;
+	// Only draw arrows with height of 5
+	const static double height = 5;
 
+	// Calculate arrow coordinates
 	Polar start_help(start.r() - height, start.phi()),
-			direction_help(start.r(), start.phi()),
+			direction_help(start.r() - height / 2, start.phi()),
 			left_help(start.r() - height, start.phi() - height / 1000),
 			right_help(start.r() - height, start.phi() + height / 1000);
 
+	// Convert arrow coordinates into Cartesian coordinates
 	Cartesian start_c, direction_c, left, right;
 	_pc.convert(start_help, start_c);
 	_pc.convert(direction_help, direction_c);
 	_pc.convert(left_help, left);
 	_pc.convert(right_help, right);
 
+	// Calculate head coordinate h = p + height * (d - p) / ||d-p||
 	double p_x = start_c.x(), p_y = start_c.y(), d_x = direction_c.x(), d_y = direction_c.y();
-
 	double diff_len = std::sqrt(std::pow(d_x - p_x, 2) + std::pow(d_y - p_y, 2));
-
 	Cartesian head(p_x + height * (d_x - p_x) / diff_len, p_y + height * (d_y - p_y) / diff_len);
 
-
+	// Draw path and apply after setting line and fill style
 	_cr->move_to(head.x(), head.y());
 	_cr->line_to(right.x(), right.y());
 	_cr->line_to(left.x(), left.y());
@@ -369,9 +387,13 @@ void Drawer::draw_line(const Polar& from, const Polar& to,
 {
 	_cr->set_identity_matrix();
 	_cr->begin_new_path();
+
+	// Convert to Cartesian coordinates
 	Cartesian from_c, to_c;
 	_pc.convert(from, from_c);
 	_pc.convert(to, to_c);
+
+	// Draw path and apply after setting line style
 	_cr->move_to(from_c.x(), from_c.y());
 	_cr->line_to(to_c.x(), to_c.y());
 	_cr->set_source_rgba(prop.line_color.r(), prop.line_color.g(),
@@ -444,15 +466,20 @@ void Drawer::draw_text_orthogonal(const Label & label, const Polar & start)
 
 void Drawer::finish()
 {
-	_cr->save(); // save the state of the context
+	// save the state of the context
+	_cr->save();
 	_cr->show_page();
 }
 
 Cartesian Drawer::create_control_point(const Polar & point)
 {
-	Polar p_control { point };
-	Cartesian c_control;
-	p_control.r() -= _linkControlStrength;
-	_pc.convert(p_control, c_control);
-	return c_control;
+	// Create Polar coordinate control point
+	Polar control(point);
+	control.r() -= _link_control_strength;
+
+	// Convert to Cartesian coordinates
+	Cartesian control_c;
+	_pc.convert(control, control_c);
+
+	return control_c;
 }

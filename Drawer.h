@@ -25,11 +25,11 @@
 class Drawer
 {
 public:
-    /** Creates a Drawer wich draws to a file with the given path on
+    /** Creates a Drawer which draws to a file with the given path on
      * a surface from (0,0) with the given configuration width and
      * height.
      * Drawer uses polar coordinate inputs which are transformed into
-     * cartesian coordinates. The cartesian center of its coordinate 
+     * Cartesian coordinates. The Cartesian center of its coordinate
      * system is (width/2, height/2).
      * @brief Drawer
      * @param config the Configuration instance
@@ -183,15 +183,16 @@ private:
 
 private:
     /** MooViE configuration */
-    const Configuration & _config;
+    const Configuration & 		_config;
 
     /** Polar-Cartesian converting */
-    const PolarCartesian _pc;
+    const PolarCartesian 		_pc;
+
     /** Cairo reference pointer, the interface for calling Cairo functions. */
-    Cairo::RefPtr<Cairo::Context> _cr;
+    Cairo::RefPtr<Cairo::Context> 	_cr;
 
     /** ??? */
-    double _linkControlStrength = 100.0;
+    double 				_link_control_strength 	= 100.0;
 
 };
 
