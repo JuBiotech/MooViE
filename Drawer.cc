@@ -9,9 +9,10 @@
 #include <iostream>
 #include <cmath>
 
-Drawer::Drawer(const Configuration & config)
-: _config(config), _pc(config.get_width(), config.get_height())
+Drawer::Drawer()
+: _pc(Configuration::get_instance().get_width(), Configuration::get_instance().get_height())
 {
+	const Configuration & config = Configuration::get_instance();
 	const Cairo::RefPtr<Cairo::Surface>& ptr = Cairo::SvgSurface::create(config.get_output_file(), config.get_width(), config.get_height());
 	_cr = Cairo::Context::create(ptr);
 }
@@ -22,12 +23,12 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 	_cr->set_identity_matrix();
 
 	// Draw ring with colored segments which are used to color and distinguish the connectors
-	draw_segment_axis(grid.radius, _config.get_input_thickness(), grid.start, grid.end, DrawerProperties<std::array<Color, 10>>(1, Color::BLACK,
+	draw_segment_axis(grid.radius, Configuration::get_instance().get_input_thickness(), grid.start, grid.end, DrawerProperties<std::array<Color, 10>>(1, Color::BLACK,
 				Color::GLOW_10), grid.direction);
 
 	// Calculate the inner and outer radius of the CoordGrid
-	double min_radius = grid.radius + _config.get_input_thickness();
-	double max_radius = grid.radius + _config.get_input_thickness() + grid.height;
+	double min_radius = grid.radius + Configuration::get_instance().get_input_thickness();
+	double max_radius = grid.radius + Configuration::get_instance().get_input_thickness() + grid.height;
 
 	// Radian distance (absolute!) between start and end angle
 	double span = angle_helper::rad_dist(grid.start.get(), grid.end.get());
@@ -118,15 +119,15 @@ void Drawer::draw_data_link(const DataLink & link)
 {
 	// Calculate target from connector coordinate
 	Polar from = link.get_connector_coord();
-	Polar target1(from.r(), from.phi() - 0.001),
-			target2(from.r(), from.phi() + 0.001); // TODO: Subtract other values (from configuration?)
+	Polar target1(from.r() - 5, from.phi() - 0.001),
+			target2(from.r() - 5, from.phi() + 0.001); // TODO: Subtract other values (from configuration?)
 
 	// Draw links
 	std::size_t i = 0;
 	for (Polar in: link.get_input_coords())
 	{
-		Polar origin1(in.r() - 2, in.phi() - 0.0001),
-				origin2(in.r() - 2, in.phi() + 0.0001); // TODO: Subtract other values (from configuration?)
+		Polar origin1(in.r() - 10, in.phi() - 0.0001),
+				origin2(in.r() - 10, in.phi() + 0.0001); // TODO: Subtract other values (from configuration?)
 		draw_link(origin1, origin2, target1, target2, link.get_link_prop(i++));
 	}
 
@@ -356,8 +357,8 @@ void Drawer::draw_arrow(const Polar & start, const DrawerProperties<> & prop)
 	// Calculate arrow coordinates
 	Polar start_help(start.r() - height, start.phi()),
 			direction_help(start.r() - height / 2, start.phi()),
-			left_help(start.r() - height, start.phi() - height / 1000),
-			right_help(start.r() - height, start.phi() + height / 1000);
+			left_help(start.r() - height, start.phi() - height / 500),
+			right_help(start.r() - height, start.phi() + height / 500);
 
 	// Convert arrow coordinates into Cartesian coordinates
 	Cartesian start_c, direction_c, left, right;
@@ -377,7 +378,7 @@ void Drawer::draw_arrow(const Polar & start, const DrawerProperties<> & prop)
 	_cr->line_to(left.x(), left.y());
 	_cr->set_source_rgba(prop.line_color.r(), prop.line_color.g(),
 				prop.line_color.b(), prop.line_color.a());
-	_cr->set_line_width(prop.line_width);
+	_cr->set_line_width(0.1); // TODO: replace with constant
 	_cr->fill_preserve();
 	_cr->stroke();
 }

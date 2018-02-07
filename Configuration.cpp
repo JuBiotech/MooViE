@@ -7,16 +7,24 @@
 
 #include "Configuration.h"
 
-Configuration::Configuration(const std::string & fname, std::size_t inputs)
-: _input_file(fname), _num_inputs(inputs) {}
+std::shared_ptr<Configuration> Configuration::_instance;
 
-Configuration::Configuration(const std::string & fname, std::size_t inputs, const std::string & fpath)
+void Configuration::initialize(const std::string & fname, std::size_t inputs, const std::string & cpath)
+{
+    _instance = std::shared_ptr<Configuration>(new Configuration(fname, inputs, cpath));
+}
+
+Configuration::Configuration()
+: _num_inputs(0)
+{}
+
+Configuration::Configuration(const std::string & fname, std::size_t inputs, const std::string & cpath)
 : _input_file(fname), _num_inputs(inputs),
   mooviec_int("moovie\\.\\w+=\\d+"),
   mooviec_dbl("moovie\\.\\w+=(\\d+(\\.\\d+)?|\\.\\d+)"),
   mooviec_name("moovie\\.\\w+=[a-zA-Z ]+")
 {
-	std::string content = Util::read_file(fpath);
+	std::string content = Util::read_file(cpath);
 
 	for (std::string line: Util::split(content, "\n"))
 	{

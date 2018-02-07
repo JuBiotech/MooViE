@@ -25,15 +25,14 @@ class Drawer
 {
 public:
     /** Creates a Drawer which draws to a file with the given path on
-     * a surface from (0,0) with the given configuration width and
+     * a surface from (0,0) with the stored configuration width and
      * height.
      * Drawer uses polar coordinate inputs which are transformed into
      * Cartesian coordinates. The Cartesian center of its coordinate
      * system is (width/2, height/2).
      * @brief Drawer
-     * @param config the Configuration instance
      */
-    Drawer(const Configuration & config);
+    Drawer();
 
     /** Writes and closes file correctly on destruction of this Drawer.
      * @brief ~Drawer
@@ -181,9 +180,6 @@ private:
 	Cartesian create_control_point(const Polar & point);
 
 private:
-    /** MooViE configuration */
-    const Configuration & 		_config;
-
     /** Polar-Cartesian converting */
     const PolarCartesian 		_pc;
 

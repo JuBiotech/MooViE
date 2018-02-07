@@ -24,11 +24,10 @@
 class Scene
 {
 public:
-    /** Creates a new Scene from a given Configuration.
+    /** Creates a new MooViE Scene.
      * @brief Scene
-     * @param config the MooViE configuration
      */
-    Scene(const Configuration & config);
+    Scene();
 
     /** Draws the Scene with CoordGrid, VarAxis' and DataLinks.
      * @brief draw_scene
@@ -36,9 +35,6 @@ public:
     void draw_scene(void);
 
 private:
-    /** MooViE configuration */
-    const Configuration & 			_config;
-
     /** Data set */
     DefDataSet 					_set;
 

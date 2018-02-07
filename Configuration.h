@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include <regex>
+#include <memory>
 #include "Utils.h"
 #include "DrawerProperties.h"
 
@@ -18,9 +19,15 @@
  *
  */
 class Configuration {
+private:
+	static std::shared_ptr<Configuration> _instance;
 public:
-	Configuration(const std::string & fname, std::size_t inputs);
-	Configuration(const std::string & fname, std::size_t inputs, const std::string & fpath);
+	inline static Configuration & get_instance()
+	{
+	  return *_instance; // TODO: throw exception if empty
+	}
+
+	static void initialize(const std::string & fname, std::size_t inputs, const std::string & cpath = ".");
 
 	inline const std::string & get_input_file() const {
 		return _input_file;
@@ -128,6 +135,9 @@ public:
 	}
 
 private:
+	Configuration();
+	Configuration(const std::string & fname, std::size_t inputs, const std::string & cpath);
+
 	/* Absolute file paths for data (input) and image (output) */
 	std::string 		_input_file;
 	std::string		_output_file 		= "image.svg";

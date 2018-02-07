@@ -24,7 +24,7 @@ CoordGrid::CoordGrid(std::size_t major_ticks_, std::size_t minor_ticks_,
 Polar CoordGrid::get_coord(double val, std::size_t num_output) const
 {
 	if (num_output >= outputs); // TODO: throw exception
-	return Polar(radius + config::INPUT_THICKNESS + num_output * (height / (outputs - 0.5)),
+	return Polar(radius + Configuration::get_instance().get_output_thickness() + num_output * (height / (outputs - 0.5)),
 			_output_mappers[num_output].map(val));
 }
 
@@ -33,9 +33,14 @@ Color CoordGrid::get_color(double val) const
 	double range = angle_helper::rad_dist(start.get(), end.get());
 	double angle = _output_mappers[0].map(val);
 
-	size_t i;
+	std::size_t i;
 	for (i = 0; i < 10; ++i)
+	{
 		if (angle < start.get() + i * range / 10)
+		{
 			break;
+		}
+	}
+
 	return Color::GLOW_10[i-1];
 }

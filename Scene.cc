@@ -6,30 +6,30 @@
  */
 
 #include "Scene.h"
-#include "Config.h"
 #include <iostream>
 
-Scene::Scene(const Configuration & config)
-: _config(config),
-  _set(
+Scene::Scene()
+: _set(
 		  DataSet<double>::parse_from_csv(
-				  Util::read_file(config.get_input_file()),
-				  config.get_num_inputs())
+				  Util::read_file(Configuration::get_instance().get_input_file()),
+				  Configuration::get_instance().get_num_inputs())
 		  ),
-  _drawer(config),
+  _drawer(),
   _grid(
 		  10, 10,
 		  angle_helper::deg_to_rad(310), angle_helper::deg_to_rad(50),
-		  config.get_output_inner_radius(), config.get_grid_size(),
+		  Configuration::get_instance().get_output_inner_radius(), Configuration::get_instance().get_grid_size(),
 		  Direction::INCREASING, _set.output_variables()
 		  ),  // TODO: add output angle calculation
   _split_prop(
-		  config.get_prop_thick().line_width,
+		  Configuration::get_instance().get_prop_thick().line_width,
 		  Color::BLACK, Color::GLOW_10
 		  )
 {
+	const Configuration & config = Configuration::get_instance();
+
 	// Calculate
-	double angle = 180 / _set.input_variables().size() - config.get_input_separation_angle();
+	double angle = 180 / _set.input_variables().size() - Configuration::get_instance().get_input_separation_angle();
 	double start = 90, end = start+angle;
 
 	std::size_t i = 0;
@@ -59,11 +59,11 @@ Scene::Scene(const Configuration & config)
 
 		for (std::size_t k = 0; k < _axis.size(); ++k)
 		{
-		    const Polar & s = _axis[k].get_coord(row[k].value); std::cout << row[k].value << "->" << s << std::endl;
-			in.push_back(s); // TODO: Throw null value exception
+			in.push_back(_axis[k].get_coord(row[k].value)); // TODO: Throw null value exception
 		}
 
-		Polar connector(config.get_output_inner_radius(), _grid.get_coord(row[_axis.size()].value, 0).phi());
+		// TODO: subtract other value (from configuration?)
+		Polar connector(config.get_output_inner_radius() - 10, _grid.get_coord(row[_axis.size()].value, 0).phi());
 
 		for (std::size_t k = 0; k < _grid.outputs; ++k)
 		{
@@ -91,7 +91,8 @@ void Scene::draw_scene(void)
 		_drawer.draw_data_link(link);
 	}
 
-	_drawer.draw_coord_grid(_grid, _config.get_prop_thick(), _config.get_prop_thin());
+	const Configuration & config = Configuration::get_instance();
+	_drawer.draw_coord_grid(_grid, config.get_prop_thick(), config.get_prop_thin());
 
 	for (VarAxis axis: _axis)
 	{

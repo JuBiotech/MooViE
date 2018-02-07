@@ -76,26 +76,27 @@ int DefDataSet_test(void)
 
 int Scene_test(void)
 {
-	Configuration config("/home/stratmann/MooViE/testfiles/input.csv", 3);
-	config.set_output_file("/home/stratmann/MooViE/image.svg");
-	Scene mainScene(config);
+	Configuration::initialize("/home/stratmann/MooViE/testfiles/input.csv", 3);
+	Configuration::get_instance().set_output_file("/home/stratmann/MooViE/image.svg");
+	Scene mainScene;
 
 	return 0;
 }
 
 int Configuration_test(void)
 {
-	Configuration conf("/home/stratmann/MooViE/testfiles/input.csv", 3, "/home/stratmann/MooViE/testfiles/moovie.conf");
+	Configuration::initialize("/home/stratmann/MooViE/testfiles/input.csv", 3, "/home/stratmann/MooViE/testfiles/moovie.conf");
+	const Configuration & config = Configuration::get_instance();
 
-	std::cout << "fname: " << conf.get_input_file() << std::endl
-			<< "output file: " << conf.get_output_file() << std::endl
-			<< "width: " << conf.get_width() << std::endl
-			<< "height: " << conf.get_width() << std::endl
-			<< "input inner radius: " << conf.get_input_inner_radius() << std::endl
-			<< "output thickness: " << conf.get_input_thickness() << std::endl
-			<< "output inner radius: " << conf.get_output_inner_radius() << std::endl
-			<< "output thickness: " << conf.get_output_thickness() << std::endl
-			<< "grid size: " << conf.get_grid_size() << std::endl;
+	std::cout << "fname: " << config.get_input_file() << std::endl
+			<< "output file: " << config.get_output_file() << std::endl
+			<< "width: " << config.get_width() << std::endl
+			<< "height: " << config.get_width() << std::endl
+			<< "input inner radius: " << config.get_input_inner_radius() << std::endl
+			<< "output thickness: " << config.get_input_thickness() << std::endl
+			<< "output inner radius: " << config.get_output_inner_radius() << std::endl
+			<< "output thickness: " << config.get_output_thickness() << std::endl
+			<< "grid size: " << config.get_grid_size() << std::endl;
 
 	return 0;
 }
@@ -112,15 +113,15 @@ int All_test(int argc, const char * argv[])
 		}
 		else if (args.has_config_file())
 		{
-			Configuration config(args.get_input_file(), args.get_num_inputs(), args.get_config_file());
+			Configuration::initialize(args.get_input_file(), args.get_num_inputs(), args.get_config_file());
 			if (args.has_output_file())
-				config.set_output_file(args.get_output_file());
-			Scene main(config);
+				Configuration::get_instance().set_output_file(args.get_output_file());
+			Scene main;
 		}
 		else
 		{
-			Configuration config(args.get_input_file(), args.get_num_inputs());
-			Scene main(config);
+			Configuration::initialize(args.get_input_file(), args.get_num_inputs());
+			Scene main;
 		}
 		return 0;
 	} catch (ParseException & e)
