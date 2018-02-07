@@ -31,16 +31,15 @@ int Args_test(int argc, char const * argv[])
 {
 	try
 	{
-		const Args & args =
-				Args::parse_from_commandline(argc, argv);
+		const Args & args = Args::parse(argc, argv);
 
 		if (args.help())
 			std::cout << Args::HELP_STRING << std::endl;
 		else
 			std::cout << "Given MooViE arguments:" << std::endl <<
 			"Width: " << args.width() << ", Height: " << args.height() << std::endl <<
-			"Inputs: " << args.inputs() << std::endl <<
-			"Output file: " << args.output_file() << ", input file: " << args.input_file() << std::endl <<
+			"Inputs: " << args.get_num_inputs() << std::endl <<
+			"Output file: " << args.get_output_file() << ", input file: " << args.get_input_file() << std::endl <<
 			"Input file format: " << args.file_type() << std::endl;
 		return 0;
 	} catch (ParseException & e)
@@ -105,7 +104,7 @@ int All_test(int argc, const char * argv[])
 {
 	try
 	{
-		const Args & args = Args::parse_from_commandline(argc, argv);
+		const Args & args = Args::parse(argc, argv);
 
 		if (args.help())
 		{
@@ -113,14 +112,14 @@ int All_test(int argc, const char * argv[])
 		}
 		else if (args.has_config_file())
 		{
-			Configuration config(args.input_file(), args.inputs(), args.config_file());
+			Configuration config(args.get_input_file(), args.get_num_inputs(), args.get_config_file());
 			if (args.has_output_file())
-				config.set_output_file(args.output_file());
+				config.set_output_file(args.get_output_file());
 			Scene main(config);
 		}
 		else
 		{
-			Configuration config(args.input_file(), args.inputs());
+			Configuration config(args.get_input_file(), args.get_num_inputs());
 			Scene main(config);
 		}
 		return 0;

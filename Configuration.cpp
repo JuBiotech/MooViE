@@ -8,10 +8,10 @@
 #include "Configuration.h"
 
 Configuration::Configuration(const std::string & fname, std::size_t inputs)
-: _input_file(fname), _inputs(inputs) {}
+: _input_file(fname), _num_inputs(inputs) {}
 
 Configuration::Configuration(const std::string & fname, std::size_t inputs, const std::string & fpath)
-: _input_file(fname), _inputs(inputs),
+: _input_file(fname), _num_inputs(inputs),
   mooviec_int("moovie\\.\\w+=\\d+"),
   mooviec_dbl("moovie\\.\\w+=(\\d+(\\.\\d+)?|\\.\\d+)"),
   mooviec_name("moovie\\.\\w+=[a-zA-Z ]+")

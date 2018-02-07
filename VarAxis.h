@@ -27,9 +27,10 @@ public:
 	/**
 	 *
 	 */
-	VarAxis(Ticks ticks_, const Angle & start_, const Angle & end_,
-			double radius_, std::size_t height_, DefVar var_,
-			const DrawerProperties<> & prop_, const TextProperties & text_prop_);
+	VarAxis( DefVar var_, Ticks ticks_,
+		const Angle & start_, const Angle & end_,
+		double radius_, std::size_t height_,
+		const DrawerProperties<> & prop_, const TextProperties & text_prop_);
 
 	/**
 	 *

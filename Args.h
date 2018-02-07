@@ -15,7 +15,8 @@
 #include "Utils.h"
 
 /** Argument storage for MooViE.
- *
+ * @author stratmann
+ * @date 28.11.2017
  */
 class Args {
 public:
@@ -40,14 +41,14 @@ public:
 	};
 
 public:
-	static Args parse_from_commandline(int argc, char const * argv[]);
+	static Args parse(int argc, char const * argv[]) throw (ParseException);
 
 	inline int width() const { return _width; }
 	inline int height() const { return _height; }
-	inline std::size_t inputs() const { return _inputs; };
-	inline const std::string & output_file() const { return _output_file; }
-	inline const std::string & input_file() const { return _input_file; }
-	inline const std::string & config_file() const { return _config_file; };
+	inline std::size_t get_num_inputs() const { return _num_inputs; };
+	inline const std::string & get_output_file() const { return _output_file; }
+	inline const std::string & get_input_file() const { return _input_file; }
+	inline const std::string & get_config_file() const { return _config_file; };
 	inline File_t file_type() const { return _file_type; }
 	inline bool help() const { return _help; }
 
@@ -63,21 +64,20 @@ private:
 			const std::string & config_file, File_t file_type, bool help,
 			bool has_width, bool has_height, bool has_output_file,
 			bool has_config_file, bool has_file_type)
-	: _width(width), _height(height), _inputs(inputs),
+	: _width(width), _height(height), _num_inputs(inputs),
 	  _output_file(output_file), _input_file(input_file),
 	  _config_file(config_file), _file_type(file_type), _help(help),
 	  _has_width(has_width), _has_height(has_height), _has_output_file(has_output_file),
 	  _has_config_file(has_config_file), _has_file_type(has_file_type)
 	{}
 
-	const int 			_width, _height;
-	std::size_t			_inputs;
+	const int 		_width, _height;
+	std::size_t		_num_inputs;
 	const std::string 	_output_file, _input_file, _config_file;
 	const File_t		_file_type;
-	bool				_help;
+	bool			_help;
 
-	bool				_has_width, _has_height, _has_output_file,
-							_has_config_file, _has_file_type;
+	bool			_has_width, _has_height, _has_output_file, _has_config_file, _has_file_type;
 };
 
 #endif /* ARGS_H_ */

@@ -14,7 +14,7 @@ Scene::Scene(const Configuration & config)
   _set(
 		  DataSet<double>::parse_from_csv(
 				  Util::read_file(config.get_input_file()),
-				  config.get_inputs())
+				  config.get_num_inputs())
 		  ),
   _drawer(config),
   _grid(
@@ -37,16 +37,18 @@ Scene::Scene(const Configuration & config)
 	{
 		_axis.push_back(
 				VarAxis(
-						Ticks(10, 10, std::make_pair(var.min, var.max), config.get_tick_label(), "cm"),
-						angle_helper::deg_to_rad(start),
-						angle_helper::deg_to_rad(end),
-						config.get_input_inner_radius(), config.get_input_thickness(),
-						var,
-						DrawerProperties<>(
-								config.get_prop_thick().line_width,
-								Color::BLACK, Color::SET3.at(_set.input_variables().size(), i++)
-								),
-						config.get_var_label()));
+				    var,
+				    Ticks(10, 10, std::make_pair(var.min, var.max), config.get_tick_label(), "cm"),
+				    angle_helper::deg_to_rad(start),
+				    angle_helper::deg_to_rad(end),
+				    config.get_input_inner_radius(), config.get_input_thickness(),
+				    DrawerProperties<>(
+					config.get_prop_thick().line_width,
+					Color::BLACK, Color::SET3.at(_set.input_variables().size(), i++)
+					),
+					config.get_var_label()
+				    )
+				);
 		start += angle + config.get_input_separation_angle();
 		end += angle + config.get_input_separation_angle();
 	}
@@ -57,7 +59,8 @@ Scene::Scene(const Configuration & config)
 
 		for (std::size_t k = 0; k < _axis.size(); ++k)
 		{
-			in.push_back(_axis[k].get_coord(row[k].value)); // TODO: Throw null value exception
+		    const Polar & s = _axis[k].get_coord(row[k].value); std::cout << row[k].value << "->" << s << std::endl;
+			in.push_back(s); // TODO: Throw null value exception
 		}
 
 		Polar connector(config.get_output_inner_radius(), _grid.get_coord(row[_axis.size()].value, 0).phi());

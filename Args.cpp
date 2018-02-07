@@ -31,7 +31,7 @@ const std::string Args::LOPT_FILE_T = "--file-type";
 const std::string Args::LOPT_HELP = "--help";
 const std::regex Args::OPT_REGEX("-[-]?\\S+");
 
-Args Args::parse_from_commandline(int argc, char const * argv[])
+Args Args::parse(int argc, char const * argv[]) throw (ParseException)
 {
 	int width, height;
 	std::size_t inputs;
@@ -137,7 +137,7 @@ Args Args::parse_from_commandline(int argc, char const * argv[])
 				inputs = Util::string_to_int(argv[i]);
 				inputs_set = true;
 			} else {
-				throw ParseException("Expected only two non-positional parameter.");
+				throw ParseException("Expected only two non-positional parameters.");
 			}
 		}
 	}

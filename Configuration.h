@@ -35,8 +35,8 @@ public:
 		_output_file = output_file;
 	}
 
-	inline std::size_t get_inputs() const {
-		return _inputs;
+	inline std::size_t get_num_inputs() const {
+		return _num_inputs;
 	}
 
 	inline int get_width() const {
@@ -130,32 +130,32 @@ public:
 private:
 	/* Absolute file paths for data (input) and image (output) */
 	std::string 		_input_file;
-	std::string			_output_file 			= "image.svg";
+	std::string		_output_file 		= "image.svg";
 
 	/* Number of input variables in the data set */
-	std::size_t			_inputs;
+	std::size_t		_num_inputs;
 
 	/* Width and height of the output image */
-	int 				_width 					= 500;
-	int 				_height 				= 500;
+	int 			_width 			= 500;
+	int 			_height 		= 500;
 
 	/* VarAxis modification values */
-	double 				_input_inner_radius 	= 150;
-	double 				_input_thickness 		= 10;
-	double 				_input_separation_angle = 5;
+	double 			_input_inner_radius 	= 150;
+	double 			_input_thickness 	= 10;
+	double 			_input_separation_angle = 5;
 
 	/* CoordGrid modification values */
-	double 				_output_inner_radius 	= 160;
-	double 				_output_thickness 		= 10;
-	double 				_grid_size 				= 150;
+	double 			_output_inner_radius 	= 160;
+	double 			_output_thickness 	= 10;
+	double 			_grid_size 		= 150;
 
 	/* General line and fill styles */
-	DrawerProperties<> 	_prop_thick 			= {0.5, Color::BLACK, Color::BLACK};
-	DrawerProperties<> 	_prop_thin 				= {0.25, Color::BLACK, Color::BLACK};
+	DrawerProperties<> 	_prop_thick 		= {0.5, Color::BLACK, Color::BLACK};
+	DrawerProperties<> 	_prop_thin 		= {0.25, Color::BLACK, Color::BLACK};
 
 	/* General font and font size */
-	TextProperties 		_tick_label 			= {"Liberation Serif", 8};
-	TextProperties 		_var_label 				= {"Liberation Serif", 20};
+	TextProperties 		_tick_label 		= {"Liberation Serif", 8};
+	TextProperties 		_var_label 		= {"Liberation Serif", 20};
 
 	/* Regex for recognizing integer, floating point
 	 * and name constants
