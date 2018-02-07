@@ -42,5 +42,5 @@ Color CoordGrid::get_color(double val) const
 		}
 	}
 
-	return Color::GLOW_10[i-1];
+	return Color::GLOW_10[i - 1];
 }
