@@ -52,11 +52,11 @@ public:
 			double radius_, double height_, Direction dir_,
 			const std::vector<DefVar> output_vars);
 
-    virtual ~CoordGrid() {};
+    const DefVar & get_var(std::size_t num_output) const;
 
-	Polar get_coord(double val, std::size_t num_output) const;
+    Polar get_coord(double val, std::size_t num_output) const;
 
-	Color get_color(double val) const;
+    Color get_color(double val) const;
 
 public:
     /** The number of outputs. */
@@ -75,6 +75,8 @@ public:
     Direction 		direction;
 
 private:
+    /* The output variables */
+    std::vector<DefVar> _output_variables;
     /** Vector of mappings from actual values to radii */
     std::vector<Mapper> _output_mappers;
 };

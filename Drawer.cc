@@ -50,12 +50,19 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 	// Adjusted difference between the radial lines of the CoordGrid (outputs)
 	double y_dist = grid.height / (grid.outputs - 0.5); // TODO: parameterize adjustment
 
+	// Draw the description of the first output
+	draw_text_parallel(Label(std::to_string(grid.get_var(0).max), Configuration::get_instance().get_tick_label()), Polar(min_radius, grid.start - 0.05));
+	draw_text_parallel(Label(std::to_string(grid.get_var(0).min), Configuration::get_instance().get_tick_label()), Polar(min_radius, grid.end + 0.05));
+
 	// Draw the output lines of the CoordGrid
 	for (size_t i = 1; i < grid.outputs; ++i)
 	{
-		// TODO: add min/max values to each output
-		// Changed max_angle <-> min_angle. Whether fix or not depends on meaning of dir
-		draw_arc(min_radius + i * y_dist, grid.start, grid.end, grid.direction);
+		// Draw the description of the i-th output
+		draw_text_parallel(Label(std::to_string(grid.get_var(i).max), Configuration::get_instance().get_tick_label()), Polar(min_radius + i * y_dist, grid.start - 0.05));
+		draw_text_parallel(Label(std::to_string(grid.get_var(i).min), Configuration::get_instance().get_tick_label()), Polar(min_radius + i * y_dist, grid.end + 0.05));
+
+		_cr->begin_new_path();
+		draw_arc(min_radius + i * y_dist, grid.start, grid.end, Direction::INCREASING);
 		_cr->set_source_rgba(
 		    prop_thin.line_color.r(),
 		    prop_thin.line_color.g(),

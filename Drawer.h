@@ -7,7 +7,6 @@
 #include "CoordGrid.h"
 #include "VarAxis.h"
 #include "DataLink.h"
-#include "Config.h"
 #include "Configuration.h"
 #include <cairommconfig.h>
 #include <cairomm/context.h>
