@@ -48,18 +48,30 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 	}
 
 	// Adjusted difference between the radial lines of the CoordGrid (outputs)
-	double y_dist = grid.height / (grid.outputs - 0.5); // TODO: parameterize adjustment
+	double y_dist = grid.height / (grid.outputs - Configuration::COORDGRID_ADJUSTMENT);
 
 	// Draw the description of the first output
-	draw_text_parallel(Label(std::to_string(grid.get_var(0).max), Configuration::get_instance().get_tick_label()), Polar(min_radius, grid.start - 0.05));
-	draw_text_parallel(Label(std::to_string(grid.get_var(0).min), Configuration::get_instance().get_tick_label()), Polar(min_radius, grid.end + 0.05));
+	draw_text_parallel(
+	    Label(std::to_string(grid.get_var(0).max), Configuration::get_instance().get_tick_label()),
+	    Polar(min_radius, grid.start - Configuration::TEXT_DELTA)
+	    );
+	draw_text_parallel(
+	    Label(std::to_string(grid.get_var(0).min), Configuration::get_instance().get_tick_label()),
+	    Polar(min_radius, grid.end + Configuration::TEXT_DELTA)
+	    );
 
 	// Draw the output lines of the CoordGrid
 	for (size_t i = 1; i < grid.outputs; ++i)
 	{
 		// Draw the description of the i-th output
-		draw_text_parallel(Label(std::to_string(grid.get_var(i).max), Configuration::get_instance().get_tick_label()), Polar(min_radius + i * y_dist, grid.start - 0.05));
-		draw_text_parallel(Label(std::to_string(grid.get_var(i).min), Configuration::get_instance().get_tick_label()), Polar(min_radius + i * y_dist, grid.end + 0.05));
+		draw_text_parallel(
+		    Label(std::to_string(grid.get_var(i).max), Configuration::get_instance().get_tick_label()),
+		    Polar(min_radius + i * y_dist, grid.start - Configuration::TEXT_DELTA)
+		    );
+		draw_text_parallel(
+		    Label(std::to_string(grid.get_var(i).min), Configuration::get_instance().get_tick_label()),
+		    Polar(min_radius + i * y_dist, grid.end + Configuration::TEXT_DELTA)
+		    );
 
 		_cr->begin_new_path();
 		draw_arc(min_radius + i * y_dist, grid.start, grid.end, Direction::INCREASING);
@@ -79,7 +91,7 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 	_cr->set_identity_matrix();
 
 	// Draw the base of the VarAxis: a filled ring segment
-	draw_ring_segment(axis.radius, axis.height, axis.start, axis.end, axis.prop, Direction::INCREASING); // TODO: Direction necessary?
+	draw_ring_segment(axis.radius, axis.height, axis.start, axis.end, axis.prop, Direction::INCREASING);
 
 	// Radian distance (absolute!) between start and end angle
 	double span = angle_helper::rad_dist(axis.start.get(), axis.end.get());
@@ -126,15 +138,15 @@ void Drawer::draw_data_link(const DataLink & link)
 {
 	// Calculate target from connector coordinate
 	Polar from = link.get_connector_coord();
-	Polar target1(from.r() - 5, from.phi() - 0.001),
-			target2(from.r() - 5, from.phi() + 0.001); // TODO: Subtract other values (from configuration?)
+	Polar target1(from.r() - 5, from.phi() - Configuration::ANGLE_DELTA_SMALL),
+			target2(from.r() - 5, from.phi() + Configuration::ANGLE_DELTA_SMALL);
 
 	// Draw links
 	std::size_t i = 0;
 	for (Polar in: link.get_input_coords())
 	{
-		Polar origin1(in.r() - 10, in.phi() - 0.0001),
-				origin2(in.r() - 10, in.phi() + 0.0001); // TODO: Subtract other values (from configuration?)
+		Polar origin1(in.r() - 10, in.phi() - Configuration::ANGLE_DELTA_SMALL),
+				origin2(in.r() - 10, in.phi() + Configuration::ANGLE_DELTA_SMALL);
 		draw_link(origin1, origin2, target1, target2, link.get_link_prop(i++));
 	}
 
@@ -213,7 +225,7 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 
 	// Calculate to intermediate coordinates to draw the arc from
 	double radial_dist = to.r() - from.r();
-	Polar intermediate1 {from.r() + dist_factor * radial_dist,from.phi() };
+	Polar intermediate1 {from.r() + dist_factor * radial_dist, from.phi() };
 	Polar intermediate2 {to.r() - dist_factor * radial_dist, to.phi() };
 
 	// Convert to Cartesian coordinates
@@ -230,12 +242,14 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 	_cr->move_to(real_from_c.x(), real_from_c.y());
 	_cr->line_to(intermediate1_c.x(), intermediate1_c.y());
 
-	// Draw arc by approximating circle segments linearly
+
+	// Draw arc by approximating circle segments linearly:
 	//TODO: nicer bezier solution!
 	double r_diff = radial_dist * 0.6;
 	double d0 = angle_helper::rad_dist(from.phi().get(), to.phi().get()),
 	    d1 = angle_helper::rad_dist(to.phi().get(), from.phi().get());
 	double phi_diff = d0 <= d1 ? d0 : -d1;
+
 	size_t steps = 10;
 
 	for (size_t i = 0; i < steps - 1; ++i)
@@ -250,7 +264,6 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 
 	// Line from second intermediate to end
 	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
-	_cr->line_to(real_to_c.x(), real_to_c.y());
 
 	// Set line style and apply drawing
 	_cr->set_source_rgba(prop.line_color.r(), prop.line_color.g(), prop.line_color.b(),

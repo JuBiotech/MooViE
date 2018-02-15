@@ -24,7 +24,11 @@ int run_moovie(int argc, const char * argv[])
 		}
 		else if (args.has_config_file())
 		{
-			Configuration::initialize(args.get_input_file(), args.get_num_inputs(), args.get_config_file());
+			Configuration::initialize(
+			    args.get_input_file(),
+			    args.get_num_inputs(),
+			    args.get_config_file()
+			    );
 			if (args.has_output_file())
 				Configuration::get_instance().set_output_file(args.get_output_file());
 			Scene main;

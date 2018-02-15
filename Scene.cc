@@ -14,13 +14,13 @@ Scene::Scene()
 				  Util::read_file(Configuration::get_instance().get_input_file()),
 				  Configuration::get_instance().get_num_inputs())
 		  ),
-  _drawer(),
   _grid(
 		  10, 10,
-		  angle_helper::deg_to_rad(310), angle_helper::deg_to_rad(50),
+		  angle_helper::deg_to_rad(360 - Configuration::get_instance().get_output_angle_span() / 2),
+		  angle_helper::deg_to_rad(Configuration::get_instance().get_output_angle_span() / 2),
 		  Configuration::get_instance().get_output_inner_radius(), Configuration::get_instance().get_grid_size(),
 		  Direction::INCREASING, _set.output_variables()
-		  ),  // TODO: add output angle calculation
+		  ),
   _split_prop(
 		  Configuration::get_instance().get_prop_thick().line_width,
 		  Color::BLACK, Color::GLOW_10
@@ -62,8 +62,7 @@ Scene::Scene()
 			in.push_back(_axis[k].get_coord(row[k].value)); // TODO: Throw null value exception
 		}
 
-		// TODO: subtract other value (from configuration?)
-		Polar connector(config.get_output_inner_radius() - 10, _grid.get_coord(row[_axis.size()].value, 0).phi());
+		Polar connector(config.get_output_inner_radius() - Configuration::CONNECTOR_DELTA, _grid.get_coord(row[_axis.size()].value, 0).phi());
 
 		for (std::size_t k = 0; k < _grid.outputs; ++k)
 		{
