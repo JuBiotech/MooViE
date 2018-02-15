@@ -7,6 +7,12 @@
 
 #include "Configuration.h"
 
+const double Configuration::CONNECTOR_DELTA = 10;
+const double Configuration::COORDGRID_ADJUSTMENT = 0.5;
+const double Configuration::TEXT_DELTA = 0.05;
+const double Configuration::ANGLE_DELTA_SMALL = 0.001;
+const double Configuration::ANGLE_DELTA_LARGE = 0.1;
+
 std::shared_ptr<Configuration> Configuration::_instance;
 
 void Configuration::initialize(const std::string & fname, std::size_t inputs, const std::string & cpath)
