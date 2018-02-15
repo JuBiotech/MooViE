@@ -29,8 +29,8 @@ Scene::Scene()
 	const Configuration & config = Configuration::get_instance();
 
 	// Calculate
-	double angle = 180 / _set.input_variables().size() - Configuration::get_instance().get_input_separation_angle();
-	double start = 90, end = start+angle;
+	double angle = 180 / _set.input_variables().size() - config.get_input_separation_angle();
+	double start = 90 + config.get_input_separation_angle() / 2, end = start+angle;
 
 	std::size_t i = 0;
 	for (DefVar var: _set.input_variables())

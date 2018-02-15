@@ -20,6 +20,7 @@
  */
 class Configuration {
 public:
+	static const double DATA_LINK_LINE_WIDTH;
 	static const double CONNECTOR_DELTA;
 	static const double COORDGRID_ADJUSTMENT;
 	static const double TEXT_DELTA;
