@@ -52,6 +52,7 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 
 	// Draw the description of the first output
 	draw_text_parallel(
+<<<<<<< HEAD
 	    Label(grid.get_var(0).name, Configuration::get_instance().get_tick_label()),
 	    Polar(min_radius, 0)
 	);
@@ -60,6 +61,12 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 	    Polar(min_radius, grid.start - Configuration::TEXT_DELTA)
 	    );
 	draw_text_orthogonal(
+=======
+	    Label(std::to_string(grid.get_var(0).max), Configuration::get_instance().get_tick_label()),
+	    Polar(min_radius, grid.start - Configuration::TEXT_DELTA)
+	    );
+	draw_text_parallel(
+>>>>>>> ac17626994f4f18b7ef465ca8fedf1bf39b16dbc
 	    Label(std::to_string(grid.get_var(0).min), Configuration::get_instance().get_tick_label()),
 	    Polar(min_radius, grid.end + Configuration::TEXT_DELTA)
 	    );
@@ -69,6 +76,7 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 	{
 		// Draw the description of the i-th output
 		draw_text_parallel(
+<<<<<<< HEAD
 		    Label(grid.get_var(i).name, Configuration::get_instance().get_tick_label()),
 		    Polar(min_radius + i * y_dist, 0)
 		    );
@@ -77,6 +85,12 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 		    Polar(min_radius + i * y_dist, grid.start - Configuration::TEXT_DELTA)
 		    );
 		draw_text_orthogonal(
+=======
+		    Label(std::to_string(grid.get_var(i).max), Configuration::get_instance().get_tick_label()),
+		    Polar(min_radius + i * y_dist, grid.start - Configuration::TEXT_DELTA)
+		    );
+		draw_text_parallel(
+>>>>>>> ac17626994f4f18b7ef465ca8fedf1bf39b16dbc
 		    Label(std::to_string(grid.get_var(i).min), Configuration::get_instance().get_tick_label()),
 		    Polar(min_radius + i * y_dist, grid.end + Configuration::TEXT_DELTA)
 		    );
@@ -272,7 +286,6 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 
 	// Line to second intermediate to from there to end
 	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
-	_cr->line_to(real_to_c.x(), real_to_c.y());
 
 	// Set line style and apply drawing
 	_cr->set_source_rgba(prop.line_color.r(), prop.line_color.g(), prop.line_color.b(),
@@ -487,8 +500,8 @@ void Drawer::draw_text_orthogonal(const Label & label, const Polar & start)
 	_cr->translate(_pc.center().x(), _pc.center().y());
 	_cr->rotate(cairo_angle.get());
 	_cr->translate(0, -start.r());
-	if (start.phi().get() > M_PI)
-		_cr->rotate_degrees(180); // TODO: change rotation
+//	if (start.phi().get() > M_PI)
+//		_cr->rotate_degrees(180); // TODO: change rotation
 	_cr->translate(-0.5 * t_exts.width, 0.5 * t_exts.height);
 
 	_cr->show_text(message);
