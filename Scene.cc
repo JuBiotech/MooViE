@@ -90,8 +90,11 @@ void Scene::draw_scene(void)
 		_drawer.draw_data_link(link);
 	}
 
-	const Configuration & config = Configuration::get_instance();
-	_drawer.draw_coord_grid(_grid, config.get_prop_thick(), config.get_prop_thin());
+	_drawer.draw_coord_grid(
+	    _grid,
+	    Configuration::get_instance().get_prop_thick(),
+	    Configuration::get_instance().get_prop_thin()
+	    );
 
 	for (VarAxis axis: _axis)
 	{

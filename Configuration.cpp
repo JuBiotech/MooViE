@@ -7,9 +7,13 @@
 
 #include "Configuration.h"
 
-const double Configuration::DATA_LINK_LINE_WIDTH = 0.1;
-const double Configuration::CONNECTOR_DELTA = 10;
+const double Configuration::RADIAL_TEXT_FACTOR = 0.5;
+
 const double Configuration::COORDGRID_ADJUSTMENT = 0.5;
+
+const double Configuration::DATA_LINK_LINE_WIDTH = 0.1;
+
+const double Configuration::CONNECTOR_DELTA = 10;
 const double Configuration::TEXT_DELTA = 0.05;
 const double Configuration::ANGLE_DELTA_SMALL = 0.001;
 const double Configuration::ANGLE_DELTA_LARGE = 0.1;

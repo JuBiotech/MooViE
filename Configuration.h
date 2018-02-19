@@ -20,9 +20,13 @@
  */
 class Configuration {
 public:
-	static const double DATA_LINK_LINE_WIDTH;
-	static const double CONNECTOR_DELTA;
+	static const double RADIAL_TEXT_FACTOR;
+
 	static const double COORDGRID_ADJUSTMENT;
+
+	static const double DATA_LINK_LINE_WIDTH;
+
+	static const double CONNECTOR_DELTA;
 	static const double TEXT_DELTA;
 	static const double ANGLE_DELTA_SMALL;
 	static const double ANGLE_DELTA_LARGE;
@@ -198,7 +202,7 @@ private:
 
 	/* General line and fill styles */
 	DrawerProperties<> 	_prop_thick 		= {0.5, Color::BLACK, Color::BLACK};
-	DrawerProperties<> 	_prop_thin 		= {0.25, Color::BLACK, Color::BLACK};
+	DrawerProperties<> 	_prop_thin 		= {0.1, Color::BLACK, Color::BLACK};
 
 	/* General font and font size */
 	TextProperties 		_tick_label 		= {"Liberation Serif", 8};

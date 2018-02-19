@@ -133,11 +133,18 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 		}
 		else
 		{
+			const Label & tick_label = tick_labels[label_pos++];
 			draw_line(Polar(start_radius, a), Polar(end_radius_major, a), axis.prop);
-			draw_text_parallel(tick_labels[label_pos++], Polar(radius_tick_label, a));
+			// TODO: Calculate label size-dependend distance correctly
+			double dep_distance = (tick_label.text().length() / 2) * tick_label.prop().fontsize() * Configuration::RADIAL_TEXT_FACTOR;
+			draw_text_parallel(
+			    tick_label,
+			    Polar(radius_tick_label + dep_distance, a)
+			    );
 		}
 	}
 
+	// TODO: Adjust VarAxis label radius
 	// Draw the name of the Variable
 	draw_text_orthogonal(axis.label, Polar(radius_label, Angle::center(axis.start, axis.end)));
 }
@@ -272,6 +279,7 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 
 	// Line to second intermediate to from there to end
 	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
+	_cr->line_to(real_to_c.x(), real_to_c.y());
 
 	// Set line style and apply drawing
 	_cr->set_source_rgba(prop.line_color.r(), prop.line_color.g(), prop.line_color.b(),
@@ -406,7 +414,7 @@ void Drawer::draw_arrow(const Polar & start, const DrawerProperties<> & prop)
 	_cr->line_to(left.x(), left.y());
 	_cr->set_source_rgba(prop.line_color.r(), prop.line_color.g(),
 				prop.line_color.b(), prop.line_color.a());
-	_cr->set_line_width(Configuration::DATA_LINK_LINE_WIDTH); // TODO: replace with constant
+	_cr->set_line_width(Configuration::DATA_LINK_LINE_WIDTH);
 	_cr->fill_preserve();
 	_cr->stroke();
 }
@@ -431,10 +439,12 @@ void Drawer::draw_line(const Polar& from, const Polar& to,
 	_cr->stroke();
 
 }
-// TODO: rewrite
+
 void Drawer::draw_text_parallel(const Label& label, const Polar & start)
 {
 	_cr->set_identity_matrix();
+
+	// Set font styles
 	Cairo::RefPtr<Cairo::ToyFontFace> font = Cairo::ToyFontFace::create(
 			label.prop().fontname(),
 			label.prop().italic() ? Cairo::FONT_SLANT_ITALIC : Cairo::FONT_SLANT_NORMAL,
@@ -444,28 +454,30 @@ void Drawer::draw_text_parallel(const Label& label, const Polar & start)
 	_cr->set_source_rgba(label.prop().color().r(), label.prop().color().g(), label.prop().color().b(),
 			label.prop().color().a());
 
+	// Create cairo label
 	Cairo::TextExtents t_exts;
 	std::string message { label.text() };
 	_cr->get_text_extents(message, t_exts);
 
+	// Calculate cairo angle
 	Angle cairo_angle = M_PI_2 - start.phi();
 
-	_cr->set_identity_matrix();
+	// Set cairo user-space origin and rotation
 	_cr->begin_new_path();
 	_cr->translate(_pc.center().x(), _pc.center().y());
 	_cr->rotate(cairo_angle.get());
 	_cr->translate(0, -start.r());
 	_cr->rotate_degrees(90);
-	if ((M_PI_2 - start.phi()).get() > 0)
-		_cr->rotate_degrees(180); // TODO: change rotation
 	_cr->translate(-0.5 * t_exts.width, 0.5 * t_exts.height);
 
 	_cr->show_text(message);
 }
-// TODO: rewrite
+
 void Drawer::draw_text_orthogonal(const Label & label, const Polar & start)
 {
 	_cr->set_identity_matrix();
+
+	// Set font styles
 	Cairo::RefPtr<Cairo::ToyFontFace> font = Cairo::ToyFontFace::create(
 			label.prop().fontname(),
 			label.prop().italic() ? Cairo::FONT_SLANT_ITALIC : Cairo::FONT_SLANT_NORMAL,
@@ -475,19 +487,19 @@ void Drawer::draw_text_orthogonal(const Label & label, const Polar & start)
 	_cr->set_source_rgba(label.prop().color().r(), label.prop().color().g(), label.prop().color().b(),
 			label.prop().color().a());
 
+	// Create cairo label
 	Cairo::TextExtents t_exts;
 	std::string message { label.text() };
 	_cr->get_text_extents(message, t_exts);
 
+	// Create cairo angle
 	Angle cairo_angle = M_PI_2 - start.phi();
 
-	_cr->set_identity_matrix();
+	// Set cairo user-space origin and rotation
 	_cr->begin_new_path();
 	_cr->translate(_pc.center().x(), _pc.center().y());
 	_cr->rotate(cairo_angle.get());
 	_cr->translate(0, -start.r());
-//	if (start.phi().get() > M_PI)
-//		_cr->rotate_degrees(180); // TODO: change rotation
 	_cr->translate(-0.5 * t_exts.width, 0.5 * t_exts.height);
 
 	_cr->show_text(message);

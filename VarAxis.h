@@ -24,10 +24,46 @@
 class VarAxis
 {
 public:
+	class Histogram
+	{
+	public:
+	    /** Creates an empty Histogram for this variable with
+	     * the specified number of intervals.
+	     * @param var the input variable
+	     * @param num_intervals the number of intervals
+	     */
+	    Histogram(DefVar var, std::size_t num_intervals);
+
+	    /** Calculates equidistant data sections and stores
+	     * them.
+	     * @param data the input values of this variable
+	     */
+	    void calculate(const std::vector<double> & data);
+
+	    /** Returns the total maximum frequecy of an interval.
+	     * @return the max frequency
+	     */
+	    std::size_t get_max_frequency(void) const;
+
+	    /** Returns the value of the histogram graph in this
+	     * section. They are associated with the total
+	     * frequency of the equidistant intervals.
+	     * @param i index of the section
+	     * @return the height
+	     */
+	    std::size_t get_section_frequency(std::size_t i) const;
+	private:
+	    DefVar _var;
+	    std::size_t _num_intervals;
+	    std::vector<std::size_t> _frequencies;
+	    std::size_t _max_frequency;
+	};
+
+public:
 	/**
 	 *
 	 */
-	VarAxis( DefVar var_, Ticks ticks_,
+	VarAxis(DefVar var_, Ticks ticks_,
 		const Angle & start_, const Angle & end_,
 		double radius_, std::size_t height_,
 		const DrawerProperties<> & prop_, const TextProperties & text_prop_);
@@ -43,6 +79,10 @@ public:
 	Ticks 			ticks;
 	/** A mapping from actual values to angles */
 	Mapper 			_input_mapper;
+	/** The histogram describing the frequencies
+	 * of the intervals
+	 */
+	Histogram		_histogram;
 
 	/** Start and end angle for drawing the VarAxis */
 	Angle 			start, end;
