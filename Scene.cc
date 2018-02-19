@@ -53,6 +53,10 @@ Scene::Scene()
 		end += angle + config.get_input_separation_angle();
 	}
 
+	std::vector<std::vector<double>> histogram_data;
+	for (std::size_t i = 0; i < histogram_data.size(); ++i)
+	  histogram_data.push_back(row[k].value);
+
 	for (DefDataRow row: _set)
 	{
 		std::vector<Polar> in, out;

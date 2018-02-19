@@ -40,23 +40,22 @@ public:
 	     */
 	    void calculate(const std::vector<double> & data);
 
-	    /** Returns the total maximum frequecy of an interval.
-	     * @return the max frequency
-	     */
-	    std::size_t get_max_frequency(void) const;
-
 	    /** Returns the value of the histogram graph in this
-	     * section. They are associated with the total
+	     * section. They are associated with the relative
 	     * frequency of the equidistant intervals.
 	     * @param i index of the section
 	     * @return the height
 	     */
-	    std::size_t get_section_frequency(std::size_t i) const;
+	    double get_section_frequency(std::size_t i) const;
+
+	    inline std::size_t get_num_intervals(void) const
+	    {
+	      return _num_intervals;
+	    }
 	private:
 	    DefVar _var;
 	    std::size_t _num_intervals;
-	    std::vector<std::size_t> _frequencies;
-	    std::size_t _max_frequency;
+	    std::vector<double> _frequencies;
 	};
 
 public:
@@ -79,9 +78,7 @@ public:
 	Ticks 			ticks;
 	/** A mapping from actual values to angles */
 	Mapper 			_input_mapper;
-	/** The histogram describing the frequencies
-	 * of the intervals
-	 */
+	/** The histogram describing the frequencies of the intervals */
 	Histogram		_histogram;
 
 	/** Start and end angle for drawing the VarAxis */

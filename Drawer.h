@@ -65,6 +65,12 @@ public:
     void finish();
 
 private:
+    /**
+     *
+     */
+    void draw_histogram(const VarAxis::Histogram & histogram,
+			double radius, const Angle & begin, const Angle & end);
+
     /** Draws a bold line between the lines origin1-origin2
      * and target1-target2. This is realized by drawing bezier
      * curves from origin1 to target1 and from origin2 to target2

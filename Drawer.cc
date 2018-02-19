@@ -104,12 +104,14 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 	// Radian distance (absolute!) between start and end angle
 	double span = angle_helper::rad_dist(axis.start.get(), axis.end.get());
 
+	// TODO: Calculate using predefined constants
 	// Calculate radii for ticks and labels
 	double start_radius = axis.radius + axis.height;
 	double end_radius_major = start_radius + 0.25 * axis.height;
 	double end_radius_minor = start_radius + 0.125 * axis.height;
 	double radius_tick_label = end_radius_major + 0.75 * axis.height;
 	double radius_label = end_radius_major + 3 * axis.height;
+	double radius_histogram = radius_label + 10;
 
 	// Tick values as strings
 	std::vector<Label> tick_labels = axis.ticks.get_labels();
@@ -147,6 +149,8 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 	// TODO: Adjust VarAxis label radius
 	// Draw the name of the Variable
 	draw_text_orthogonal(axis.label, Polar(radius_label, Angle::center(axis.start, axis.end)));
+
+	draw_histogram(axis._histogram, radius_histogram, axis.start, axis.end);
 }
 
 void Drawer::draw_data_link(const DataLink & link)
@@ -188,6 +192,33 @@ void Drawer::draw_data_link(const DataLink & link)
 		from = out;
 		draw_coord_point(from, 0.005, (out.r() - mod.r()) * 2, link.get_connector_prop());
 	}
+}
+
+void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
+			double radius, const Angle & begin, const Angle & end)
+{
+	_cr->set_identity_matrix();
+
+	DrawerProperties<> histogram_background(0.1, Color(0,0,0,0.1), Color(0,0,0,0.1));
+
+	draw_ring_segment(radius, 20, begin, end, histogram_background, Direction::INCREASING);
+
+	Polar start(radius + 20 * histogram.get_section_frequency(0), begin);
+	Cartesian start_c;
+	_pc.convert(start, start_c);
+
+	_cr->begin_new_path();
+	_cr->move_to(start_c.x(), start_c.y());
+	double span = angle_helper::rad_dist(begin.get(), end.get());
+	for (std::size_t i = 0; i < histogram.get_num_intervals(); ++i)
+	    draw_arc(
+		radius + 20 * histogram.get_section_frequency(i),
+		begin, begin + (span / histogram.get_num_intervals()) * (i + 1),
+		Direction::INCREASING
+		);
+	_cr->close_path();
+	_cr->set_source_rgb(0,0,0);
+	_cr->stroke();
 }
 
 void Drawer::draw_link(const Polar & origin1, const Polar & origin2,
