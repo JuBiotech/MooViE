@@ -13,7 +13,7 @@ Drawer::Drawer()
 : _pc(Configuration::get_instance().get_width(), Configuration::get_instance().get_height())
 {
 	const Configuration & config = Configuration::get_instance();
-	const Cairo::RefPtr<Cairo::Surface>& ptr = Cairo::SvgSurface::create(config.get_output_file(), config.get_width(), config.get_height());
+	const Cairo::RefPtr<Cairo::Surface> & ptr = Cairo::SvgSurface::create(config.get_output_file(), config.get_width(), config.get_height());
 	_cr = Cairo::Context::create(ptr);
 }
 
@@ -498,7 +498,10 @@ void Drawer::draw_text_parallel(const Label& label, const Polar & start)
 	_cr->translate(_pc.center().x(), _pc.center().y());
 	_cr->rotate(cairo_angle.get());
 	_cr->translate(0, -start.r());
-	_cr->rotate_degrees(90);
+	if (start.phi().get() > M_PI_2 && start.phi().get() < 3 * M_PI_2)
+	  _cr->rotate_degrees(90);
+	else
+	  _cr->rotate_degrees(270);
 	_cr->translate(-0.5 * t_exts.width, 0.5 * t_exts.height);
 
 	_cr->show_text(message);
@@ -538,18 +541,16 @@ void Drawer::draw_text_orthogonal(const Label & label, const Polar & start)
 
 void Drawer::finish()
 {
-	// save the state of the context
+	// Save the state of the context
 	_cr->save();
 	_cr->show_page();
 }
 
 Cartesian Drawer::create_control_point(const Polar & point)
 {
-	// Create Polar coordinate control point
 	Polar control(point);
 	control.r() -= _link_control_strength;
 
-	// Convert to Cartesian coordinates
 	Cartesian control_c;
 	_pc.convert(control, control_c);
 

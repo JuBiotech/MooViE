@@ -28,11 +28,13 @@ Scene::Scene()
 {
 	const Configuration & config = Configuration::get_instance();
 
-	// Calculate
+	// DataRows of the later histogram
+	std::vector<std::vector<double>> histogram_values;
+
+	// Create VarAxis' from DataSet's input variables
 	double angle = 180 / _set.input_variables().size() - config.get_input_separation_angle();
 	double start = 90 + config.get_input_separation_angle() / 2, end = start+angle;
-
-	std::size_t i = 0;
+	std::size_t axis_color_pos = 0;
 	for (DefVar var: _set.input_variables())
 	{
 		_axis.push_back(
@@ -44,19 +46,18 @@ Scene::Scene()
 				    config.get_input_inner_radius(), config.get_input_thickness(),
 				    DrawerProperties<>(
 					config.get_prop_thick().line_width,
-					Color::BLACK, Color::SET3.at(_set.input_variables().size(), i++)
+					Color::BLACK, Color::SET3.at(_set.input_variables().size(), axis_color_pos++)
 					),
 					config.get_var_label()
 				    )
 				);
 		start += angle + config.get_input_separation_angle();
 		end += angle + config.get_input_separation_angle();
+
+		histogram_values.push_back(std::vector<double>());
 	}
 
-	std::vector<std::vector<double>> histogram_data;
-	for (std::size_t i = 0; i < histogram_data.size(); ++i)
-	  histogram_data.push_back(row[k].value);
-
+	// Create DataLinks from DataSet's input/output values
 	for (DefDataRow row: _set)
 	{
 		std::vector<Polar> in, out;
@@ -64,6 +65,7 @@ Scene::Scene()
 		for (std::size_t k = 0; k < _axis.size(); ++k)
 		{
 			in.push_back(_axis[k].get_coord(row[k].value)); // TODO: Throw null value exception
+			histogram_values[k].push_back(row[k].value);
 		}
 
 		Polar connector(config.get_output_inner_radius() - Configuration::CONNECTOR_DELTA, _grid.get_coord(row[_axis.size()].value, 0).phi());
@@ -82,6 +84,11 @@ Scene::Scene()
 		}
 
 		_links.push_back(link);
+	}
+
+	for (std::size_t k = 0; k < _axis.size(); ++k)
+	{
+	    _axis[k]._histogram.calculate(histogram_values[k]);
 	}
 
 	draw_scene();

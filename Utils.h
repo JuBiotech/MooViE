@@ -84,7 +84,7 @@ inline int string_to_double(const std::string & str) throw(ParseException)
 
 /** Cairo uses an non-standard way to define angles. The angle of 0 is on
  * the positive X axis, but the angle of pi/2 or 90° is on the negative
- * Y axis (the model uses the other way around).
+ * Y axis (the common model uses the positive Y axis).
  * @param angle
  * @return the cairo angle
  */
