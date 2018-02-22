@@ -195,29 +195,54 @@ void Drawer::draw_data_link(const DataLink & link)
 }
 
 void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
-			double radius, const Angle & begin, const Angle & end)
+			double radius, const Angle & start, const Angle & end)
 {
 	_cr->set_identity_matrix();
 
-	DrawerProperties<> histogram_background(0.1, Color(0,0,0,0.1), Color(0,0,0,0.1));
+	DrawerProperties<> histogram_background(0.1, Color(0,0,0,0.1), Color(0,0,0,0.1)),
+	    histogram_lines(0.1, Color(0,0,0,0.3), Color(0,0,0,0.3));
 
-	draw_ring_segment(radius, 20, begin, end, histogram_background, Direction::INCREASING);
+	draw_ring_segment(
+	    radius,
+	    20,
+	    start, end,
+	    histogram_background,
+	    Direction::INCREASING
+	    );
 
-	Polar start(radius + 20 * histogram.get_section_frequency(0), begin);
-	Cartesian start_c;
-	_pc.convert(start, start_c);
+	for (std::size_t i = 1; i < 6; ++i)
+	{
+	    _cr->begin_new_path();
+	    draw_arc(
+		radius + 20 * (i / 6.),
+		start, end,
+		Direction::INCREASING
+	    );
+	    _cr->set_source_rgba(
+		histogram_lines.line_color.r(),
+		histogram_lines.line_color.g(),
+		histogram_lines.line_color.b(),
+		histogram_lines.line_color.a()
+	    );
+	    _cr->set_line_width(histogram_lines.line_width);
+	    _cr->stroke();
+	}
+
+	double span = angle_helper::rad_dist(start.get(), end.get());
 
 	_cr->begin_new_path();
-	_cr->move_to(start_c.x(), start_c.y());
-	double span = angle_helper::rad_dist(begin.get(), end.get());
 	for (std::size_t i = 0; i < histogram.get_num_intervals(); ++i)
+	{
 	    draw_arc(
 		radius + 20 * histogram.get_section_frequency(i),
-		begin, begin + (span / histogram.get_num_intervals()) * (i + 1),
-		Direction::INCREASING
-		);
-	_cr->close_path();
+		start + (span / histogram.get_num_intervals()) * i,
+		start + (span / histogram.get_num_intervals()) * (i + 1),
+		Direction::DECREASING
+	    );
+	}
+
 	_cr->set_source_rgb(0,0,0);
+	_cr->set_line_width(0.5);
 	_cr->stroke();
 }
 
@@ -367,8 +392,8 @@ void Drawer::draw_arc(double radius, const Angle & start, const Angle & end,
 		    _pc.center().x(),
 		    _pc.center().y(),
 		    radius,
-		    start.get(),
-		    end.get()
+		    Util::get_cairo_angle(end).get(),
+		    Util::get_cairo_angle(start).get()
 		    );
 		break;
 	case Direction::DECREASING:
@@ -376,29 +401,25 @@ void Drawer::draw_arc(double radius, const Angle & start, const Angle & end,
 		    _pc.center().x(),
 		    _pc.center().y(),
 		    radius,
-		    start.get(),
-		    end.get()
+		    Util::get_cairo_angle(start).get(),
+		    Util::get_cairo_angle(end).get()
 		    );
 		break;
 	}
 }
 
 void Drawer::draw_ring_segment(double inner_radius, double thickness,
-		const Angle & begin, const Angle & end, const DrawerProperties<> & prop,
+		const Angle & start, const Angle & end, const DrawerProperties<> & prop,
 		Direction dir)
 {
 	_cr->set_identity_matrix();
 	_cr->begin_new_path();
 
-	// Calculate cairo angles
-	const Angle & CAIRO_BEGIN = Util::get_cairo_angle(end);
-	const Angle & CAIRO_END = Util::get_cairo_angle(begin);
-
 	// Draw first arc
-	draw_arc(inner_radius, CAIRO_BEGIN, CAIRO_END, Direction::INCREASING);
+	draw_arc(inner_radius, start, end, Direction::INCREASING);
 
 	// Draw second arc depending on first one
-	draw_arc(inner_radius + thickness, CAIRO_END, CAIRO_BEGIN,
+	draw_arc(inner_radius + thickness, start, end,
 		 dir == Direction::INCREASING ? Direction::DECREASING : Direction::INCREASING);
 
 	_cr->close_path();
@@ -504,6 +525,7 @@ void Drawer::draw_text_parallel(const Label& label, const Polar & start)
 	  _cr->rotate_degrees(270);
 	_cr->translate(-0.5 * t_exts.width, 0.5 * t_exts.height);
 
+	_cr->close_path();
 	_cr->show_text(message);
 }
 
@@ -536,6 +558,7 @@ void Drawer::draw_text_orthogonal(const Label & label, const Polar & start)
 	_cr->translate(0, -start.r());
 	_cr->translate(-0.5 * t_exts.width, 0.5 * t_exts.height);
 
+	_cr->close_path();
 	_cr->show_text(message);
 }
 
