@@ -12,6 +12,7 @@
 #include "Args.h"
 #include "Configuration.h"
 
+// Runs the MooViE application from command line arguments
 int run_moovie(int argc, const char * argv[])
 {
 	try
@@ -28,9 +29,9 @@ int run_moovie(int argc, const char * argv[])
 			    args.get_input_file(),
 			    args.get_num_inputs(),
 			    args.get_config_file()
-			    );
+			);
 			if (args.has_output_file())
-				Configuration::get_instance().set_output_file(args.get_output_file());
+			  Configuration::get_instance().set_output_file(args.get_output_file());
 			Scene main;
 		}
 		else
@@ -38,11 +39,11 @@ int run_moovie(int argc, const char * argv[])
 			Configuration::initialize(args.get_input_file(), args.get_num_inputs());
 			Scene main;
 		}
-		return 0;
+		return EXIT_SUCCESS;
 	} catch (ParseException & e)
 	{
 		std::cout << e.what() << std::endl;
-		return 1;
+		return EXIT_FAILURE;
 	}
 }
 

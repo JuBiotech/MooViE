@@ -13,18 +13,18 @@ Scene::Scene()
 		  DataSet<double>::parse_from_csv(
 				  Util::read_file(Configuration::get_instance().get_input_file()),
 				  Configuration::get_instance().get_num_inputs())
-		  ),
+  ),
   _grid(
 		  10, 10,
 		  angle_helper::deg_to_rad(360 - Configuration::get_instance().get_output_angle_span() / 2),
 		  angle_helper::deg_to_rad(Configuration::get_instance().get_output_angle_span() / 2),
 		  Configuration::get_instance().get_output_inner_radius(), Configuration::get_instance().get_grid_size(),
 		  Direction::INCREASING, _set.output_variables()
-		  ),
+  ),
   _split_prop(
 		  Configuration::get_instance().get_prop_thick().line_width,
 		  Color::BLACK, Color::GLOW_10
-		  )
+  )
 {
 	const Configuration & config = Configuration::get_instance();
 
@@ -47,10 +47,10 @@ Scene::Scene()
 				    DrawerProperties<>(
 					config.get_prop_thick().line_width,
 					Color::BLACK, Color::SET3.at(_set.input_variables().size(), axis_color_pos++)
-					),
-					config.get_var_label()
-				    )
-				);
+				    ),
+				    config.get_var_label()
+				)
+		);
 		start += angle + config.get_input_separation_angle();
 		end += angle + config.get_input_separation_angle();
 
@@ -86,6 +86,7 @@ Scene::Scene()
 		_links.push_back(link);
 	}
 
+	// Calculate the histograms for the VarAxis'
 	for (std::size_t k = 0; k < _axis.size(); ++k)
 	{
 	    _axis[k]._histogram.calculate(histogram_values[k]);
@@ -105,7 +106,7 @@ void Scene::draw_scene(void)
 	    _grid,
 	    Configuration::get_instance().get_prop_thick(),
 	    Configuration::get_instance().get_prop_thin()
-	    );
+	);
 
 	for (VarAxis axis: _axis)
 	{
