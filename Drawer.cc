@@ -17,8 +17,7 @@ Drawer::Drawer()
 	_cr = Cairo::Context::create(ptr);
 }
 
-void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & prop_thick,
-		const DrawerProperties<> & prop_thin)
+void Drawer::draw_coord_grid(const CoordGrid & grid)
 {
 	_cr->set_identity_matrix();
 
@@ -46,9 +45,17 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 	{
 		Angle a((grid.get_start().get() + i * span / NUM_SEGMENTS));
 		if (i % NUM_THICK_LINES)
-			draw_line(Polar(min_radius, a), Polar(max_radius, a), prop_thin);
+			draw_line(
+					Polar(min_radius, a),
+					Polar(max_radius, a),
+					Configuration::get_instance().get_prop_thin()
+			);
 		else
-			draw_line(Polar(min_radius, a), Polar(max_radius, a), prop_thick);
+			draw_line(
+					Polar(min_radius, a),
+					Polar(max_radius, a),
+					Configuration::get_instance().get_prop_thick()
+			);
 	}
 
 	// Adjusted difference between the radial lines of the CoordGrid (outputs)

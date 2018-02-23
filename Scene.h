@@ -36,17 +36,17 @@ public:
 
 private:
     /** Data set */
-    DefDataSet 					_set;
+    DefDataSet 									_set;
 
     /** Draws data to file */
-    Drawer 					_drawer;
+    Drawer 										_drawer;
 
     /** Output data section of the diagram */
-    CoordGrid 					_grid;
+    CoordGrid 									_grid;
     /** Variable axis */
-    std::vector<VarAxis> 			_axis;
+    std::vector<VarAxis> 						_axis;
     /** Data links */
-    std::vector<DataLink> 			_links;
+    std::vector<DataLink> 						_links;
 
     /** Drawer properties for SplitAxis drawing */
     DrawerProperties<std::array<Color, 10>> 	_split_prop;

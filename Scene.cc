@@ -10,9 +10,10 @@
 
 Scene::Scene()
 : _set(
-		  DataSet<double>::parse_from_csv(
+		  DefDataSet::parse_from_csv(
 				  Util::read_file(Configuration::get_instance().get_input_file()),
-				  Configuration::get_instance().get_num_inputs())
+				  Configuration::get_instance().get_num_inputs()
+		  )
   ),
   _grid(
 		  10, 10,
@@ -102,11 +103,7 @@ void Scene::draw_scene(void)
 		_drawer.draw_data_link(link);
 	}
 
-	_drawer.draw_coord_grid(
-	    _grid,
-	    Configuration::get_instance().get_prop_thick(),
-	    Configuration::get_instance().get_prop_thin()
-	);
+	_drawer.draw_coord_grid(_grid);
 
 	for (VarAxis axis: _axis)
 	{

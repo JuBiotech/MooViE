@@ -38,14 +38,11 @@ public:
      */
     ~Drawer() { this->finish(); }
 
-    /** Draws a CoordGrid. Thin/Thick line styles are specifiable.
+    /** Draws a CoordGrid.
      * @brief draw_coord_grid
      * @param grid the CoordGrid to draw
-     * @param prop_thick DrawerProperties for thick lines
-     * @param prop_thin DrawerProperties for thin lines
     */
-    void draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & prop_thick,
-    		const DrawerProperties<> & prop_thin);
+    void draw_coord_grid(const CoordGrid & grid);
 
     /** Draws a VarAxis.
      * @brief draw_var_axis
@@ -53,7 +50,7 @@ public:
      */
     void draw_var_axis(const VarAxis & axis);
 
-    /** Draws DataLink.
+    /** Draws a DataLink.
      * @brief draw_data_link
      * @param the DataLink to draw
      */
