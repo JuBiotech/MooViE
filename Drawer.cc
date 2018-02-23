@@ -99,44 +99,49 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 	_cr->set_identity_matrix();
 
 	// Draw the base of the VarAxis: a filled ring segment
-	draw_ring_segment(axis.radius, axis.height, axis.start, axis.end, axis.prop, Direction::INCREASING);
+	draw_ring_segment(
+	    axis.get_radius(), axis.get_height(),
+	    axis.get_start(), axis.get_end(),
+	    axis.get_prop(),
+	    Direction::INCREASING
+	    );
 
 	// Radian distance (absolute!) between start and end angle
-	double span = angle_helper::rad_dist(axis.start.get(), axis.end.get());
+	double span = angle_helper::rad_dist(axis.get_start().get(), axis.get_end().get());
 
 	// TODO: Calculate using predefined constants
 	// Calculate radii for ticks and labels
-	double start_radius = axis.radius + axis.height;
-	double end_radius_major = start_radius + 0.25 * axis.height;
-	double end_radius_minor = start_radius + 0.125 * axis.height;
-	double radius_tick_label = end_radius_major + 0.75 * axis.height;
-	double radius_label = end_radius_major + 3 * axis.height;
+	double start_radius = axis.get_radius() + axis.get_height();
+	double end_radius_major = start_radius + 0.25 * axis.get_height();
+	double end_radius_minor = start_radius + 0.125 * axis.get_height();
+	double radius_tick_label = end_radius_major + 0.75 * axis.get_height();
+	double radius_label = end_radius_major + 3 * axis.get_height();
 	double radius_histogram = radius_label + 10;
 
 	// Tick values as strings
-	std::vector<Label> tick_labels = axis.ticks.get_labels();
+	std::vector<Label> tick_labels = axis.get_ticks().get_labels();
 	std::size_t label_pos = 0;
 
 	// Calculate how the VarAxis' ticks is separated into thin and thick lines (ticks)
-	const std::size_t NUM_SEGMENTS = axis.ticks.get_major_ticks() * axis.ticks.get_minor_ticks();
-	const std::size_t NUM_THICK_LINES = axis.ticks.get_major_ticks();
+	const std::size_t NUM_SEGMENTS = axis.get_ticks().get_major_ticks() * axis.get_ticks().get_minor_ticks();
+	const std::size_t NUM_THICK_LINES = axis.get_ticks().get_major_ticks();
 
 	// Draw the ticks and the associated values
 	for (size_t i = 0; i <= NUM_SEGMENTS; ++i)
 	{
-		Angle a((axis.start + span * (double(i) / double(NUM_SEGMENTS))));
+		Angle a((axis.get_start() + span * (double(i) / double(NUM_SEGMENTS))));
 		if (i % NUM_THICK_LINES)
 		{
 			draw_line(
 			    Polar(start_radius, a),
 			    Polar(end_radius_minor, a),
-			    axis.prop.half_line_width()
+			    axis.get_prop().half_line_width()
 			    );
 		}
 		else
 		{
 			const Label & tick_label = tick_labels[label_pos++];
-			draw_line(Polar(start_radius, a), Polar(end_radius_major, a), axis.prop);
+			draw_line(Polar(start_radius, a), Polar(end_radius_major, a), axis.get_prop());
 			// TODO: Calculate label size-dependend distance correctly
 			double dep_distance = (tick_label.text().length() / 2) * tick_label.prop().fontsize() * Configuration::RADIAL_TEXT_FACTOR;
 			draw_text_parallel(
@@ -148,9 +153,12 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 
 	// TODO: Adjust VarAxis label radius
 	// Draw the name of the Variable
-	draw_text_orthogonal(axis.label, Polar(radius_label, Angle::center(axis.start, axis.end)));
+	draw_text_orthogonal(
+	    axis.get_label(),
+	    Polar(radius_label, Angle::center(axis.get_start(), axis.get_end()))
+	    );
 
-	draw_histogram(axis._histogram, radius_histogram, axis.start, axis.end);
+	draw_histogram(axis.get_histogram(), radius_histogram, axis.get_start(), axis.get_end());
 }
 
 void Drawer::draw_data_link(const DataLink & link)

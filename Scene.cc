@@ -80,7 +80,7 @@ Scene::Scene()
 
 		for(const VarAxis & va: _axis)
 		{
-			link.add_link_prop(va.prop);
+			link.add_link_prop(va.get_prop());
 		}
 
 		_links.push_back(link);
@@ -89,7 +89,7 @@ Scene::Scene()
 	// Calculate the histograms for the VarAxis'
 	for (std::size_t k = 0; k < _axis.size(); ++k)
 	{
-	    _axis[k]._histogram.calculate(histogram_values[k]);
+	    _axis[k].calculate_histogram(histogram_values[k]);
 	}
 
 	draw_scene();

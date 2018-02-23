@@ -52,6 +52,7 @@ public:
 	    {
 	      return _num_intervals;
 	    }
+
 	private:
 	    DefVar _var;
 	    std::size_t _num_intervals;
@@ -67,31 +68,113 @@ public:
 		double radius_, std::size_t height_,
 		const DrawerProperties<> & prop_, const TextProperties & text_prop_);
 
+	const Histogram & get_histogram () const
+	{
+	      return _histogram;
+	}
+
+	Angle get_end () const
+	{
+	      return _end;
+	}
+
+	void set_end (Angle end)
+	{
+	      this->_end = end;
+	}
+
+	std::size_t get_height () const
+	{
+	      return _height;
+	}
+
+	void set_height (std::size_t height)
+	{
+	      this->_height = height;
+	}
+
+	const Label & get_label () const
+	{
+	      return _label;
+	}
+
+	void set_label (const Label& label)
+	{
+	      this->_label = label;
+	}
+
+	const DrawerProperties<> & get_prop () const
+	{
+	      return _prop;
+	}
+
+	void set_prop (const DrawerProperties<> & prop)
+	{
+	      this->_prop = prop;
+	}
+
+	double get_radius () const
+	{
+	      return _radius;
+	}
+
+	void set_radius (double radius)
+	{
+	      this->_radius = radius;
+	}
+
+	Angle get_start () const
+	{
+	      return _start;
+	}
+
+	void set_start (Angle start)
+	{
+	      this->_start = start;
+	}
+
+	const Ticks & get_ticks () const
+	{
+	      return _ticks;
+	}
+
+	void set_ticks (const Ticks & ticks)
+	{
+	      this->_ticks = ticks;
+	}
+
+	const DefVar & get_var () const
+	{
+	      return _var;
+	}
+
 	/**
 	 *
 	 */
 	Polar get_coord(double val) const;
-public:
+
+	void calculate_histogram(const std::vector<double> & data);
+private:
 	/* The Variable this VarAxis represents */
-	DefVar 			var;
+	DefVar 			_var;
 	/** The ticks of this variable */
-	Ticks 			ticks;
+	Ticks 			_ticks;
 	/** A mapping from actual values to angles */
 	Mapper 			_input_mapper;
 	/** The histogram describing the frequencies of the intervals */
 	Histogram		_histogram;
 
 	/** Start and end angle for drawing the VarAxis */
-	Angle 			start, end;
+	Angle 			_start, _end;
 	/** Start radius of the VarAxis */
-	double 			radius;
+	double 			_radius;
 	/** Height of the VarAxis */
-	std::size_t 		height;
+	std::size_t 		_height;
 
 	/** Label showing the variable name */
-	Label 			label;
+	Label 			_label;
 	/** Style defining how the VarAxis is drawn */
-	DrawerProperties<> 	prop;
+	DrawerProperties<> 	_prop;
 };
 
 #endif /* VARAXIS_H_ */
