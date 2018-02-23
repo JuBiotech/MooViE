@@ -23,7 +23,7 @@ void VarAxis::Histogram::calculate(const std::vector<double> & data)
     for (double value: data)
     {
 	std::size_t pos = std::floor((value - _var.min) / section_width);
-	++_frequencies[pos];
+	++_frequencies.at(pos < _num_intervals ? pos : _num_intervals - 1);
     }
     for (std::size_t i = 0; i < _frequencies.size(); ++i)
 	_frequencies[i] /= data.size();
