@@ -70,7 +70,7 @@ Scene::Scene()
 
 		Polar connector(config.get_output_inner_radius() - Configuration::CONNECTOR_DELTA, _grid.get_coord(row[_axis.size()].value, 0).phi());
 
-		for (std::size_t k = 0; k < _grid.outputs; ++k)
+		for (std::size_t k = 0; k < _grid.get_num_outputs(); ++k)
 		{
 			out.push_back(_grid.get_coord(row[_axis.size() + k].value, k)); // TODO: Throw null value exception
 		}

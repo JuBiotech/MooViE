@@ -23,24 +23,28 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 	_cr->set_identity_matrix();
 
 	// Draw ring with colored segments which are used to color and distinguish the connectors
-	draw_segment_axis(grid.radius, Configuration::get_instance().get_input_thickness(), grid.start, grid.end, DrawerProperties<std::array<Color, 10>>(1, Color::BLACK,
-				Color::GLOW_10), grid.direction);
+	draw_segment_axis(
+			grid.get_radius(), Configuration::get_instance().get_input_thickness(),
+			grid.get_start(), grid.get_end(),
+			DrawerProperties<std::array<Color, 10>>(1, Color::BLACK, Color::GLOW_10),
+			grid.get_direction()
+			);
 
 	// Calculate the inner and outer radius of the CoordGrid
-	double min_radius = grid.radius + Configuration::get_instance().get_input_thickness();
-	double max_radius = grid.radius + Configuration::get_instance().get_input_thickness() + grid.height;
+	double min_radius = grid.get_radius() + Configuration::get_instance().get_input_thickness();
+	double max_radius = grid.get_radius() + Configuration::get_instance().get_input_thickness() + grid.get_height();
 
 	// Radian distance (absolute!) between start and end angle
-	double span = angle_helper::rad_dist(grid.start.get(), grid.end.get());
+	double span = angle_helper::rad_dist(grid.get_start().get(), grid.get_end().get());
 
 	// Calculate how the CoordGrid is separated into thin and thick lines (ticks)
-	const std::size_t NUM_SEGMENTS = grid.major_ticks * grid.minor_ticks;
-	const std::size_t NUM_THICK_LINES = grid.major_ticks;
+	const std::size_t NUM_SEGMENTS = grid.get_major_ticks() * grid.get_minor_ticks();
+	const std::size_t NUM_THICK_LINES = grid.get_major_ticks();
 
 	// Draw the ticks of the CoordGrid
 	for (size_t i = 0; i <= NUM_SEGMENTS; ++i)
 	{
-		Angle a((grid.start.get() + i * span / NUM_SEGMENTS));
+		Angle a((grid.get_start().get() + i * span / NUM_SEGMENTS));
 		if (i % NUM_THICK_LINES)
 			draw_line(Polar(min_radius, a), Polar(max_radius, a), prop_thin);
 		else
@@ -48,7 +52,7 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 	}
 
 	// Adjusted difference between the radial lines of the CoordGrid (outputs)
-	double y_dist = grid.height / (grid.outputs - Configuration::COORDGRID_ADJUSTMENT);
+	double y_dist = grid.get_height() / (grid.get_num_outputs() - Configuration::COORDGRID_ADJUSTMENT);
 
 	// Draw the description of the first output
 	draw_text_parallel(
@@ -57,15 +61,15 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 	);
 	draw_text_orthogonal(
 	    Label(std::to_string(grid.get_var(0).max), Configuration::get_instance().get_tick_label()),
-	    Polar(min_radius, grid.start - Configuration::TEXT_DELTA)
+	    Polar(min_radius, grid.get_start() - Configuration::TEXT_DELTA)
 	    );
 	draw_text_orthogonal(
 	    Label(std::to_string(grid.get_var(0).min), Configuration::get_instance().get_tick_label()),
-	    Polar(min_radius, grid.end + Configuration::TEXT_DELTA)
+	    Polar(min_radius, grid.get_end() + Configuration::TEXT_DELTA)
 	    );
 
 	// Draw the output lines of the CoordGrid
-	for (size_t i = 1; i < grid.outputs; ++i)
+	for (size_t i = 1; i < grid.get_num_outputs(); ++i)
 	{
 		// Draw the description of the i-th output
 		draw_text_parallel(
@@ -74,15 +78,15 @@ void Drawer::draw_coord_grid(const CoordGrid & grid, const DrawerProperties<> & 
 		    );
 		draw_text_orthogonal(
 		    Label(std::to_string(grid.get_var(i).max), Configuration::get_instance().get_tick_label()),
-		    Polar(min_radius + i * y_dist, grid.start - Configuration::TEXT_DELTA)
+		    Polar(min_radius + i * y_dist, grid.get_start() - Configuration::TEXT_DELTA)
 		    );
 		draw_text_orthogonal(
 		    Label(std::to_string(grid.get_var(i).min), Configuration::get_instance().get_tick_label()),
-		    Polar(min_radius + i * y_dist, grid.end + Configuration::TEXT_DELTA)
+		    Polar(min_radius + i * y_dist, grid.get_end() + Configuration::TEXT_DELTA)
 		    );
 
 		_cr->begin_new_path();
-		draw_arc(min_radius + i * y_dist, grid.start, grid.end, Direction::INCREASING);
+		draw_arc(min_radius + i * y_dist, grid.get_start(), grid.get_end(), Direction::INCREASING);
 		_cr->set_source_rgba(
 		    prop_thin.line_color.r(),
 		    prop_thin.line_color.g(),
