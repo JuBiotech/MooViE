@@ -95,12 +95,12 @@ void Drawer::draw_coord_grid(const CoordGrid & grid)
 		_cr->begin_new_path();
 		draw_arc(min_radius + i * y_dist, grid.get_start(), grid.get_end(), Direction::INCREASING);
 		_cr->set_source_rgba(
-		    prop_thin.line_color.r(),
-		    prop_thin.line_color.g(),
-		    prop_thin.line_color.b(),
-		    prop_thin.line_color.a()
+			Configuration::get_instance().get_prop_thin().line_color.r(),
+			Configuration::get_instance().get_prop_thin().line_color.g(),
+			Configuration::get_instance().get_prop_thin().line_color.b(),
+			Configuration::get_instance().get_prop_thin().line_color.a()
 		    );
-		_cr->set_line_width(prop_thin.line_width);
+		_cr->set_line_width(Configuration::get_instance().get_prop_thin().line_width);
 		_cr->stroke();
 	}
 }
@@ -153,12 +153,14 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 		{
 			const Label & tick_label = tick_labels[label_pos++];
 			draw_line(Polar(start_radius, a), Polar(end_radius_major, a), axis.get_prop());
-			// TODO: Calculate label size-dependend distance correctly
-			double dep_distance = (tick_label.text().length() / 2) * tick_label.prop().fontsize() * Configuration::RADIAL_TEXT_FACTOR;
+
+			double dep_distance = (tick_label.text().length() / 2)
+					* tick_label.prop().fontsize() * Configuration::RADIAL_TEXT_FACTOR;
+
 			draw_text_parallel(
 			    tick_label,
 			    Polar(radius_tick_label + dep_distance, a)
-			    );
+			);
 		}
 	}
 
@@ -229,22 +231,22 @@ void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
 	    start, end,
 	    histogram_background,
 	    Direction::INCREASING
-	    );
+	);
 
 	// Draw thin lines for histogram background
 	for (std::size_t i = 1; i < 6; ++i)
 	{
 	    _cr->begin_new_path();
 	    draw_arc(
-		radius + 20 * (i / 6.),
-		start, end,
-		Direction::INCREASING
+	    		radius + 20 * (i / 6.),
+				start, end,
+				Direction::INCREASING
 	    );
 	    _cr->set_source_rgba(
-		histogram_lines.line_color.r(),
-		histogram_lines.line_color.g(),
-		histogram_lines.line_color.b(),
-		histogram_lines.line_color.a()
+	    		histogram_lines.line_color.r(),
+				histogram_lines.line_color.g(),
+				histogram_lines.line_color.b(),
+				histogram_lines.line_color.a()
 	    );
 	    _cr->set_line_width(histogram_lines.line_width);
 	    _cr->stroke();

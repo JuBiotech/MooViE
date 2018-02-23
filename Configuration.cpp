@@ -7,7 +7,7 @@
 
 #include "Configuration.h"
 
-const double Configuration::RADIAL_TEXT_FACTOR = 0.5;
+const double Configuration::RADIAL_TEXT_FACTOR = 0.3;
 
 const double Configuration::COORDGRID_ADJUSTMENT = 0.5;
 
