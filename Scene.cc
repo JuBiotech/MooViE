@@ -15,6 +15,11 @@ Scene::Scene()
 				  Configuration::get_instance().get_num_inputs()
 		  )
   ),
+  _drawer (
+		  Configuration::get_instance().get_output_file(),
+		  Configuration::get_instance().get_width(),
+		  Configuration::get_instance().get_height()
+  ),
   _grid(
 		  10, 10,
 		  angle_helper::deg_to_rad(360 - Configuration::get_instance().get_output_angle_span() / 2),
@@ -38,19 +43,17 @@ Scene::Scene()
 	std::size_t axis_color_pos = 0;
 	for (DefVar var: _set.input_variables())
 	{
-		_axis.push_back(
-				VarAxis(
-				    var,
-				    Ticks(10, 10, std::make_pair(var.min, var.max), config.get_tick_label(), "cm"),
-				    angle_helper::deg_to_rad(start),
-				    angle_helper::deg_to_rad(end),
-				    config.get_input_inner_radius(), config.get_input_thickness(),
-				    DrawerProperties<>(
+		_axis.emplace_back(
+				var,
+				Ticks(10, 10, std::make_pair(var.min, var.max), config.get_tick_label(), "cm"),
+				angle_helper::deg_to_rad(start),
+				angle_helper::deg_to_rad(end),
+				config.get_input_inner_radius(), config.get_input_thickness(),
+				DrawerProperties<>(
 					config.get_prop_thick().line_width,
 					Color::BLACK, Color::SET3.at(_set.input_variables().size(), axis_color_pos++)
-				    ),
-				    config.get_var_label()
-				)
+				),
+				config.get_var_label()
 		);
 		start += angle + config.get_input_separation_angle();
 		end += angle + config.get_input_separation_angle();
@@ -90,13 +93,13 @@ Scene::Scene()
 	// Calculate the histograms for the VarAxis'
 	for (std::size_t k = 0; k < _axis.size(); ++k)
 	{
-	    _axis[k].calculate_histogram(histogram_values[k]);
+		_axis[k].calculate_histogram(histogram_values[k]);
 	}
 
-	draw_scene();
+	draw_components();
 }
 
-void Scene::draw_scene(void)
+void Scene::draw_components(void)
 {
 	for (DataLink link: _links)
 	{

@@ -31,7 +31,7 @@ public:
      * system is (width/2, height/2).
      * @brief Drawer
      */
-    Drawer();
+    Drawer(const std::string & fpath, int width, int height);
 
     /** Writes and closes file correctly on destruction of this Drawer.
      * @brief ~Drawer

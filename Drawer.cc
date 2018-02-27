@@ -9,11 +9,10 @@
 #include <iostream>
 #include <cmath>
 
-Drawer::Drawer()
-: _pc(Configuration::get_instance().get_width(), Configuration::get_instance().get_height())
+Drawer::Drawer(const std::string & fpath, int width, int height)
+: _pc(width, height)
 {
-	const Configuration & config = Configuration::get_instance();
-	const Cairo::RefPtr<Cairo::Surface> & ptr = Cairo::SvgSurface::create(config.get_output_file(), config.get_width(), config.get_height());
+	const Cairo::RefPtr<Cairo::Surface> & ptr = Cairo::SvgSurface::create(fpath, width, height);
 	_cr = Cairo::Context::create(ptr);
 }
 

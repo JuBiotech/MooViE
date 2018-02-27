@@ -8,6 +8,7 @@
 #ifndef SCENE_H_
 #define SCENE_H_
 
+#include <algorithm>
 #include "CoordGrid.h"
 #include "Drawer.h"
 #include "VarAxis.h"
@@ -29,10 +30,10 @@ public:
      */
     Scene();
 
-    /** Draws the Scene with CoordGrid, VarAxis' and DataLinks.
-     * @brief draw_scene
+    /** Draws the Scene components CoordGrid, VarAxis' and DataLinks.
+     * @brief draw_components
      */
-    void draw_scene(void);
+    void draw_components(void);
 
 private:
     /** Data set */
