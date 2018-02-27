@@ -32,6 +32,50 @@ Scene::Scene()
 		  Color::BLACK, Color::GLOW_10
   )
 {
+	initialize();
+
+	draw_components();
+}
+
+void Scene::update(void)
+{
+	// Update CoordGrid
+	_grid.set_start(angle_helper::deg_to_rad(360 - Configuration::get_instance().get_output_angle_span() / 2));
+	_grid.set_end(angle_helper::deg_to_rad(Configuration::get_instance().get_output_angle_span() / 2));
+	_grid.set_radius(Configuration::get_instance().get_output_inner_radius());
+	_grid.set_height(Configuration::get_instance().get_grid_size());
+
+	// Update VarAxis and DataLinks
+	_axis.clear();
+	_links.clear();
+	initialize();
+
+	// Update Drawer
+	_drawer.set_surface(
+			Configuration::get_instance().get_output_file(),
+			Configuration::get_instance().get_width(),
+			Configuration::get_instance().get_height()
+	);
+}
+
+void Scene::draw_components(void)
+{
+	for (DataLink link: _links)
+	{
+		_drawer.draw_data_link(link);
+	}
+
+	_drawer.draw_coord_grid(_grid);
+
+	for (VarAxis axis: _axis)
+	{
+		_drawer.draw_var_axis(axis);
+	}
+
+}
+
+void Scene::initialize(void)
+{
 	const Configuration & config = Configuration::get_instance();
 
 	// DataRows of the later histogram
@@ -45,7 +89,7 @@ Scene::Scene()
 	{
 		_axis.emplace_back(
 				var,
-				Ticks(10, 10, std::make_pair(var.min, var.max), config.get_tick_label(), "cm"),
+				Ticks(10, 10, std::make_pair(var.min, var.max), config.get_tick_label(), "cm"), // TODO: Parametrize Units
 				angle_helper::deg_to_rad(start),
 				angle_helper::deg_to_rad(end),
 				config.get_input_inner_radius(), config.get_input_thickness(),
@@ -82,9 +126,9 @@ Scene::Scene()
 		const Color & c = _grid.get_color(row[_set.input_variables().size()].value);
 		DataLink link(in, connector, out, DrawerProperties<>(0.4, c, Color(c.r(), c.g(), c.b(), 0.5)));
 
-		for(const VarAxis & va: _axis)
+		for(const VarAxis & axis: _axis)
 		{
-			link.add_link_prop(va.get_prop());
+			link.add_link_prop(axis.get_prop());
 		}
 
 		_links.push_back(link);
@@ -95,22 +139,4 @@ Scene::Scene()
 	{
 		_axis[k].calculate_histogram(histogram_values[k]);
 	}
-
-	draw_components();
-}
-
-void Scene::draw_components(void)
-{
-	for (DataLink link: _links)
-	{
-		_drawer.draw_data_link(link);
-	}
-
-	_drawer.draw_coord_grid(_grid);
-
-	for (VarAxis axis: _axis)
-	{
-		_drawer.draw_var_axis(axis);
-	}
-
 }

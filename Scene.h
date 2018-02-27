@@ -30,11 +30,19 @@ public:
      */
     Scene();
 
+    void update(void);
+
+
+private:
     /** Draws the Scene components CoordGrid, VarAxis' and DataLinks.
      * @brief draw_components
      */
     void draw_components(void);
 
+    /**
+     *
+     */
+    void initialize(void);
 private:
     /** Data set */
     DefDataSet 									_set;

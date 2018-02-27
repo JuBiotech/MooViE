@@ -56,6 +56,11 @@ public:
      */
     void draw_data_link(const DataLink & link);
 
+    /**
+     *
+     */
+    void set_surface(const std::string & fpath, int width, int height);
+
     /** Save and show the Drawer's result.
      * @brief finish
      */

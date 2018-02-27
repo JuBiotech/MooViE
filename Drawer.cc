@@ -12,8 +12,7 @@
 Drawer::Drawer(const std::string & fpath, int width, int height)
 : _pc(width, height)
 {
-	const Cairo::RefPtr<Cairo::Surface> & ptr = Cairo::SvgSurface::create(fpath, width, height);
-	_cr = Cairo::Context::create(ptr);
+	set_surface(fpath, width, height);
 }
 
 void Drawer::draw_coord_grid(const CoordGrid & grid)
@@ -212,6 +211,12 @@ void Drawer::draw_data_link(const DataLink & link)
 		from = out;
 		draw_coord_point(from, 0.005, (out.r() - mod.r()) * 2, link.get_connector_prop());
 	}
+}
+
+void Drawer::set_surface(const std::string & fpath, int width, int height)
+{
+	const Cairo::RefPtr<Cairo::Surface> & ptr = Cairo::SvgSurface::create(fpath, width, height);
+	_cr = Cairo::Context::create(ptr);
 }
 
 void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
