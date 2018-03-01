@@ -118,14 +118,13 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 	// Radian distance (absolute!) between start and end angle
 	double span = angle_helper::rad_dist(axis.get_start().get(), axis.get_end().get());
 
-	// TODO: Calculate using predefined constants
 	// Calculate radii for ticks and labels
 	double start_radius = axis.get_radius() + axis.get_height();
-	double end_radius_major = start_radius + 0.25 * axis.get_height();
-	double end_radius_minor = start_radius + 0.125 * axis.get_height();
-	double radius_tick_label = end_radius_major + 0.75 * axis.get_height();
-	double radius_label = end_radius_major + 3 * axis.get_height();
-	double radius_histogram = radius_label + 10;
+	double end_radius_major = start_radius + Configuration::END_RADIUS_MAJOR_FACTOR * axis.get_height();
+	double end_radius_minor = start_radius + Configuration::END_RADIUS_MINOR_FACTOR * axis.get_height();
+	double radius_tick_label = end_radius_major + Configuration::RADIUS_TICK_LABEL_FACTOR * axis.get_height();
+	double radius_label = end_radius_major + Configuration::RADIUS_LABEL_FACTOR * axis.get_height();
+	double radius_histogram = radius_label + Configuration::RADIUS_HISTOGRAM_FACTOR;
 
 	// Tick values as strings
 	std::vector<Label> tick_labels = axis.get_ticks().get_labels();
@@ -199,7 +198,12 @@ void Drawer::draw_data_link(const DataLink & link)
 		mod = Util::get_connector_end(from, to);
 		draw_connector(from, mod, link.get_connector_prop());
 		from = to;
-		draw_coord_point(from, 0.005, (to.r() - mod.r()) * 2, link.get_connector_prop());
+		draw_coord_point(
+				from,
+				Configuration::COORDPOINT_ANGLE,
+				(to.r() - mod.r()) * 2,
+				link.get_connector_prop()
+		);
 	}
 
 	// Draw connector on CoordGrid
@@ -209,7 +213,12 @@ void Drawer::draw_data_link(const DataLink & link)
 		mod = Util::get_connector_end(from, out);
 		draw_connector(Util::get_connector_start(from, out), mod, link.get_connector_prop());
 		from = out;
-		draw_coord_point(from, 0.005, (out.r() - mod.r()) * 2, link.get_connector_prop());
+		draw_coord_point(
+				from,
+				Configuration::COORDPOINT_ANGLE,
+				(out.r() - mod.r()) * 2,
+				link.get_connector_prop()
+		);
 	}
 }
 
@@ -224,14 +233,16 @@ void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
 {
 	_cr->set_identity_matrix();
 
-	DrawerProperties<> histogram_background(0.1, Color(0,0,0,0.1), Color(0,0,0,0.1)),
-	    histogram_lines(0.1, Color(0,0,0,0.3), Color(0,0,0,0.3));
-	// TODO: use configuration values
+	const Configuration & config = Configuration::get_instance();
+	DrawerProperties<> histogram_background(
+			config.get_prop_thin().line_width,
+			config.get_histogram_background(),
+			config.get_histogram_background());
 
 	// Draw background
 	draw_ring_segment(
 	    radius,
-	    20,
+	    config.get_histogram_height(),
 	    start, end,
 	    histogram_background,
 	    Direction::INCREASING
@@ -242,17 +253,11 @@ void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
 	{
 	    _cr->begin_new_path();
 	    draw_arc(
-	    		radius + 20 * (i / 6.),
+	    		radius + config.get_histogram_height() * (i / 6.),
 				start, end,
 				Direction::INCREASING
 	    );
-	    _cr->set_source_rgba(
-	    		histogram_lines.line_color.r(),
-				histogram_lines.line_color.g(),
-				histogram_lines.line_color.b(),
-				histogram_lines.line_color.a()
-	    );
-	    _cr->set_line_width(histogram_lines.line_width);
+	    _cr->set_line_width(config.get_prop_thin().line_width);
 	    _cr->stroke();
 	}
 
@@ -262,13 +267,12 @@ void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
 	for (std::size_t i = 0; i < histogram.get_num_intervals(); ++i)
 	{
 	    draw_arc(
-		radius + 20 * histogram.get_section_frequency(i),
-		start + (span / histogram.get_num_intervals()) * i,
-		start + (span / histogram.get_num_intervals()) * (i + 1),
-		Direction::DECREASING
+	    		radius + config.get_histogram_height() * histogram.get_section_frequency(i),
+				start + (span / histogram.get_num_intervals()) * i,
+				start + (span / histogram.get_num_intervals()) * (i + 1),
+				Direction::DECREASING
 	    );
 	}
-	_cr->set_source_rgb(0,0,0);
 	_cr->set_line_width(0.5);
 	_cr->stroke();
 }
@@ -319,7 +323,8 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
   	_cr->begin_new_path();
 
 	// Only use 0.2 as distance factor
-	const static double dist_factor = 0.2;
+	static const double dist_factor =
+			(1 - Configuration::get_instance().get_ratio_connector_arc()) / 2;
 
 	// Calculate to intermediate coordinates to draw the arc from
 	double radial_dist = to.r() - from.r();
@@ -343,7 +348,7 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 
 	// Draw arc by approximating circle segments linearly:
 	//TODO: nicer bezier solution!
-	double r_diff = radial_dist * 0.6;
+	double r_diff = radial_dist * (1 - 2 * dist_factor);
 	double d0 = angle_helper::rad_dist(from.phi().get(), to.phi().get()),
 	    d1 = angle_helper::rad_dist(to.phi().get(), from.phi().get());
 	double phi_diff = d0 <= d1 ? d0 : -d1;
