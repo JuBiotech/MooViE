@@ -32,7 +32,6 @@ public:
 
     void update(void);
 
-
 private:
     /** Draws the Scene components CoordGrid, VarAxis' and DataLinks.
      * @brief draw_components

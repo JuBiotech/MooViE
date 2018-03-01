@@ -40,7 +40,7 @@ VarAxis::VarAxis(DefVar var_, Ticks ticks_,
 		 double radius_, std::size_t height_,
 		 const DrawerProperties<> & prop_, const TextProperties & text_prop_)
 : _var(var_), _ticks(ticks_), _input_mapper(std::make_pair(_var.min, _var.max), std::make_pair(start_.get(), end_.get())),
-  _histogram(var_, 10), // TODO: replace with configuration constant
+  _histogram(var_, Configuration::get_instance().get_num_histogram_classes()),
   _start(start_), _end(end_),_radius(radius_),  _height(height_),
   _label(_var.name, text_prop_), _prop(prop_)
 {}

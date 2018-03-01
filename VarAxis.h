@@ -13,6 +13,7 @@
 #include "DataSet.h"
 #include "Mapper.h"
 #include "DrawerProperties.h"
+#include "Configuration.h"
 
 /** A VarAxis is an axis which displays the possible values
  * of a input variable. It is visualized as a ring segment

@@ -56,6 +56,8 @@ void Scene::update(void)
 			Configuration::get_instance().get_width(),
 			Configuration::get_instance().get_height()
 	);
+
+	draw_components();
 }
 
 void Scene::draw_components(void)
@@ -89,7 +91,12 @@ void Scene::initialize(void)
 	{
 		_axis.emplace_back(
 				var,
-				Ticks(10, 10, std::make_pair(var.min, var.max), config.get_tick_label(), "cm"), // TODO: Parametrize Units
+				Ticks(
+						config.get_num_major_ticks_va(),
+						config.get_num_minor_ticks_va(),
+						std::make_pair(var.min, var.max),
+						config.get_tick_label(), "cm"
+				), // TODO: Parametrize Units
 				angle_helper::deg_to_rad(start),
 				angle_helper::deg_to_rad(end),
 				config.get_input_inner_radius(), config.get_input_thickness(),
