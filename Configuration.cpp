@@ -15,8 +15,8 @@ const double Configuration::COORDPOINT_ANGLE = 0.005;
 const double Configuration::END_RADIUS_MAJOR_FACTOR = 0.25;
 const double Configuration::END_RADIUS_MINOR_FACTOR = 0.125;
 const double Configuration::RADIUS_TICK_LABEL_FACTOR = 0.75;
-const double Configuration::RADIUS_LABEL_FACTOR = 3;
-const double Configuration::RADIUS_HISTOGRAM_FACTOR = 10;
+const double Configuration::RADIUS_LABEL_FACTOR = 1.75;
+const double Configuration::RADIUS_HISTOGRAM_FACTOR = 1.25;
 
 const double Configuration::DATA_LINK_LINE_WIDTH = 0.1;
 

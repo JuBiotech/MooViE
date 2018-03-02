@@ -179,12 +179,14 @@ private:
 	 */
 	void draw_text_orthogonal(const Label & label, const Polar & start);
 
+	Cairo::TextExtents get_text_extents(const Label & label) const;
+
 	/** ???
 	 * @brief createLinkControlPoint
 	 * @param point
 	 * @return
 	 */
-	Cartesian create_control_point(const Polar & point);
+	Cartesian create_control_point(const Polar & point) const;
 
 private:
     /** Polar-Cartesian converting */

@@ -30,7 +30,7 @@ DataSet<double> DataSet<double>::parse_from_csv(const std::string & cont, std::s
 				&& close_bracket != std::string::npos)
 		{
 			std::string name = header[i].substr(0, open_bracket),
-					unit = header[i].substr(open_bracket + 1, close_bracket - open_bracket - 2);
+					unit = header[i].substr(open_bracket + 1, close_bracket - open_bracket - 1);
 			input_vars.push_back(DefVar(DBL_MAX, DBL_MIN, Util::strip(name), Util::strip(unit)));
 		}
 		else
