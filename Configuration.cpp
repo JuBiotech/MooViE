@@ -24,6 +24,8 @@ const double Configuration::CONNECTOR_DELTA = 10;
 const double Configuration::TEXT_DELTA = 0.05;
 const double Configuration::ANGLE_DELTA_SMALL = 0.001;
 const double Configuration::ANGLE_DELTA_LARGE = 0.1;
+const double Configuration::RADIUS_DELTA_SMALL = 5;
+const double Configuration::RADIUS_DELTA_LARGE = 10;
 
 std::shared_ptr<Configuration> Configuration::_instance;
 

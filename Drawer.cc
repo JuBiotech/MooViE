@@ -28,8 +28,10 @@ void Drawer::draw_coord_grid(const CoordGrid & grid)
 	);
 
 	// Calculate the inner and outer radius of the CoordGrid
-	double min_radius = grid.get_radius() + Configuration::get_instance().get_input_thickness();
-	double max_radius = grid.get_radius() + Configuration::get_instance().get_input_thickness() + grid.get_height();
+	double min_radius = grid.get_radius()
+			+ Configuration::get_instance().get_input_thickness();
+	double max_radius = grid.get_radius()
+			+ Configuration::get_instance().get_input_thickness() + grid.get_height();
 
 	// Radian distance (absolute!) between start and end angle
 	double span = angle_helper::rad_dist(grid.get_start().get(), grid.get_end().get());
@@ -131,8 +133,8 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 	const Cairo::TextExtents & tick_ext = get_text_extents(tick_labels[0]);
 	const Cairo::TextExtents & label_ext = get_text_extents(axis.get_label());
 	double radius_tick_label = end_radius_major + Configuration::RADIUS_TICK_LABEL_FACTOR * axis.get_height();
-	double radius_label = end_radius_major + tick_ext.width * Configuration::RADIUS_LABEL_FACTOR;
-	double radius_histogram = radius_label + label_ext.height * Configuration::RADIUS_HISTOGRAM_FACTOR;
+	double radius_label = end_radius_major + Configuration::RADIUS_LABEL_FACTOR * tick_ext.width;
+	double radius_histogram = radius_label + Configuration::RADIUS_HISTOGRAM_FACTOR * label_ext.height;
 
 	// Calculate how the VarAxis' ticks is separated into thin and thick lines (ticks)
 	const std::size_t NUM_SEGMENTS = axis.get_ticks().get_major_ticks() * axis.get_ticks().get_minor_ticks();
@@ -178,15 +180,27 @@ void Drawer::draw_data_link(const DataLink & link)
 {
 	// Calculate target from connector coordinate
 	Polar from = link.get_connector_coord();
-	Polar target1(from.r() - 5, from.phi() - Configuration::ANGLE_DELTA_SMALL),
-			target2(from.r() - 5, from.phi() + Configuration::ANGLE_DELTA_SMALL);
+	Polar target1(
+				from.r() - Configuration::RADIUS_DELTA_SMALL,
+				from.phi() - Configuration::ANGLE_DELTA_SMALL
+			),
+		target2(
+				from.r() - Configuration::RADIUS_DELTA_SMALL,
+				from.phi() + Configuration::ANGLE_DELTA_SMALL
+		);
 
 	// Draw links
 	std::size_t i = 0;
 	for (Polar in: link.get_input_coords())
 	{
-		Polar origin1(in.r() - 10, in.phi() - Configuration::ANGLE_DELTA_SMALL),
-				origin2(in.r() - 10, in.phi() + Configuration::ANGLE_DELTA_SMALL);
+		Polar origin1(
+				in.r() - Configuration::RADIUS_DELTA_LARGE,
+				in.phi() - Configuration::ANGLE_DELTA_SMALL
+				),
+			origin2(
+					in.r() - Configuration::RADIUS_DELTA_LARGE,
+					in.phi() + Configuration::ANGLE_DELTA_SMALL
+			);
 		draw_link(origin1, origin2, target1, target2, link.get_link_prop(i++));
 	}
 
@@ -227,8 +241,16 @@ void Drawer::draw_data_link(const DataLink & link)
 
 void Drawer::set_surface(const std::string & fpath, int width, int height)
 {
+	finish();
 	const Cairo::RefPtr<Cairo::Surface> & ptr = Cairo::SvgSurface::create(fpath, width, height);
 	_cr = Cairo::Context::create(ptr);
+}
+
+void Drawer::finish()
+{
+	// Save the state of the context
+	_cr->save();
+	_cr->show_page();
 }
 
 void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
@@ -579,13 +601,6 @@ void Drawer::draw_text_orthogonal(const Label & label, const Polar & start)
 
 	_cr->close_path();
 	_cr->show_text(label.text());
-}
-
-void Drawer::finish()
-{
-	// Save the state of the context
-	_cr->save();
-	_cr->show_page();
 }
 
 Cairo::TextExtents Drawer::get_text_extents(const Label & label) const
