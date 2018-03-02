@@ -1,6 +1,6 @@
 # test csv file
 
-Input1, Input2, Input3, Output1, Output2, Output3
+Input1[cm], Input2[cm], Input3[cm], Output1, Output2, Output3
 0.111, 0.112, 0.113, 0.121, 0.322, 0.123
 0.211, 0.212, 0.213, 0.221, 0.222, 0.723
 0.311, 0.312, 0.313, 0.321, 0.422, 0.323

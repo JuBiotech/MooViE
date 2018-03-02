@@ -38,8 +38,8 @@ public:
 		 * @param max the max value
 		 * @param name the name
 		 */
-		Var(T min_, T max_, const std::string& name_) :
-				min(min_), max(max_), name(name_)
+		Var(T min_, T max_, const std::string & name_, const std::string & unit_ = "") :
+				min(min_), max(max_), name(name_), unit(unit_)
 		{
 		}
 
@@ -51,6 +51,9 @@ public:
 
 		/** Variable name */
 		std::string name;
+
+		/* Unit of the Variables values */
+		std::string unit;
 	};
 
 	/** Stores the value of a cell. The value is 0 if

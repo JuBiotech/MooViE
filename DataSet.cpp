@@ -24,13 +24,37 @@ DataSet<double> DataSet<double>::parse_from_csv(const std::string & cont, std::s
 	// Add input variables from table header
 	for (std::size_t i = 0; i < num_ins; ++i)
 	{
-		input_vars.push_back(DefVar(DBL_MAX, DBL_MIN, Util::strip(header[i])));
+		std::size_t open_bracket = header[i].find_first_of('['),
+				close_bracket = header[i].find_first_of(']');
+		if (open_bracket != std::string::npos
+				&& close_bracket != std::string::npos)
+		{
+			std::string name = header[i].substr(0, open_bracket),
+					unit = header[i].substr(open_bracket + 1, close_bracket - open_bracket - 2);
+			input_vars.push_back(DefVar(DBL_MAX, DBL_MIN, Util::strip(name), Util::strip(unit)));
+		}
+		else
+		{
+			input_vars.push_back(DefVar(DBL_MAX, DBL_MIN, Util::strip(header[i])));
+		}
 	}
 
 	// Add output variables from table header
 	for (std::size_t i = num_ins; i < header.size(); ++i)
 	{
-		output_vars.push_back(DefVar(DBL_MAX, DBL_MIN, Util::strip(header[i])));
+		std::size_t open_bracket = header[i].find_first_of('['),
+				close_bracket = header[i].find_first_of(']');
+		if (open_bracket != std::string::npos
+				&& close_bracket != std::string::npos)
+		{
+			std::string name = header[i].substr(0, open_bracket),
+					unit = header[i].substr(open_bracket + 1, close_bracket - open_bracket - 2);
+			output_vars.push_back(DefVar(DBL_MAX, DBL_MIN, Util::strip(name), Util::strip(unit)));
+		}
+		else
+		{
+			output_vars.push_back(DefVar(DBL_MAX, DBL_MIN, Util::strip(header[i])));
+		}
 	}
 
 	// Add values from table body
