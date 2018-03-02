@@ -96,7 +96,7 @@ void Scene::initialize(void)
 						config.get_num_minor_ticks_va(),
 						std::make_pair(var.min, var.max),
 						config.get_tick_label(), var.unit
-				), // TODO: Parametrize Units
+				),
 				angle_helper::deg_to_rad(start),
 				angle_helper::deg_to_rad(end),
 				config.get_input_inner_radius(), config.get_input_thickness(),

@@ -71,7 +71,7 @@ inline int string_to_int(const std::string & str) throw(ParseException)
  * @return the double value
  * @throws ParseException if string is not an double literal
  */
-inline int string_to_double(const std::string & str) throw(ParseException)
+inline double string_to_double(const std::string & str) throw(ParseException)
 {
 	try
 	{

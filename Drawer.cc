@@ -237,7 +237,9 @@ void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
 	DrawerProperties<> histogram_background(
 			config.get_prop_thin().line_width,
 			config.get_histogram_background(),
-			config.get_histogram_background());
+			config.get_histogram_background()
+	);
+	const DrawerProperties<> & prop_thin = config.get_prop_thin();
 
 	// Draw background
 	draw_ring_segment(
@@ -249,6 +251,7 @@ void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
 	);
 
 	// Draw thin lines for histogram background
+	_cr->set_line_width(prop_thin.line_width);
 	for (std::size_t i = 1; i < 6; ++i)
 	{
 	    _cr->begin_new_path();
@@ -257,12 +260,17 @@ void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
 				start, end,
 				Direction::INCREASING
 	    );
-	    _cr->set_line_width(config.get_prop_thin().line_width);
 	    _cr->stroke();
 	}
 
 	// Draw the histogram graph
 	_cr->begin_new_path();
+	_cr->set_source_rgba(
+		prop_thin.line_color.r(),
+		prop_thin.line_color.g(),
+		prop_thin.line_color.b(),
+		prop_thin.line_color.a()
+	);
 	double span = angle_helper::rad_dist(start.get(), end.get());
 	for (std::size_t i = 0; i < histogram.get_num_intervals(); ++i)
 	{

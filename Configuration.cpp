@@ -83,7 +83,7 @@ Configuration::Configuration(const std::string & fname, std::size_t inputs, cons
 			}
 			else if (key.compare("moovie.num_minor_ticks_coordgrid") == 0)
 			{
-					_num_minor_ticks_cg = Util::string_to_int(value);
+				_num_minor_ticks_cg = Util::string_to_int(value);
 			}
 			else if (key.compare("moovie.num_segments") == 0)
 			{
@@ -124,7 +124,8 @@ Configuration::Configuration(const std::string & fname, std::size_t inputs, cons
 				_histogram_background = Color(
 						Util::string_to_double(values[0]),
 						Util::string_to_double(values[1]),
-						Util::string_to_double(values[2])
+						Util::string_to_double(values[2]),
+						0.1
 				);
 			}
 			else if (key.compare("moovie.line_width_datalink") == 0)
@@ -134,14 +135,6 @@ Configuration::Configuration(const std::string & fname, std::size_t inputs, cons
 			else if (key.compare("moovie.ratio_connector_arc") == 0)
 			{
 				_ratio_connector_arc = Util::string_to_double(value);
-			}
-			else if (key.compare("moovie.tick_label_font_size") == 0)
-			{
-				_tick_label = TextProperties(_tick_label.fontname(), Util::string_to_double(value));
-			}
-			else if (key.compare("moovie.var_label_font_size") == 0)
-			{
-				_var_label = TextProperties(_var_label.fontname(), Util::string_to_double(value));
 			}
 			else if (key.compare("moovie.thick_line") == 0)
 			{
@@ -153,11 +146,19 @@ Configuration::Configuration(const std::string & fname, std::size_t inputs, cons
 			}
 			else if (key.compare("moovie.tick_label_font") == 0)
 			{
-				_tick_label = TextProperties(value, _tick_label.fontsize());
+				_tick_label = TextProperties(value, _tick_label.fontsize()); // TODO: Check if exists
+			}
+			else if (key.compare("moovie.tick_label_font_size") == 0)
+			{
+				_tick_label = TextProperties(_tick_label.fontname(), Util::string_to_double(value));
 			}
 			else if (key.compare("moovie.var_label_font") == 0)
 			{
-				_var_label = TextProperties(value, _var_label.fontsize());
+				_var_label = TextProperties(value, _var_label.fontsize()); // TODO: Check if exists
+			}
+			else if (key.compare("moovie.var_label_font_size") == 0)
+			{
+				_var_label = TextProperties(_var_label.fontname(), Util::string_to_double(value));
 			}
 		}
 	}

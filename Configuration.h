@@ -337,7 +337,7 @@ private:
 	/* Histogram modification values */
 	int					_num_histogram_classes	= 10;
 	double				_histogram_height		= 20;
-	Color				_histogram_background;
+	Color				_histogram_background	= {0, 0, 0, .1};
 
 	/* DataLink modification values */
 	double				_line_with_dl			= 0.1;
@@ -345,7 +345,7 @@ private:
 
 	/* General line and fill styles */
 	DrawerProperties<> 	_prop_thick 			= {0.5, Color::BLACK, Color::BLACK};
-	DrawerProperties<> 	_prop_thin 				= {0.1, Color::BLACK, Color::BLACK};
+	DrawerProperties<> 	_prop_thin 				= {0.2, Color::BLACK, Color::BLACK};
 
 	/* General font and font size */
 	TextProperties 		_tick_label 			= {"Liberation Serif", 8};
