@@ -355,6 +355,7 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 	_cr->set_identity_matrix();
   	_cr->begin_new_path();
 
+
 	// Only use 0.2 as distance factor
 	static const double dist_factor =
 			(1 - Configuration::get_instance().get_ratio_connector_arc()) / 2;
@@ -365,19 +366,18 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 	Polar intermediate2 {to.r() - dist_factor * radial_dist, to.phi() };
 
 	// Convert to Cartesian coordinates
-	Cartesian real_from_c;
-	Cartesian real_to_c;
+	Cartesian from_c;
+	Cartesian to_c;
 	Cartesian intermediate1_c;
 	Cartesian intermediate2_c;
-	_pc.convert(from, real_from_c);
-	_pc.convert(to, real_to_c);
+	_pc.convert(from, from_c);
+	_pc.convert(to, to_c);
 	_pc.convert(intermediate1, intermediate1_c);
 	_pc.convert(intermediate2, intermediate2_c);
 
 	// Line from start to first intermediate
-	_cr->move_to(real_from_c.x(), real_from_c.y());
+	_cr->move_to(from_c.x(), from_c.y());
 	_cr->line_to(intermediate1_c.x(), intermediate1_c.y());
-
 
 	// Draw arc by approximating circle segments linearly:
 	//TODO: nicer bezier solution!
@@ -400,11 +400,15 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 
 	// Line to second intermediate to from there to end
 	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
-	_cr->line_to(real_to_c.x(), real_to_c.y());
+	_cr->line_to(to_c.x(), to_c.y());
 
 	// Set line style and apply drawing
-	_cr->set_source_rgba(prop.line_color.r(), prop.line_color.g(), prop.line_color.b(),
-			prop.line_color.a());
+	_cr->set_source_rgba(
+			prop.line_color.r(),
+			prop.line_color.g(),
+			prop.line_color.b(),
+			prop.line_color.a()
+	);
 	_cr->set_line_width(prop.line_width);
 	_cr->stroke();
 }
@@ -490,11 +494,19 @@ void Drawer::draw_ring_segment(double inner_radius, double thickness,
 	_cr->close_path();
 
 	// Set line and fill color and apply drawing
-	_cr->set_source_rgba(prop.fill_color.r(), prop.fill_color.g(),
-			prop.fill_color.b(), prop.fill_color.a());
+	_cr->set_source_rgba(
+			prop.fill_color.r(),
+			prop.fill_color.g(),
+			prop.fill_color.b(),
+			prop.fill_color.a()
+	);
 	_cr->fill_preserve();
-	_cr->set_source_rgba(prop.line_color.r(), prop.line_color.g(),
-			prop.line_color.b(), prop.line_color.a());
+	_cr->set_source_rgba(
+			prop.line_color.r(),
+			prop.line_color.g(),
+			prop.line_color.b(),
+			prop.line_color.a()
+	);
 	_cr->set_line_width(prop.line_width);
 	_cr->stroke();
 }
@@ -529,8 +541,12 @@ void Drawer::draw_arrow(const Polar & start, const DrawerProperties<> & prop)
 	_cr->move_to(head.x(), head.y());
 	_cr->line_to(right.x(), right.y());
 	_cr->line_to(left.x(), left.y());
-	_cr->set_source_rgba(prop.line_color.r(), prop.line_color.g(),
-				prop.line_color.b(), prop.line_color.a());
+	_cr->set_source_rgba(
+			prop.line_color.r(),
+			prop.line_color.g(),
+			prop.line_color.b(),
+			prop.line_color.a()
+	);
 	_cr->set_line_width(Configuration::DATA_LINK_LINE_WIDTH);
 	_cr->fill_preserve();
 	_cr->stroke();
@@ -550,8 +566,12 @@ void Drawer::draw_line(const Polar& from, const Polar& to,
 	// Draw path and apply after setting line style
 	_cr->move_to(from_c.x(), from_c.y());
 	_cr->line_to(to_c.x(), to_c.y());
-	_cr->set_source_rgba(prop.line_color.r(), prop.line_color.g(),
-			prop.line_color.b(), prop.line_color.a());
+	_cr->set_source_rgba(
+			prop.line_color.r(),
+			prop.line_color.g(),
+			prop.line_color.b(),
+			prop.line_color.a()
+	);
 	_cr->set_line_width(prop.line_width);
 	_cr->stroke();
 
