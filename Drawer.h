@@ -59,7 +59,8 @@ public:
     /**
      *
      */
-    void set_surface(const std::string & fpath, int width, int height);
+    void change_surface(const std::string & fpath, int width, int height);
+
 
     /** Save and show the Drawer's result.
      * @brief finish
@@ -187,6 +188,11 @@ private:
 	 * @return
 	 */
 	Cartesian create_control_point(const Polar & point) const;
+
+	/**
+	 *
+	 */
+	void set_surface(const std::string & fpath, int width, int height);
 
 private:
     /** Polar-Cartesian converting */

@@ -239,7 +239,7 @@ void Drawer::draw_data_link(const DataLink & link)
 	}
 }
 
-void Drawer::set_surface(const std::string & fpath, int width, int height)
+void Drawer::change_surface(const std::string & fpath, int width, int height)
 {
 	finish();
 	const Cairo::RefPtr<Cairo::Surface> & ptr = Cairo::SvgSurface::create(fpath, width, height);
@@ -637,4 +637,10 @@ Cartesian Drawer::create_control_point(const Polar & point) const
 	_pc.convert(control, control_c);
 
 	return control_c;
+}
+
+void Drawer::set_surface(const std::string & fpath, int width, int height)
+{
+	const Cairo::RefPtr<Cairo::Surface> & ptr = Cairo::SvgSurface::create(fpath, width, height);
+	_cr = Cairo::Context::create(ptr);
 }

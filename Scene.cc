@@ -51,7 +51,7 @@ void Scene::update(void)
 	initialize();
 
 	// Update Drawer
-	_drawer.set_surface(
+	_drawer.change_surface(
 			Configuration::get_instance().get_output_file(),
 			Configuration::get_instance().get_width(),
 			Configuration::get_instance().get_height()
