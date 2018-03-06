@@ -48,12 +48,10 @@ Configuration::Configuration(const std::string & fname, std::size_t inputs, cons
 		if (line.find_first_not_of(' ') != line.npos
 				&& line[line.find_first_not_of(' ')] != '#')
 		{
-			std::string stripped_line = Util::strip(line);
-
-			std::size_t split_pos = stripped_line.find_first_of("=");
-			const std::string & key = Util::strip(stripped_line.substr(0, split_pos));
-			const std::string & value = Util::strip(stripped_line.substr(split_pos + 1,
-					stripped_line.size() - split_pos - 1));
+			std::size_t split_pos = line.find_first_of("=");
+			const std::string & key = Util::strip(line.substr(0, split_pos));
+			const std::string & value = Util::strip(line.substr(split_pos + 1,
+					line.size() - split_pos - 1));
 
 			if (key.compare("moovie.width") == 0)
 			{
@@ -69,7 +67,7 @@ Configuration::Configuration(const std::string & fname, std::size_t inputs, cons
 			}
 			else if (key.compare("moovie.output_inner_radius") == 0)
 			{
-					_output_inner_radius = Util::string_to_double(value);
+				_output_inner_radius = Util::string_to_double(value);
 			}
 			else if (key.compare("moovie.output_thickness") == 0)
 			{
@@ -122,7 +120,7 @@ Configuration::Configuration(const std::string & fname, std::size_t inputs, cons
 			else if (key.compare("moovie.histogram_background") == 0)
 			{
 				std::vector<std::string> values = Util::split(value, ",");
-				if (values.size() < 3);
+				if (values.size() != 3);
 				_histogram_background = Color(
 						Util::string_to_double(values[0]),
 						Util::string_to_double(values[1]),
@@ -132,7 +130,7 @@ Configuration::Configuration(const std::string & fname, std::size_t inputs, cons
 			}
 			else if (key.compare("moovie.line_width_datalink") == 0)
 			{
-				_line_with_dl = Util::string_to_double(value);
+				_line_width_dl = Util::string_to_double(value);
 			}
 			else if (key.compare("moovie.ratio_connector_arc") == 0)
 			{
@@ -148,7 +146,7 @@ Configuration::Configuration(const std::string & fname, std::size_t inputs, cons
 			}
 			else if (key.compare("moovie.tick_label_font") == 0)
 			{
-				_tick_label = TextProperties(value, _tick_label.fontsize()); // TODO: Check if exists
+				_tick_label = TextProperties(value, _tick_label.fontsize());
 			}
 			else if (key.compare("moovie.tick_label_font_size") == 0)
 			{
@@ -156,7 +154,7 @@ Configuration::Configuration(const std::string & fname, std::size_t inputs, cons
 			}
 			else if (key.compare("moovie.var_label_font") == 0)
 			{
-				_var_label = TextProperties(value, _var_label.fontsize()); // TODO: Check if exists
+				_var_label = TextProperties(value, _var_label.fontsize());
 			}
 			else if (key.compare("moovie.var_label_font_size") == 0)
 			{

@@ -244,12 +244,12 @@ public:
 
 	double get_line_with_dl() const
 	{
-		return _line_with_dl;
+		return _line_width_dl;
 	}
 
 	void set_line_with_dl(double line_with_dl = 0.1)
 	{
-		_line_with_dl = line_with_dl;
+		_line_width_dl = line_with_dl;
 	}
 
 	double get_ratio_connector_arc() const
@@ -340,7 +340,7 @@ private:
 	Color				_histogram_background	= {0, 0, 0, .1};
 
 	/* DataLink modification values */
-	double				_line_with_dl			= 0.1;
+	double				_line_width_dl			= 0.1;
 	double				_ratio_connector_arc	= 0.6;
 
 	/* General line and fill styles */
