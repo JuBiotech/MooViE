@@ -355,7 +355,6 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 	_cr->set_identity_matrix();
   	_cr->begin_new_path();
 
-
 	// Only use 0.2 as distance factor
 	static const double dist_factor =
 			(1 - Configuration::get_instance().get_ratio_connector_arc()) / 2;

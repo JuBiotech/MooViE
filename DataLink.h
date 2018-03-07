@@ -9,6 +9,9 @@
 #define DATALINK_H_
 
 #include <vector>
+#include "CoordGrid.h"
+#include "VarAxis.h"
+#include "DataLink.h"
 #include "PolarCartesian.h"
 #include "DrawerProperties.h"
 
@@ -20,6 +23,25 @@
  */
 class DataLink
 {
+	friend class DataLinkFactory;
+
+private:
+	class CoordinateStorage
+	{
+	public:
+		std::size_t add_unique(Polar && coord);
+		inline const Polar & get(std::size_t pos)
+		{
+			if (pos >= _coordinates.size()); // TODO: throw exception
+			return _coordinates[pos];
+		}
+
+	private:
+		std::vector<Polar> _coordinates;
+	};
+
+	static CoordinateStorage _coordinate_storage;
+
 public:
 	/** Creates a new DataLink, a connection from the different inputs to their output values.
 	 * @param input_coords coordinates of the different VarAxis
@@ -96,6 +118,19 @@ private:
 	/* DrawerProperties for coloring the DataLink */
 	DrawerProperties<> 		_connector_prop;
 	std::vector<DrawerProperties<>>	_link_props;
+};
+
+
+class DataLinkFactory
+{
+public:
+	DataLinkFactory(const CoordGrid & grid, const std::vector<VarAxis> & axis);
+	DataLink create(const DefDataRow & row) const;
+private:
+	const CoordGrid & _grid;
+	const std::vector<VarAxis> & _axis;
+	std::vector<Mapper> _input_mapper,
+						_output_mapper;
 };
 
 #endif /* DATALINK_H_ */
