@@ -11,10 +11,13 @@
 #include "Scene.h"
 #include "Args.h"
 #include "Configuration.h"
+#include <chrono>
 
 // Runs the MooViE application from command line arguments
 int run_moovie(int argc, const char * argv[])
 {
+	std::chrono::time_point<std::chrono::system_clock> start, end;
+	start = std::chrono::system_clock::now();
 	try
 	{
 		const Args & args = Args::parse(argc, argv);
@@ -39,6 +42,8 @@ int run_moovie(int argc, const char * argv[])
 			Configuration::initialize(args.get_input_file(), args.get_num_inputs());
 			Scene main;
 		}
+		end = std::chrono::system_clock::now();
+		std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end -start).count() << std::endl;
 		return EXIT_SUCCESS;
 	} catch (ParseException & e)
 	{

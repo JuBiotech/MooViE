@@ -34,13 +34,14 @@ double VarAxis::Histogram::get_section_frequency(std::size_t i) const
 }
 
 VarAxis::VarAxis(DefVar var, Ticks ticks_,
-		 const Angle & start_, const Angle & end_,
-		 double radius_, std::size_t height_,
-		 const DrawerProperties<> & prop_, const TextProperties & text_prop_)
-: _var(var), _ticks(ticks_), _input_mapper(std::make_pair(_var.min, _var.max), std::make_pair(start_.get(), end_.get())),
+		 const Angle & start, const Angle & end,
+		 double radius, std::size_t height,
+		 const DrawerProperties<> & prop,
+		 const TextProperties & text_prop)
+: _var(var), _ticks(ticks_), _input_mapper(std::make_pair(_var.min, _var.max), std::make_pair(start.get(), end.get())),
   _histogram(var),
-  _start(start_), _end(end_),_radius(radius_),  _height(height_),
-  _label(_var.name, text_prop_), _prop(prop_)
+  _start(start), _end(end),_radius(radius),  _height(height),
+  _label(_var.name, text_prop), _prop(prop)
 {}
 
 Polar VarAxis::get_coord(double val) const

@@ -7,13 +7,18 @@
 
 #include "DataLink.h"
 
+const Polar & DataPoint::coord() const
+{
+	return DataLinkFactory::_coordinate_storage.get(_coord);
+}
+
 DataLinkFactory::CoordinateStorage DataLinkFactory::_coordinate_storage;
 
-const Polar & DataLinkFactory::CoordinateStorage::add_unique(Polar && coord)
+std::size_t DataLinkFactory::CoordinateStorage::add_unique(Polar && coord)
 {
 	static auto comparator = [&](const Polar & comp) {
-		return (comp.r() - 5 > coord.r() && comp.r() + 5 < coord.r())
-				&& (comp.phi() - 0.001 > coord.phi() && comp.phi() + 0.001 < coord.phi());
+		return (comp.r() - 5 < coord.r() && comp.r() + 5 > coord.r())
+				&& (comp.phi() - 0.001 < coord.phi() && comp.phi() + 0.001 > coord.phi());
 	};
 
 	std::vector<Polar>::iterator found;
@@ -21,12 +26,12 @@ const Polar & DataLinkFactory::CoordinateStorage::add_unique(Polar && coord)
 	if ((found = std::find_if(_coordinates.begin(), _coordinates.end(), comparator))
 			!= _coordinates.end())
 	{
-		return *found;
+		return found - _coordinates.begin();
 	}
 	else
 	{
 		_coordinates.push_back(std::move(coord));
-		return _coordinates[_coordinates.size()];
+		return _coordinates.size() - 1;
 	}
 }
 
@@ -35,11 +40,16 @@ DataLinkFactory::DataLinkFactory(
 		const std::vector<VarAxis> & axis)
 : _grid(grid), _axis(axis)
 {
+	std::pair<double, double> out = std::make_pair(
+						grid.get_start().get(),
+						grid.get_start() > grid.get_end() ?
+								grid.get_end().get() + 2 * M_PIl : grid.get_end().get()
+					);
 	for (DefVar var: grid.get_output_variables())
 	{
 		_output_mapper.emplace_back(
 				std::make_pair(var.min, var.max),
-				std::make_pair(grid.get_start().get(), grid.get_end().get())
+				out
 		);
 	}
 
@@ -55,8 +65,10 @@ DataLinkFactory::DataLinkFactory(
 DataLink DataLinkFactory::create(const DefDataRow & row) const
 {
 	DataLink link;
+	std::size_t num_inputs = _axis.size(),
+			num_cols = row.size();
 
-	for (std::size_t i = 0; i < _axis.size(); ++i)
+	for (std::size_t i = 0; i < num_inputs; ++i)
 	{
 		link.emplace_back(
 				_coordinate_storage.add_unique(
@@ -66,18 +78,18 @@ DataLink DataLinkFactory::create(const DefDataRow & row) const
 		);
 	}
 
-	DrawerProperties<> prop(1.0, Color::BLACK, _grid.get_color(row[_axis.size()].value)); // TODO: add config value
+	DrawerProperties<> prop(1.0, Color::BLACK, _grid.get_color(row[num_inputs].value)); // TODO: add config value
 	link.emplace_back(
 			_coordinate_storage.add_unique(
 					Polar(_grid.get_radius() - Configuration::CONNECTOR_DELTA,
-						_output_mapper[0].map(row[_axis.size()].value)
+						_output_mapper[0].map(row[num_inputs].value)
 					)
 			),
 			prop
 	);
 
 	double height_factor = _grid.get_height() / (_grid.get_num_outputs() - 0.5);
-	for (std::size_t i = 0; i < _axis.size(); ++i)
+	for (std::size_t i = 0; i < num_cols - num_inputs; ++i)
 	{
 		link.emplace_back(
 				_coordinate_storage.add_unique(
@@ -85,7 +97,7 @@ DataLink DataLinkFactory::create(const DefDataRow & row) const
 								_grid.get_radius()
 									+ Configuration::get_instance().get_output_thickness()
 									+ i * height_factor,
-								_output_mapper[i].map(row[i].value)
+								_output_mapper[i].map(row[i + num_inputs].value)
 						)
 				),
 				prop
