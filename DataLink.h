@@ -53,6 +53,8 @@ public:
 	DataLinkFactory(const CoordGrid & grid, const std::vector<VarAxis> & axis);
 	DataLink create(const DefDataRow & row) const;
 private:
+	const Color & get_color(double val) const;
+private:
 	const CoordGrid & _grid;
 	const std::vector<VarAxis> & _axis;
 	std::vector<Mapper> _input_mapper,

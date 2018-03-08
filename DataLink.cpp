@@ -78,7 +78,9 @@ DataLink DataLinkFactory::create(const DefDataRow & row) const
 		);
 	}
 
-	DrawerProperties<> prop(1.0, Color::BLACK, _grid.get_color(row[num_inputs].value)); // TODO: add config value
+	Color line = get_color(row[num_inputs].value);
+	Color fill(line.r(), line.g(), line.b(), 0.3);
+	DrawerProperties<> prop(0.2, line, fill); // TODO: add config value
 	link.emplace_back(
 			_coordinate_storage.add_unique(
 					Polar(_grid.get_radius() - Configuration::CONNECTOR_DELTA,
@@ -105,4 +107,24 @@ DataLink DataLinkFactory::create(const DefDataRow & row) const
 	}
 
 	return link;
+}
+
+const Color & DataLinkFactory::get_color(double val) const
+{
+	double range = angle_helper::rad_dist(
+				_grid.get_start().get(),
+				_grid.get_end().get()
+			);
+	double angle = _output_mapper[0].map(val);
+
+	std::size_t i;
+	for (i = 0; i < 10; ++i)
+	{
+		if (angle < _grid.get_start().get() + i * range / 10)
+		{
+			break;
+		}
+	}
+
+	return Color::GLOW_10[i - 1];
 }

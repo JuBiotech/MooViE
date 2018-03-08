@@ -38,16 +38,11 @@ VarAxis::VarAxis(DefVar var, Ticks ticks_,
 		 double radius, std::size_t height,
 		 const DrawerProperties<> & prop,
 		 const TextProperties & text_prop)
-: _var(var), _ticks(ticks_), _input_mapper(std::make_pair(_var.min, _var.max), std::make_pair(start.get(), end.get())),
+: _var(var), _ticks(ticks_),
   _histogram(var),
   _start(start), _end(end),_radius(radius),  _height(height),
   _label(_var.name, text_prop), _prop(prop)
 {}
-
-Polar VarAxis::get_coord(double val) const
-{
-    return Polar(_radius, _input_mapper.map(val));
-}
 
 void VarAxis::calculate_histogram(const std::vector<double> & data)
 {
