@@ -28,11 +28,11 @@ public:
 	static const double END_RADIUS_MAJOR_FACTOR;
 	static const double END_RADIUS_MINOR_FACTOR;
 	static const double RADIUS_TICK_LABEL_FACTOR;
-	static const double RADIUS_LABEL_FACTOR;
-	static const double RADIUS_HISTOGRAM_FACTOR;
 
 	static const double DATA_LINK_LINE_WIDTH;
 
+	static const double RADIUS_LABEL_DELTA;
+	static const double RADIUS_HISTOGRAM_DELTA;
 	static const double CONNECTOR_DELTA;
 	static const double TEXT_DELTA;
 	static const double ANGLE_DELTA_SMALL;

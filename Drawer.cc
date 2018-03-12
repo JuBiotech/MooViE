@@ -130,11 +130,19 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 	double end_radius_minor = start_radius + Configuration::END_RADIUS_MINOR_FACTOR * axis.get_height();
 
 	// Calculate radii for labels
-	const Cairo::TextExtents & tick_ext = get_text_extents(tick_labels[0]);
+	std::size_t max_tick_label_pos = 0;
+	for (std::size_t i = 1; i < tick_labels.size(); ++i)
+	{
+		if (tick_labels[i].text().length() > tick_labels[max_tick_label_pos].text().length())
+		{
+			max_tick_label_pos = i;
+		}
+	}
+	const Cairo::TextExtents & tick_ext = get_text_extents(tick_labels[max_tick_label_pos]);
 	const Cairo::TextExtents & label_ext = get_text_extents(axis.get_label());
 	double radius_tick_label = end_radius_major + Configuration::RADIUS_TICK_LABEL_FACTOR * axis.get_height();
-	double radius_label = end_radius_major + Configuration::RADIUS_LABEL_FACTOR * tick_ext.width;
-	double radius_histogram = radius_label + Configuration::RADIUS_HISTOGRAM_FACTOR * label_ext.height;
+	double radius_label = radius_tick_label + tick_ext.width + Configuration::RADIUS_LABEL_DELTA;
+	double radius_histogram = radius_label + label_ext.height + Configuration::RADIUS_HISTOGRAM_DELTA;
 
 	// Calculate how the VarAxis' ticks is separated into thin and thick lines (ticks)
 	const std::size_t NUM_SEGMENTS = axis.get_ticks().get_major_ticks() * axis.get_ticks().get_minor_ticks();
@@ -242,8 +250,7 @@ void Drawer::draw_data_link(const DataLink & link)
 void Drawer::change_surface(const std::string & fpath, int width, int height)
 {
 	finish();
-	const Cairo::RefPtr<Cairo::Surface> & ptr = Cairo::SvgSurface::create(fpath, width, height);
-	_cr = Cairo::Context::create(ptr);
+	set_surface(fpath, width, height);
 }
 
 void Drawer::finish()
@@ -607,7 +614,7 @@ void Drawer::draw_text_orthogonal(const Label & label, const Polar & start)
 	_cr->set_identity_matrix();
 
 	// Calculate the width and height of the textbox
-	const Cairo::TextExtents & t_exts = get_text_extents(label);
+	Cairo::TextExtents t_exts = get_text_extents(label);
 
 	// Create cairo angle
 	Angle cairo_angle = M_PI_2 - start.phi();
