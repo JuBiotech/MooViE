@@ -131,7 +131,7 @@ void Scene::initialize(void)
 		}
 
 		const Color & c = _grid.get_color(row[_set.input_variables().size()].value);
-		DataLink link(in, connector, out, DrawerProperties<>(0.4, c, Color(c.r(), c.g(), c.b(), 0.5)));
+		DataLink link(in, connector, out, DrawerProperties<>(0.1, c, Color(c.r(), c.g(), c.b(), 0.5)));
 
 		for(const VarAxis & axis: _axis)
 		{
