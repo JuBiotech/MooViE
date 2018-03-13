@@ -378,7 +378,7 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 	// Line from start to first intermediate
 	_cr->move_to(from_c.x(), from_c.y());
 	_cr->line_to(intermediate1_c.x(), intermediate1_c.y());
-
+	/*
 	// Draw arc by approximating circle segments linearly:
 	//TODO: nicer bezier solution!
 	double r_diff = radial_dist * (1 - 2 * dist_factor);
@@ -400,6 +400,33 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 
 	// Line to second intermediate to from there to end
 	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
+	_cr->line_to(to_c.x(), to_c.y());
+	*/
+
+	static const double c1_factor = 0.5, c2_factor = 0.5;
+
+	// Starting points Q, K
+	const Cartesian & Q = intermediate1_c;
+	const Cartesian & K = intermediate2_c;
+
+	// Projection from K on Q
+	double p_factor = (Q.x() * K.x() + Q.y() * K.y()) / (std::pow(Q.x(), 2) + std::pow(Q.y(), 2));
+	Cartesian C(p_factor * Q.x(), p_factor * Q.y());
+
+	// Calculate third coordinate to build equilateral triangle with Q and K
+//	Cartesian M = Cartesian::interpolate(K, Q, 0.5);
+//	Cartesian QM(M.x() - Q.x(), M.y() - Q.y());
+//	Cartesian C(M.x() + QM.y(), M.y() - QM.x());
+
+	// Calculate control points
+	Cartesian C1(Q.x() + c1_factor * (C.x() - Q.x()), Q.y() + c1_factor * (C.y() - Q.y())),
+			C2(K.x() + c2_factor * (C.x() - K.x()), K.y() + c2_factor * (C.y() - K.y()));
+
+	_cr->curve_to(C1.x(), C1.y(), C2.x(), C2.y(), K.x(), K.y());
+//	_cr->line_to(C1.x(), C1.y());
+//	_cr->line_to(C.x(), C.y());
+//	_cr->line_to(C2.x(), C2.y());
+//	_cr->line_to(K.x(), K.y());
 	_cr->line_to(to_c.x(), to_c.y());
 
 	// Set line style and apply drawing
