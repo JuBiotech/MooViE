@@ -24,6 +24,7 @@ public:
 
 	static const double COORDGRID_ADJUSTMENT;
 	static const double COORDPOINT_ANGLE;
+	static const double COORDGRID_DESCRIPTION_ANGLE;
 
 	static const double END_RADIUS_MAJOR_FACTOR;
 	static const double END_RADIUS_MINOR_FACTOR;

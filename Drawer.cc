@@ -62,17 +62,21 @@ void Drawer::draw_coord_grid(const CoordGrid & grid)
 	double y_dist = grid.get_height() / (grid.get_num_outputs() - Configuration::COORDGRID_ADJUSTMENT);
 
 	// Draw the description of the first output
+	static TextProperties name_prop("Liberation Serif", 6, Color::BLACK, true, false);
 	draw_text_parallel(
-	    Label(grid.get_var(0).name, Configuration::get_instance().get_tick_label()),
-	    Polar(min_radius, 0)
+	    Label(grid.get_var(0).name, name_prop),
+	    Polar(min_radius, Configuration::COORDGRID_DESCRIPTION_ANGLE),
+		0
 	);
 	draw_text_orthogonal(
 	    Label(std::to_string(grid.get_var(0).max), Configuration::get_instance().get_tick_label()),
-	    Polar(min_radius, grid.get_start() - Configuration::TEXT_DELTA)
+	    Polar(min_radius, grid.get_start() - Configuration::TEXT_DELTA),
+		0
 	);
 	draw_text_orthogonal(
 	    Label(std::to_string(grid.get_var(0).min), Configuration::get_instance().get_tick_label()),
-	    Polar(min_radius, grid.get_end() + Configuration::TEXT_DELTA)
+	    Polar(min_radius, grid.get_end() + Configuration::TEXT_DELTA),
+		1
 	);
 
 	// Draw the output lines of the CoordGrid
@@ -80,16 +84,19 @@ void Drawer::draw_coord_grid(const CoordGrid & grid)
 	{
 		// Draw the description of the i-th output
 		draw_text_parallel(
-		    Label(grid.get_var(i).name, Configuration::get_instance().get_tick_label()),
-		    Polar(min_radius + i * y_dist, 0)
+		    Label(grid.get_var(i).name, name_prop),
+		    Polar(min_radius + i * y_dist, Configuration::COORDGRID_DESCRIPTION_ANGLE),
+			0
 		);
 		draw_text_orthogonal(
 		    Label(std::to_string(grid.get_var(i).max), Configuration::get_instance().get_tick_label()),
-		    Polar(min_radius + i * y_dist, grid.get_start() - Configuration::TEXT_DELTA)
+		    Polar(min_radius + i * y_dist, grid.get_start() - Configuration::TEXT_DELTA),
+			0
 		);
 		draw_text_orthogonal(
 		    Label(std::to_string(grid.get_var(i).min), Configuration::get_instance().get_tick_label()),
-		    Polar(min_radius + i * y_dist, grid.get_end() + Configuration::TEXT_DELTA)
+		    Polar(min_radius + i * y_dist, grid.get_end() + Configuration::TEXT_DELTA),
+			1
 		);
 
 		_cr->begin_new_path();
@@ -138,8 +145,11 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 			max_tick_label_pos = i;
 		}
 	}
+	set_font_face(tick_labels[max_tick_label_pos]);
 	const Cairo::TextExtents & tick_ext = get_text_extents(tick_labels[max_tick_label_pos]);
+	set_font_face(axis.get_label());
 	const Cairo::TextExtents & label_ext = get_text_extents(axis.get_label());
+
 	double radius_tick_label = end_radius_major + Configuration::RADIUS_TICK_LABEL_FACTOR * axis.get_height();
 	double radius_label = radius_tick_label + tick_ext.width + Configuration::RADIUS_LABEL_DELTA;
 	double radius_histogram = radius_label + label_ext.height + Configuration::RADIUS_HISTOGRAM_DELTA;
@@ -584,9 +594,12 @@ void Drawer::draw_line(const Polar& from, const Polar& to,
 
 }
 
-void Drawer::draw_text_parallel(const Label& label, const Polar & start)
+void Drawer::draw_text_parallel(const Label& label, const Polar & start, double ratio)
 {
 	_cr->set_identity_matrix();
+
+	// Set font style
+	set_font_face(label);
 
 	// Calculate the width and height of the textbox
 	const Cairo::TextExtents & t_exts = get_text_extents(label);
@@ -603,15 +616,18 @@ void Drawer::draw_text_parallel(const Label& label, const Polar & start)
 	  _cr->rotate_degrees(90);
 	else
 	  _cr->rotate_degrees(270);
-	_cr->translate(-0.5 * t_exts.width, 0.5 * t_exts.height);
+	_cr->translate(-ratio * t_exts.width, (1 - ratio) * t_exts.height);
 
 	_cr->close_path();
 	_cr->show_text(label.text());
 }
 
-void Drawer::draw_text_orthogonal(const Label & label, const Polar & start)
+void Drawer::draw_text_orthogonal(const Label & label, const Polar & start, double ratio)
 {
 	_cr->set_identity_matrix();
+
+	// Set font style
+	set_font_face(label);
 
 	// Calculate the width and height of the textbox
 	Cairo::TextExtents t_exts = get_text_extents(label);
@@ -624,13 +640,13 @@ void Drawer::draw_text_orthogonal(const Label & label, const Polar & start)
 	_cr->translate(_pc.center().x(), _pc.center().y());
 	_cr->rotate(cairo_angle.get());
 	_cr->translate(0, -start.r());
-	_cr->translate(-0.5 * t_exts.width, 0.5 * t_exts.height);
+	_cr->translate(-ratio * t_exts.width, (1 - ratio) * t_exts.height);
 
 	_cr->close_path();
 	_cr->show_text(label.text());
 }
 
-Cairo::TextExtents Drawer::get_text_extents(const Label & label) const
+void Drawer::set_font_face(const Label & label)
 {
 	// Set font styles
 	Cairo::RefPtr<Cairo::ToyFontFace> font = Cairo::ToyFontFace::create(
@@ -646,7 +662,10 @@ Cairo::TextExtents Drawer::get_text_extents(const Label & label) const
 		label.prop().color().b(),
 		label.prop().color().a()
 	);
+}
 
+Cairo::TextExtents Drawer::get_text_extents(const Label & label) const
+{
 	// Calculate the width and height of the textbox
 	Cairo::TextExtents t_exts;
 	std::string message { label.text() };
@@ -668,6 +687,6 @@ Cartesian Drawer::create_control_point(const Polar & point) const
 
 void Drawer::set_surface(const std::string & fpath, int width, int height)
 {
-	const Cairo::RefPtr<Cairo::Surface> & ptr = Cairo::SvgSurface::create(fpath, width, height);
+	const Cairo::RefPtr<Cairo::Surface> ptr = Cairo::SvgSurface::create(fpath, width, height);
 	_cr = Cairo::Context::create(ptr);
 }

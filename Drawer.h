@@ -170,7 +170,7 @@ private:
 	 * @param label the label to draw
 	 * @param start the coordinate to adjust to
 	 */
-	void draw_text_parallel(const Label & label, const Polar & start);
+	void draw_text_parallel(const Label & label, const Polar & start, double ratio=0.5);
 
 	/** Draws the given label orthogonal to the angle of the given
 	 * coordinate's angle.
@@ -178,7 +178,9 @@ private:
 	 * @param label the label to draw
 	 * @param start the coordinate to adjust to
 	 */
-	void draw_text_orthogonal(const Label & label, const Polar & start);
+	void draw_text_orthogonal(const Label & label, const Polar & start, double ratio=0.5);
+
+	void set_font_face(const Label & label);
 
 	Cairo::TextExtents get_text_extents(const Label & label) const;
 
@@ -196,13 +198,13 @@ private:
 
 private:
     /** Polar-Cartesian converting */
-    const PolarCartesian 		_pc;
+    const PolarCartesian 				_pc;
 
-    /** Cairo reference pointer, the interface for calling Cairo functions. */
-    Cairo::RefPtr<Cairo::Context> 	_cr;
+    /** Smart pointer for calling Cairo functions */
+    Cairo::RefPtr<Cairo::Context> 		_cr;
 
     /** ??? */
-    double 				_link_control_strength 	= 100.0;
+    double 								_link_control_strength 	= 100.0;
 
 };
 
