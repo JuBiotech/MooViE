@@ -7,34 +7,6 @@
 
 #include "DataLink.h"
 
-const Polar & DataPoint::coord() const
-{
-	return DataLinkFactory::_coordinate_storage.get(_coord);
-}
-
-DataLinkFactory::CoordinateStorage DataLinkFactory::_coordinate_storage;
-
-std::size_t DataLinkFactory::CoordinateStorage::add_unique(Polar && coord)
-{
-	static auto comparator = [&](const Polar & comp) {
-		return (comp.r() - 5 < coord.r() && comp.r() + 5 > coord.r())
-				&& (comp.phi() - 0.001 < coord.phi() && comp.phi() + 0.001 > coord.phi());
-	};
-
-	std::vector<Polar>::iterator found;
-
-	if ((found = std::find_if(_coordinates.begin(), _coordinates.end(), comparator))
-			!= _coordinates.end())
-	{
-		return found - _coordinates.begin();
-	}
-	else
-	{
-		_coordinates.push_back(std::move(coord));
-		return _coordinates.size() - 1;
-	}
-}
-
 DataLinkFactory::DataLinkFactory(
 		const CoordGrid & grid,
 		const std::vector<VarAxis> & axis)
@@ -71,9 +43,7 @@ DataLink DataLinkFactory::create(const DefDataRow & row) const
 	for (std::size_t i = 0; i < num_inputs; ++i)
 	{
 		link.emplace_back(
-				_coordinate_storage.add_unique(
-						Polar(_axis[i].get_radius(), _input_mapper[i].map(row[i].value))
-				),
+				Polar(_axis[i].get_radius(), _input_mapper[i].map(row[i].value)),
 				_axis[i].get_prop()
 		);
 	}
@@ -82,10 +52,9 @@ DataLink DataLinkFactory::create(const DefDataRow & row) const
 	Color fill(line.r(), line.g(), line.b(), 0.3);
 	DrawerProperties<> prop(0.2, line, fill); // TODO: add config value
 	link.emplace_back(
-			_coordinate_storage.add_unique(
-					Polar(_grid.get_radius() - Configuration::CONNECTOR_DELTA,
-						_output_mapper[0].map(row[num_inputs].value)
-					)
+			Polar(
+				_grid.get_radius() - Configuration::CONNECTOR_DELTA,
+				_output_mapper[0].map(row[num_inputs].value)
 			),
 			prop
 	);
@@ -94,13 +63,11 @@ DataLink DataLinkFactory::create(const DefDataRow & row) const
 	for (std::size_t i = 0; i < num_cols - num_inputs; ++i)
 	{
 		link.emplace_back(
-				_coordinate_storage.add_unique(
-						Polar(
-								_grid.get_radius()
-									+ Configuration::get_instance().get_output_thickness()
-									+ i * height_factor,
-								_output_mapper[i].map(row[i + num_inputs].value)
-						)
+				Polar(
+					_grid.get_radius()
+						+ Configuration::get_instance().get_output_thickness()
+						+ i * height_factor,
+					_output_mapper[i].map(row[i + num_inputs].value)
 				),
 				prop
 		);

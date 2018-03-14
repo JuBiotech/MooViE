@@ -183,36 +183,36 @@ void Drawer::draw_data_link(const DataLink & link)
 	DataPoint from = link.at(connector_pos);
 
 	Polar target1(
-				from.coord().r() - Configuration::RADIUS_DELTA_SMALL,
-				from.coord().phi() - Configuration::ANGLE_DELTA_SMALL
+				from.coord.r() - Configuration::RADIUS_DELTA_SMALL,
+				from.coord.phi() - Configuration::ANGLE_DELTA_SMALL
 		  ),
 		  target2(
-				from.coord().r() - Configuration::RADIUS_DELTA_SMALL,
-				from.coord().phi() + Configuration::ANGLE_DELTA_SMALL
+				from.coord.r() - Configuration::RADIUS_DELTA_SMALL,
+				from.coord.phi() + Configuration::ANGLE_DELTA_SMALL
 		  );
 
 	// Draw links
 	for (std::size_t i = 0; i < Configuration::get_instance().get_num_inputs(); ++i)
 	{
 		Polar origin1(
-				link[i].coord().r() - Configuration::RADIUS_DELTA_LARGE,
-				link[i].coord().phi() - Configuration::ANGLE_DELTA_SMALL
+				link[i].coord.r() - Configuration::RADIUS_DELTA_LARGE,
+				link[i].coord.phi() - Configuration::ANGLE_DELTA_SMALL
 			  ),
 			  origin2(
-					link[i].coord().r() - Configuration::RADIUS_DELTA_LARGE,
-					link[i].coord().phi() + Configuration::ANGLE_DELTA_SMALL
+					link[i].coord.r() - Configuration::RADIUS_DELTA_LARGE,
+					link[i].coord.phi() + Configuration::ANGLE_DELTA_SMALL
 			  );
 		draw_link(origin1, origin2, target1, target2, link[i].prop);
 	}
 
 	// Draw line from connector to first output
-	draw_connector(from.coord(), link[connector_pos + 1].coord(), from.prop);
-	draw_arrow(from.coord(), from.prop);
+	draw_connector(from.coord, link[connector_pos + 1].coord, from.prop);
+	draw_arrow(from.coord, from.prop);
 
 	// Draw connector on CoordGrid
 	for (size_t i = connector_pos + 1; i < link.size() - 1; ++i)
 	{
-		Polar from = link[i].coord(), to = link[i + 1].coord();
+		Polar from = link[i].coord, to = link[i + 1].coord;
 		draw_connector(
 				Util::get_connector_start(from, to),
 				Util::get_connector_end(from, to),

@@ -17,38 +17,17 @@
 
 struct DataPoint
 {
-private:
-	std::size_t _coord;
-public:
+	const Polar coord;
 	DrawerProperties<> prop;
-
-	DataPoint(std::size_t coord, const DrawerProperties<> _prop)
-	: _coord(coord), prop(_prop) {}
-
-	const Polar & coord() const;
+	DataPoint(Polar&& coord, const DrawerProperties<>& prop)
+	: coord(coord), prop(prop)
+	{}
 };
 
 typedef std::vector<DataPoint> DataLink;
 
 class DataLinkFactory
 {
-private:
-	friend struct DataPoint;
-
-	class CoordinateStorage
-	{
-	public:
-		std::size_t add_unique(Polar && coord);
-		inline const Polar & get(std::size_t location)
-		{
-			return _coordinates[location];
-		}
-	private:
-		std::vector<Polar> _coordinates;
-	};
-
-	static CoordinateStorage _coordinate_storage;
-
 public:
 	DataLinkFactory(const CoordGrid & grid, const std::vector<VarAxis> & axis);
 	DataLink create(const DefDataRow & row) const;
