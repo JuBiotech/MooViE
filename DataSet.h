@@ -39,7 +39,7 @@ public:
 		 * @param name the name
 		 */
 		Var(T min_, T max_, const std::string & name_, const std::string & unit_ = "") :
-				min(min_), max(max_), name(name_), unit(unit_)
+				min(min_), max(max_), error(0), name(name_), unit(unit_)
 		{
 		}
 
@@ -48,6 +48,9 @@ public:
 
 		/** Maximal value */
 		T max;
+
+		/** Maximal possible error */
+		T error;
 
 		/** Variable name */
 		std::string name;
@@ -121,7 +124,7 @@ public:
 		;
 	};
 
-	/** Renaming to ease the iterators */
+	/** Renaming to simplify the use of iterators */
 	typedef const iterator const_iterator;
 public:
 	/** Returns a data table parsed from a csv encoded string
@@ -140,7 +143,7 @@ public:
 	 * @param newline the newline indicator used in this csv string
 	 * @return the DataSet object
 	 */
-	static DataSet parse_from_csv(const std::string & cont, std::size_t num_ins,
+	static DataSet parse_from_csv(const std::string & cont,
 			std::string separator = ",", std::string comment = "#", std::string newline = "\n");
 
 	/** Returns the number of columns in this table.
@@ -163,8 +166,7 @@ public:
 	 * be used like a vector from the given type.
 	 * @return the DataRow object
 	 */
-	inline const DataRow &
-	operator[](std::size_t i) const
+	inline const DataRow & operator[](std::size_t i) const
 	{
 		return _rows[i];
 	}
@@ -227,10 +229,10 @@ private:
 };
 
 template<typename T>
-DataSet<T> DataSet<T>::parse_from_csv(const std::string & cont, std::size_t num_ins,
+DataSet<T> DataSet<T>::parse_from_csv(const std::string & cont,
 		std::string separator, std::string comment, std::string newline)
 {
-	static_assert(true, "Should not be compiled.");
+	static_assert(std::is_same<T, double>::value, "Should not be compiled.");
 }
 
 typedef DataSet<double> DefDataSet;

@@ -11,8 +11,7 @@
 Scene::Scene()
 : _set(
 		  DefDataSet::parse_from_csv(
-				  Util::read_file(Configuration::get_instance().get_input_file()),
-				  Configuration::get_instance().get_num_inputs()
+				  Util::read_file(Configuration::get_instance().get_input_file())
 		  )
   ),
   _drawer (
@@ -122,8 +121,8 @@ void Scene::initialize(void)
 	}
 
 	// Calculate the histograms for the VarAxis'
-	for (std::size_t k = 0; k < _axis.size(); ++k)
+	for (std::size_t i = 0; i < _axis.size(); ++i)
 	{
-		_axis[k].calculate_histogram(histogram_values[k]);
+		_axis[i].calculate_histogram(histogram_values[i]);
 	}
 }
