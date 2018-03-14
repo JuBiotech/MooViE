@@ -81,7 +81,7 @@ void Scene::initialize(void)
 	const Configuration & config = Configuration::get_instance();
 
 	// DataRows of the later histogram
-	std::vector<std::vector<double>> histogram_values;
+	std::vector<std::vector<double>> histogram_values(config.get_num_inputs());
 
 	// Create VarAxis' from DataSet's input variables
 	double angle = 180 / _set.input_variables().size() - config.get_input_separation_angle();
@@ -108,37 +108,17 @@ void Scene::initialize(void)
 		);
 		start += angle + config.get_input_separation_angle();
 		end += angle + config.get_input_separation_angle();
-
-		histogram_values.push_back(std::vector<double>());
 	}
 
 	// Create DataLinks from DataSet's input/output values
-	for (DefDataRow row: _set)
+	DataLinkFactory factory(_grid, _axis);
+	for (const DefDataRow & row: _set)
 	{
-		std::vector<Polar> in, out;
-
-		for (std::size_t k = 0; k < _axis.size(); ++k)
+		_links.push_back(factory.create(row));
+		for (std::size_t i = 0; i < histogram_values.size(); ++i)
 		{
-			in.push_back(_axis[k].get_coord(row[k].value)); // TODO: Throw null value exception
-			histogram_values[k].push_back(row[k].value);
+			histogram_values[i].push_back(row[i].value);
 		}
-
-		Polar connector(config.get_output_inner_radius() - Configuration::CONNECTOR_DELTA, _grid.get_coord(row[_axis.size()].value, 0).phi());
-
-		for (std::size_t k = 0; k < _grid.get_num_outputs(); ++k)
-		{
-			out.push_back(_grid.get_coord(row[_axis.size() + k].value, k)); // TODO: Throw null value exception
-		}
-
-		const Color & c = _grid.get_color(row[_set.input_variables().size()].value);
-		DataLink link(in, connector, out, DrawerProperties<>(0.1, c, Color(c.r(), c.g(), c.b(), 0.5)));
-
-		for(const VarAxis & axis: _axis)
-		{
-			link.add_link_prop(axis.get_prop());
-		}
-
-		_links.push_back(link);
 	}
 
 	// Calculate the histograms for the VarAxis'

@@ -155,11 +155,6 @@ public:
 	      return _var;
 	}
 
-	/**
-	 *
-	 */
-	Polar get_coord(double val) const;
-
 	void calculate_histogram(const std::vector<double> & data);
 
 private:
@@ -167,8 +162,6 @@ private:
 	DefVar 				_var;
 	/** The ticks of this variable */
 	Ticks 				_ticks;
-	/** A mapping from actual values to angles */
-	Mapper 				_input_mapper;
 	/** The histogram describing the frequencies of the intervals */
 	Histogram			_histogram;
 

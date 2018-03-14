@@ -197,62 +197,50 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 void Drawer::draw_data_link(const DataLink & link)
 {
 	// Calculate target from connector coordinate
-	Polar from = link.get_connector_coord();
+	std::size_t connector_pos = Configuration::get_instance().get_num_inputs();
+	DataPoint from = link.at(connector_pos);
+
 	Polar target1(
-				from.r() - Configuration::RADIUS_DELTA_SMALL,
-				from.phi() - Configuration::ANGLE_DELTA_SMALL
-			),
-		target2(
-				from.r() - Configuration::RADIUS_DELTA_SMALL,
-				from.phi() + Configuration::ANGLE_DELTA_SMALL
-		);
+				from.coord.r() - Configuration::RADIUS_DELTA_SMALL,
+				from.coord.phi() - Configuration::ANGLE_DELTA_SMALL
+		  ),
+		  target2(
+				from.coord.r() - Configuration::RADIUS_DELTA_SMALL,
+				from.coord.phi() + Configuration::ANGLE_DELTA_SMALL
+		  );
 
 	// Draw links
-	std::size_t i = 0;
-	for (Polar in: link.get_input_coords())
+	for (std::size_t i = 0; i < Configuration::get_instance().get_num_inputs(); ++i)
 	{
 		Polar origin1(
-				in.r() - Configuration::RADIUS_DELTA_LARGE,
-				in.phi() - Configuration::ANGLE_DELTA_SMALL
-				),
-			origin2(
-					in.r() - Configuration::RADIUS_DELTA_LARGE,
-					in.phi() + Configuration::ANGLE_DELTA_SMALL
-			);
-		draw_link(origin1, origin2, target1, target2, link.get_link_prop(i++));
+				link[i].coord.r() - Configuration::RADIUS_DELTA_LARGE,
+				link[i].coord.phi() - Configuration::ANGLE_DELTA_SMALL
+			  ),
+			  origin2(
+					link[i].coord.r() - Configuration::RADIUS_DELTA_LARGE,
+					link[i].coord.phi() + Configuration::ANGLE_DELTA_SMALL
+			  );
+		draw_link(origin1, origin2, target1, target2, link[i].prop);
 	}
 
 	// Draw line from connector to first output
-	Polar mod;
-	draw_connector(from, link.get_output_coords()[0], link.get_connector_prop());
-	draw_arrow(from, link.get_connector_prop());
-	from = link.get_output_coords()[0];
-	if (link.get_output_coords().size() > 1)
-	{
-		const Polar & to = link.get_output_coords()[1];
-		mod = Util::get_connector_end(from, to);
-		draw_connector(from, mod, link.get_connector_prop());
-		from = to;
-		draw_coord_point(
-				from,
-				Configuration::COORDPOINT_ANGLE,
-				(to.r() - mod.r()) * 2,
-				link.get_connector_prop()
-		);
-	}
+	draw_connector(from.coord, link[connector_pos + 1].coord, from.prop);
+	draw_arrow(from.coord, from.prop);
 
 	// Draw connector on CoordGrid
-	for (size_t i = 2; i < link.get_output_coords().size(); ++i)
+	for (size_t i = connector_pos + 1; i < link.size() - 1; ++i)
 	{
-		const Polar out = link.get_output_coords()[i];
-		mod = Util::get_connector_end(from, out);
-		draw_connector(Util::get_connector_start(from, out), mod, link.get_connector_prop());
-		from = out;
+		Polar from = link[i].coord, to = link[i + 1].coord;
+		draw_connector(
+				Util::get_connector_start(from, to),
+				Util::get_connector_end(from, to),
+				link[i].prop
+		);
 		draw_coord_point(
-				from,
+				to,
 				Configuration::COORDPOINT_ANGLE,
-				(out.r() - mod.r()) * 2,
-				link.get_connector_prop()
+				(to.r() - from.r()) * 0.1 * 2,
+				link[i].prop
 		);
 	}
 }
@@ -371,7 +359,6 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 {
 	_cr->set_identity_matrix();
   	_cr->begin_new_path();
-
 
 	// Only use 0.2 as distance factor
 	static const double dist_factor =

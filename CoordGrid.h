@@ -134,10 +134,6 @@ public:
 
 	const DefVar & get_var(std::size_t num_output) const;
 
-	Polar get_coord(double val, std::size_t num_output) const;
-
-	Color get_color(double val) const;
-
 private:
     /** The number of outputs. */
     std::size_t 		_num_outputs;
@@ -156,8 +152,6 @@ private:
 
     /* The output variables */
     std::vector<DefVar> _output_variables;
-    /** Vector of mappings from actual values to radii */
-    std::vector<Mapper> _output_mappers;
 };
 
 #endif /* COORDGRID_H_ */
