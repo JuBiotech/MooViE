@@ -175,12 +175,10 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 			const Label & tick_label = tick_labels[label_pos++];
 			draw_line(Polar(start_radius, a), Polar(end_radius_major, a), axis.get_prop());
 
-			double dep_distance = (tick_label.text().length() / 2)
-					* tick_label.prop().fontsize() * Configuration::RADIAL_TEXT_FACTOR;
-
 			draw_text_parallel(
 			    tick_label,
-			    Polar(radius_tick_label + dep_distance, a)
+			    Polar(radius_tick_label, a),
+				1
 			);
 		}
 	}
@@ -188,7 +186,8 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 	// Draw the name of the Variable
 	draw_text_orthogonal(
 	    axis.get_label(),
-	    Polar(radius_label, Angle::center(axis.get_start(), axis.get_end()))
+	    Polar(radius_label, Angle::center(axis.get_start(), axis.get_end())),
+		1
 	);
 
 	draw_histogram(axis.get_histogram(), radius_histogram, axis.get_start(), axis.get_end());

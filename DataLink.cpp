@@ -44,12 +44,16 @@ DataLink DataLinkFactory::create(const DefDataRow & row) const
 	{
 		link.emplace_back(
 				Polar(_axis[i].get_radius(), _input_mapper[i].map(row[i].value)),
-				_axis[i].get_prop()
+				DrawerProperties<>(
+						_axis[i].get_prop().line_width,
+						Color(_axis[i].get_prop().fill_color, 0.3),
+						Color(_axis[i].get_prop().fill_color, 0.25)
+				)
 		);
 	}
 
-	Color line = get_color(row[num_inputs].value);
-	Color fill(line.r(), line.g(), line.b(), 0.3);
+	Color line(get_color(row[num_inputs].value), 0.3);
+	Color fill(line.r(), line.g(), line.b(), 0.25);
 	DrawerProperties<> prop(0.2, line, fill); // TODO: add config value
 	link.emplace_back(
 			Polar(

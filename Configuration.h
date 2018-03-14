@@ -349,8 +349,8 @@ private:
 	DrawerProperties<> 	_prop_thin 				= {0.2, Color::BLACK, Color::BLACK};
 
 	/* General font and font size */
-	TextProperties 		_tick_label 			= {"Liberation Serif", 8};
-	TextProperties 		_var_label 				= {"Liberation Serif", 20};
+	TextProperties 		_tick_label 			= {"Sans Serif", 8};
+	TextProperties 		_var_label 				= {"Sans Serif", 20};
 };
 
 #endif /* CONFIGURATION_H_ */

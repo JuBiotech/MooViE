@@ -30,6 +30,10 @@ public:
     : _r { limit(r) }, _g { limit(g) }, _b { limit(b) }, _a { limit(a) }
     {}
 
+    Color(const Color & c, double a)
+    : _r{ limit(c._r) }, _g { limit(c._g) }, _b { limit(c._b) }, _a { limit(a) }
+    {}
+
     /** Access function for the color's red value.
      * @brief r
      * @return a reference to the colors red value
