@@ -45,7 +45,6 @@ public:
 
 	inline int width() const { return _width; }
 	inline int height() const { return _height; }
-	inline std::size_t get_num_inputs() const { return _num_inputs; };
 	inline const std::string & get_output_file() const { return _output_file; }
 	inline const std::string & get_input_file() const { return _input_file; }
 	inline const std::string & get_config_file() const { return _config_file; };
@@ -59,12 +58,13 @@ public:
 	inline bool has_file_type() const { return _has_file_type; };
 
 private:
-	Args(int width, int height, std::size_t inputs,
+	Args(
+			int width, int height,
 			const std::string & output_file, const std::string & input_file,
 			const std::string & config_file, File_t file_type, bool help,
 			bool has_width, bool has_height, bool has_output_file,
 			bool has_config_file, bool has_file_type)
-	: _width(width), _height(height), _num_inputs(inputs),
+	: _width(width), _height(height),
 	  _output_file(output_file), _input_file(input_file),
 	  _config_file(config_file), _file_type(file_type), _help(help),
 	  _has_width(has_width), _has_height(has_height), _has_output_file(has_output_file),
@@ -72,7 +72,6 @@ private:
 	{}
 
 	const int 		_width, _height;
-	std::size_t		_num_inputs;
 	const std::string 	_output_file, _input_file, _config_file;
 	const File_t		_file_type;
 	bool			_help;

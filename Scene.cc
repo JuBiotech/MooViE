@@ -80,7 +80,7 @@ void Scene::initialize(void)
 	const Configuration & config = Configuration::get_instance();
 
 	// DataRows of the later histogram
-	std::vector<std::vector<double>> histogram_values(config.get_num_inputs());
+	std::vector<std::vector<double>> histogram_values(_set.input_variables().size());
 
 	// Create VarAxis' from DataSet's input variables
 	double angle = 180 / _set.input_variables().size() - config.get_input_separation_angle();

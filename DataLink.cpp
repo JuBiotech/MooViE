@@ -7,11 +7,15 @@
 
 #include "DataLink.h"
 
+std::size_t DataLink::num_inputs = 0;
+
 DataLinkFactory::DataLinkFactory(
 		const CoordGrid & grid,
 		const std::vector<VarAxis> & axis)
 : _grid(grid), _axis(axis)
 {
+	DataLink::num_inputs = axis.size();
+
 	std::pair<double, double> out = std::make_pair(
 						grid.get_start().get(),
 						grid.get_start() > grid.get_end() ?

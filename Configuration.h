@@ -48,7 +48,7 @@ public:
 	  return *_instance; // TODO: throw exception if empty
 	}
 
-	static void initialize(const std::string & fname, std::size_t inputs, const std::string & cpath = ".");
+	static void initialize(const std::string & fname, const std::string & cpath = ".");
 
 
 	// Generell
@@ -67,11 +67,6 @@ public:
 	inline void set_output_file(const std::string & output_file)
 	{
 		_output_file = output_file;
-	}
-
-	inline std::size_t get_num_inputs() const
-	{
-		return _num_inputs;
 	}
 
 	inline int get_width() const {
@@ -305,15 +300,11 @@ public:
 	}
 
 private:
-	Configuration();
-	Configuration(const std::string & fname, std::size_t inputs, const std::string & cpath);
+	Configuration(const std::string & fname, const std::string & cpath);
 
 	/* Absolute file paths for data (input) and image (output) */
 	std::string 		_input_file;
 	std::string			_output_file 			= "image.svg";
-
-	/* Number of input variables in the data set */
-	std::size_t			_num_inputs;
 
 	/* Width and height of the output image */
 	int 				_width 					= 500;

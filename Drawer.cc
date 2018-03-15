@@ -196,8 +196,8 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 void Drawer::draw_data_link(const DataLink & link)
 {
 	// Calculate target from connector coordinate
-	std::size_t connector_pos = Configuration::get_instance().get_num_inputs();
-	DataPoint from = link.at(connector_pos);
+	std::size_t connector_pos = DataLink::num_inputs;
+	const DataPoint from = link[connector_pos];
 
 	Polar target1(
 				from.coord.r() - Configuration::CONNECTOR_ARROW_HEIGHT,
@@ -209,7 +209,7 @@ void Drawer::draw_data_link(const DataLink & link)
 		  );
 
 	// Draw links
-	for (std::size_t i = 0; i < Configuration::get_instance().get_num_inputs(); ++i)
+	for (std::size_t i = 0; i < DataLink::num_inputs; ++i)
 	{
 		Polar origin1(
 				link[i].coord.r() - Configuration::RADIUS_DELTA,

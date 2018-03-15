@@ -18,13 +18,35 @@
 struct DataPoint
 {
 	const Polar coord;
-	DrawerProperties<> prop;
+	const DrawerProperties<> prop;
 	DataPoint(Polar&& coord, const DrawerProperties<>& prop)
 	: coord(coord), prop(prop)
 	{}
 };
 
-typedef std::vector<DataPoint> DataLink;
+class DataLink
+{
+public:
+	static std::size_t num_inputs;
+
+	const DataPoint & operator[](std::size_t i) const
+	{
+		return points[i];
+	}
+
+	inline std::size_t size(void) const
+	{
+		return points.size();
+	}
+
+	template<typename... Arg>
+	void emplace_back(Arg&&... args)
+	{
+		points.emplace_back(std::forward<Arg>(args)...);
+	}
+private:
+	std::vector<DataPoint> points;
+};
 
 class DataLinkFactory
 {

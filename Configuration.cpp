@@ -28,19 +28,15 @@ const double Configuration::ANGLE_DELTA_SMALL = 0.001;
 const double Configuration::ANGLE_DELTA_LARGE = 0.1;
 const double Configuration::RADIUS_DELTA = 10;
 
-std::shared_ptr<Configuration> Configuration::_instance;
+std::shared_ptr<Configuration> Configuration::_instance(nullptr);
 
-void Configuration::initialize(const std::string & fname, std::size_t inputs, const std::string & cpath)
+void Configuration::initialize(const std::string & fname, const std::string & cpath)
 {
-    _instance = std::shared_ptr<Configuration>(new Configuration(fname, inputs, cpath));
+    _instance = std::shared_ptr<Configuration>(new Configuration(fname, cpath));
 }
 
-Configuration::Configuration()
-: _num_inputs(0)
-{}
-
-Configuration::Configuration(const std::string & fname, std::size_t inputs, const std::string & cpath)
-: _input_file(fname), _num_inputs(inputs)
+Configuration::Configuration(const std::string & fname, const std::string & cpath)
+: _input_file(fname)
 {
 	std::string content = Util::read_file(cpath);
 

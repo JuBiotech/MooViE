@@ -30,7 +30,6 @@ int run_moovie(int argc, const char * argv[])
 		{
 			Configuration::initialize(
 			    args.get_input_file(),
-			    args.get_num_inputs(),
 			    args.get_config_file()
 			);
 			if (args.has_output_file())
@@ -39,7 +38,7 @@ int run_moovie(int argc, const char * argv[])
 		}
 		else
 		{
-			Configuration::initialize(args.get_input_file(), args.get_num_inputs());
+			Configuration::initialize(args.get_input_file());
 			Scene main;
 		}
 		end = std::chrono::system_clock::now();

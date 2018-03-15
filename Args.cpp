@@ -35,14 +35,15 @@ Args
 Args::parse (int argc, char const * argv[]) throw (ParseException)
 {
   int width, height;
-  std::size_t inputs;
   std::string output_file, input_file, config_file;
   File_t file_type;
   bool help = false;
 
-  bool width_set = false, height_set = false, inputs_set = false, outputf_set =
-      false, inputf_set = false, configf_set = false, ftype_set = false,
-      help_set = false;
+  bool width_set = false, height_set = false,
+		  outputf_set = false, inputf_set = false,
+		  configf_set = false,
+		  ftype_set = false,
+		  help_set = false;
 
   for (int i = 1; i < argc; ++i)
     {
@@ -192,23 +193,18 @@ Args::parse (int argc, char const * argv[]) throw (ParseException)
 	      input_file = argv[i];
 	      inputf_set = true;
 	    }
-	  else if (!inputs_set)
-	    {
-	      inputs = Util::string_to_int (argv[i]);
-	      inputs_set = true;
-	    }
 	  else
 	    {
 	      throw ParseException (
-		  "Expected only two non-positional parameters.");
+		  "Expected only one non-positional parameters.");
 	    }
 	}
     }
 
-  if (!inputf_set || !inputs_set)
+  if (!inputf_set)
     throw ParseException ("Expected two non-positional parameters.");
 
-  return Args (width, height, inputs, output_file, input_file, config_file,
+  return Args (width, height, output_file, input_file, config_file,
 	       file_type, help, width_set, height_set, outputf_set, configf_set,
 	       ftype_set);
 }
