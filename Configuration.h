@@ -307,8 +307,8 @@ private:
 	std::string			_output_file 			= "image.svg";
 
 	/* Width and height of the output image */
-	int 				_width 					= 500;
-	int 				_height 				= 500;
+	int 				_width 					= 0;
+	int 				_height 				= 0;
 
 	/* CoordGrid modification values */
 	double				_output_angle_span		= 100;

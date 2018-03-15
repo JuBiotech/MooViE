@@ -159,5 +159,18 @@ Configuration::Configuration(const std::string & fname, const std::string & cpat
 			}
 		}
 	}
+
+	if (_width == 0 && _height == 0)
+	{
+		_width = _height = _output_inner_radius + _output_thickness + _grid_size;
+	}
+	else if (_width == 0)
+	{
+		_width = _height;
+	}
+	else if (_height == 0)
+	{
+		_height = _width;
+	}
 }
 
