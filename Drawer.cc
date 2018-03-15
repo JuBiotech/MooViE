@@ -200,11 +200,11 @@ void Drawer::draw_data_link(const DataLink & link)
 	DataPoint from = link.at(connector_pos);
 
 	Polar target1(
-				from.coord.r() - Configuration::RADIUS_DELTA_SMALL,
+				from.coord.r() - Configuration::CONNECTOR_ARROW_HEIGHT,
 				from.coord.phi() - Configuration::ANGLE_DELTA_SMALL
 		  ),
 		  target2(
-				from.coord.r() - Configuration::RADIUS_DELTA_SMALL,
+				from.coord.r() - Configuration::CONNECTOR_ARROW_HEIGHT,
 				from.coord.phi() + Configuration::ANGLE_DELTA_SMALL
 		  );
 
@@ -212,11 +212,11 @@ void Drawer::draw_data_link(const DataLink & link)
 	for (std::size_t i = 0; i < Configuration::get_instance().get_num_inputs(); ++i)
 	{
 		Polar origin1(
-				link[i].coord.r() - Configuration::RADIUS_DELTA_LARGE,
+				link[i].coord.r() - Configuration::RADIUS_DELTA,
 				link[i].coord.phi() - Configuration::ANGLE_DELTA_SMALL
 			  ),
 			  origin2(
-					link[i].coord.r() - Configuration::RADIUS_DELTA_LARGE,
+					link[i].coord.r() - Configuration::RADIUS_DELTA,
 					link[i].coord.phi() + Configuration::ANGLE_DELTA_SMALL
 			  );
 		draw_link(origin1, origin2, target1, target2, link[i].prop);
@@ -310,7 +310,7 @@ void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
 				Direction::DECREASING
 	    );
 	}
-	_cr->set_line_width(0.5);
+	_cr->set_line_width(0.5); // TODO: configuration value
 	_cr->stroke();
 }
 
@@ -383,7 +383,6 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 	_cr->line_to(intermediate1_c.x(), intermediate1_c.y());
 
 	// Draw arc by approximating circle segments linearly:
-	//TODO: nicer bezier solution!
 	double r_diff = radial_dist * (1 - 2 * dist_factor);
 	double d0 = angle_helper::rad_dist(from.phi().get(), to.phi().get()),
 	    d1 = angle_helper::rad_dist(to.phi().get(), from.phi().get());
@@ -520,7 +519,7 @@ void Drawer::draw_arrow(const Polar & start, const DrawerProperties<> & prop)
 	_cr->begin_new_path();
 
 	// Only draw arrows with height of 5
-	const static double height = 5;
+	double height = Configuration::CONNECTOR_ARROW_HEIGHT;
 
 	// Calculate arrow coordinates
 	Polar start_help(start.r() - height, start.phi()),
@@ -548,7 +547,7 @@ void Drawer::draw_arrow(const Polar & start, const DrawerProperties<> & prop)
 			prop.line_color.r(),
 			prop.line_color.g(),
 			prop.line_color.b(),
-			prop.line_color.a()
+			1
 	);
 	_cr->set_line_width(Configuration::DATA_LINK_LINE_WIDTH);
 	_cr->fill_preserve();

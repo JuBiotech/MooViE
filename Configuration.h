@@ -31,6 +31,7 @@ public:
 	static const double RADIUS_TICK_LABEL_FACTOR;
 
 	static const double DATA_LINK_LINE_WIDTH;
+	static const double CONNECTOR_ARROW_HEIGHT;
 
 	static const double RADIUS_LABEL_DELTA;
 	static const double RADIUS_HISTOGRAM_DELTA;
@@ -38,8 +39,7 @@ public:
 	static const double TEXT_DELTA;
 	static const double ANGLE_DELTA_SMALL;
 	static const double ANGLE_DELTA_LARGE;
-	static const double RADIUS_DELTA_SMALL;
-	static const double RADIUS_DELTA_LARGE;
+	static const double RADIUS_DELTA;
 private:
 	static std::shared_ptr<Configuration> _instance;
 public:
