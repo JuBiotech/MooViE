@@ -28,7 +28,7 @@ DataLinkFactory::DataLinkFactory(
 	for (const VarAxis & elem: axis)
 	{
 		_input_mapper.emplace_back(
-				std::make_pair(elem.get_var().min, elem.get_var().max),
+				elem.get_ticks().extreme_vals(),
 				std::make_pair(elem.get_start().get(), elem.get_end().get())
 		);
 	}

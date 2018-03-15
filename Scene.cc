@@ -90,12 +90,6 @@ void Scene::initialize(void)
 	{
 		_axis.emplace_back(
 				var,
-				Ticks(
-						config.get_num_major_ticks_va(),
-						config.get_num_minor_ticks_va(),
-						std::make_pair(var.min, var.max),
-						config.get_tick_label(), var.unit
-				),
 				angle_helper::deg_to_rad(start),
 				angle_helper::deg_to_rad(end),
 				config.get_input_inner_radius(), config.get_input_thickness(),

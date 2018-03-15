@@ -141,15 +141,14 @@ private:
  */
 inline std::pair<double,double> create_axis(double min, double max)
 {
-	if (max > min)
+	if (max < min)
 	{
 		std::pair<double,double> ret = create_axis(max, min);
 		return std::make_pair(ret.second, ret.first);
 	}
 	else
 	{
-		// Double inputs < 1 result in NAN return, probably just for integer numbers?
-		double diff = std::floor(std::log10(std::abs(max-min)));
+		double diff = std::floor(std::log10(std::abs(max-min))) + 1;
 		double power_of_ten = std::pow(10, diff);
 		bool shift = false;
 

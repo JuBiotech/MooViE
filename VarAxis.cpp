@@ -33,12 +33,18 @@ double VarAxis::Histogram::get_section_frequency(std::size_t i) const
     return _frequencies[i];
 }
 
-VarAxis::VarAxis(DefVar var, Ticks ticks_,
+VarAxis::VarAxis(DefVar var,
 		 const Angle & start, const Angle & end,
 		 double radius, std::size_t height,
 		 const DrawerProperties<> & prop,
 		 const TextProperties & text_prop)
-: _var(var), _ticks(ticks_),
+: _var(var),
+  _ticks(
+		  Configuration::get_instance().get_num_major_ticks_va(),
+		  Configuration::get_instance().get_num_minor_ticks_va(),
+		  create_axis(var.min, var.max),
+		  Configuration::get_instance().get_tick_label(), var.unit
+  ),
   _histogram(var),
   _start(start), _end(end),_radius(radius),  _height(height),
   _label(_var.name, text_prop), _prop(prop)

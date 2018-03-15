@@ -70,10 +70,11 @@ public:
 	/**
 	 *
 	 */
-	VarAxis(DefVar var, Ticks ticks,
+	VarAxis(DefVar var,
 		const Angle & start, const Angle & end,
 		double radius, std::size_t height,
-		const DrawerProperties<> & prop, const TextProperties & text_prop);
+		const DrawerProperties<> & prop,
+		const TextProperties & text_prop);
 
 	const Histogram & get_histogram () const
 	{
