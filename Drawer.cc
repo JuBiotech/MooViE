@@ -380,7 +380,6 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 	_cr->line_to(intermediate1_c.x(), intermediate1_c.y());
 	/*
 	// Draw arc by approximating circle segments linearly:
-	//TODO: nicer bezier solution!
 	double r_diff = radial_dist * (1 - 2 * dist_factor);
 	double d0 = angle_helper::rad_dist(from.phi().get(), to.phi().get()),
 	    d1 = angle_helper::rad_dist(to.phi().get(), from.phi().get());
@@ -402,7 +401,7 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
 	_cr->line_to(to_c.x(), to_c.y());
 	*/
-
+	/*
 	static const double c1_factor = 0.5, c2_factor = 0.5;
 
 	// Starting points Q, K
@@ -423,10 +422,30 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 			C2(K.x() + c2_factor * (C.x() - K.x()), K.y() + c2_factor * (C.y() - K.y()));
 
 	_cr->curve_to(C1.x(), C1.y(), C2.x(), C2.y(), K.x(), K.y());
-//	_cr->line_to(C1.x(), C1.y());
-//	_cr->line_to(C.x(), C.y());
-//	_cr->line_to(C2.x(), C2.y());
-//	_cr->line_to(K.x(), K.y());
+	_cr->line_to(to_c.x(), to_c.y());
+	*/
+
+	const static double k = 1.1213;
+
+	auto dSdx = [&] (double x) {
+		double phi_diff = (intermediate2.phi().get() - intermediate1.phi().get()),
+				r_diff = (intermediate2.r() - intermediate1.r());
+		return -r_diff * std::sin(x)
+				- std::cos(x) * (phi_diff * intermediate1.r() + r_diff * x / phi_diff);
+	};
+	auto dSdy = [&] (double x) {
+		double phi_diff = (intermediate2.phi().get() - intermediate1.phi().get()),
+				r_diff = (intermediate2.r() - intermediate1.r());
+		return r_diff * std::cos(x)
+				- std::sin(x) * (phi_diff * intermediate1.r() + r_diff * x / phi_diff);
+	};
+
+	const Cartesian P1(intermediate1_c.x() + k * dSdx(intermediate1.phi().get()),
+			intermediate1_c.y() + k * dSdy(intermediate1.phi().get()));
+	const Cartesian P2(intermediate2_c.x() + k * dSdx(intermediate2.phi().get()),
+			intermediate2_c.y() + k * dSdy(intermediate2.phi().get()));
+
+	_cr->curve_to(P1.x(), P1.y(), P2.x(), P2.y(), intermediate2_c.x(), intermediate2_c.y());
 	_cr->line_to(to_c.x(), to_c.y());
 
 	// Set line style and apply drawing
