@@ -8,11 +8,12 @@
 #ifndef TICKS_H_
 #define TICKS_H_
 
+#include <cmath>
 #include <cstddef>
 #include <string>
 #include <vector>
 #include <sstream>
-#include "DrawerProperties.h"
+#include "TextProperties.h"
 
 /** A Label is a formatted text that is stored as a text string
  * and a TextProperties object.

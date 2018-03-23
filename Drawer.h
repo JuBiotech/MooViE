@@ -1,13 +1,7 @@
 #ifndef DRAWER_H_
 #define DRAWER_H_
 
-#include "PolarCartesian.h"
-#include "DrawerProperties.h"
-#include "Ticks.h"
-#include "CoordGrid.h"
-#include "VarAxis.h"
 #include "DataLink.h"
-#include "Configuration.h"
 #include <cairommconfig.h>
 #include <cairomm/context.h>
 #include <cairomm/surface.h>

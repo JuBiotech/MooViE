@@ -167,7 +167,8 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 			draw_line(
 			    Polar(start_radius, a),
 			    Polar(end_radius_minor, a),
-			    axis.get_prop().half_line_width()
+			    DrawerProperties<>(axis.get_prop().line_width / 2,
+			    		axis.get_prop().line_color, axis.get_prop().fill_color)
 			);
 		}
 		else
@@ -635,17 +636,17 @@ void Drawer::set_font_face(const Label & label)
 {
 	// Set font styles
 	Cairo::RefPtr<Cairo::ToyFontFace> font = Cairo::ToyFontFace::create(
-		label.prop().fontname(),
-		label.prop().italic() ? Cairo::FONT_SLANT_ITALIC : Cairo::FONT_SLANT_NORMAL,
-		label.prop().bold() ? Cairo::FONT_WEIGHT_BOLD : Cairo::FONT_WEIGHT_NORMAL
+		label.prop().font_name,
+		label.prop().italic ? Cairo::FONT_SLANT_ITALIC : Cairo::FONT_SLANT_NORMAL,
+		label.prop().bold ? Cairo::FONT_WEIGHT_BOLD : Cairo::FONT_WEIGHT_NORMAL
 	);
 	_cr->set_font_face(font);
-	_cr->set_font_size(label.prop().fontsize());
+	_cr->set_font_size(label.prop().font_size);
 	_cr->set_source_rgba(
-		label.prop().color().r(),
-		label.prop().color().g(),
-		label.prop().color().b(),
-		label.prop().color().a()
+		label.prop().color.r(),
+		label.prop().color.g(),
+		label.prop().color.b(),
+		label.prop().color.a()
 	);
 }
 

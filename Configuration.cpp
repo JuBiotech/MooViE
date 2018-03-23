@@ -143,19 +143,19 @@ Configuration::Configuration(const std::string & fname, const std::string & cpat
 			}
 			else if (key.compare("moovie.tick_label_font") == 0)
 			{
-				_tick_label = TextProperties(value, _tick_label.fontsize());
+				_tick_label.font_name = value;
 			}
 			else if (key.compare("moovie.tick_label_font_size") == 0)
 			{
-				_tick_label = TextProperties(_tick_label.fontname(), Util::string_to_double(value));
+				_tick_label.font_size = Util::string_to_double(value);
 			}
 			else if (key.compare("moovie.var_label_font") == 0)
 			{
-				_var_label = TextProperties(value, _var_label.fontsize());
+				_var_label.font_name = value;
 			}
 			else if (key.compare("moovie.var_label_font_size") == 0)
 			{
-				_var_label = TextProperties(_var_label.fontname(), Util::string_to_double(value));
+				_var_label.font_size = Util::string_to_double(value);
 			}
 		}
 	}

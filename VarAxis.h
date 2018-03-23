@@ -9,10 +9,8 @@
 #define VARAXIS_H_
 
 #include "Ticks.h"
-#include "PolarCartesian.h"
 #include "DataSet.h"
 #include "Mapper.h"
-#include "DrawerProperties.h"
 #include "Configuration.h"
 
 /** A VarAxis is an axis which displays the possible values

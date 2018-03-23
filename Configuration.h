@@ -14,6 +14,7 @@
 #include <memory>
 #include "Utils.h"
 #include "DrawerProperties.h"
+#include "TextProperties.h"
 
 /**
  *

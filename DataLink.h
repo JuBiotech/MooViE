@@ -11,9 +11,7 @@
 #include <vector>
 #include "CoordGrid.h"
 #include "VarAxis.h"
-#include "DataLink.h"
 #include "PolarCartesian.h"
-#include "DrawerProperties.h"
 
 struct DataPoint
 {
