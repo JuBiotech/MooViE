@@ -10,11 +10,16 @@
 std::size_t DataLink::num_inputs = 0;
 
 DataLinkFactory::DataLinkFactory(
+		std::size_t num_data_rows,
 		const CoordGrid & grid,
 		const std::vector<VarAxis> & axis)
 : _grid(grid), _axis(axis)
 {
 	DataLink::num_inputs = axis.size();
+
+	_line_width = 0.1 * (1 + std::exp(-(num_data_rows * 0.0006)));
+	_line_alpha = 0.3 * (1 + 3 * std::exp(-(num_data_rows * 0.04)));
+	_fill_alpha = 0.25 * (1 + 3 * std::exp(-(num_data_rows * 0.04)));
 
 	std::pair<double, double> out = std::make_pair(
 						grid.get_start().get(),
@@ -49,16 +54,16 @@ DataLink DataLinkFactory::create(const DefDataRow & row) const
 		link.emplace_back(
 				Polar(_axis[i].get_radius(), _input_mapper[i].map(row[i].value)),
 				DrawerProperties<>(
-						_axis[i].get_prop().line_width,
-						Color(_axis[i].get_prop().fill_color, 0.3),
-						Color(_axis[i].get_prop().fill_color, 0.25)
+						_line_width,
+						Color(_axis[i].get_prop().fill_color, _line_alpha),
+						Color(_axis[i].get_prop().fill_color, _fill_alpha)
 				)
 		);
 	}
 
-	Color line(get_color(row[num_inputs].value), 0.3);
-	Color fill(line.r(), line.g(), line.b(), 0.25);
-	DrawerProperties<> prop(0.2, line, fill); // TODO: add config value
+	Color line(get_color(row[num_inputs].value), _line_alpha);
+	Color fill(line.r(), line.g(), line.b(), _fill_alpha);
+	DrawerProperties<> prop(_line_width, line, fill);
 	link.emplace_back(
 			Polar(
 				_grid.get_radius() - Configuration::CONNECTOR_DELTA,
@@ -92,14 +97,7 @@ const Color & DataLinkFactory::get_color(double val) const
 			);
 	double angle = _output_mapper[0].map(val);
 
-	std::size_t i;
-	for (i = 0; i < 10; ++i)
-	{
-		if (angle < _grid.get_start().get() + i * range / 10)
-		{
-			break;
-		}
-	}
+	std::size_t i = std::ceil(10 * (angle - _grid.get_start().get()) / range);
 
 	return Color::GLOW_10[i - 1];
 }

@@ -311,7 +311,7 @@ void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
 				Direction::DECREASING
 	    );
 	}
-	_cr->set_line_width(0.5); // TODO: configuration value
+	_cr->set_line_width(config.get_prop_thick().line_width);
 	_cr->stroke();
 }
 
@@ -350,7 +350,7 @@ void Drawer::draw_link(const Polar & origin1, const Polar & origin2,
 	_cr->fill_preserve();
 	_cr->set_source_rgba(prop.fill_color.r(), prop.fill_color.g(),
 			prop.fill_color.b(), prop.fill_color.a());
-	_cr->set_line_width(Configuration::get_instance().get_line_with_dl());
+	_cr->set_line_width(prop.line_width);
 	_cr->stroke();
 }
 
@@ -412,7 +412,7 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 			prop.line_color.b(),
 			prop.line_color.a()
 	);
-	_cr->set_line_width(Configuration::get_instance().get_line_with_dl());
+	_cr->set_line_width(prop.line_width);
 	_cr->stroke();
 }
 

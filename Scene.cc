@@ -104,7 +104,7 @@ void Scene::initialize(void)
 	}
 
 	// Create DataLinks from DataSet's input/output values
-	DataLinkFactory factory(_grid, _axis);
+	DataLinkFactory factory(_set.rows(), _grid, _axis);
 	for (const DefDataRow & row: _set)
 	{
 		_links.push_back(factory.create(row));

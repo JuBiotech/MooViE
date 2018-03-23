@@ -49,11 +49,14 @@ private:
 class DataLinkFactory
 {
 public:
-	DataLinkFactory(const CoordGrid & grid, const std::vector<VarAxis> & axis);
+	DataLinkFactory(std::size_t num_data_rows,
+			const CoordGrid & grid,
+			const std::vector<VarAxis> & axis);
 	DataLink create(const DefDataRow & row) const;
 private:
 	const Color & get_color(double val) const;
 private:
+	double _line_width, _line_alpha, _fill_alpha;
 	const CoordGrid & _grid;
 	const std::vector<VarAxis> & _axis;
 	std::vector<Mapper> _input_mapper,
