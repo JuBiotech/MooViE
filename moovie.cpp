@@ -8,47 +8,77 @@
 
 #include <string>
 #include <iostream>
+#include <chrono>
 #include "Scene.h"
 #include "Args.h"
+#include "3rdparty/tclap/CmdLine.h"
 #include "Configuration.h"
-#include <chrono>
+
+using namespace TCLAP;
 
 // Runs the MooViE application from command line arguments
 int run_moovie(int argc, const char * argv[])
 {
-	std::chrono::time_point<std::chrono::system_clock> start, end;
-	start = std::chrono::system_clock::now();
-	try
-	{
-		const Args & args = Args::parse(argc, argv);
+	CmdLine cmd("MooViE is a tool to display multi-dimensional data (R^n -> R^m) using a "
+			"clear circular chart.\n");
 
-		if (args.help())
-		{
-			std::cout << Args::HELP_STRING << std::endl;
-		}
-		else if (args.has_config_file())
-		{
-			Configuration::initialize(
-			    args.get_input_file(),
-			    args.get_config_file()
-			);
-			if (args.has_output_file())
-			  Configuration::get_instance().set_output_file(args.get_output_file());
-			Scene main;
-		}
-		else
-		{
-			Configuration::initialize(args.get_input_file());
-			Scene main;
-		}
-		end = std::chrono::system_clock::now();
-		std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end -start).count() << std::endl;
-		return EXIT_SUCCESS;
-	} catch (ParseException & e)
+	UnlabeledValueArg<std::string> input("input", "path to the input file",
+			true, "", "string");
+	cmd.add(input);
+
+	ValueArg<std::size_t> width("x", "width", "width of the resulting svg",
+			false, 0, "natural number or 0");
+	cmd.add(width);
+
+	ValueArg<std::size_t> height("y", "height", "height of the resulting svg",
+				false, 0, "natural number or 0");
+	cmd.add(height);
+
+	ValueArg<std::string> output("o", "output-file", "path to the output file",
+				false, "./image.svg", "string");
+	cmd.add(output);
+
+	ValueArg<std::string> config("c", "configuration-file", "path to a moovie config file",
+					false, "", "string");
+	cmd.add(config);
+
+	ValueArg<std::string> file_type("f", "file-type", "file type of the input file",
+					false, "csv", "string");
+	cmd.add(file_type);
+
+	if (input.getValue().empty())
 	{
-		std::cout << e.what() << std::endl;
-		return EXIT_FAILURE;
+		std::chrono::time_point<std::chrono::system_clock> start, end;
+		start = std::chrono::system_clock::now();
+		try
+		{
+			cmd.parse(argc, argv);
+
+			if (not config.getValue().empty())
+			{
+				Configuration::initialize(
+						input.getValue(),
+						config.getValue()
+				);
+				if (not output.getValue().empty())
+					Configuration::get_instance().set_output_file(output.getValue());
+				Scene main;
+			}
+			else
+			{
+				Configuration::initialize(input.getValue());
+				Scene main;
+			}
+			end = std::chrono::system_clock::now();
+			std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end -start).count() << std::endl;
+		} catch (ParseException & e)
+		{
+			std::cout << e.what() << std::endl;
+			return EXIT_FAILURE;
+		}
 	}
+
+	return EXIT_SUCCESS;
 }
 
 int main(int argc, char const * argv[])
