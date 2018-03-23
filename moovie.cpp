@@ -27,11 +27,11 @@ int run_moovie(int argc, const char * argv[])
 	cmd.add(input);
 
 	ValueArg<std::size_t> width("x", "width", "width of the resulting svg",
-			false, 0, "natural number or 0");
+			false, 0, "positive integral");
 	cmd.add(width);
 
 	ValueArg<std::size_t> height("y", "height", "height of the resulting svg",
-				false, 0, "natural number or 0");
+				false, 0, "positive integral");
 	cmd.add(height);
 
 	ValueArg<std::string> output("o", "output-file", "path to the output file",

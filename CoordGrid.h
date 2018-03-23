@@ -107,6 +107,11 @@ public:
 		this->_minor_ticks = minor_ticks;
 	}
 
+	const std::vector<Ticks> & get_ticks() const
+	{
+		return _ticks;
+	}
+
 	std::size_t get_num_outputs() const
 	{
 		return _num_outputs;
@@ -140,6 +145,7 @@ private:
 
     /** The major and minor sections */
     std::size_t 		_major_ticks, _minor_ticks;
+    std::vector<Ticks>	_ticks;
 
     /** Start and end angle for drawing the CoordGrid */
     Angle 				_start, _end;

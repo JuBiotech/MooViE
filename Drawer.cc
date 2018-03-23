@@ -9,6 +9,12 @@
 #include <iostream>
 #include <cmath>
 
+const Drawer::TextAlignment Drawer::TextAlignment::LEFT(1),
+							Drawer::TextAlignment::HALF_LEFT(0.75),
+							Drawer::TextAlignment::CENTERED(0.5),
+							Drawer::TextAlignment::HALF_RIGHT(0.25),
+							Drawer::TextAlignment::RIGHT(0);
+
 Drawer::Drawer(const std::string & fpath, int width, int height)
 : _pc(width, height)
 {
@@ -61,22 +67,24 @@ void Drawer::draw_coord_grid(const CoordGrid & grid)
 	// Adjusted difference between the radial lines of the CoordGrid (outputs)
 	double y_dist = grid.get_height() / (grid.get_num_outputs() - Configuration::COORDGRID_ADJUSTMENT);
 
+	const std::vector<Ticks> ticks = grid.get_ticks();
+
 	// Draw the description of the first output
 	static TextProperties name_prop("Liberation Serif", 6, Color::BLACK, true, false);
 	draw_text_parallel(
 	    Label(grid.get_var(0).name, name_prop),
 	    Polar(min_radius, Configuration::COORDGRID_DESCRIPTION_ANGLE),
-		0
+		TextAlignment::RIGHT
 	);
 	draw_text_orthogonal(
-	    Label(std::to_string(grid.get_var(0).max), Configuration::get_instance().get_tick_label()),
+	    Label(std::to_string(ticks[0].extreme_vals().second), Configuration::get_instance().get_tick_label()),
 	    Polar(min_radius, grid.get_start() - Configuration::TEXT_DELTA),
-		0
+		TextAlignment::RIGHT
 	);
 	draw_text_orthogonal(
-	    Label(std::to_string(grid.get_var(0).min), Configuration::get_instance().get_tick_label()),
+	    Label(std::to_string(ticks[0].extreme_vals().first), Configuration::get_instance().get_tick_label()),
 	    Polar(min_radius, grid.get_end() + Configuration::TEXT_DELTA),
-		1
+		TextAlignment::LEFT
 	);
 
 	// Draw the output lines of the CoordGrid
@@ -86,17 +94,17 @@ void Drawer::draw_coord_grid(const CoordGrid & grid)
 		draw_text_parallel(
 		    Label(grid.get_var(i).name, name_prop),
 		    Polar(min_radius + i * y_dist, Configuration::COORDGRID_DESCRIPTION_ANGLE),
-			0
+			TextAlignment::RIGHT
 		);
 		draw_text_orthogonal(
-		    Label(std::to_string(grid.get_var(i).max), Configuration::get_instance().get_tick_label()),
+		    Label(std::to_string(ticks[i].extreme_vals().second), Configuration::get_instance().get_tick_label()),
 		    Polar(min_radius + i * y_dist, grid.get_start() - Configuration::TEXT_DELTA),
-			0
+			TextAlignment::RIGHT
 		);
 		draw_text_orthogonal(
-		    Label(std::to_string(grid.get_var(i).min), Configuration::get_instance().get_tick_label()),
+		    Label(std::to_string(ticks[0].extreme_vals().first), Configuration::get_instance().get_tick_label()),
 		    Polar(min_radius + i * y_dist, grid.get_end() + Configuration::TEXT_DELTA),
-			1
+			TextAlignment::LEFT
 		);
 
 		_cr->begin_new_path();
@@ -179,7 +187,7 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 			draw_text_parallel(
 			    tick_label,
 			    Polar(radius_tick_label, a),
-				1
+				TextAlignment::LEFT
 			);
 		}
 	}
@@ -187,8 +195,7 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 	// Draw the name of the Variable
 	draw_text_orthogonal(
 	    axis.get_label(),
-	    Polar(radius_label, Angle::center(axis.get_start(), axis.get_end())),
-		1
+	    Polar(radius_label, Angle::center(axis.get_start(), axis.get_end()))
 	);
 
 	draw_histogram(axis.get_histogram(), radius_histogram, axis.get_start(), axis.get_end());
@@ -580,7 +587,7 @@ void Drawer::draw_line(const Polar& from, const Polar& to,
 
 }
 
-void Drawer::draw_text_parallel(const Label& label, const Polar & start, double ratio)
+void Drawer::draw_text_parallel(const Label& label, const Polar & start, const TextAlignment & alignment)
 {
 	_cr->set_identity_matrix();
 
@@ -602,13 +609,13 @@ void Drawer::draw_text_parallel(const Label& label, const Polar & start, double 
 	  _cr->rotate_degrees(90);
 	else
 	  _cr->rotate_degrees(270);
-	_cr->translate(-ratio * t_exts.width, (1 - ratio) * t_exts.height);
+	_cr->translate(-alignment.ratio * t_exts.width, (1 - alignment.ratio) * t_exts.height);
 
 	_cr->close_path();
 	_cr->show_text(label.text());
 }
 
-void Drawer::draw_text_orthogonal(const Label & label, const Polar & start, double ratio)
+void Drawer::draw_text_orthogonal(const Label & label, const Polar & start, const TextAlignment & alignment)
 {
 	_cr->set_identity_matrix();
 
@@ -626,7 +633,7 @@ void Drawer::draw_text_orthogonal(const Label & label, const Polar & start, doub
 	_cr->translate(_pc.center().x(), _pc.center().y());
 	_cr->rotate(cairo_angle.get());
 	_cr->translate(0, -start.r());
-	_cr->translate(-ratio * t_exts.width, (1 - ratio) * t_exts.height);
+	_cr->translate(-alignment.ratio * t_exts.width, (1 - alignment.ratio) * t_exts.height);
 
 	_cr->close_path();
 	_cr->show_text(label.text());

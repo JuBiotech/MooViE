@@ -26,10 +26,10 @@ DataLinkFactory::DataLinkFactory(
 						grid.get_start() > grid.get_end() ?
 								grid.get_end().get() + 2 * M_PIl : grid.get_end().get()
 					);
-	for (DefVar var: grid.get_output_variables())
+	for (const Ticks & ticks: grid.get_ticks())
 	{
 		_output_mapper.emplace_back(
-				std::make_pair(var.min, var.max),
+				ticks.extreme_vals(),
 				out
 		);
 	}

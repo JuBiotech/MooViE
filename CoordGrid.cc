@@ -14,7 +14,17 @@ CoordGrid::CoordGrid(std::size_t major_ticks_, std::size_t minor_ticks_,
 	: _num_outputs(output_vars.size()), _major_ticks(major_ticks_), _minor_ticks(minor_ticks_),
 	  _start(start_), _end(end_), _radius(radius_), _height(height_), _direction(dir_),
 	  _output_variables(output_vars)
-	{}
+	{
+		for (DefVar var: output_vars)
+		{
+			double var_delta = 0.02 * (var.max - var.min);
+			_ticks.emplace_back(
+					minor_ticks_, major_ticks_,
+					create_axis(var.min - var_delta, var.max + var_delta),
+					Configuration::get_instance().get_tick_label()
+			);
+		}
+	}
 
 const DefVar & CoordGrid::get_var(std::size_t num_output) const
 {

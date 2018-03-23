@@ -17,6 +17,15 @@
 class Drawer
 {
 public:
+	struct TextAlignment
+	{
+		const static TextAlignment LEFT, HALF_LEFT, CENTERED, HALF_RIGHT, RIGHT;
+		double ratio;
+		TextAlignment(double ratio)
+		: ratio(ratio)
+		{}
+	};
+
     /** Creates a Drawer which draws to a file with the given path on
      * a surface from (0,0) with the stored configuration width and
      * height.
@@ -164,7 +173,7 @@ private:
 	 * @param label the label to draw
 	 * @param start the coordinate to adjust to
 	 */
-	void draw_text_parallel(const Label & label, const Polar & start, double ratio=0.5);
+	void draw_text_parallel(const Label & label, const Polar & start, const TextAlignment & alignment = TextAlignment::CENTERED);
 
 	/** Draws the given label orthogonal to the angle of the given
 	 * coordinate's angle.
@@ -172,7 +181,7 @@ private:
 	 * @param label the label to draw
 	 * @param start the coordinate to adjust to
 	 */
-	void draw_text_orthogonal(const Label & label, const Polar & start, double ratio=0.5);
+	void draw_text_orthogonal(const Label & label, const Polar & start, const TextAlignment & alignment = TextAlignment::CENTERED);
 
 	void set_font_face(const Label & label);
 
