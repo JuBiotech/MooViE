@@ -125,6 +125,17 @@ Configuration::Configuration(const std::string & fname, const std::string & cpat
 						0.1
 				);
 			}
+			else if (key.compare("moovie.histogram_fill") == 0)
+			{
+				std::vector<std::string> values = Util::split(value, ",");
+				if (values.size() != 3);
+				_histogram_fill = Color(
+						Util::string_to_double(values[0]),
+						Util::string_to_double(values[1]),
+						Util::string_to_double(values[2]),
+						1
+				);
+			}
 			else if (key.compare("moovie.line_width_datalink") == 0)
 			{
 				_line_width_dl = Util::string_to_double(value);

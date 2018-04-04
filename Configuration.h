@@ -235,6 +235,16 @@ public:
 		_histogram_background = histogram_background;
 	}
 
+	const Color& get_histogram_fill() const
+	{
+		return _histogram_fill;
+	}
+
+	void set_histogram_fill(const Color& histogram_fill)
+	{
+		_histogram_fill = histogram_fill;
+	}
+
 
 	// DataLink
 
@@ -260,7 +270,7 @@ public:
 	}
 
 
-	// Properties and labels
+	// Standard properties and labels
 
 
 	const DrawerProperties<> & get_prop_thick() const
@@ -331,6 +341,7 @@ private:
 	int					_num_histogram_classes	= 10;
 	double				_histogram_height		= 20;
 	Color				_histogram_background	= {0, 0, 0, .1};
+	Color				_histogram_fill			= {.5, .5, .5, 1};
 
 	/* DataLink modification values */
 	double				_line_width_dl			= 0.1;
