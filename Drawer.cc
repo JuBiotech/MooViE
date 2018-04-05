@@ -222,16 +222,23 @@ void Drawer::draw_data_link(const DataLink & link)
 		Polar origin1(
 				link[i].coord.r() - Configuration::RADIUS_DELTA,
 				link[i].coord.phi() - Configuration::ANGLE_DELTA_SMALL
-			  ),
-			  origin2(
-					link[i].coord.r() - Configuration::RADIUS_DELTA,
-					link[i].coord.phi() + Configuration::ANGLE_DELTA_SMALL
-			  );
+		),
+		origin2(
+				link[i].coord.r() - Configuration::RADIUS_DELTA,
+				link[i].coord.phi() + Configuration::ANGLE_DELTA_SMALL
+		);
 		draw_link(origin1, origin2, target1, target2, link[i].prop);
 	}
 
 	// Draw line from connector to first output
-	draw_connector(from.coord, link[connector_pos + 1].coord, from.prop);
+	double connector_distance = (link[connector_pos + 1].coord.r() - from.coord.r()) * 0.1
+			+ Configuration::get_instance().get_output_thickness();
+	draw_line(
+			from.coord,
+			Polar(link[connector_pos + 1].coord.r() + connector_distance,
+					link[connector_pos + 1].coord.phi()),
+			from.prop
+	);
 	draw_arrow(from.coord, from.prop);
 
 	// Draw connector on CoordGrid
@@ -246,7 +253,7 @@ void Drawer::draw_data_link(const DataLink & link)
 		draw_coord_point(
 				to,
 				Configuration::COORDPOINT_ANGLE,
-				(to.r() - from.r()) * 0.1 * 2,
+				(to.r() - from.r()) * 0.2,
 				link[i].prop
 		);
 	}
