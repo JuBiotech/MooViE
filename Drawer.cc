@@ -321,8 +321,9 @@ void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
 	}
 	_cr->stroke();
 
-	// TODO: Add sides to outline
 	// Draw the histogram graph outline
+	Cartesian spoint;
+	_pc.convert(Polar(radius, start), spoint);
 	_cr->begin_new_path();
 	_cr->set_source_rgba(
 		prop_thin.line_color.r(),
@@ -330,14 +331,31 @@ void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
 		prop_thin.line_color.b(),
 		prop_thin.line_color.a()
 	);
+	_cr->move_to(spoint.x(), spoint.y());
 	for (std::size_t i = 0; i < histogram.get_num_intervals(); ++i)
 	{
+		// Create the lower right and upper left coordinates of the histogram column
+		Polar right_down(
+					radius,
+					start + (span / histogram.get_num_intervals()) * (i + 1)
+				),
+				left_up(
+						radius + config.get_histogram_height() * histogram.get_section_frequency(i),
+						start + (span / histogram.get_num_intervals()) * i
+				);
+		Cartesian right_down_c, left_up_c;
+		_pc.convert(right_down, right_down_c);
+		_pc.convert(left_up, left_up_c);
+
+		// Draw the histogram column
+		_cr->line_to(left_up_c.x(), left_up_c.y());
 	    draw_arc(
-	    		radius + config.get_histogram_height() * histogram.get_section_frequency(i),
-				start + (span / histogram.get_num_intervals()) * i,
-				start + (span / histogram.get_num_intervals()) * (i + 1),
+	    		left_up.r(),
+				left_up.phi(),
+				right_down.phi(),
 				Direction::DECREASING
 	    );
+	    _cr->line_to(right_down_c.x(), right_down_c.y());
 	}
 	_cr->stroke();
 }

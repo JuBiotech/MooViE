@@ -153,7 +153,6 @@ inline std::pair<double,double> create_axis(double min, double max)
 		double diff = std::floor(std::log10(std::abs(max-min))) + 1;
 		double power_of_ten = std::pow(10, diff);
 		bool shift = false;
-		std::cout << min << " " << max << " " << diff << std::endl;
 		if (std::abs(std::abs(max - min) - power_of_ten) < 1.5 * power_of_ten)
 		{
 			diff -= 1;
