@@ -401,51 +401,29 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
 	_cr->line_to(to_c.x(), to_c.y());
 	*/
-	/*
-	static const double c1_factor = 0.5, c2_factor = 0.5;
 
-	// Starting points Q, K
-	const Cartesian & Q = intermediate1_c;
-	const Cartesian & K = intermediate2_c;
-
-	// Projection from K on Q
-	double p_factor = (Q.x() * K.x() + Q.y() * K.y()) / (std::pow(Q.x(), 2) + std::pow(Q.y(), 2));
-	Cartesian C(p_factor * Q.x(), p_factor * Q.y());
-
-	// Calculate third coordinate to build equilateral triangle with Q and K
-//	Cartesian M = Cartesian::interpolate(K, Q, 0.5);
-//	Cartesian QM(M.x() - Q.x(), M.y() - Q.y());
-//	Cartesian C(M.x() + QM.y(), M.y() - QM.x());
-
-	// Calculate control points
-	Cartesian C1(Q.x() + c1_factor * (C.x() - Q.x()), Q.y() + c1_factor * (C.y() - Q.y())),
-			C2(K.x() + c2_factor * (C.x() - K.x()), K.y() + c2_factor * (C.y() - K.y()));
-
-	_cr->curve_to(C1.x(), C1.y(), C2.x(), C2.y(), K.x(), K.y());
-	_cr->line_to(to_c.x(), to_c.y());
-	*/
-
-	const static double k = 1.1213;
-
+	double phi_diff = (intermediate1.phi().get() - intermediate2.phi().get()),
+					r_diff = (intermediate2.r() - intermediate1.r());
 	auto dSdx = [&] (double x) {
-		double phi_diff = (intermediate2.phi().get() - intermediate1.phi().get()),
-				r_diff = (intermediate2.r() - intermediate1.r());
-		return -r_diff * std::sin(x)
-				- std::cos(x) * (phi_diff * intermediate1.r() + r_diff * x / phi_diff);
+		return - (r_diff / phi_diff) * std::cos(x)
+				- std::sin(x) * (intermediate1.r() + r_diff / phi_diff * (intermediate1.phi().get() - x));
 	};
 	auto dSdy = [&] (double x) {
-		double phi_diff = (intermediate2.phi().get() - intermediate1.phi().get()),
-				r_diff = (intermediate2.r() - intermediate1.r());
-		return r_diff * std::cos(x)
-				- std::sin(x) * (phi_diff * intermediate1.r() + r_diff * x / phi_diff);
+		return - (r_diff / phi_diff) * std::sin(x)
+				+ std::cos(x) * (intermediate1.r() + r_diff / phi_diff * (intermediate1.phi().get() - x));
 	};
 
-	const Cartesian P1(intermediate1_c.x() + k * dSdx(intermediate1.phi().get()),
-			intermediate1_c.y() + k * dSdy(intermediate1.phi().get()));
-	const Cartesian P2(intermediate2_c.x() + k * dSdx(intermediate2.phi().get()),
-			intermediate2_c.y() + k * dSdy(intermediate2.phi().get()));
+	double k = 1.1213 * phi_diff;
+
+	const Cartesian P1(intermediate1_c.x() + k,
+			intermediate1_c.y() + k * dSdy(intermediate1.phi().get()) / dSdx(intermediate1.phi().get()));
+	const Cartesian P2(intermediate2_c.x() - k,
+			intermediate2_c.y() - k * dSdy(intermediate2.phi().get()) / dSdx(intermediate2.phi().get()));
 
 	_cr->curve_to(P1.x(), P1.y(), P2.x(), P2.y(), intermediate2_c.x(), intermediate2_c.y());
+//	_cr->line_to(P1.x(), P1.y());
+//	_cr->line_to(P2.x(), P2.y());
+//	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
 	_cr->line_to(to_c.x(), to_c.y());
 
 	// Set line style and apply drawing
