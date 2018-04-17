@@ -405,25 +405,25 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 	double phi_diff = (intermediate1.phi().get() - intermediate2.phi().get()),
 					r_diff = (intermediate2.r() - intermediate1.r());
 	auto dSdx = [&] (double x) {
-		return - (r_diff / phi_diff) * std::cos(x)
-				- std::sin(x) * (intermediate1.r() + r_diff / phi_diff * (intermediate1.phi().get() - x));
+		return -(r_diff / phi_diff) * std::cos(x)
+				- std::sin(x) * (intermediate1.r() + (r_diff / phi_diff) * (intermediate1.phi().get() - x));
 	};
 	auto dSdy = [&] (double x) {
-		return - (r_diff / phi_diff) * std::sin(x)
-				+ std::cos(x) * (intermediate1.r() + r_diff / phi_diff * (intermediate1.phi().get() - x));
+		return (r_diff / phi_diff) * std::sin(x)
+				- std::cos(x) * (intermediate1.r() + (r_diff / phi_diff) * (intermediate1.phi().get() - x));
 	};
 
 	double k = 1.1213 * phi_diff;
 
-	const Cartesian P1(intermediate1_c.x() + k,
+	Cartesian P1(intermediate1_c.x() + k,
 			intermediate1_c.y() + k * dSdy(intermediate1.phi().get()) / dSdx(intermediate1.phi().get()));
-	const Cartesian P2(intermediate2_c.x() - k,
+	Cartesian P2(intermediate2_c.x() - k,
 			intermediate2_c.y() - k * dSdy(intermediate2.phi().get()) / dSdx(intermediate2.phi().get()));
 
-	_cr->curve_to(P1.x(), P1.y(), P2.x(), P2.y(), intermediate2_c.x(), intermediate2_c.y());
-//	_cr->line_to(P1.x(), P1.y());
-//	_cr->line_to(P2.x(), P2.y());
-//	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
+//	_cr->curve_to(P1.x(), P1.y(), P2.x(), P2.y(), intermediate2_c.x(), intermediate2_c.y());
+	_cr->line_to(P1.x(), P1.y());
+	_cr->line_to(P2.x(), P2.y());
+	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
 	_cr->line_to(to_c.x(), to_c.y());
 
 	// Set line style and apply drawing
