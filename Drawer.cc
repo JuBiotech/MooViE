@@ -7,6 +7,7 @@
 
 #include "Drawer.h"
 #include <iostream>
+#include <functional>
 #include <cmath>
 
 Drawer::Drawer(const std::string & fpath, int width, int height)
@@ -402,28 +403,46 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 	_cr->line_to(to_c.x(), to_c.y());
 	*/
 
-	double phi_diff = (intermediate1.phi().get() - intermediate2.phi().get()),
+	double phi_diff = (intermediate2.phi().get() - intermediate1.phi().get()),
 					r_diff = (intermediate2.r() - intermediate1.r());
-	auto dSdx = [&] (double x) {
-		return -(r_diff / phi_diff) * std::cos(x)
-				- std::sin(x) * (intermediate1.r() + (r_diff / phi_diff) * (intermediate1.phi().get() - x));
-	};
-	auto dSdy = [&] (double x) {
-		return (r_diff / phi_diff) * std::sin(x)
-				- std::cos(x) * (intermediate1.r() + (r_diff / phi_diff) * (intermediate1.phi().get() - x));
-	};
 
-	double k = 1.1213 * phi_diff;
+	double k = 1.1213 * std::abs(phi_diff);
+
+	std::function<double(double)> derivative =
+			[&] (double x) {
+				return (std::cos(x) * (intermediate1.r() + (r_diff / phi_diff) * (x - intermediate1.phi().get()))
+					+ (r_diff / phi_diff) * std::sin(x))
+				/ ((r_diff / phi_diff) * std::cos(x)
+					+ std::sin(x) * (intermediate1.r() + (r_diff / phi_diff) * (x - intermediate1.phi().get())));
+			};
 
 	Cartesian P1(intermediate1_c.x() + k,
-			intermediate1_c.y() + k * dSdy(intermediate1.phi().get()) / dSdx(intermediate1.phi().get()));
-	Cartesian P2(intermediate2_c.x() - k,
-			intermediate2_c.y() - k * dSdy(intermediate2.phi().get()) / dSdx(intermediate2.phi().get()));
+			intermediate1_c.y() + k * derivative(intermediate1.phi().get()));
+	Cartesian P2;
+	if (std::abs(phi_diff) < DBL_MIN)
+	{
+		P1 = intermediate1_c;
+		P2 = intermediate2_c;
+	}
+	else if (phi_diff > -M_PI_2 && phi_diff < M_PI_2)
+	{
+		P1 = Cartesian(intermediate1_c.x() + k,
+				intermediate1_c.y() + k * derivative(intermediate1.phi().get()));
+		P2 = Cartesian(intermediate2_c.x() - k,
+				intermediate2_c.y() - k * derivative(intermediate2.phi().get()));
+	}
+	else
+	{
+		P1 = Cartesian(intermediate1_c.x() + k,
+				intermediate1_c.y() + k * derivative(intermediate1.phi().get()));
+		P2 = Cartesian(intermediate2_c.x() + k,
+				intermediate2_c.y() + k * derivative(intermediate2.phi().get()));
+	}
 
-//	_cr->curve_to(P1.x(), P1.y(), P2.x(), P2.y(), intermediate2_c.x(), intermediate2_c.y());
-	_cr->line_to(P1.x(), P1.y());
-	_cr->line_to(P2.x(), P2.y());
-	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
+	_cr->curve_to(P1.x(), P1.y(), P2.x(), P2.y(), intermediate2_c.x(), intermediate2_c.y());
+//	_cr->line_to(P1.x(), P1.y());
+//	_cr->line_to(P2.x(), P2.y());
+//	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
 	_cr->line_to(to_c.x(), to_c.y());
 
 	// Set line style and apply drawing
