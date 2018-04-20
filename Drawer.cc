@@ -403,17 +403,30 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 	_cr->line_to(to_c.x(), to_c.y());
 	*/
 
-	double phi_diff = (intermediate2.phi().get() - intermediate1.phi().get()),
-					r_diff = (intermediate2.r() - intermediate1.r());
+	double begin_angle = intermediate1.phi().get(),
+			end_angle = intermediate2.phi().get();
+	double phi_diff_na = end_angle - begin_angle;
 
-	double k = 70 * (std::abs(phi_diff) < M_PI ? std::abs(phi_diff):(2*M_PI - std::abs(phi_diff)));
+	double k = 70 * (std::abs(phi_diff_na) < M_PI ? std::abs(phi_diff_na):(2*M_PI - std::abs(phi_diff_na)));
+
+	if (phi_diff_na > M_PI)
+	{
+		begin_angle += 2*M_PI;
+	}
+	else if (phi_diff_na < -M_PI)
+	{
+		end_angle += 2*M_PI;
+	}
+
+	double phi_diff = (end_angle - begin_angle),
+					r_diff = (intermediate2.r() - intermediate1.r());
 
 	std::function<double(double)> derivative =
 			[&] (double x) {
-				return (std::cos(x) * (intermediate1.r() + (r_diff / phi_diff) * (x - intermediate1.phi().get()))
+				return (std::cos(x) * (intermediate1.r() + (r_diff / phi_diff) * (x - begin_angle))
 					+ (r_diff / phi_diff) * std::sin(x))
-				/ ((r_diff / phi_diff) * std::cos(x)
-					+ std::sin(x) * (intermediate1.r() + (r_diff / phi_diff) * (x - intermediate1.phi().get())));
+				/ (-(r_diff / phi_diff) * std::cos(x)
+					+ std::sin(x) * (intermediate1.r() + (r_diff / phi_diff) * (x - begin_angle)));
 			};
 
 	double P1_x, P1_y, P3_x, P3_y;
@@ -424,12 +437,12 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 		P3_x = 0;
 		P3_y = 0;
 	}
-	else if (phi_diff > -M_PI_2 && phi_diff < M_PI_2)
+	else
 	{
 		P1_x = 1;
-		P1_y = derivative(intermediate1.phi().get());
+		P1_y = derivative(begin_angle);
 		P3_x = 1;
-		P3_y = derivative(intermediate2.phi().get());
+		P3_y = derivative(end_angle);
 
 		double norm_p1 = std::sqrt(1 + std::pow(P1_y, 2)),
 				norm_p3 = std::sqrt(1 + std::pow(P3_y, 2));
@@ -438,37 +451,17 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 		P3_x /= norm_p3;
 		P3_y /= norm_p3;
 	}
-	else
-	{
-		P1_x = 1;
-		P1_y = derivative(intermediate1.phi().get());
-		P3_x = 1;
-		P3_y = derivative(intermediate2.phi().get());
-
-		double norm_p1 = std::sqrt(1 + std::pow(P1_y, 2)),
-				norm_p3 = std::sqrt(1 + std::pow(P3_y, 2));
-		P1_x /= norm_p1;
-		P1_y /= norm_p1;
-		P3_x /= -norm_p3;
-		P3_y /= -norm_p3;
-	}
 
 	Cartesian P1(intermediate1_c.x() + k * P1_x,
 					intermediate1_c.y() + k * P1_y),
-			  P2(intermediate2_c.x() - k * P3_x,
-					intermediate2_c.y() - k * P3_y);
+			  P2(intermediate2_c.x() + k * P3_x,
+					intermediate2_c.y() + k * P3_y);
 
-	_cr->curve_to(P1.x(), P1.y(), P2.x(), P2.y(), intermediate2_c.x(), intermediate2_c.y());
-//	_cr->line_to(P1.x(), P1.y());
-//	_cr->line_to(P2.x(), P2.y());
-//	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
+//	_cr->curve_to(P1.x(), P1.y(), P2.x(), P2.y(), intermediate2_c.x(), intermediate2_c.y());
+	_cr->line_to(P1.x(), P1.y());
+	_cr->line_to(P2.x(), P2.y());
+	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
 	_cr->line_to(to_c.x(), to_c.y());
-
-	std::cout << std::abs(phi_diff) << ": " << "("
-			<< prop.line_color.r() << ","
-			<< prop.line_color.g() << ","
-			<< prop.line_color.b() << ","
-			<< prop.line_color.a() << ")" << std::endl;
 
 	// Set line style and apply drawing
 	_cr->set_source_rgba(
