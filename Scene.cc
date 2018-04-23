@@ -62,10 +62,11 @@ void Scene::update(void)
 
 void Scene::draw_components(void)
 {
-	for (DataLink link: _links)
-	{
-		_drawer.draw_data_link(link);
-	}
+//	for (DataLink link: _links)
+//	{
+//		_drawer.draw_data_link(link);
+//	}
+	_drawer.draw_data_link(_links[4]);
 
 	_drawer.draw_coord_grid(_grid);
 
