@@ -131,6 +131,10 @@ private:
 	void draw_ring_segment(double radius, double thickness, const Angle& begin,
 			const Angle & end, const DrawerProperties<> & prop, Direction dir);
 
+	void draw_connector_segment(double begin_radius, double begin_angle,
+			double end_radius, double end_angle,
+			const DrawerProperties<> & prop);
+
 	/** Draws a arrow head from a given start pointing.
 	 * @brief
 	 * @param start the start of the arrow head

@@ -7,6 +7,7 @@
 
 #include "Drawer.h"
 #include <iostream>
+#include <functional>
 #include <cmath>
 
 const Drawer::TextAlignment Drawer::TextAlignment::LEFT(1),
@@ -418,21 +419,22 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 
 	// Calculate to intermediate coordinates to draw the arc from
 	double radial_dist = to.r() - from.r();
-	Polar intermediate1 {from.r() + dist_factor * radial_dist, from.phi() };
-	Polar intermediate2 {to.r() - dist_factor * radial_dist, to.phi() };
+	Polar curve_begin {from.r() + dist_factor * radial_dist, from.phi() };
+	Polar curve_end {to.r() - dist_factor * radial_dist, to.phi() };
 
 	// Convert to Cartesian coordinates
 	Cartesian from_c;
 	Cartesian to_c;
-	Cartesian intermediate1_c;
-	Cartesian intermediate2_c;
+	Cartesian curve_begin_c;
+	Cartesian curve_end_c;
 	_pc.convert(from, from_c);
 	_pc.convert(to, to_c);
-	_pc.convert(intermediate1, intermediate1_c);
-	_pc.convert(intermediate2, intermediate2_c);
+	_pc.convert(curve_begin, curve_begin_c);
+	_pc.convert(curve_end, curve_end_c);
 
-	// Line from start to first intermediate
+	// Line from start to the curve begin
 	_cr->move_to(from_c.x(), from_c.y());
+<<<<<<< HEAD
 	_cr->line_to(intermediate1_c.x(), intermediate1_c.y());
 
 	// Draw arc by approximating circle segments linearly:
@@ -442,19 +444,47 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 	double phi_diff = d0 <= d1 ? d0 : -d1;
 
 	size_t steps = 10;
+=======
+	_cr->line_to(curve_begin_c.x(), curve_begin_c.y());
+>>>>>>> Bezier_curves
 
-	for (size_t i = 0; i < steps - 1; ++i)
+	// Adjust angles so that their difference is lower than PI
+	double begin_angle = curve_begin.phi().get(),
+			end_angle = curve_end.phi().get();
+	double phi_diff_unadjusted = end_angle - begin_angle;
+	if (phi_diff_unadjusted > M_PI)
 	{
-		double r = intermediate1.r() + i * r_diff / steps;
-		double phi = intermediate1.phi().get() + i * phi_diff / steps;
-		Polar next(r,phi);
-		Cartesian next_c;
-		_pc.convert(next,next_c);
-		_cr->line_to(next_c.x(), next_c.y());
+		begin_angle += 2*M_PI;
+	}
+	else if (phi_diff_unadjusted < -M_PI)
+	{
+		end_angle += 2*M_PI;
 	}
 
-	// Line to second intermediate to from there to end
-	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
+	// Decide wether to draw one or to connector segments
+	double phi_diff = end_angle - begin_angle;
+	if (std::abs(phi_diff) > M_PI_2)
+	{
+		// Calculate coordinate between the curve begin and the curve end
+		double mid_angle = (begin_angle + end_angle) / 2.0;
+		double mid_radius = curve_begin.r()
+				+ (curve_end.r() - curve_begin.r()) / phi_diff * (mid_angle - begin_angle);
+
+		draw_connector_segment(curve_begin.r(), begin_angle,
+				mid_radius, mid_angle,
+				prop);
+		draw_connector_segment(mid_radius, mid_angle,
+				curve_end.r(), end_angle,
+				prop);
+	}
+	else
+	{
+		draw_connector_segment(curve_begin.r(), begin_angle,
+				curve_end.r(), end_angle,
+				prop);
+	}
+	
+	// Line from the curve end to end
 	_cr->line_to(to_c.x(), to_c.y());
 
 	// Set line style and apply drawing
@@ -503,33 +533,82 @@ void Drawer::draw_coord_point(const Polar & coord, const Angle & width,
 	draw_ring_segment(inner_radius, height, begin, end, prop, Direction::INCREASING);
 }
 
-void Drawer::draw_arc(double radius, const Angle & start, const Angle & end,
-		Direction dir)
+void Drawer::draw_connector_segment(double begin_radius, double begin_angle,
+		double end_radius, double end_angle,
+		const DrawerProperties<> & prop)
 {
-	_cr->set_identity_matrix();
+	// Calculate the Cartesian coordinates of start and end
+	Cartesian P0, P3;
+	_pc.convert(Polar(begin_radius, begin_angle), P0);
+	_pc.convert(Polar(end_radius, end_angle), P3);
 
-	// Draw arc begin->end or end->begin depending on direction
-	switch (dir)
+	double phi_diff = end_angle - begin_angle,
+			r_diff = end_radius - begin_radius;
+
+	// Calculate the derivative vectors
+	double P1_x, P1_y, P2_x, P2_y;
+	if (std::abs(phi_diff) < DBL_MIN)
 	{
-	case Direction::INCREASING:
-		_cr->arc(
-		    _pc.center().x(),
-		    _pc.center().y(),
-		    radius,
-		    Util::get_cairo_angle(end).get(),
-		    Util::get_cairo_angle(start).get()
-		);
-		break;
-	case Direction::DECREASING:
-		_cr->arc_negative(
-		    _pc.center().x(),
-		    _pc.center().y(),
-		    radius,
-		    Util::get_cairo_angle(start).get(),
-		    Util::get_cairo_angle(end).get()
-		);
-		break;
+		P1_x = 0;
+		P1_y = 0;
+		P2_x = 0;
+		P2_y = 0;
 	}
+	else
+	{
+		P1_x = 1;
+		P1_y = (begin_radius * std::cos(begin_angle) + (r_diff / phi_diff) * std::sin(begin_angle))
+						/ (begin_radius * std::sin(begin_angle) - (r_diff / phi_diff) * std::cos(begin_angle));
+		P2_x = 1;
+		P2_y = (end_radius * std::cos(end_angle) + (r_diff / phi_diff) * std::sin(end_angle))
+				/ (end_radius * std::sin(end_angle) - (r_diff / phi_diff) * std::cos(end_angle));
+
+		double norm_p1 = std::sqrt(1 + std::pow(P1_y, 2)),
+				norm_p3 = std::sqrt(1 + std::pow(P2_y, 2));
+		P1_x /= norm_p1;
+		P1_y /= norm_p1;
+		P2_x /= norm_p3;
+		P2_y /= norm_p3;
+	}
+
+	// Factor to scale the derivative vector
+	double k = 70 * std::abs(phi_diff);
+
+	// Calculate in which direction the derivative vector should be added
+	double phi_p1 = std::atan2(-(P0.y() + k * P1_y - _pc.center().y()),
+			P0.x() + k * P1_x - _pc.center().x());
+	if (phi_p1 < 0)
+	{
+		phi_p1 += 2*M_PI;
+	}
+	if (phi_p1 < begin_angle && phi_p1 < end_angle)
+	{
+		phi_p1 += 2*M_PI;
+	}
+
+	double phi_p2 = std::atan2(-(P3.y() + k * P2_y - _pc.center().y()),
+			P3.x() + k * P2_x - _pc.center().x());
+	if (phi_p2 < 0)
+	{
+		phi_p2 += 2*M_PI;
+	}
+	if (phi_p2 < begin_angle && phi_p2 < end_angle)
+	{
+		phi_p2 += 2*M_PI;
+	}
+
+	double sign_1 = (begin_angle < phi_p1 && end_angle > phi_p1)
+			|| (begin_angle > phi_p1 && end_angle < phi_p1) ? 1 : -1;
+	double sign_2 = (begin_angle < phi_p2 && end_angle > phi_p2)
+			|| (begin_angle > phi_p2 && end_angle < phi_p2) ? 1 : -1;
+
+	// Calculate the control points of the Bezier curve
+	Cartesian P1(P0.x() + k * P1_x * sign_1,
+					P0.y() + k * P1_y * sign_1),
+			  P2(P3.x() + k * P2_x * sign_2,
+					P3.y() + k * P2_y * sign_2);
+
+	_cr->curve_to(P1.x(), P1.y(), P2.x(), P2.y(), P3.x(), P3.y());
 }
 
 void Drawer::draw_ring_segment(double inner_radius, double thickness,
@@ -605,6 +684,35 @@ void Drawer::draw_arrow(const Polar & start, const DrawerProperties<> & prop)
 	_cr->set_line_width(Configuration::DATA_LINK_LINE_WIDTH);
 	_cr->fill_preserve();
 	_cr->stroke();
+}
+
+void Drawer::draw_arc(double radius, const Angle & start, const Angle & end,
+		Direction dir)
+{
+	_cr->set_identity_matrix();
+
+	// Draw arc begin->end or end->begin depending on direction
+	switch (dir)
+	{
+	case Direction::INCREASING:
+		_cr->arc(
+		    _pc.center().x(),
+		    _pc.center().y(),
+		    radius,
+		    Util::get_cairo_angle(end).get(),
+		    Util::get_cairo_angle(start).get()
+		);
+		break;
+	case Direction::DECREASING:
+		_cr->arc_negative(
+		    _pc.center().x(),
+		    _pc.center().y(),
+		    radius,
+		    Util::get_cairo_angle(start).get(),
+		    Util::get_cairo_angle(end).get()
+		);
+		break;
+	}
 }
 
 void Drawer::draw_line(const Polar& from, const Polar& to,
