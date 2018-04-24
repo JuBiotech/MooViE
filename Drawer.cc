@@ -434,19 +434,8 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 
 	// Line from start to the curve begin
 	_cr->move_to(from_c.x(), from_c.y());
-<<<<<<< HEAD
-	_cr->line_to(intermediate1_c.x(), intermediate1_c.y());
 
-	// Draw arc by approximating circle segments linearly:
-	double r_diff = radial_dist * (1 - 2 * dist_factor);
-	double d0 = angle_helper::rad_dist(from.phi().get(), to.phi().get()),
-	    d1 = angle_helper::rad_dist(to.phi().get(), from.phi().get());
-	double phi_diff = d0 <= d1 ? d0 : -d1;
-
-	size_t steps = 10;
-=======
 	_cr->line_to(curve_begin_c.x(), curve_begin_c.y());
->>>>>>> Bezier_curves
 
 	// Adjust angles so that their difference is lower than PI
 	double begin_angle = curve_begin.phi().get(),

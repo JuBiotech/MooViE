@@ -17,10 +17,9 @@ CoordGrid::CoordGrid(std::size_t major_ticks_, std::size_t minor_ticks_,
 	{
 		for (DefVar var: output_vars)
 		{
-			double var_delta = 0.02 * (var.max - var.min);
 			_ticks.emplace_back(
 					minor_ticks_, major_ticks_,
-					create_axis(var.min - var_delta, var.max + var_delta),
+					create_axis(var.min, var.max),
 					Configuration::get_instance().get_tick_label()
 			);
 		}
