@@ -379,35 +379,34 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 	// Line from start to first intermediate
 	_cr->move_to(from_c.x(), from_c.y());
 	_cr->line_to(intermediate1_c.x(), intermediate1_c.y());
-	/*
-	// Draw arc by approximating circle segments linearly:
-	double r_diff = radial_dist * (1 - 2 * dist_factor);
-	double d0 = angle_helper::rad_dist(from.phi().get(), to.phi().get()),
-	    d1 = angle_helper::rad_dist(to.phi().get(), from.phi().get());
-	double phi_diff = d0 <= d1 ? d0 : -d1;
 
-	size_t steps = 10;
+//	// Draw arc by approximating circle segments linearly:
+//	double r_diff = radial_dist * (1 - 2 * dist_factor);
+//	double d0 = angle_helper::rad_dist(from.phi().get(), to.phi().get()),
+//	    d1 = angle_helper::rad_dist(to.phi().get(), from.phi().get());
+//	double phi_diff = d0 <= d1 ? d0 : -d1;
+//
+//	size_t steps = 10;
+//
+//	for (size_t i = 0; i < steps - 1; ++i)
+//	{
+//		double r = intermediate1.r() + i * r_diff / steps;
+//		double phi = intermediate1.phi().get() + i * phi_diff / steps;
+//		Polar next(r,phi);
+//		Cartesian next_c;
+//		_pc.convert(next,next_c);
+//		_cr->line_to(next_c.x(), next_c.y());
+//	}
+//
+//	// Line to second intermediate to from there to end
+//	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
+//	_cr->line_to(to_c.x(), to_c.y());
 
-	for (size_t i = 0; i < steps - 1; ++i)
-	{
-		double r = intermediate1.r() + i * r_diff / steps;
-		double phi = intermediate1.phi().get() + i * phi_diff / steps;
-		Polar next(r,phi);
-		Cartesian next_c;
-		_pc.convert(next,next_c);
-		_cr->line_to(next_c.x(), next_c.y());
-	}
-
-	// Line to second intermediate to from there to end
-	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
-	_cr->line_to(to_c.x(), to_c.y());
-	*/
 
 	double begin_angle = intermediate1.phi().get(),
 			end_angle = intermediate2.phi().get();
 	double phi_diff_na = end_angle - begin_angle;
 
-	//double sign = intermediate1_c.x() < intermediate2_c.x() ? -1 : 1;
 	double k = 70 * (std::abs(phi_diff_na) < M_PI ? std::abs(phi_diff_na):(2*M_PI - std::abs(phi_diff_na)));
 
 	if (phi_diff_na > M_PI)
@@ -426,43 +425,69 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 			[&] (double x) {
 				return (std::cos(x) * (intermediate1.r() + (r_diff / phi_diff) * (x - begin_angle))
 					+ (r_diff / phi_diff) * std::sin(x))
-				/ ((r_diff / phi_diff) * std::cos(x)
-					- std::sin(x) * (intermediate1.r() + (r_diff / phi_diff) * (x - begin_angle)));
+				/ (-(r_diff / phi_diff) * std::cos(x)
+					+ std::sin(x) * (intermediate1.r() + (r_diff / phi_diff) * (x - begin_angle)));
 			};
 
-	double P1_x, P1_y, P3_x, P3_y;
+	double P1_x, P1_y, P2_x, P2_y;
 	if (std::abs(phi_diff) < DBL_MIN)
 	{
 		P1_x = 0;
 		P1_y = 0;
-		P3_x = 0;
-		P3_y = 0;
+		P2_x = 0;
+		P2_y = 0;
 	}
 	else
 	{
 		P1_x = 1;
-		P1_y = -derivative(begin_angle);
-		P3_x = 1;
-		P3_y = -derivative(end_angle);
+		P1_y = derivative(begin_angle);
+		P2_x = 1;
+		P2_y = derivative(end_angle);
 
 		double norm_p1 = std::sqrt(1 + std::pow(P1_y, 2)),
-				norm_p3 = std::sqrt(1 + std::pow(P3_y, 2));
+				norm_p3 = std::sqrt(1 + std::pow(P2_y, 2));
 		P1_x /= norm_p1;
 		P1_y /= norm_p1;
-		P3_x /= norm_p3;
-		P3_y /= norm_p3;
+		P2_x /= norm_p3;
+		P2_y /= norm_p3;
 	}
 
-	Cartesian P1(intermediate1_c.x() + k * P1_x,
-					intermediate1_c.y() + k * P1_y),
-			  P2(intermediate2_c.x() + k * P3_x,
-					intermediate2_c.y() + k * P3_y);
-	std::cout << "(" << P1_y << ", " << P3_y << "): " << intermediate1_c << "->" << intermediate2_c << ", " << P1 << "->" << P2 << std::endl;
+	double phi_p1 = std::atan2(-(intermediate1_c.y() + k * P1_y - _pc.center().y()),
+			intermediate1_c.x() + k * P1_x - _pc.center().x());
+	if (phi_p1 < 0)
+	{
+		phi_p1 += 2*M_PI;
+	}
+	if (phi_p1 < begin_angle && phi_p1 < end_angle)
+	{
+		phi_p1 += 2*M_PI;
+	}
 
-//	_cr->curve_to(P1.x(), P1.y(), P2.x(), P2.y(), intermediate2_c.x(), intermediate2_c.y());
-	_cr->line_to(P1.x(), P1.y());
-	_cr->line_to(P2.x(), P2.y());
-	_cr->line_to(intermediate2_c.x(), intermediate2_c.y());
+	double phi_p2 = std::atan2(-(intermediate2_c.y() + k * P2_y - _pc.center().y()),
+			intermediate2_c.x() + k * P2_x - _pc.center().x());
+	if (phi_p2 < 0)
+	{
+		phi_p2 += 2*M_PI;
+	}
+	if (phi_p2 < begin_angle && phi_p2 < end_angle)
+	{
+		phi_p2 += 2*M_PI;
+	}
+
+	double sign_1 = (begin_angle < phi_p1 && end_angle > phi_p1)
+			|| (begin_angle > phi_p1 && end_angle < phi_p1) ? 1 : -1;
+	double sign_2 = (begin_angle < phi_p2 && end_angle > phi_p2)
+			|| (begin_angle > phi_p2 && end_angle < phi_p2) ? 1 : -1;
+
+	std::cout << phi_p1 << " e [" << begin_angle << ", " << end_angle << "]" << std::endl;
+	std::cout << phi_p2 << " e [" << begin_angle << ", " << end_angle << "]" << std::endl;
+
+	Cartesian P1(intermediate1_c.x() + k * P1_x * sign_1,
+					intermediate1_c.y() + k * P1_y * sign_1),
+			  P2(intermediate2_c.x() + k * P2_x * sign_2,
+					intermediate2_c.y() + k * P2_y * sign_2);
+
+	_cr->curve_to(P1.x(), P1.y(), P2.x(), P2.y(), intermediate2_c.x(), intermediate2_c.y());
 	_cr->line_to(to_c.x(), to_c.y());
 
 	// Set line style and apply drawing
@@ -474,6 +499,28 @@ void Drawer::draw_connector(const Polar & from, const Polar & to,
 	);
 	_cr->set_line_width(prop.line_width);
 	_cr->stroke();
+
+//	_cr->begin_new_path();
+//	_cr->move_to(intermediate1_c.x(), intermediate1_c.y());
+//	auto r = [&](double phi) {
+//		return intermediate1.r() + r_diff / phi_diff * (phi - begin_angle);
+//	};
+//	Cartesian p;
+//	double it_begin = begin_angle < end_angle ? begin_angle : end_angle;
+//	double it_end = begin_angle < end_angle ? end_angle : begin_angle;
+//	for (double phi = it_begin; phi <= it_end; phi += 0.01)
+//	{
+//		_pc.convert(Polar(r(phi), phi), p);
+//		_cr->line_to(p.x(), p.y());
+//	}
+//	_cr->set_source_rgba(
+//				prop.line_color.r(),
+//				prop.line_color.g(),
+//				prop.line_color.b(),
+//				prop.line_color.a()
+//	);
+//	_cr->set_line_width(prop.line_width);
+//	_cr->stroke();
 }
 
 void Drawer::draw_segment_axis(double inner_radius, double thickness,
