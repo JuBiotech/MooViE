@@ -41,12 +41,12 @@ CairoDrawer::TextAlignment::TextAlignment(double ratio)
 {
 	if (0 > ratio)
 	{
-		ratio = std::abs(ratio);
+		this->ratio = std::abs(ratio);
 	}
 
 	if (ratio > 1)
 	{
-		ratio /= std::floor(std::log10(ratio));
+		this->ratio /= std::floor(std::log10(ratio));
 	}
 }
 
