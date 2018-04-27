@@ -8,8 +8,6 @@
 #ifndef MAPPER_H_
 #define MAPPER_H_
 
-#include <iostream>
-
 /** Mapper represent a mapping of from one
  * interval to another: [a,b] -> [c,d]. It solves
  * the linear equations

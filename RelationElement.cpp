@@ -5,17 +5,18 @@
  *      Author: IBT\stratmann
  */
 
-#include "DataLink.h"
+#include "RelationElement.h"
+#include "CairoDrawer.h"
 
-std::size_t DataLink::num_inputs = 0;
+std::size_t RelationElement::num_inputs = 0;
 
-DataLinkFactory::DataLinkFactory(
+RelationElementFactory::RelationElementFactory(
 		std::size_t num_data_rows,
-		const CoordGrid & grid,
-		const std::vector<VarAxis> & axis)
+		const CodomainGrid & grid,
+		const std::vector<DomainAxis> & axis)
 : _grid(grid), _axis(axis)
 {
-	DataLink::num_inputs = axis.size();
+	RelationElement::num_inputs = axis.size();
 
 	_line_width = 0.1 * (1 + std::exp(-(num_data_rows * 0.0006)));
 	_line_alpha = 0.3 * (1 + 3 * std::exp(-(num_data_rows * 0.04)));
@@ -26,7 +27,7 @@ DataLinkFactory::DataLinkFactory(
 						grid.get_start() > grid.get_end() ?
 								grid.get_end().get() + 2 * M_PIl : grid.get_end().get()
 					);
-	for (const Ticks & ticks: grid.get_ticks())
+	for (const Scale & ticks: grid.get_ticks())
 	{
 		_output_mapper.emplace_back(
 				ticks.get_extremes(),
@@ -34,7 +35,7 @@ DataLinkFactory::DataLinkFactory(
 		);
 	}
 
-	for (const VarAxis & elem: axis)
+	for (const DomainAxis & elem: axis)
 	{
 		_input_mapper.emplace_back(
 				elem.get_ticks().get_extremes(),
@@ -43,9 +44,9 @@ DataLinkFactory::DataLinkFactory(
 	}
 }
 
-DataLink DataLinkFactory::create(const DefDataRow & row) const
+RelationElement RelationElementFactory::create(const DefDataRow & row) const
 {
-	DataLink link;
+	RelationElement link;
 	std::size_t num_inputs = _axis.size(),
 			num_cols = row.size();
 
@@ -66,7 +67,7 @@ DataLink DataLinkFactory::create(const DefDataRow & row) const
 	DrawerProperties<> prop(_line_width, line, fill);
 	link.emplace_back(
 			Polar(
-				_grid.get_radius() - Configuration::CONNECTOR_DELTA,
+				_grid.get_radius() - CairoDrawer::CONNECTOR_DELTA,
 				_output_mapper[0].map(row[num_inputs].value)
 			),
 			prop
@@ -89,7 +90,7 @@ DataLink DataLinkFactory::create(const DefDataRow & row) const
 	return link;
 }
 
-const Color & DataLinkFactory::get_color(double val) const
+const Color & RelationElementFactory::get_color(double val) const
 {
 	double range = angle_helper::rad_dist(
 				_grid.get_start().get(),

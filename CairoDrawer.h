@@ -1,22 +1,22 @@
 #ifndef DRAWER_H_
 #define DRAWER_H_
 
-#include "DataLink.h"
+#include "RelationElement.h"
 #include <cairommconfig.h>
 #include <cairomm/context.h>
 #include <cairomm/surface.h>
 #include <array>
 #include <iostream>
 
-/** Drawer is a wrapper class for MooViE's basic drawing abilities
+/** CairoDrawer is a wrapper class for MooViE's basic drawing abilities
  * which are realized using Cairo.
- * @brief Drawer draws on a SVG surface and stores it to a file.
+ * @brief CairoDrawer draws on a SVG surface and stores it to a file.
  * @author beyss
  * @date 05.07.2017
  */
-class Drawer
+class CairoDrawer
 {
-private:
+public:
 	static const double RADIAL_TEXT_FACTOR;
 
 	static const double COORDGRID_ADJUSTMENT,
@@ -38,7 +38,6 @@ private:
 						ANGLE_DELTA_LARGE,
 						RADIUS_DELTA;
 
-public:
 	struct TextAlignment
 	{
 		const static TextAlignment LEFT, HALF_LEFT, CENTERED, HALF_RIGHT, RIGHT;
@@ -46,38 +45,38 @@ public:
 		TextAlignment(double ratio);
 	};
 
-    /** Creates a Drawer which draws to a file with the given path on
+    /** Creates a CairoDrawer which draws to a file with the given path on
      * a surface from (0,0) with the stored configuration width and
      * height.
-     * Drawer uses polar coordinate inputs which are transformed into
+     * CairoDrawer uses polar coordinate inputs which are transformed into
      * Cartesian coordinates. The Cartesian center of its coordinate
      * system is (width/2, height/2).
-     * @brief Drawer
+     * @brief CairoDrawer
      */
-    Drawer(const std::string & fpath, int width, int height);
+    CairoDrawer(const std::string & fpath, int width, int height);
 
-    /** Writes and closes file correctly on destruction of this Drawer.
-     * @brief ~Drawer
+    /** Writes and closes file correctly on destruction of this CairoDrawer.
+     * @brief ~CairoDrawer
      */
-    ~Drawer() { this->finish(); }
+    ~CairoDrawer() { this->finish(); }
 
     /** Draws a CoordGrid.
      * @brief draw_coord_grid
      * @param grid the CoordGrid to draw
     */
-    void draw_coord_grid(const CoordGrid & grid);
+    void draw_coord_grid(const CodomainGrid & grid);
 
     /** Draws a VarAxis.
      * @brief draw_var_axis
      * @param the VarAxis to draw
      */
-    void draw_var_axis(const VarAxis & axis);
+    void draw_var_axis(const DomainAxis & axis);
 
     /** Draws a DataLink.
      * @brief draw_data_link
      * @param the DataLink to draw
      */
-    void draw_data_link(const DataLink & link);
+    void draw_data_link(const RelationElement & link);
 
     /**
      *
@@ -85,7 +84,7 @@ public:
     void change_surface(const std::string & fpath, int width, int height);
 
 
-    /** Save and show the Drawer's result.
+    /** Save and show the CairoDrawer's result.
      * @brief finish
      */
     void finish();
@@ -94,7 +93,7 @@ private:
     /**
      *
      */
-    void draw_histogram(const VarAxis::Histogram & histogram,
+    void draw_histogram(const DomainAxis::Histogram & histogram,
 			double radius, const Angle & begin, const Angle & end);
 
     /** Draws a bold line between the lines origin1-origin2
@@ -118,7 +117,7 @@ private:
 	 * @brief draw_connection
 	 * @param from the start Polar
 	 * @param to the end Polar
-	 * @param prop the Drawer properties
+	 * @param prop the CairoDrawer properties
 	 */
 	void draw_connector(const Polar & from, const Polar & to,
 			const DrawerProperties<> & prop);
@@ -145,7 +144,7 @@ private:
 	 * @param thickness the thinkness of the edge segment
 	 * @param begin the begin Angle
 	 * @param end the end Angle
-	 * @param prop the Drawer properties
+	 * @param prop the CairoDrawer properties
 	 * @param dir the direction
 	 */
 	void draw_ring_segment(double radius, double thickness, const Angle& begin,
@@ -166,7 +165,7 @@ private:
 	 * @brief draw_line
 	 * @param from the starting coordinates
 	 * @param to the end coordinates
-	 * @param prop the Drawer properties to use
+	 * @param prop the DrawerProperties to use
 	 */
 	void draw_line(const Polar & from, const Polar & to,
 			const DrawerProperties<> & prop);
@@ -187,7 +186,7 @@ private:
 	 * @param coord the polar coordinate to draw
 	 * @param width the width
 	 * @param height the height
-	 * @param prop the drawer properties
+	 * @param prop the DrawerProperties
 	 */
 	void draw_coord_point(const Polar & coord, const Angle & width, double height,
 					const DrawerProperties<> & prop);

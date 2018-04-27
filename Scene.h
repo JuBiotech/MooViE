@@ -9,11 +9,8 @@
 #define SCENE_H_
 
 #include <algorithm>
-#include "CoordGrid.h"
-#include "Drawer.h"
-#include "VarAxis.h"
-#include "DataLink.h"
-#include "Mapper.h"
+#include "CairoDrawer.h"
+#include "RelationElement.h"
 #include "DataSet.h"
 #include "Configuration.h"
 
@@ -47,14 +44,14 @@ private:
     DefDataSet 									_set;
 
     /** Draws data to file */
-    Drawer 										_drawer;
+    CairoDrawer 								_drawer;
 
     /** Output data section of the diagram */
-    CoordGrid 									_grid;
+    CodomainGrid 								_grid;
     /** Variable axis */
-    std::vector<VarAxis> 						_axis;
+    std::vector<DomainAxis> 						_axis;
     /** Data links */
-    std::vector<DataLink> 						_links;
+    std::vector<RelationElement> 						_links;
 };
 
 #endif /* SCENE_H_ */

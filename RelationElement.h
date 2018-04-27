@@ -9,25 +9,26 @@
 #define DATALINK_H_
 
 #include <vector>
-#include "CoordGrid.h"
-#include "VarAxis.h"
-#include "PolarCartesian.h"
+#include "CodomainGrid.h"
+#include "DomainAxis.h"
+#include "Coordinates.h"
+#include "Mapper.h"
 
-struct DataPoint
+struct Point
 {
 	const Polar coord;
 	const DrawerProperties<> prop;
-	DataPoint(Polar&& coord, const DrawerProperties<>& prop)
+	Point(Polar&& coord, const DrawerProperties<>& prop)
 	: coord(coord), prop(prop)
 	{}
 };
 
-class DataLink
+class RelationElement
 {
 public:
 	static std::size_t num_inputs;
 
-	const DataPoint & operator[](std::size_t i) const
+	const Point & operator[](std::size_t i) const
 	{
 		return points[i];
 	}
@@ -43,22 +44,22 @@ public:
 		points.emplace_back(std::forward<Arg>(args)...);
 	}
 private:
-	std::vector<DataPoint> points;
+	std::vector<Point> points;
 };
 
-class DataLinkFactory
+class RelationElementFactory
 {
 public:
-	DataLinkFactory(std::size_t num_data_rows,
-			const CoordGrid & grid,
-			const std::vector<VarAxis> & axis);
-	DataLink create(const DefDataRow & row) const;
+	RelationElementFactory(std::size_t num_data_rows,
+			const CodomainGrid & grid,
+			const std::vector<DomainAxis> & axis);
+	RelationElement create(const DefDataRow & row) const;
 private:
 	const Color & get_color(double val) const;
 private:
 	double _line_width, _line_alpha, _fill_alpha;
-	const CoordGrid & _grid;
-	const std::vector<VarAxis> & _axis;
+	const CodomainGrid & _grid;
+	const std::vector<DomainAxis> & _axis;
 	std::vector<Mapper> _input_mapper,
 						_output_mapper;
 };

@@ -57,14 +57,14 @@ void Scene::update(void)
 
 void Scene::draw_components(void)
 {
-	for (DataLink link: _links)
+	for (RelationElement link: _links)
 	{
 		_drawer.draw_data_link(link);
 	}
 
 	_drawer.draw_coord_grid(_grid);
 
-	for (VarAxis axis: _axis)
+	for (DomainAxis axis: _axis)
 	{
 		_drawer.draw_var_axis(axis);
 	}
@@ -100,7 +100,7 @@ void Scene::initialize(void)
 	}
 
 	// Create DataLinks from DataSet's input/output values
-	DataLinkFactory factory(_set.rows(), _grid, _axis);
+	RelationElementFactory factory(_set.rows(), _grid, _axis);
 	for (const DefDataRow & row: _set)
 	{
 		_links.push_back(factory.create(row));

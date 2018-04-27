@@ -17,7 +17,7 @@
 /** Ticks are the .
  * @brief The Ticks class
  */
-class Ticks
+class Scale
 {
 public:
     /**
@@ -28,7 +28,7 @@ public:
      * @param label_prop
      * @param label_suffix
      */
-    Ticks(size_t ticks_major, size_t ticks_minor,
+    Scale(size_t ticks_major, size_t ticks_minor,
           const std::pair<double, double>& extreme_vals,
           const TextProperties& label_prop, const std::string& label_suffix = "")
     : _ticks_major(ticks_major), _ticks_minor(ticks_minor), _extreme_vals(extreme_vals),
@@ -36,7 +36,7 @@ public:
     {
     }
 
-    virtual ~Ticks() {}
+    virtual ~Scale() {}
 
     /** Access function for the Ticks extreme values.
      * @brief extreme_vals

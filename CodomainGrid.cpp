@@ -5,9 +5,9 @@
  *      Author: beyss
  */
 
-#include "CoordGrid.h"
+#include "CodomainGrid.h"
 
-CoordGrid::CoordGrid(std::size_t major_ticks_, std::size_t minor_ticks_,
+CodomainGrid::CodomainGrid(std::size_t major_ticks_, std::size_t minor_ticks_,
 		const Angle & start_, const Angle & end_,
 		double radius_, double height_, Direction dir_,
 		const std::vector<DefVar> output_vars)
@@ -25,7 +25,7 @@ CoordGrid::CoordGrid(std::size_t major_ticks_, std::size_t minor_ticks_,
 		}
 	}
 
-const DefVar & CoordGrid::get_var(std::size_t num_output) const
+const DefVar & CodomainGrid::get_var(std::size_t num_output) const
 {
 	if (num_output >= _num_outputs);
 	return _output_variables[num_output];

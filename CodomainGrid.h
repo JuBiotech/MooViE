@@ -10,10 +10,9 @@
 
 #include <cstddef>
 #include <vector>
-#include "Mapper.h"
-#include "PolarCartesian.h"
+#include "Coordinates.h"
 #include "DataSet.h"
-#include "Ticks.h"
+#include "Scale.h"
 #include "Configuration.h"
 
 /** A enum for drawer direction */
@@ -35,7 +34,7 @@ enum Direction
  * @author beyss
  * @date 26.07.2017
  */
-class CoordGrid
+class CodomainGrid
 {
 public:
     /** Creates a CoordGrid which can be drawn between two angles in a
@@ -47,7 +46,7 @@ public:
      * @param height the height of the CoordGrid
      * @param output_vars a vector containing the output variables
      */
-    CoordGrid(std::size_t major_ticks_, std::size_t minor_ticks_,
+    CodomainGrid(std::size_t major_ticks_, std::size_t minor_ticks_,
     		const Angle & start_, const Angle & end_,
 			double radius_, double height_, Direction dir_,
 			const std::vector<DefVar> output_vars);
@@ -107,7 +106,7 @@ public:
 		this->_minor_ticks = minor_ticks;
 	}
 
-	const std::vector<Ticks> & get_ticks() const
+	const std::vector<Scale> & get_ticks() const
 	{
 		return _ticks;
 	}
@@ -145,7 +144,7 @@ private:
 
     /** The major and minor sections */
     std::size_t 		_major_ticks, _minor_ticks;
-    std::vector<Ticks>	_ticks;
+    std::vector<Scale>	_ticks;
 
     /** Start and end angle for drawing the CoordGrid */
     Angle 				_start, _end;

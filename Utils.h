@@ -16,7 +16,7 @@
 #include <stdexcept>
 #include <climits>
 #include <cstdlib>
-#include "PolarCartesian.h"
+#include "Coordinates.h"
 
 class ParseException : public std::exception
 {

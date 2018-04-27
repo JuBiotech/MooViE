@@ -8,9 +8,8 @@
 #ifndef VARAXIS_H_
 #define VARAXIS_H_
 
-#include "Ticks.h"
+#include "Scale.h"
 #include "DataSet.h"
-#include "Mapper.h"
 #include "Configuration.h"
 
 /** A VarAxis is an axis which displays the possible values
@@ -20,7 +19,7 @@
  * @author stratmann
  * @date 12.12.2017
  */
-class VarAxis
+class DomainAxis
 {
 public:
 	class Histogram
@@ -68,7 +67,7 @@ public:
 	/**
 	 *
 	 */
-	VarAxis(DefVar var,
+	DomainAxis(DefVar var,
 		const Angle & start, const Angle & end,
 		double radius, std::size_t height,
 		const DrawerProperties<> & prop,
@@ -139,12 +138,12 @@ public:
 	      this->_start = start;
 	}
 
-	const Ticks & get_ticks () const
+	const Scale & get_ticks () const
 	{
 	      return _ticks;
 	}
 
-	void set_ticks (const Ticks & ticks)
+	void set_ticks (const Scale & ticks)
 	{
 	      this->_ticks = ticks;
 	}
@@ -160,7 +159,7 @@ private:
 	/* The Variable this VarAxis represents */
 	DefVar 				_var;
 	/** The ticks of this variable */
-	Ticks 				_ticks;
+	Scale 				_ticks;
 	/** The histogram describing the frequencies of the intervals */
 	Histogram			_histogram;
 
