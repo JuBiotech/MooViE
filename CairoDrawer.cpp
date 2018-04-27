@@ -51,7 +51,7 @@ CairoDrawer::TextAlignment::TextAlignment(double ratio)
 }
 
 CairoDrawer::CairoDrawer(const std::string & fpath, int width, int height)
-: _pc(width, height)
+: Drawer(width, height)
 {
 	set_surface(fpath, width, height);
 }
@@ -283,8 +283,8 @@ void CairoDrawer::draw_data_link(const RelationElement & link)
 	{
 		Polar from = link[i].coord, to = link[i + 1].coord;
 		draw_connector(
-				Util::get_connector_start(from, to),
-				Util::get_connector_end(from, to),
+				get_connector_start(from, to),
+				get_connector_end(from, to),
 				link[i].prop
 		);
 		draw_coord_point(
@@ -726,8 +726,8 @@ void CairoDrawer::draw_arc(double radius, const Angle & start, const Angle & end
 		    _pc.center().x(),
 		    _pc.center().y(),
 		    radius,
-		    Util::get_cairo_angle(end).get(),
-		    Util::get_cairo_angle(start).get()
+		    get_cairo_angle(end).get(),
+		    get_cairo_angle(start).get()
 		);
 		break;
 	case Direction::DECREASING:
@@ -735,8 +735,8 @@ void CairoDrawer::draw_arc(double radius, const Angle & start, const Angle & end
 		    _pc.center().x(),
 		    _pc.center().y(),
 		    radius,
-		    Util::get_cairo_angle(start).get(),
-		    Util::get_cairo_angle(end).get()
+		    get_cairo_angle(start).get(),
+		    get_cairo_angle(end).get()
 		);
 		break;
 	}
@@ -849,17 +849,6 @@ Cairo::TextExtents CairoDrawer::get_text_extents(const Label & label) const
 	_cr->get_text_extents(message, t_exts);
 
 	return t_exts;
-}
-
-Cartesian CairoDrawer::create_control_point(const Polar & point) const
-{
-	Polar control(point);
-	control.r() -= _link_control_strength;
-
-	Cartesian control_c;
-	_pc.convert(control, control_c);
-
-	return control_c;
 }
 
 void CairoDrawer::set_surface(const std::string & fpath, int width, int height)

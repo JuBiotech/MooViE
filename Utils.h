@@ -16,7 +16,6 @@
 #include <stdexcept>
 #include <climits>
 #include <cstdlib>
-#include "Coordinates.h"
 
 class ParseException : public std::exception
 {
@@ -80,42 +79,6 @@ inline double string_to_double(const std::string & str) throw(ParseException)
 	{
 		throw ParseException("Invalid integer value.");
 	}
-}
-
-/** Cairo uses an non-standard way to define angles. The angle of 0 is on
- * the positive X axis, but the angle of pi/2 or 90° is on the negative
- * Y axis (the common model uses the positive Y axis).
- * @param angle
- * @return the cairo angle
- */
-inline Angle get_cairo_angle(const Angle & angle)
-{
-	return Angle(2 * M_PI - angle.get());
-}
-
-/** Calculates a Polar coordinate for the beginning of a connector
- * between 'from' and 'to'. If the resulting coordinate is passed to
- * a connector drawing function, the connector does not immediately
- * start at from.
- * @param from the Polar coordinate to start the connector from
- * @param from the Polar coordinate to draw the connector to
- * @return the modified Connector start coordinate
- */
-inline Polar get_connector_start(const Polar & from, const Polar to)
-{
-	return Polar(from.r() + 0.1 * (to.r() - from.r()), from.phi());
-}
-
-/** Calculates a Polar coordinate for the end of a connector between
- * 'from' and 'to'. If the resulting coordinate is passed to a connector
- * drawing function, the connector does not immediately end at to.
- * @param from the Polar coordinate to start the connector from
- * @param from the Polar coordinate to draw the connector to
- * @return the modified Connector end coordinate
- */
-inline Polar get_connector_end(const Polar & from, const Polar to)
-{
-	return Polar(to.r() - 0.1 * (to.r() - from.r()), to.phi());
 }
 
 }

@@ -44,14 +44,14 @@ private:
     DefDataSet 									_set;
 
     /** Draws data to file */
-    CairoDrawer 								_drawer;
+    std::unique_ptr<Drawer> 					_drawer;
 
     /** Output data section of the diagram */
     CodomainGrid 								_grid;
     /** Variable axis */
-    std::vector<DomainAxis> 						_axis;
+    std::vector<DomainAxis> 					_axis;
     /** Data links */
-    std::vector<RelationElement> 						_links;
+    std::vector<RelationElement> 				_links;
 };
 
 #endif /* SCENE_H_ */

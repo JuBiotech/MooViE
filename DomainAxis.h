@@ -11,6 +11,7 @@
 #include "Scale.h"
 #include "DataSet.h"
 #include "Configuration.h"
+#include "Coordinates.h"
 
 /** A VarAxis is an axis which displays the possible values
  * of a input variable. It is visualized as a ring segment

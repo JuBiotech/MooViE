@@ -15,9 +15,11 @@ Scene::Scene()
 		  )
   ),
   _drawer (
-		  Configuration::get_instance().get_output_file(),
-		  Configuration::get_instance().get_width(),
-		  Configuration::get_instance().get_height()
+		  new CairoDrawer(
+				  Configuration::get_instance().get_output_file(),
+				  Configuration::get_instance().get_width(),
+				  Configuration::get_instance().get_height()
+				  )
   ),
   _grid(
 		  10, 10,
@@ -46,7 +48,7 @@ void Scene::update(void)
 	initialize();
 
 	// Update Drawer
-	_drawer.change_surface(
+	_drawer->change_surface(
 			Configuration::get_instance().get_output_file(),
 			Configuration::get_instance().get_width(),
 			Configuration::get_instance().get_height()
@@ -59,14 +61,14 @@ void Scene::draw_components(void)
 {
 	for (RelationElement link: _links)
 	{
-		_drawer.draw_data_link(link);
+		_drawer->draw_data_link(link);
 	}
 
-	_drawer.draw_coord_grid(_grid);
+	_drawer->draw_coord_grid(_grid);
 
 	for (DomainAxis axis: _axis)
 	{
-		_drawer.draw_var_axis(axis);
+		_drawer->draw_var_axis(axis);
 	}
 
 }
