@@ -15,8 +15,11 @@
 namespace angle_helper
 {
     /** Converts degree to radian value.
+     *
      * @brief deg_to_rad
+     *
      * @param deg the degree value to be converted
+     *
      * @return the matching radian value
      */
     inline double deg_to_rad(double deg)
@@ -25,8 +28,11 @@ namespace angle_helper
     }
 
     /** Converts radian to degree value.
+     *
      * @brief rad_to_deg
+     *
      * @param rad the radian value to be converted
+     *
      * @return the matching degree value
      */
     inline double rad_to_deg(double rad)
@@ -42,7 +48,9 @@ namespace angle_helper
 
 /** Angle is a wrapper class for angle values. Angles are stored as radian values.
  * For consistence, its value needs to be in [0,2*pi].
+ *
  * @brief The Angle class
+ *
  * @author beyss
  * @date 03.07.2017
  */
@@ -51,7 +59,9 @@ class Angle
 public:
     /** Creates a Angle from an angle value. If necessary, the value is corrected
      * to be consistent.
+     *
      * @brief Angle
+     *
      * @param angle the angle value
      */
     Angle(double angle)
@@ -61,7 +71,9 @@ public:
     }
 
     /** Returns the value of this angle.
+     *
      * @brief get
+     *
      * @return the angle value
      */
     double get() const
@@ -71,8 +83,11 @@ public:
 
     /** Assignment operator setting this Angle's value. If necessary,
      * the value is corrected to be consistent.
+     *
      * @brief operator =
+     *
      * @param angle
+     *
      * @return
      */
     double operator=(const double& angle)
@@ -84,8 +99,11 @@ public:
 
     /** Equal to operator checking wether this Angle's value
      * is equal to the other Angle's value.
+     *
      * @brief operator ==
+     *
      * @param rhs the other Angle
+     *
      * @return if equal or not
      */
     bool operator==(const Angle& rhs) const
@@ -95,8 +113,11 @@ public:
 
     /** Smaller than operator checking wether this Angle's value
      * is smaller than the other Angle's value.
+     *
      * @brief operator <
+     *
      * @param rhs the other Angle
+     *
      * @return if smaller than or not
      */
     bool operator<(const Angle& rhs) const
@@ -106,8 +127,11 @@ public:
 
     /** Smaller than or equal to operator checking wether this Angle's
      * value is smaller than or equal to the other Angle's value.
+     *
      * @brief operator <=
+     *
      * @param rhs the other Angle
+     *
      * @return if smaller than or equal or not
      */
     bool operator<=(const Angle& rhs) const
@@ -117,8 +141,11 @@ public:
 
     /** Greater than operator checking wether this Angle's value
      * is greater than the other Angle's value.
+     *
      * @brief operator ==
+     *
      * @param rhs the other Angle
+     *
      * @return if greater than or not
      */
     bool operator>(const Angle& rhs) const
@@ -128,8 +155,11 @@ public:
 
     /** Greater than or equal to operator checking wether this Angle's
      * value is smaller than or equal to the other Angle's value.
+     *
      * @brief operator >=
+     *
      * @param rhs the other Angle
+     *
      * @return if greater than or equal or not
      */
     bool operator>=(const Angle& rhs) const
@@ -140,8 +170,11 @@ public:
     /** Addition assignment operator increasing this Angle's value by
      * the other Angle's value. If necessary, the value is corrected
      * to be consistent.
+     *
      * @brief operator +=
+     *
      * @param rhs the other Angle
+     *
      * @return a reference to this angle
      */
     Angle& operator+=(const Angle& rhs)
@@ -153,9 +186,13 @@ public:
 
     /** Friend addition operator returning an Angle equal to the return of rhs += lhs.
      * It operates on a copy of lhs so that the original object is not changed.
+     *
      * @brief operator +
+     *
      * @param lhs the left operand Angle
+     *
      * @param rhs the right operand Angle
+     *
      * @return a new Angle equal to lhs+=rhs
      */
     friend Angle operator+(Angle lhs, const Angle& rhs)
@@ -167,8 +204,11 @@ public:
     /** Subtraction assignment operator decreasing this Angle's value by
      * the other Angle's value. If necessary, the value is corrected
      * to be consistent.
+     *
      * @brief operator -=
+     *
      * @param rhs the other angle
+     *
      * @return a reference to this angle
      */
     Angle& operator-=(const Angle& rhs)
@@ -181,8 +221,10 @@ public:
     /** Friend addition operator returning an Angle equal to the return of rhs -= lhs.
      * It operates on a copy of lhs so that the original object is not changed.
      * @brief operator -
+     *
      * @param lhs the left operand Angle
      * @param rhs the right operand Angle
+     *
      * @return a new Angle equal to lhs-=rhs
      */
     friend Angle operator-(Angle lhs, const Angle& rhs)
@@ -193,8 +235,11 @@ public:
 
     /** Multiplication assignment operator multiplying this Angle's value with the given
      * double value. If necessary, the value is corrected to be consistent.
+     *
      * @brief operator *=
+     *
      * @param rhs the factor
+     *
      * @return a reference to this angle
      */
     Angle& operator*=(const double& rhs)
@@ -206,9 +251,12 @@ public:
 
     /** Friend multiplication operator returning an Angle equal to the return of rhs *= lhs.
      * It operates on a copy of lhs so that the original object is not changed.
+     *
      * @brief operator *
+     *
      * @param lhs the Angle to multiply
      * @param rhs the factor
+     *
      * @return a new Angle equal to lhs*=rhs
      */
     friend Angle operator*(Angle lhs, const double& rhs)
@@ -219,8 +267,11 @@ public:
 
     /** Division assignment operator divides this Angle's value by the given
      * double value. If necessary, the value is corrected to be consistent.
+     *
      * @brief operator /=
+     *
      * @param rhs the dividend
+     *
      * @return a reference to this angle
      */
     Angle& operator/=(const double& rhs)
@@ -232,9 +283,12 @@ public:
 
     /** Friend division operator returning an Angle equal to the return of rhs /= lhs.
      * It operates on a copy of lhs so that the original object is not changed.
+     *
      * @brief operator /=
+     *
      * @param lhs the Angle to divide
      * @param rhs the dividend
+     *
      * @return a new Angle equal to lhs/=rhs
      */
     friend Angle operator/(Angle lhs, const double& rhs)
@@ -245,10 +299,13 @@ public:
 
     /** Returns an Angle that is (1-p) percent of a1 and p percent
      * of a2. To be consistent, p should be in [0,1].
+     *
      * @brief interpolate
+     *
      * @param a1 the first angle
      * @param a2 the second angle
      * @param p the percentage
+     *
      * @return the interpolated Angle
      */
     static Angle interpolate(const Angle& a1, const Angle& a2, double p)
@@ -260,8 +317,10 @@ public:
 
     /** Returns the Angle in the center of two given Angles.
      * @brief center
+     *
      * @param a1 the first Angle
      * @param a2 the second Angle
+     *
      * @return the centered Angle
      */
     static Angle center(const Angle& a1, const Angle& a2)
@@ -285,13 +344,16 @@ private:
 };
 
 /** Polar represents a tupel from the R² in polar coordinate form.
+ *
  * @brief The Polar class
  */
 class Polar
 {
 public:
     /** Creates a Polar coordinate from a given radius and angle.
+     *
      * @brief Polar
+     *
      * @param r the radius
      * @param phi the angle
      */
@@ -301,8 +363,11 @@ public:
     }
 
     /** Equal to operator checking for equality of radius and angle.
+     *
      * @brief operator ==
+     *
      * @param rhs the other Polar
+     *
      * @return if equal or not
      */
     bool operator==(const Polar& rhs) const
@@ -311,7 +376,9 @@ public:
     }
 
     /** Access function for this Polar's radius as readonly.
+     *
      * @brief r
+     *
      * @return a constant reference to this Polar's radius
      */
     const double& r() const
@@ -320,7 +387,9 @@ public:
     }
 
     /** Access function for this Polar's radius.
+     *
      * @brief r
+     *
      * @return a reference to this Polar's radius
      */
     double& r()
@@ -329,7 +398,9 @@ public:
     }
 
     /** Access function for this Polar's angle readonly.
+     *
      * @brief phi
+     *
      * @return a constant reference to the Angle
      */
     const Angle& phi() const
@@ -338,7 +409,9 @@ public:
     }
 
     /** Access function for this Polar's angle.
+     *
      * @brief phi
+     *
      * @return a reference to the Angle
      */
     Angle& phi()
@@ -348,10 +421,13 @@ public:
 
     /** Returns an Polar whose radius and Angle are (1-p) percent of p1's
      * and p percent of p2's radius and Angle. To be consistent, p should be in [0,1].
+     *
      * @brief interpolate
+     *
      * @param p1 the first Polar
      * @param p2 the second Polar
      * @param p the percentage
+     *
      * @return the interpolated Polar
      */
     static Polar interpolate(const Polar& p1, const Polar& p2, double p)
@@ -362,9 +438,12 @@ public:
     }
 
     /** Returns a Polar centered between two given Polars.
+     *
      * @brief center
+     *
      * @param p1 the first Polar
      * @param p2 the second Polar
+     *
      * @return the centered Polar
      */
     static Polar center(const Polar& p1, const Polar& p2)
@@ -378,14 +457,18 @@ private:
     Angle _phi;
 };
 
+
 /** Cartesian represents a tupel from the R² as cartesian coordinate.
+ *
  * @brief The Cartesian class
  */
 class Cartesian
 {
 public:
     /** Creates a cartesian coordinate from given x and y value.
+     *
      * @brief Cartesian
+     *
      * @param x the x value
      * @param y the y value
      */
@@ -395,8 +478,11 @@ public:
     }
 
     /** Equal to operator checking for equality of x and y.
+     *
      * @brief operator ==
+     *
      * @param rhs the other Cartesian
+     *
      * @return if equal or not
      */
     bool operator==(const Cartesian& rhs) const
@@ -405,7 +491,9 @@ public:
     }
 
     /** Access function for this Cartesian's x value as readonly.
+     *
      * @brief x
+     *
      * @return a constant reference to this Cartesians x value
      */
     const double& x() const
@@ -414,7 +502,9 @@ public:
     }
 
     /** Access function for this Cartesian's x value.
+     *
      * @brief x
+     *
      * @return a reference to this Cartesians x value
      */
     double& x()
@@ -423,7 +513,9 @@ public:
     }
 
     /** Access function for this Cartesian's y value as readonly.
+     *
      * @brief y
+     *
      * @return a constant reference to this Cartesians y value
      */
     const double& y() const
@@ -432,7 +524,9 @@ public:
     }
 
     /** Access function for this Cartesian's y value.
+     *
      * @brief y
+     *
      * @return a reference to this Cartesians y value
      */
     double& y()
@@ -442,10 +536,13 @@ public:
 
     /** Returns an Cartesian whose radius and Angle are (1-p) percent of p1's
      * and p percent of p2's radius and Angle. To be consistent, p should be in [0,1].
+     *
      * @brief interpolate
+     *
      * @param p1 the first Cartesian
      * @param p2 the second Cartesian
      * @param p the percentage
+     *
      * @return the interpolated Cartesian
      */
     static Cartesian interpolate(const Cartesian& p1, const Cartesian& p2, double p)
@@ -455,9 +552,12 @@ public:
     }
 
     /** Returns a Cartesian centered between two given Cartesian.
+     *
      * @brief center
+     *
      * @param p1 the first Cartesian
      * @param p2 the second Cartesian
+     *
      * @return the centered Cartesian
      */
     static Cartesian center(const Cartesian& p1, const Cartesian& p2)
@@ -469,28 +569,34 @@ private:
     double _x, _y;
 };
 
-/** PolarCartesian simulates a fixed width/height coordinate system.
+
+/** CoordinateConverter simulates a fixed width/height coordinate system.
  * It can convert polar and cartesian coordinates.
+ *
  * @brief The PolarCartesian class
  */
-class PolarCartesian
+class CoordinateConverter
 {
 public:
     /** Creates a new coordinate system with given width and height.
      * The middle coordinate is (width / 2, height / 2).
+     *
      * @brief PolarCartesian
+     *
      * @param width the coordinate system width
      * @param height the coordinate system system
      */
-    PolarCartesian(size_t width, size_t height)
+    CoordinateConverter(size_t width, size_t height)
     : width { width }, height { height }, center_x { width / 2.0 }, center_y { height / 2.0 }
     {
     }
 
-    virtual ~PolarCartesian() {}
+    virtual ~CoordinateConverter() {}
 
-    /** Converts a cartesian coordinate to a polar coordinate.
-     * @brief convert
+    /** Converts a Cartesian coordinate to a Polar coordinate.
+     *
+     * @brief convert Cartesian to Polar
+     *
      * @param from the Cartesian to convert
      * @param to the Polar to store
      */
@@ -502,8 +608,10 @@ public:
             to.phi() = std::atan2(y, x);
     }
 
-    /** Converts a polar coordinate to a cartesian coordinate.
-     * @brief convert
+    /** Converts a Polar coordinate to a Cartesian coordinate.
+     *
+     * @brief convert Polar to Cartesian
+     *
      * @param from the Polar to convert
      * @param to the Polar to store
      */
@@ -517,7 +625,9 @@ public:
     }
 
     /** Returns the center as cartesian coordinate.
+     *
      * @brief center
+     *
      * @return the center coordinate
      */
     Cartesian center() const

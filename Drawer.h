@@ -311,7 +311,7 @@ protected:
 
 protected:
     /** Polar-Cartesian converting */
-    const PolarCartesian 	_pc;
+    const CoordinateConverter 	_pc;
 };
 
 
