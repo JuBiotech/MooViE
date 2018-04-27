@@ -50,13 +50,13 @@ CairoDrawer::TextAlignment::TextAlignment(double ratio)
 	}
 }
 
-CairoDrawer::CairoDrawer(const std::string & fpath, int width, int height)
+CairoDrawer::CairoDrawer(const std::string& fpath, int width, int height)
 : Drawer(width, height)
 {
 	set_surface(fpath, width, height);
 }
 
-void CairoDrawer::draw_coord_grid(const CodomainGrid & grid)
+void CairoDrawer::draw_coord_grid(const CodomainGrid& grid)
 {
 	_cr->set_identity_matrix();
 
@@ -157,7 +157,7 @@ void CairoDrawer::draw_coord_grid(const CodomainGrid & grid)
 	}
 }
 
-void CairoDrawer::draw_var_axis(const DomainAxis & axis)
+void CairoDrawer::draw_var_axis(const DomainAxis& axis)
 {
 	_cr->set_identity_matrix();
 
@@ -238,7 +238,7 @@ void CairoDrawer::draw_var_axis(const DomainAxis & axis)
 	draw_histogram(axis.get_histogram(), radius_histogram, axis.get_start(), axis.get_end());
 }
 
-void CairoDrawer::draw_data_link(const RelationElement & link)
+void CairoDrawer::draw_data_link(const RelationElement& link)
 {
 	// Calculate target from connector coordinate
 	std::size_t connector_pos = RelationElement::num_inputs;
@@ -296,7 +296,7 @@ void CairoDrawer::draw_data_link(const RelationElement & link)
 	}
 }
 
-void CairoDrawer::change_surface(const std::string & fpath, int width, int height)
+void CairoDrawer::change_surface(const std::string& fpath, int width, int height)
 {
 	finish();
 	set_surface(fpath, width, height);
@@ -309,8 +309,8 @@ void CairoDrawer::finish()
 	_cr->show_page();
 }
 
-void CairoDrawer::draw_histogram(const DomainAxis::Histogram & histogram,
-			double radius, const Angle & start, const Angle & end)
+void CairoDrawer::draw_histogram(const DomainAxis::Histogram& histogram,
+			double radius, const Angle& start, const Angle& end)
 {
 	_cr->set_identity_matrix();
 
@@ -406,8 +406,8 @@ void CairoDrawer::draw_histogram(const DomainAxis::Histogram & histogram,
 	_cr->stroke();
 }
 
-void CairoDrawer::draw_link(const Polar & origin1, const Polar & origin2,
-		const Polar & target1, const Polar & target2,
+void CairoDrawer::draw_link(const Polar& origin1, const Polar& origin2,
+		const Polar& target1, const Polar& target2,
 		const DrawerProperties<>& prop)
 {
 	_cr->set_identity_matrix();
@@ -420,10 +420,10 @@ void CairoDrawer::draw_link(const Polar & origin1, const Polar & origin2,
 	_pc.convert(target2, target2_c);
 
 	// Calculate control points for Bezier curve
-	Cartesian CTRL_ORIG1 = create_control_point(origin1);
-	Cartesian CTRL_ORIG2 = create_control_point(origin2);
-	Cartesian CTRL_TARG1 = create_control_point(target1);
-	Cartesian CTRL_TARG2 = create_control_point(target2);
+	Cartesian CTRL_ORIG1 = create_link_control_point(origin1);
+	Cartesian CTRL_ORIG2 = create_link_control_point(origin2);
+	Cartesian CTRL_TARG1 = create_link_control_point(target1);
+	Cartesian CTRL_TARG2 = create_link_control_point(target2);
 
 	_cr->begin_new_path();
 	_cr->move_to(origin1_c.x(), origin1_c.y());
@@ -445,8 +445,8 @@ void CairoDrawer::draw_link(const Polar & origin1, const Polar & origin2,
 	_cr->stroke();
 }
 
-void CairoDrawer::draw_connector(const Polar & from, const Polar & to,
-		const DrawerProperties<> & prop)
+void CairoDrawer::draw_connector(const Polar& from, const Polar& to,
+		const DrawerProperties<>& prop)
 {
 	_cr->set_identity_matrix();
   	_cr->begin_new_path();
@@ -526,8 +526,8 @@ void CairoDrawer::draw_connector(const Polar & from, const Polar & to,
 }
 
 void CairoDrawer::draw_segment_axis(double inner_radius, double thickness,
-		const Angle & begin, const Angle & end,
-		const DrawerProperties<std::array<Color, 10>> & prop, Direction dir)
+		const Angle& start, const Angle& end,
+		const DrawerProperties<std::array<Color, 10>>& prop, Direction dir)
 {
 	_cr->set_identity_matrix();
 
@@ -535,19 +535,19 @@ void CairoDrawer::draw_segment_axis(double inner_radius, double thickness,
 	const static std::size_t NUM_SPLITS = 10;
 
 	// Calculate segment size
-	double segment_size = angle_helper::rad_dist(begin.get(), end.get()) / NUM_SPLITS;
+	double segment_size = angle_helper::rad_dist(start.get(), end.get()) / NUM_SPLITS;
 
 	// Draw segments
 	for (size_t i = 0; i < NUM_SPLITS; ++i)
 	{
 		DrawerProperties<> inner_prop(prop.line_width, prop.line_color, prop.fill_color.at(i));
-		draw_ring_segment(inner_radius, thickness, begin + segment_size * i,
-				begin + segment_size * (i + 1), inner_prop, dir);
+		draw_ring_segment(inner_radius, thickness, start + segment_size * i,
+				start + segment_size * (i + 1), inner_prop, dir);
 	}
 }
 
-void CairoDrawer::draw_coord_point(const Polar & coord, const Angle & width,
-		double height, const DrawerProperties<> & prop)
+void CairoDrawer::draw_coord_point(const Polar& coord, const Angle& width,
+		double height, const DrawerProperties<>& prop)
 {
 	_cr->set_identity_matrix();
 
@@ -639,7 +639,7 @@ void CairoDrawer::draw_connector_segment(double begin_radius, double begin_angle
 }
 
 void CairoDrawer::draw_ring_segment(double inner_radius, double thickness,
-		const Angle & start, const Angle & end, const DrawerProperties<> & prop,
+		const Angle& start, const Angle& end, const DrawerProperties<>& prop,
 		Direction dir)
 {
 	_cr->set_identity_matrix();
@@ -672,7 +672,7 @@ void CairoDrawer::draw_ring_segment(double inner_radius, double thickness,
 	_cr->stroke();
 }
 
-void CairoDrawer::draw_arrow(const Polar & start, const DrawerProperties<> & prop)
+void CairoDrawer::draw_arrow(const Polar& start, const DrawerProperties<>& prop)
 {
 	_cr->set_identity_matrix();
 	_cr->begin_new_path();
@@ -713,7 +713,7 @@ void CairoDrawer::draw_arrow(const Polar & start, const DrawerProperties<> & pro
 	_cr->stroke();
 }
 
-void CairoDrawer::draw_arc(double radius, const Angle & start, const Angle & end,
+void CairoDrawer::draw_arc(double radius, const Angle& start, const Angle& end,
 		Direction dir)
 {
 	_cr->set_identity_matrix();
@@ -767,8 +767,8 @@ void CairoDrawer::draw_line(const Polar& from, const Polar& to,
 
 }
 
-void CairoDrawer::draw_text_parallel(const Label& label, const Polar & start,
-		const TextAlignment & alignment)
+void CairoDrawer::draw_text_parallel(const Label& label, const Polar& start,
+		const TextAlignment& alignment)
 {
 	_cr->set_identity_matrix();
 
@@ -796,7 +796,7 @@ void CairoDrawer::draw_text_parallel(const Label& label, const Polar & start,
 	_cr->show_text(label.get_text());
 }
 
-void CairoDrawer::draw_text_orthogonal(const Label & label, const Polar & start,
+void CairoDrawer::draw_text_orthogonal(const Label& label, const Polar& start,
 		const TextAlignment & alignment)
 {
 	_cr->set_identity_matrix();
@@ -821,7 +821,7 @@ void CairoDrawer::draw_text_orthogonal(const Label & label, const Polar & start,
 	_cr->show_text(label.get_text());
 }
 
-void CairoDrawer::set_font_face(const Label & label)
+void CairoDrawer::set_font_face(const Label& label)
 {
 	const TextProperties & prop = label.get_properties();
 
@@ -841,7 +841,7 @@ void CairoDrawer::set_font_face(const Label & label)
 	);
 }
 
-Cairo::TextExtents CairoDrawer::get_text_extents(const Label & label) const
+Cairo::TextExtents CairoDrawer::get_text_extents(const Label& label) const
 {
 	// Calculate the width and height of the textbox
 	Cairo::TextExtents t_exts;
@@ -851,7 +851,7 @@ Cairo::TextExtents CairoDrawer::get_text_extents(const Label & label) const
 	return t_exts;
 }
 
-void CairoDrawer::set_surface(const std::string & fpath, int width, int height)
+void CairoDrawer::set_surface(const std::string& fpath, int width, int height)
 {
 	const Cairo::RefPtr<Cairo::Surface> ptr = Cairo::SvgSurface::create(fpath, width, height);
 	_cr = Cairo::Context::create(ptr);

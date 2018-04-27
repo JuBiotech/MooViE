@@ -3,12 +3,28 @@
 
 #include "RelationElement.h"
 
-/** An abstract Drawer
+/** An abstract Drawer class that can be used to draw
+ * MooViE elements. Drawer is supposed to cover the strategy that is used to
+ * actually draw an image with a MooViE scene. It provides the implementation
+ * with a CoordinateConverter, TextAlignment wrapper and basic calculation functions
+ * for points.
  *
+ * @brief an abstract MooViE Drawer
+ *
+ * @author stratmann
+ * @date 27.04.2018
  */
 class Drawer
 {
 public:
+	/* Constant affecting the distance of the control points of a link Bezier curve */
+	static constexpr double LINK_CONTROL_STRENGTH = 100;
+
+	/** TextAlignment represents the alignment of MooViE Labels. It can be
+	 * used for both horizontal and vertical alignment.
+	 *
+	 * @brief an text alignment representation
+	 */
 	struct TextAlignment
 	{
 		const static TextAlignment LEFT, HALF_LEFT, CENTERED, HALF_RIGHT, RIGHT;
@@ -158,16 +174,24 @@ protected:
 	 * @param prop the CairoDrawer properties
 	 * @param dir the direction
 	 */
-	virtual void draw_ring_segment(double radius, double thickness, const Angle& begin,
-			const Angle & end, const DrawerProperties<>& prop, Direction dir) = 0;
+	virtual void draw_ring_segment(double radius, double thickness,
+			const Angle& start, const Angle& end, const DrawerProperties<>& prop,
+			Direction dir) = 0;
 
-	/** Draws a Bezier curve from (begin_radius, begin_angle) to (end_radius, end_angle) which
-	 *
+	/** Draws a Bezier curve from Polar(start_radius, start_angle) to
+	 * Polar(end_radius, end_angle) which approximately behaves like Archimedean spiral.
+	 * If the smaller difference angle between start_angle and end_angle is bigger than
+	 * PI, the spiral will be approximated by two Bezier curves.
 	 *
 	 * @brief draws a connector Bezier curve
 	 *
+	 * @param start_radius the radius of the starting point
+	 * @param start_angle the angle of the starting point
+	 * @param end_radius the radius of the end point
+	 * @param end_angle the angle of the end point
+	 * @param prop the DrawerProperties for the segment
 	 */
-	virtual void draw_connector_segment(double begin_radius, double begin_angle,
+	virtual void draw_connector_segment(double start_radius, double start_angle,
 			double end_radius, double end_angle,
 			const DrawerProperties<>& prop) = 0;
 
@@ -245,7 +269,7 @@ protected:
 	 * @param from the Polar coordinate to start the connector from
 	 * @param from the Polar coordinate to draw the connector to
 	 *
-	 * @return the modified Connector start coordinate
+	 * @return the modified connector start coordinate
 	 */
 	inline Polar get_connector_start(const Polar& from, const Polar& to)
 	{
@@ -259,22 +283,25 @@ protected:
 	 * @param from the Polar coordinate to start the connector from
 	 * @param from the Polar coordinate to draw the connector to
 	 *
-	 * @return the modified Connector end coordinate
+	 * @return the modified connector end coordinate
 	 */
 	inline Polar get_connector_end(const Polar& from, const Polar& to)
 	{
 		return Polar(to.r() - 0.1 * (to.r() - from.r()), to.phi());
 	}
 
-	/** ???
-	 * @brief createLinkControlPoint
-	 * @param point
-	 * @return
+	/** Creates a control point for a Bezier curve approximating a link.
+	 *
+	 * @brief creates link control point
+	 *
+	 * @param point coordinate to which the control point will be created
+	 *
+	 * @return the control point
 	 */
-	inline Cartesian create_control_point(const Polar& point) const
+	inline Cartesian create_link_control_point(const Polar& point) const
 	{
 		Polar control(point);
-		control.r() -= _link_control_strength;
+		control.r() -= LINK_CONTROL_STRENGTH;
 
 		Cartesian control_c;
 		_pc.convert(control, control_c);
@@ -284,11 +311,7 @@ protected:
 
 protected:
     /** Polar-Cartesian converting */
-    const PolarCartesian 				_pc;
-
-    /** ??? */
-    double 								_link_control_strength 	= 100.0;
-
+    const PolarCartesian 	_pc;
 };
 
 
