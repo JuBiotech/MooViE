@@ -19,28 +19,8 @@
 /**
  *
  */
-class Configuration {
-public:
-	static const double RADIAL_TEXT_FACTOR;
-
-	static const double COORDGRID_ADJUSTMENT;
-	static const double COORDPOINT_ANGLE;
-	static const double COORDGRID_DESCRIPTION_ANGLE;
-
-	static const double END_RADIUS_MAJOR_FACTOR;
-	static const double END_RADIUS_MINOR_FACTOR;
-	static const double RADIUS_TICK_LABEL_FACTOR;
-
-	static const double DATA_LINK_LINE_WIDTH;
-	static const double CONNECTOR_ARROW_HEIGHT;
-
-	static const double RADIUS_LABEL_DELTA;
-	static const double RADIUS_HISTOGRAM_DELTA;
-	static const double CONNECTOR_DELTA;
-	static const double TEXT_DELTA;
-	static const double ANGLE_DELTA_SMALL;
-	static const double ANGLE_DELTA_LARGE;
-	static const double RADIUS_DELTA;
+class Configuration
+{
 private:
 	static std::shared_ptr<Configuration> _instance;
 public:

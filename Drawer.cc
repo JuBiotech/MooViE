@@ -10,6 +10,27 @@
 #include <functional>
 #include <cmath>
 
+const double Drawer::RADIAL_TEXT_FACTOR = 0.3;
+
+const double Drawer::COORDGRID_ADJUSTMENT = 0.5;
+const double Drawer::COORDPOINT_ANGLE = 0.005;
+const double Drawer::COORDGRID_DESCRIPTION_ANGLE = 0.1;
+
+const double Drawer::END_RADIUS_MAJOR_FACTOR = 0.25;
+const double Drawer::END_RADIUS_MINOR_FACTOR = 0.125;
+const double Drawer::RADIUS_TICK_LABEL_FACTOR = 0.75;
+
+const double Drawer::DATA_LINK_LINE_WIDTH = 0.1;
+const double Drawer::CONNECTOR_ARROW_HEIGHT = 3;
+
+const double Drawer::RADIUS_LABEL_DELTA = 5;
+const double Drawer::RADIUS_HISTOGRAM_DELTA = 10;
+const double Drawer::CONNECTOR_DELTA = 10;
+const double Drawer::TEXT_DELTA = 0.01;
+const double Drawer::ANGLE_DELTA_SMALL = 0.001;
+const double Drawer::ANGLE_DELTA_LARGE = 0.1;
+const double Drawer::RADIUS_DELTA = 10;
+
 const Drawer::TextAlignment Drawer::TextAlignment::LEFT(1),
 							Drawer::TextAlignment::HALF_LEFT(0.75),
 							Drawer::TextAlignment::CENTERED(0.5),
@@ -66,7 +87,7 @@ void Drawer::draw_coord_grid(const CoordGrid & grid)
 	}
 
 	// Adjusted difference between the radial lines of the CoordGrid (outputs)
-	double y_dist = grid.get_height() / (grid.get_num_outputs() - Configuration::COORDGRID_ADJUSTMENT);
+	double y_dist = grid.get_height() / (grid.get_num_outputs() - COORDGRID_ADJUSTMENT);
 
 	const std::vector<Ticks> ticks = grid.get_ticks();
 
@@ -74,17 +95,17 @@ void Drawer::draw_coord_grid(const CoordGrid & grid)
 	static TextProperties name_prop("Liberation Serif", 6, Color::BLACK, true, false);
 	draw_text_parallel(
 	    Label(grid.get_var(0).name, name_prop),
-	    Polar(min_radius, Configuration::COORDGRID_DESCRIPTION_ANGLE),
+	    Polar(min_radius, COORDGRID_DESCRIPTION_ANGLE),
 		TextAlignment::RIGHT
 	);
 	draw_text_orthogonal(
-	    Label(std::to_string(ticks[0].extreme_vals().second), Configuration::get_instance().get_tick_label()),
-	    Polar(min_radius, grid.get_start() - Configuration::TEXT_DELTA),
+	    Label(std::to_string(ticks[0].get_extremes().second), Configuration::get_instance().get_tick_label()),
+	    Polar(min_radius, grid.get_start() - TEXT_DELTA),
 		TextAlignment::RIGHT
 	);
 	draw_text_orthogonal(
-	    Label(std::to_string(ticks[0].extreme_vals().first), Configuration::get_instance().get_tick_label()),
-	    Polar(min_radius, grid.get_end() + Configuration::TEXT_DELTA),
+	    Label(std::to_string(ticks[0].get_extremes().first), Configuration::get_instance().get_tick_label()),
+	    Polar(min_radius, grid.get_end() + TEXT_DELTA),
 		TextAlignment::LEFT
 	);
 
@@ -94,17 +115,17 @@ void Drawer::draw_coord_grid(const CoordGrid & grid)
 		// Draw the description of the i-th output
 		draw_text_parallel(
 		    Label(grid.get_var(i).name, name_prop),
-		    Polar(min_radius + i * y_dist, Configuration::COORDGRID_DESCRIPTION_ANGLE),
+		    Polar(min_radius + i * y_dist, COORDGRID_DESCRIPTION_ANGLE),
 			TextAlignment::RIGHT
 		);
 		draw_text_orthogonal(
-		    Label(std::to_string(ticks[i].extreme_vals().second), Configuration::get_instance().get_tick_label()),
-		    Polar(min_radius + i * y_dist, grid.get_start() - Configuration::TEXT_DELTA),
+		    Label(std::to_string(ticks[i].get_extremes().second), Configuration::get_instance().get_tick_label()),
+		    Polar(min_radius + i * y_dist, grid.get_start() - TEXT_DELTA),
 			TextAlignment::RIGHT
 		);
 		draw_text_orthogonal(
-		    Label(std::to_string(ticks[0].extreme_vals().first), Configuration::get_instance().get_tick_label()),
-		    Polar(min_radius + i * y_dist, grid.get_end() + Configuration::TEXT_DELTA),
+		    Label(std::to_string(ticks[0].get_extremes().first), Configuration::get_instance().get_tick_label()),
+		    Polar(min_radius + i * y_dist, grid.get_end() + TEXT_DELTA),
 			TextAlignment::LEFT
 		);
 
@@ -142,14 +163,14 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 
 	// Calculate radii for axis and ticks
 	double start_radius = axis.get_radius() + axis.get_height();
-	double end_radius_major = start_radius + Configuration::END_RADIUS_MAJOR_FACTOR * axis.get_height();
-	double end_radius_minor = start_radius + Configuration::END_RADIUS_MINOR_FACTOR * axis.get_height();
+	double end_radius_major = start_radius + END_RADIUS_MAJOR_FACTOR * axis.get_height();
+	double end_radius_minor = start_radius + END_RADIUS_MINOR_FACTOR * axis.get_height();
 
 	// Calculate radii for labels
 	std::size_t max_tick_label_pos = 0;
 	for (std::size_t i = 1; i < tick_labels.size(); ++i)
 	{
-		if (tick_labels[i].text().length() > tick_labels[max_tick_label_pos].text().length())
+		if (tick_labels[i].get_text().length() > tick_labels[max_tick_label_pos].get_text().length())
 		{
 			max_tick_label_pos = i;
 		}
@@ -159,9 +180,9 @@ void Drawer::draw_var_axis(const VarAxis & axis)
 	set_font_face(axis.get_label());
 	const Cairo::TextExtents & label_ext = get_text_extents(axis.get_label());
 
-	double radius_tick_label = end_radius_major + Configuration::RADIUS_TICK_LABEL_FACTOR * axis.get_height();
-	double radius_label = radius_tick_label + tick_ext.width + Configuration::RADIUS_LABEL_DELTA;
-	double radius_histogram = radius_label + label_ext.height + Configuration::RADIUS_HISTOGRAM_DELTA;
+	double radius_tick_label = end_radius_major + RADIUS_TICK_LABEL_FACTOR * axis.get_height();
+	double radius_label = radius_tick_label + tick_ext.width + RADIUS_LABEL_DELTA;
+	double radius_histogram = radius_label + label_ext.height + RADIUS_HISTOGRAM_DELTA;
 
 	// Calculate how the VarAxis' ticks is separated into thin and thick lines (ticks)
 	const std::size_t NUM_SEGMENTS = axis.get_ticks().get_major_ticks() * axis.get_ticks().get_minor_ticks();
@@ -209,24 +230,24 @@ void Drawer::draw_data_link(const DataLink & link)
 	const DataPoint from = link[connector_pos];
 
 	Polar target1(
-				from.coord.r() - Configuration::CONNECTOR_ARROW_HEIGHT,
-				from.coord.phi() - Configuration::ANGLE_DELTA_SMALL
+				from.coord.r() - CONNECTOR_ARROW_HEIGHT,
+				from.coord.phi() - ANGLE_DELTA_SMALL
 		  ),
 		  target2(
-				from.coord.r() - Configuration::CONNECTOR_ARROW_HEIGHT,
-				from.coord.phi() + Configuration::ANGLE_DELTA_SMALL
+				from.coord.r() - CONNECTOR_ARROW_HEIGHT,
+				from.coord.phi() + ANGLE_DELTA_SMALL
 		  );
 
 	// Draw links
 	for (std::size_t i = 0; i < DataLink::num_inputs; ++i)
 	{
 		Polar origin1(
-				link[i].coord.r() - Configuration::RADIUS_DELTA,
-				link[i].coord.phi() - Configuration::ANGLE_DELTA_SMALL
+				link[i].coord.r() - RADIUS_DELTA,
+				link[i].coord.phi() - ANGLE_DELTA_SMALL
 		),
 		origin2(
-				link[i].coord.r() - Configuration::RADIUS_DELTA,
-				link[i].coord.phi() + Configuration::ANGLE_DELTA_SMALL
+				link[i].coord.r() - RADIUS_DELTA,
+				link[i].coord.phi() + ANGLE_DELTA_SMALL
 		);
 		draw_link(origin1, origin2, target1, target2, link[i].prop);
 	}
@@ -253,7 +274,7 @@ void Drawer::draw_data_link(const DataLink & link)
 		);
 		draw_coord_point(
 				to,
-				Configuration::COORDPOINT_ANGLE,
+				COORDPOINT_ANGLE,
 				(to.r() - from.r()) * 0.2,
 				link[i].prop
 		);
@@ -640,7 +661,7 @@ void Drawer::draw_arrow(const Polar & start, const DrawerProperties<> & prop)
 	_cr->begin_new_path();
 
 	// Only draw arrows with height of 5
-	double height = Configuration::CONNECTOR_ARROW_HEIGHT;
+	double height = CONNECTOR_ARROW_HEIGHT;
 
 	// Calculate arrow coordinates
 	Polar start_help(start.r() - height, start.phi()),
@@ -670,7 +691,7 @@ void Drawer::draw_arrow(const Polar & start, const DrawerProperties<> & prop)
 			prop.line_color.b(),
 			1
 	);
-	_cr->set_line_width(Configuration::DATA_LINK_LINE_WIDTH);
+	_cr->set_line_width(DATA_LINK_LINE_WIDTH);
 	_cr->fill_preserve();
 	_cr->stroke();
 }
@@ -754,7 +775,7 @@ void Drawer::draw_text_parallel(const Label& label, const Polar & start, const T
 	_cr->translate(-alignment.ratio * t_exts.width, (1 - alignment.ratio) * t_exts.height);
 
 	_cr->close_path();
-	_cr->show_text(label.text());
+	_cr->show_text(label.get_text());
 }
 
 void Drawer::draw_text_orthogonal(const Label & label, const Polar & start, const TextAlignment & alignment)
@@ -778,24 +799,24 @@ void Drawer::draw_text_orthogonal(const Label & label, const Polar & start, cons
 	_cr->translate(-alignment.ratio * t_exts.width, (1 - alignment.ratio) * t_exts.height);
 
 	_cr->close_path();
-	_cr->show_text(label.text());
+	_cr->show_text(label.get_text());
 }
 
 void Drawer::set_font_face(const Label & label)
 {
 	// Set font styles
 	Cairo::RefPtr<Cairo::ToyFontFace> font = Cairo::ToyFontFace::create(
-		label.prop().font_name,
-		label.prop().italic ? Cairo::FONT_SLANT_ITALIC : Cairo::FONT_SLANT_NORMAL,
-		label.prop().bold ? Cairo::FONT_WEIGHT_BOLD : Cairo::FONT_WEIGHT_NORMAL
+		label.get_properties().font_name,
+		label.get_properties().italic ? Cairo::FONT_SLANT_ITALIC : Cairo::FONT_SLANT_NORMAL,
+		label.get_properties().bold ? Cairo::FONT_WEIGHT_BOLD : Cairo::FONT_WEIGHT_NORMAL
 	);
 	_cr->set_font_face(font);
-	_cr->set_font_size(label.prop().font_size);
+	_cr->set_font_size(label.get_properties().font_size);
 	_cr->set_source_rgba(
-		label.prop().color.r(),
-		label.prop().color.g(),
-		label.prop().color.b(),
-		label.prop().color.a()
+		label.get_properties().color.r(),
+		label.get_properties().color.g(),
+		label.get_properties().color.b(),
+		label.get_properties().color.a()
 	);
 }
 
@@ -803,7 +824,7 @@ Cairo::TextExtents Drawer::get_text_extents(const Label & label) const
 {
 	// Calculate the width and height of the textbox
 	Cairo::TextExtents t_exts;
-	std::string message { label.text() };
+	std::string message { label.get_text() };
 	_cr->get_text_extents(message, t_exts);
 
 	return t_exts;
