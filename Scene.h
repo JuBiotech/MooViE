@@ -55,9 +55,6 @@ private:
     std::vector<VarAxis> 						_axis;
     /** Data links */
     std::vector<DataLink> 						_links;
-
-    /** Drawer properties for SplitAxis drawing */
-    DrawerProperties<std::array<Color, 10>> 	_split_prop;
 };
 
 #endif /* SCENE_H_ */

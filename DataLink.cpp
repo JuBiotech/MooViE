@@ -29,7 +29,7 @@ DataLinkFactory::DataLinkFactory(
 	for (const Ticks & ticks: grid.get_ticks())
 	{
 		_output_mapper.emplace_back(
-				ticks.extreme_vals(),
+				ticks.get_extremes(),
 				out
 		);
 	}
@@ -37,7 +37,7 @@ DataLinkFactory::DataLinkFactory(
 	for (const VarAxis & elem: axis)
 	{
 		_input_mapper.emplace_back(
-				elem.get_ticks().extreme_vals(),
+				elem.get_ticks().get_extremes(),
 				std::make_pair(elem.get_start().get(), elem.get_end().get())
 		);
 	}

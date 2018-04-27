@@ -10,52 +10,9 @@
 
 #include <cmath>
 #include <cstddef>
-#include <string>
 #include <vector>
 #include <sstream>
-#include <iostream>
-#include "TextProperties.h"
-
-/** A Label is a formatted text that is stored as a text string
- * and a TextProperties object.
- * @brief The Label class
- */
-class Label
-{
-public:
-    /**
-     * @brief Label
-     * @param text
-     * @param prop
-     */
-    Label(const std::string& text, const TextProperties& prop)
-    : _text(text), _prop(prop)
-    {
-    }
-
-    /** Access function for this Label's text.
-     * @brief text
-     * @return a reference to text
-     */
-    const std::string& text() const
-    {
-        return _text;
-    }
-
-    /** Access function for this Label's TextProperties.
-     * @brief prop
-     * @return a reference to prop
-     */
-    const TextProperties& prop() const
-    {
-        return _prop;
-    }
-private:
-    /** The text of this Label */
-    std::string _text;
-    /** The TextProperties of this Label */
-    TextProperties _prop;
-};
+#include "Label.h"
 
 /** Ticks are the .
  * @brief The Ticks class
@@ -85,7 +42,7 @@ public:
      * @brief extreme_vals
      * @return a reference to the extreme values
      */
-    const std::pair<double,double> & extreme_vals() const
+    const std::pair<double,double> & get_extremes() const
     {
         return _extreme_vals;
     }
@@ -98,14 +55,14 @@ public:
     {
         std::vector<Label> label;
         label.reserve(get_major_ticks() + 1);
-        double step = (extreme_vals().second - extreme_vals().first)
+        double step = (get_extremes().second - get_extremes().first)
                         / double(get_major_ticks());
         for (size_t i = 0; i <= _ticks_major; ++i)
         {
-                double val = extreme_vals().first + i * step;
+                double val = get_extremes().first + i * step;
                 std::stringstream ss;
                 ss << val << _label_suffix;
-                label.push_back(Label(ss.str(), _label_prop));
+                label.emplace_back(ss.str(), _label_prop);
         }
         return label;
     }

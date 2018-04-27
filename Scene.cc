@@ -25,10 +25,6 @@ Scene::Scene()
 		  angle_helper::deg_to_rad(Configuration::get_instance().get_output_angle_span() / 2),
 		  Configuration::get_instance().get_output_inner_radius(), Configuration::get_instance().get_grid_size(),
 		  Direction::INCREASING, _set.output_variables()
-  ),
-  _split_prop(
-		  Configuration::get_instance().get_prop_thick().line_width,
-		  Color::BLACK, Color::GLOW_10
   )
 {
 	initialize();
