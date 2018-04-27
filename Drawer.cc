@@ -10,32 +10,45 @@
 #include <functional>
 #include <cmath>
 
-const double Drawer::RADIAL_TEXT_FACTOR = 0.3;
+const double 	Drawer::RADIAL_TEXT_FACTOR = 0.3;
 
-const double Drawer::COORDGRID_ADJUSTMENT = 0.5;
-const double Drawer::COORDPOINT_ANGLE = 0.005;
-const double Drawer::COORDGRID_DESCRIPTION_ANGLE = 0.1;
+const double	Drawer::COORDGRID_ADJUSTMENT = 0.5,
+				Drawer::COORDPOINT_ANGLE = 0.005,
+				Drawer::COORDGRID_DESCRIPTION_ANGLE = 0.1;
 
-const double Drawer::END_RADIUS_MAJOR_FACTOR = 0.25;
-const double Drawer::END_RADIUS_MINOR_FACTOR = 0.125;
-const double Drawer::RADIUS_TICK_LABEL_FACTOR = 0.75;
+const double	Drawer::END_RADIUS_MAJOR_FACTOR = 0.25,
+				Drawer::END_RADIUS_MINOR_FACTOR = 0.125,
+				Drawer::RADIUS_TICK_LABEL_FACTOR = 0.75;
 
-const double Drawer::DATA_LINK_LINE_WIDTH = 0.1;
-const double Drawer::CONNECTOR_ARROW_HEIGHT = 3;
+const double 	Drawer::DATA_LINK_LINE_WIDTH = 0.1,
+				Drawer::CONNECTOR_ARROW_HEIGHT = 3;
 
-const double Drawer::RADIUS_LABEL_DELTA = 5;
-const double Drawer::RADIUS_HISTOGRAM_DELTA = 10;
-const double Drawer::CONNECTOR_DELTA = 10;
-const double Drawer::TEXT_DELTA = 0.01;
-const double Drawer::ANGLE_DELTA_SMALL = 0.001;
-const double Drawer::ANGLE_DELTA_LARGE = 0.1;
-const double Drawer::RADIUS_DELTA = 10;
+const double 	Drawer::RADIUS_LABEL_DELTA = 5,
+				Drawer::RADIUS_HISTOGRAM_DELTA = 10,
+				Drawer::CONNECTOR_DELTA = 10,
+				Drawer::TEXT_DELTA = 0.01,
+				Drawer::ANGLE_DELTA_SMALL = 0.001,
+				Drawer::ANGLE_DELTA_LARGE = 0.1,
+				Drawer::RADIUS_DELTA = 10;
 
 const Drawer::TextAlignment Drawer::TextAlignment::LEFT(1),
 							Drawer::TextAlignment::HALF_LEFT(0.75),
 							Drawer::TextAlignment::CENTERED(0.5),
 							Drawer::TextAlignment::HALF_RIGHT(0.25),
 							Drawer::TextAlignment::RIGHT(0);
+
+Drawer::TextAlignment(double ratio)
+{
+	if (0 > ratio)
+	{
+		ratio = std::abs(ratio);
+	}
+
+	if (ratio > 1)
+	{
+		ratio /= std::floor(std::log10(ratio));
+	}
+}
 
 Drawer::Drawer(const std::string & fpath, int width, int height)
 : _pc(width, height)
@@ -47,9 +60,11 @@ void Drawer::draw_coord_grid(const CoordGrid & grid)
 {
 	_cr->set_identity_matrix();
 
+	const Configuration & conf = Configuration::get_instance();
+
 	// Draw ring with colored segments which are used to color and distinguish the connectors
 	draw_segment_axis(
-			grid.get_radius(), Configuration::get_instance().get_input_thickness(),
+			grid.get_radius(), conf.get_input_thickness(),
 			grid.get_start(), grid.get_end(),
 			DrawerProperties<std::array<Color, 10>>(1, Color::BLACK, Color::GLOW_10),
 			grid.get_direction()
@@ -57,9 +72,9 @@ void Drawer::draw_coord_grid(const CoordGrid & grid)
 
 	// Calculate the inner and outer radius of the CoordGrid
 	double min_radius = grid.get_radius()
-			+ Configuration::get_instance().get_input_thickness();
+			+ conf.get_input_thickness();
 	double max_radius = grid.get_radius()
-			+ Configuration::get_instance().get_input_thickness() + grid.get_height();
+			+ conf.get_input_thickness() + grid.get_height();
 
 	// Radian distance (absolute!) between start and end angle
 	double span = angle_helper::rad_dist(grid.get_start().get(), grid.get_end().get());
@@ -76,13 +91,13 @@ void Drawer::draw_coord_grid(const CoordGrid & grid)
 			draw_line(
 					Polar(min_radius, a),
 					Polar(max_radius, a),
-					Configuration::get_instance().get_prop_thin()
+					conf.get_prop_thin()
 			);
 		else
 			draw_line(
 					Polar(min_radius, a),
 					Polar(max_radius, a),
-					Configuration::get_instance().get_prop_thick()
+					conf.get_prop_thick()
 			);
 	}
 
@@ -99,12 +114,12 @@ void Drawer::draw_coord_grid(const CoordGrid & grid)
 		TextAlignment::RIGHT
 	);
 	draw_text_orthogonal(
-	    Label(std::to_string(ticks[0].get_extremes().second), Configuration::get_instance().get_tick_label()),
+	    Label(std::to_string(ticks[0].get_extremes().second), conf.get_tick_label()),
 	    Polar(min_radius, grid.get_start() - TEXT_DELTA),
 		TextAlignment::RIGHT
 	);
 	draw_text_orthogonal(
-	    Label(std::to_string(ticks[0].get_extremes().first), Configuration::get_instance().get_tick_label()),
+	    Label(std::to_string(ticks[0].get_extremes().first), conf.get_tick_label()),
 	    Polar(min_radius, grid.get_end() + TEXT_DELTA),
 		TextAlignment::LEFT
 	);
@@ -119,12 +134,12 @@ void Drawer::draw_coord_grid(const CoordGrid & grid)
 			TextAlignment::RIGHT
 		);
 		draw_text_orthogonal(
-		    Label(std::to_string(ticks[i].get_extremes().second), Configuration::get_instance().get_tick_label()),
+		    Label(std::to_string(ticks[i].get_extremes().second), conf.get_tick_label()),
 		    Polar(min_radius + i * y_dist, grid.get_start() - TEXT_DELTA),
 			TextAlignment::RIGHT
 		);
 		draw_text_orthogonal(
-		    Label(std::to_string(ticks[0].get_extremes().first), Configuration::get_instance().get_tick_label()),
+		    Label(std::to_string(ticks[0].get_extremes().first), conf.get_tick_label()),
 		    Polar(min_radius + i * y_dist, grid.get_end() + TEXT_DELTA),
 			TextAlignment::LEFT
 		);
@@ -132,12 +147,12 @@ void Drawer::draw_coord_grid(const CoordGrid & grid)
 		_cr->begin_new_path();
 		draw_arc(min_radius + i * y_dist, grid.get_start(), grid.get_end(), Direction::INCREASING);
 		_cr->set_source_rgba(
-			Configuration::get_instance().get_prop_thin().line_color.r(),
-			Configuration::get_instance().get_prop_thin().line_color.g(),
-			Configuration::get_instance().get_prop_thin().line_color.b(),
-			Configuration::get_instance().get_prop_thin().line_color.a()
+			conf.get_prop_thin().line_color.r(),
+			conf.get_prop_thin().line_color.g(),
+			conf.get_prop_thin().line_color.b(),
+			conf.get_prop_thin().line_color.a()
 		 );
-		_cr->set_line_width(Configuration::get_instance().get_prop_thin().line_width);
+		_cr->set_line_width(conf.get_prop_thin().line_width);
 		_cr->stroke();
 	}
 }
@@ -299,23 +314,25 @@ void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
 {
 	_cr->set_identity_matrix();
 
-	const Configuration & config = Configuration::get_instance();
+	const Configuration & conf = Configuration::get_instance();
+
+	// Create properties from Configuration
 	DrawerProperties<> histogram_background(
-			config.get_prop_thin().line_width,
-			config.get_histogram_background(),
-			config.get_histogram_background()
+			conf.get_prop_thin().line_width,
+			conf.get_histogram_background(),
+			conf.get_histogram_background()
 	);
 	DrawerProperties<> histogram_fill(
-			config.get_prop_thin().line_width,
-			config.get_histogram_fill(),
-			config.get_histogram_fill()
+			conf.get_prop_thin().line_width,
+			conf.get_histogram_fill(),
+			conf.get_histogram_fill()
 	);
-	const DrawerProperties<> & prop_thin = config.get_prop_thin();
+	const DrawerProperties<> & prop_thin = conf.get_prop_thin();
 
 	// Draw background
 	draw_ring_segment(
 	    radius,
-	    config.get_histogram_height(),
+	    conf.get_histogram_height(),
 	    start, end,
 	    histogram_background,
 	    Direction::INCREASING
@@ -327,7 +344,7 @@ void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
 	{
 	    _cr->begin_new_path();
 	    draw_arc(
-	    		radius + config.get_histogram_height() * (i / 6.),
+	    		radius + conf.get_histogram_height() * (i / 6.),
 				start, end,
 				Direction::INCREASING
 	    );
@@ -341,7 +358,7 @@ void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
 	{
 		draw_ring_segment(
 				radius,
-				config.get_histogram_height() * histogram.get_section_frequency(i),
+				conf.get_histogram_height() * histogram.get_section_frequency(i),
 				start + (span / histogram.get_num_intervals()) * i,
 				start + (span / histogram.get_num_intervals()) * (i + 1),
 				histogram_fill,
@@ -351,8 +368,8 @@ void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
 	_cr->stroke();
 
 	// Draw the histogram graph outline
-	Cartesian spoint;
-	_pc.convert(Polar(radius, start), spoint);
+	Cartesian start_point;
+	_pc.convert(Polar(radius, start), start_point);
 	_cr->begin_new_path();
 	_cr->set_source_rgba(
 		prop_thin.line_color.r(),
@@ -360,7 +377,7 @@ void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
 		prop_thin.line_color.b(),
 		prop_thin.line_color.a()
 	);
-	_cr->move_to(spoint.x(), spoint.y());
+	_cr->move_to(start_point.x(), start_point.y());
 	for (std::size_t i = 0; i < histogram.get_num_intervals(); ++i)
 	{
 		// Create the lower right and upper left coordinates of the histogram column
@@ -369,7 +386,7 @@ void Drawer::draw_histogram(const VarAxis::Histogram & histogram,
 					start + (span / histogram.get_num_intervals()) * (i + 1)
 				),
 				left_up(
-						radius + config.get_histogram_height() * histogram.get_section_frequency(i),
+						radius + conf.get_histogram_height() * histogram.get_section_frequency(i),
 						start + (span / histogram.get_num_intervals()) * i
 				);
 		Cartesian right_down_c, left_up_c;
@@ -750,7 +767,8 @@ void Drawer::draw_line(const Polar& from, const Polar& to,
 
 }
 
-void Drawer::draw_text_parallel(const Label& label, const Polar & start, const TextAlignment & alignment)
+void Drawer::draw_text_parallel(const Label& label, const Polar & start,
+		const TextAlignment & alignment)
 {
 	_cr->set_identity_matrix();
 
@@ -778,7 +796,8 @@ void Drawer::draw_text_parallel(const Label& label, const Polar & start, const T
 	_cr->show_text(label.get_text());
 }
 
-void Drawer::draw_text_orthogonal(const Label & label, const Polar & start, const TextAlignment & alignment)
+void Drawer::draw_text_orthogonal(const Label & label, const Polar & start,
+		const TextAlignment & alignment)
 {
 	_cr->set_identity_matrix();
 
@@ -804,19 +823,21 @@ void Drawer::draw_text_orthogonal(const Label & label, const Polar & start, cons
 
 void Drawer::set_font_face(const Label & label)
 {
+	const TextProperties & prop = label.get_properties();
+
 	// Set font styles
 	Cairo::RefPtr<Cairo::ToyFontFace> font = Cairo::ToyFontFace::create(
-		label.get_properties().font_name,
-		label.get_properties().italic ? Cairo::FONT_SLANT_ITALIC : Cairo::FONT_SLANT_NORMAL,
-		label.get_properties().bold ? Cairo::FONT_WEIGHT_BOLD : Cairo::FONT_WEIGHT_NORMAL
+		prop.font_name,
+		prop.italic ? Cairo::FONT_SLANT_ITALIC : Cairo::FONT_SLANT_NORMAL,
+		prop.bold ? Cairo::FONT_WEIGHT_BOLD : Cairo::FONT_WEIGHT_NORMAL
 	);
 	_cr->set_font_face(font);
 	_cr->set_font_size(label.get_properties().font_size);
 	_cr->set_source_rgba(
-		label.get_properties().color.r(),
-		label.get_properties().color.g(),
-		label.get_properties().color.b(),
-		label.get_properties().color.a()
+		prop.color.r(),
+		prop.color.g(),
+		prop.color.b(),
+		prop.color.a()
 	);
 }
 

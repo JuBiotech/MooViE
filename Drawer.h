@@ -19,33 +19,31 @@ class Drawer
 private:
 	static const double RADIAL_TEXT_FACTOR;
 
-	static const double COORDGRID_ADJUSTMENT;
-	static const double COORDPOINT_ANGLE;
-	static const double COORDGRID_DESCRIPTION_ANGLE;
+	static const double COORDGRID_ADJUSTMENT,
+						COORDPOINT_ANGLE,
+						COORDGRID_DESCRIPTION_ANGLE;
 
-	static const double END_RADIUS_MAJOR_FACTOR;
-	static const double END_RADIUS_MINOR_FACTOR;
-	static const double RADIUS_TICK_LABEL_FACTOR;
+	static const double END_RADIUS_MAJOR_FACTOR,
+						END_RADIUS_MINOR_FACTOR,
+						RADIUS_TICK_LABEL_FACTOR;
 
-	static const double DATA_LINK_LINE_WIDTH;
-	static const double CONNECTOR_ARROW_HEIGHT;
+	static const double DATA_LINK_LINE_WIDTH,
+						CONNECTOR_ARROW_HEIGHT;
 
-	static const double RADIUS_LABEL_DELTA;
-	static const double RADIUS_HISTOGRAM_DELTA;
-	static const double CONNECTOR_DELTA;
-	static const double TEXT_DELTA;
-	static const double ANGLE_DELTA_SMALL;
-	static const double ANGLE_DELTA_LARGE;
-	static const double RADIUS_DELTA;
+	static const double RADIUS_LABEL_DELTA,
+						RADIUS_HISTOGRAM_DELTA,
+						CONNECTOR_DELTA,
+						TEXT_DELTA,
+						ANGLE_DELTA_SMALL,
+						ANGLE_DELTA_LARGE,
+						RADIUS_DELTA;
 
 public:
 	struct TextAlignment
 	{
 		const static TextAlignment LEFT, HALF_LEFT, CENTERED, HALF_RIGHT, RIGHT;
 		double ratio;
-		TextAlignment(double ratio)
-		: ratio(ratio)
-		{}
+		TextAlignment(double ratio);
 	};
 
     /** Creates a Drawer which draws to a file with the given path on
@@ -199,7 +197,8 @@ private:
 	 * @param label the label to draw
 	 * @param start the coordinate to adjust to
 	 */
-	void draw_text_parallel(const Label & label, const Polar & start, const TextAlignment & alignment = TextAlignment::CENTERED);
+	void draw_text_parallel(const Label & label, const Polar & start,
+			const TextAlignment & alignment = TextAlignment::CENTERED);
 
 	/** Draws the given label orthogonal to the angle of the given
 	 * coordinate's angle.
@@ -207,7 +206,8 @@ private:
 	 * @param label the label to draw
 	 * @param start the coordinate to adjust to
 	 */
-	void draw_text_orthogonal(const Label & label, const Polar & start, const TextAlignment & alignment = TextAlignment::CENTERED);
+	void draw_text_orthogonal(const Label & label, const Polar & start,
+			const TextAlignment & alignment = TextAlignment::CENTERED);
 
 	void set_font_face(const Label & label);
 
