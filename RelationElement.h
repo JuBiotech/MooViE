@@ -1,12 +1,12 @@
 /*
- * DataLink.h
+ * RelationElement.h
  *
  *  Created on: 12.12.2017
  *      Author: IBT\stratmann
  */
 
-#ifndef DATALINK_H_
-#define DATALINK_H_
+#ifndef RELATIONELEMENT_H_
+#define RELATIONELEMENT_H_
 
 #include <vector>
 #include "CodomainGrid.h"
@@ -51,17 +51,17 @@ class RelationElementFactory
 {
 public:
 	RelationElementFactory(std::size_t num_data_rows,
-			const CodomainGrid & grid,
-			const std::vector<DomainAxis> & axis);
-	RelationElement create(const DefDataRow & row) const;
+			const CodomainGrid& grid,
+			const std::vector<DomainAxis>& axis);
+	RelationElement create(const DefDataRow& row) const;
 private:
 	const Color & get_color(double val) const;
 private:
 	double _line_width, _line_alpha, _fill_alpha;
-	const CodomainGrid & _grid;
-	const std::vector<DomainAxis> & _axis;
+	const CodomainGrid& _grid;
+	const std::vector<DomainAxis>& _axis;
 	std::vector<Mapper> _input_mapper,
 						_output_mapper;
 };
 
-#endif /* DATALINK_H_ */
+#endif /* RELATIONELEMENT_H_ */

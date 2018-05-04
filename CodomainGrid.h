@@ -1,12 +1,12 @@
  /*
- * CoordGrid.h
+ * CodomainGrid.h
  *
  *  Created on: 26.07.2017
  *      Author: beyss
  */
 
-#ifndef COORDGRID_H_
-#define COORDGRID_H_
+#ifndef CODOMAINGRID_H_
+#define CODOMAINGRID_H_
 
 #include <cstddef>
 #include <vector>
@@ -52,11 +52,6 @@ public:
 			double radius_, double height_, Direction dir_,
 			const std::vector<DefVar> output_vars);
 
-	const std::vector<DefVar>& get_output_variables() const
-	{
-		return _output_variables;
-	}
-
 	Direction get_direction() const
 	{
 		return _direction;
@@ -72,7 +67,7 @@ public:
 		return _end;
 	}
 
-	void set_end(Angle end)
+	void set_end(const Angle& end)
 	{
 		this->_end = end;
 	}
@@ -132,12 +127,12 @@ public:
 		return _start;
 	}
 
-	void set_start(Angle start)
+	void set_start(const Angle& start)
 	{
 		this->_start = start;
 	}
 
-	const DefVar & get_var(std::size_t num_output) const;
+	const DefVar& get_var(std::size_t num_output) const;
 
 private:
     /** The number of outputs. */
@@ -160,4 +155,4 @@ private:
     std::vector<DefVar> _output_variables;
 };
 
-#endif /* COORDGRID_H_ */
+#endif /* CODOMAINGRID_H_ */

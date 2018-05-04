@@ -1,19 +1,19 @@
 /*
- * VarAxis.h
+ * DomainAxis.h
  *
  *  Created on: 12.12.2017
  *      Author: IBT\stratmann
  */
 
-#ifndef VARAXIS_H_
-#define VARAXIS_H_
+#ifndef DOMAINAXIS_H_
+#define DOMAINAXIS_H_
 
 #include "Scale.h"
 #include "DataSet.h"
 #include "Configuration.h"
 #include "Coordinates.h"
 
-/** A VarAxis is an axis which displays the possible values
+/** A DomainAxis is an axis which displays the possible values
  * of a input variable. It is visualized as a ring segment
  * with a distinct color and has ticks for better readability.
  *
@@ -69,12 +69,12 @@ public:
 	 *
 	 */
 	DomainAxis(DefVar var,
-		const Angle & start, const Angle & end,
+		const Angle& start, const Angle& end,
 		double radius, std::size_t height,
-		const DrawerProperties<> & prop,
-		const TextProperties & text_prop);
+		const DrawerProperties<>& prop,
+		const TextProperties& text_prop);
 
-	const Histogram & get_histogram () const
+	const Histogram& get_histogram () const
 	{
 	      return _histogram;
 	}
@@ -84,7 +84,7 @@ public:
 	      return _end;
 	}
 
-	void set_end (Angle end)
+	void set_end (const Angle& end)
 	{
 	      this->_end = end;
 	}
@@ -99,7 +99,7 @@ public:
 	      this->_height = height;
 	}
 
-	const Label & get_label () const
+	const Label& get_label () const
 	{
 	      return _label;
 	}
@@ -109,12 +109,12 @@ public:
 	      this->_label = label;
 	}
 
-	const DrawerProperties<> & get_prop () const
+	const DrawerProperties<>& get_prop () const
 	{
 	      return _prop;
 	}
 
-	void set_prop (const DrawerProperties<> & prop)
+	void set_prop (const DrawerProperties<>& prop)
 	{
 	      this->_prop = prop;
 	}
@@ -134,7 +134,7 @@ public:
 	      return _start;
 	}
 
-	void set_start (Angle start)
+	void set_start (const Angle& start)
 	{
 	      this->_start = start;
 	}
@@ -144,7 +144,7 @@ public:
 	      return _ticks;
 	}
 
-	void set_ticks (const Scale & ticks)
+	void set_ticks (const Scale& ticks)
 	{
 	      this->_ticks = ticks;
 	}
@@ -154,7 +154,7 @@ public:
 	      return _var;
 	}
 
-	void calculate_histogram(const std::vector<double> & data);
+	void calculate_histogram(const std::vector<double>& data);
 
 private:
 	/* The Variable this VarAxis represents */
@@ -177,4 +177,4 @@ private:
 	DrawerProperties<> 	_prop;
 };
 
-#endif /* VARAXIS_H_ */
+#endif /* DOMAINAXIS_H_ */
