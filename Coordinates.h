@@ -65,9 +65,8 @@ public:
      * @param angle the angle value
      */
     Angle(double angle)
-    : _angle { angle }
+    : _angle { adjust_angle(angle) }
     {
-        wrap();
     }
 
     /** Returns the value of this angle.
@@ -76,7 +75,7 @@ public:
      *
      * @return the angle value
      */
-    double get() const
+    double value() const
     {
         return _angle;
     }
@@ -84,7 +83,7 @@ public:
     /** Assignment operator setting this Angle's value. If necessary,
      * the value is corrected to be consistent.
      *
-     * @brief operator =
+     * @brief this = rhs
      *
      * @param angle
      *
@@ -92,15 +91,14 @@ public:
      */
     double operator=(const double& angle)
     {
-        _angle = angle;
-        wrap();
+        _angle = adjust_angle(angle);
         return _angle;
     }
 
     /** Equal to operator checking wether this Angle's value
      * is equal to the other Angle's value.
      *
-     * @brief operator ==
+     * @brief this == rhs
      *
      * @param rhs the other Angle
      *
@@ -108,13 +106,13 @@ public:
      */
     bool operator==(const Angle& rhs) const
     {
-        return (get() == rhs.get());
+        return (value() == rhs.value());
     }
 
     /** Smaller than operator checking wether this Angle's value
      * is smaller than the other Angle's value.
      *
-     * @brief operator <
+     * @brief this < rhs
      *
      * @param rhs the other Angle
      *
@@ -122,13 +120,13 @@ public:
      */
     bool operator<(const Angle& rhs) const
     {
-    	return this->get() < rhs.get();
+    	return this->value() < rhs.value();
     }
 
     /** Smaller than or equal to operator checking wether this Angle's
      * value is smaller than or equal to the other Angle's value.
      *
-     * @brief operator <=
+     * @brief this <= rhs
      *
      * @param rhs the other Angle
      *
@@ -136,13 +134,13 @@ public:
      */
     bool operator<=(const Angle& rhs) const
     {
-    	return this->get() <= rhs.get();
+    	return this->value() <= rhs.value();
     }
 
     /** Greater than operator checking wether this Angle's value
      * is greater than the other Angle's value.
      *
-     * @brief operator ==
+     * @brief this == rhs
      *
      * @param rhs the other Angle
      *
@@ -150,7 +148,7 @@ public:
      */
     bool operator>(const Angle& rhs) const
     {
-    	return this->get() > rhs.get();
+    	return this->value() > rhs.value();
     }
 
     /** Greater than or equal to operator checking wether this Angle's
@@ -164,14 +162,14 @@ public:
      */
     bool operator>=(const Angle& rhs) const
 	{
-    	return this->get() >= rhs.get();
+    	return this->value() >= rhs.value();
 	}
 
     /** Addition assignment operator increasing this Angle's value by
      * the other Angle's value. If necessary, the value is corrected
      * to be consistent.
      *
-     * @brief operator +=
+     * @brief this += rhs
      *
      * @param rhs the other Angle
      *
@@ -179,33 +177,29 @@ public:
      */
     Angle& operator+=(const Angle& rhs)
     {
-        _angle += rhs.get();
-        wrap();
+        _angle = adjust_angle(_angle + rhs.value());
         return *this;
     }
 
-    /** Friend addition operator returning an Angle equal to the return of rhs += lhs.
+    /** Friend addition operator returning an Angle equal to the return of this += rhs.
      * It operates on a copy of lhs so that the original object is not changed.
      *
-     * @brief operator +
-     *
-     * @param lhs the left operand Angle
+     * @brief this + rhs
      *
      * @param rhs the right operand Angle
      *
-     * @return a new Angle equal to lhs+=rhs
+     * @return a new Angle equal to this + rhs
      */
-    friend Angle operator+(Angle lhs, const Angle& rhs)
+    Angle operator+(const Angle& rhs) const
     {
-        lhs += rhs; // reuse compound assignment
-        return lhs; // return the result by value (uses move constructor)
+        return this->_angle + rhs._angle;
     }
 
     /** Subtraction assignment operator decreasing this Angle's value by
      * the other Angle's value. If necessary, the value is corrected
      * to be consistent.
      *
-     * @brief operator -=
+     * @brief this -= rhs
      *
      * @param rhs the other angle
      *
@@ -213,88 +207,79 @@ public:
      */
     Angle& operator-=(const Angle& rhs)
     {
-        _angle -= rhs.get();
-        wrap();
+        _angle = adjust_angle(_angle - rhs.value());
         return *this;
     }
 
-    /** Friend addition operator returning an Angle equal to the return of rhs -= lhs.
+    /** Friend addition operator returning an Angle equal to the return of this - rhs.
      * It operates on a copy of lhs so that the original object is not changed.
-     * @brief operator -
      *
-     * @param lhs the left operand Angle
+     * @brief this - rhs
+     *
      * @param rhs the right operand Angle
      *
-     * @return a new Angle equal to lhs-=rhs
+     * @return a new Angle equal to this - rhs
      */
-    friend Angle operator-(Angle lhs, const Angle& rhs)
+    Angle operator-(const Angle& rhs) const
     {
-        lhs -= rhs; // reuse compound assignment
-        return lhs; // return the result by value (uses move constructor)
+        return this->_angle - rhs._angle;
     }
 
     /** Multiplication assignment operator multiplying this Angle's value with the given
      * double value. If necessary, the value is corrected to be consistent.
      *
-     * @brief operator *=
+     * @brief this *= rhs
      *
      * @param rhs the factor
      *
      * @return a reference to this angle
      */
-    Angle& operator*=(const double& rhs)
+    Angle& operator*=(const Angle& rhs)
     {
-        _angle *= rhs;
-        wrap();
+        _angle *= adjust_angle(_angle * rhs.value());
         return *this;
     }
 
-    /** Friend multiplication operator returning an Angle equal to the return of rhs *= lhs.
+    /** Friend multiplication operator returning an Angle equal to the return of this * rhs.
      * It operates on a copy of lhs so that the original object is not changed.
      *
-     * @brief operator *
+     * @brief operator this * rhs
      *
-     * @param lhs the Angle to multiply
      * @param rhs the factor
      *
-     * @return a new Angle equal to lhs*=rhs
+     * @return a new Angle equal to this * rhs
      */
-    friend Angle operator*(Angle lhs, const double& rhs)
+    Angle operator*(const Angle& rhs) const
     {
-        lhs *= rhs; // reuse compound assignment
-        return lhs; // return the result by value (uses move constructor)
+        return this->_angle * rhs._angle;
     }
 
     /** Division assignment operator divides this Angle's value by the given
      * double value. If necessary, the value is corrected to be consistent.
      *
-     * @brief operator /=
+     * @brief this /= rhs
      *
      * @param rhs the dividend
      *
      * @return a reference to this angle
      */
-    Angle& operator/=(const double& rhs)
+    Angle& operator/=(const Angle& rhs)
     {
-        _angle /= rhs;
-        wrap();
+        _angle = adjust_angle(_angle / rhs.value());
         return *this;
     }
 
-    /** Friend division operator returning an Angle equal to the return of rhs /= lhs.
-     * It operates on a copy of lhs so that the original object is not changed.
+    /** Division operator returning an Angle equal to the return of this / rhs.
      *
-     * @brief operator /=
+     * @brief this / rhs
      *
-     * @param lhs the Angle to divide
      * @param rhs the dividend
      *
-     * @return a new Angle equal to lhs/=rhs
+     * @return a new Angle equal to this / rhs
      */
-    friend Angle operator/(Angle lhs, const double& rhs)
+    Angle operator/(const Angle& rhs)
     {
-        lhs /= rhs; // reuse compound assignment
-        return lhs; // return the result by value (uses move constructor)
+        return this->_angle / rhs._angle;
     }
 
     /** Returns an Angle that is (1-p) percent of a1 and p percent
@@ -311,7 +296,7 @@ public:
     static Angle interpolate(const Angle& a1, const Angle& a2, double p)
     {
         //p has to be between 0 (p1) and 1(p2)
-        double phi = (1-p) * a1.get() + p * a2.get();
+        double phi = (1-p) * a1.value() + p * a2.value();
         return Angle(phi);
 	}
 
@@ -332,11 +317,12 @@ private:
         /** Assures the consistence of this Angle's value (in [0, 2*pi]).
          * @brief wrap
          */
-	void wrap()
+	static double adjust_angle(double angle)
 	{
-		_angle = std::fmod(_angle, 2.0 * M_PI);
-		if (_angle < 0)
-			_angle += 2.0 * M_PI;
+		angle = std::fmod(angle, 2.0 * M_PI);
+		if (angle < 0)
+			angle += 2.0 * M_PI;
+		return angle;
 	}
 
         /** The angle value in radian */
@@ -357,14 +343,14 @@ public:
      * @param r the radius
      * @param phi the angle
      */
-    Polar(double r = 0, Angle phi = 0)
-    : _r { r }, _phi { phi }
+    Polar(double radius = 0, Angle angle = 0)
+    : _radius { radius }, _angle { angle }
     {
     }
 
     /** Equal to operator checking for equality of radius and angle.
      *
-     * @brief operator ==
+     * @brief this == rhs
      *
      * @param rhs the other Polar
      *
@@ -372,7 +358,7 @@ public:
      */
     bool operator==(const Polar& rhs) const
     {
-        return (r() == rhs.r()) && (phi() == rhs.phi());
+        return (radius() == rhs.radius()) && (angle() == rhs.angle());
     }
 
     /** Access function for this Polar's radius as readonly.
@@ -381,9 +367,9 @@ public:
      *
      * @return a constant reference to this Polar's radius
      */
-    const double& r() const
+    const double& radius() const
     {
-        return _r;
+        return _radius;
     }
 
     /** Access function for this Polar's radius.
@@ -392,9 +378,9 @@ public:
      *
      * @return a reference to this Polar's radius
      */
-    double& r()
+    double& radius()
     {
-        return _r;
+        return _radius;
     }
 
     /** Access function for this Polar's angle readonly.
@@ -403,9 +389,9 @@ public:
      *
      * @return a constant reference to the Angle
      */
-    const Angle& phi() const
+    const Angle& angle() const
     {
-        return _phi;
+        return _angle;
     }
 
     /** Access function for this Polar's angle.
@@ -414,9 +400,9 @@ public:
      *
      * @return a reference to the Angle
      */
-    Angle& phi()
+    Angle& angle()
     {
-        return _phi;
+        return _angle;
     }
 
     /** Returns an Polar whose radius and Angle are (1-p) percent of p1's
@@ -432,9 +418,11 @@ public:
      */
     static Polar interpolate(const Polar& p1, const Polar& p2, double p)
     {
-        //p has to be between 0 (p1) and 1(p2)
-        double r = (1-p) * p1.r() + p * p2.r();
-        return Polar(r,Angle::interpolate(p1.phi(), p2.phi(), p));
+    	// p has to be between 0 (p1) and 1 (p2)
+    	assert(p >= 0 && p <= 1);
+
+        double r = (1-p) * p1.radius() + p * p2.radius();
+        return Polar(r,Angle::interpolate(p1.angle(), p2.angle(), p));
     }
 
     /** Returns a Polar centered between two given Polars.
@@ -452,9 +440,9 @@ public:
     }
 private:
     /** Radius, the euclidian distance from the coordinate null */
-    double _r;
+    double _radius;
     /** Angle (from x-achsis) */
-    Angle _phi;
+    Angle _angle;
 };
 
 
@@ -604,8 +592,8 @@ public:
     {
             double x { from.x() - center_x };
             double y { from.y() - center_y };
-            to.r() = std::hypot(x, y);
-            to.phi() = std::atan2(y, x);
+            to.radius() = std::hypot(x, y);
+            to.angle() = std::atan2(y, x);
     }
 
     /** Converts a Polar coordinate to a Cartesian coordinate.
@@ -618,8 +606,8 @@ public:
     inline void convert(const Polar& from, Cartesian& to) const
     {
 
-            double x { from.r() * std::cos(from.phi().get()) };
-            double y { -from.r() * std::sin(from.phi().get()) };
+            double x { from.radius() * std::cos(from.angle().value()) };
+            double y { -from.radius() * std::sin(from.angle().value()) };
             to.x() = x + center_x;
             to.y() = y + center_y;
     }
@@ -634,6 +622,16 @@ public:
     {
         return Cartesian(center_x, center_y);
     }
+
+    Cartesian get_center_x() const
+    {
+    	return center_x;
+    }
+
+    Cartesian get_center_y() const
+    {
+    	return center_y;
+    }
 private:
     /** Width and height of the coordinate system */
     const size_t 	width, height;
@@ -645,13 +643,13 @@ private:
 
 inline std::ostream& operator<<(std::ostream& stream, const Angle& angle)
 {
-	stream << angle_helper::rad_to_deg(angle.get()) << "°";
+	stream << angle_helper::rad_to_deg(angle.value()) << "°";
 	return stream;
 }
 
 inline std::ostream& operator<<(std::ostream& stream, const Polar& coord)
 {
-	stream << "[ r: " << coord.r() << ", phi: " << coord.phi() << " ]";
+	stream << "[ r: " << coord.radius() << ", phi: " << coord.angle() << " ]";
 	return stream;
 }
 

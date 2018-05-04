@@ -115,7 +115,7 @@ protected:
 	 */
 	inline Angle get_cairo_angle(const Angle& angle)
 	{
-		return Angle(2 * M_PI - angle.get());
+		return Angle(2 * M_PI - angle.value());
 	}
 
 private:

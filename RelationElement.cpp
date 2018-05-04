@@ -23,9 +23,9 @@ RelationElementFactory::RelationElementFactory(
 	_fill_alpha = 0.25 * (1 + 3 * std::exp(-(num_data_rows * 0.04)));
 
 	std::pair<double, double> out = std::make_pair(
-						grid.get_start().get(),
+						grid.get_start().value(),
 						grid.get_start() > grid.get_end() ?
-								grid.get_end().get() + 2 * M_PIl : grid.get_end().get()
+								grid.get_end().value() + 2 * M_PIl : grid.get_end().value()
 					);
 	for (const Scale & ticks: grid.get_ticks())
 	{
@@ -39,7 +39,7 @@ RelationElementFactory::RelationElementFactory(
 	{
 		_input_mapper.emplace_back(
 				elem.get_ticks().get_extremes(),
-				std::make_pair(elem.get_start().get(), elem.get_end().get())
+				std::make_pair(elem.get_start().value(), elem.get_end().value())
 		);
 	}
 }
@@ -93,12 +93,12 @@ RelationElement RelationElementFactory::create(const DefDataRow & row) const
 const Color & RelationElementFactory::get_color(double val) const
 {
 	double range = angle_helper::rad_dist(
-				_grid.get_start().get(),
-				_grid.get_end().get()
+				_grid.get_start().value(),
+				_grid.get_end().value()
 			);
 	double angle = _output_mapper[0].map(val);
 
-	std::size_t i = std::ceil(10 * (angle - _grid.get_start().get()) / range);
+	std::size_t i = std::ceil(10 * (angle - _grid.get_start().value()) / range);
 
 	return Color::GLOW_10[i - 1];
 }

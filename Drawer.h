@@ -273,7 +273,7 @@ protected:
 	 */
 	inline Polar get_connector_start(const Polar& from, const Polar& to)
 	{
-		return Polar(from.r() + 0.1 * (to.r() - from.r()), from.phi());
+		return Polar(from.radius() + 0.1 * (to.radius() - from.radius()), from.angle());
 	}
 
 	/** Calculates a Polar coordinate for the end of a connector between
@@ -287,7 +287,7 @@ protected:
 	 */
 	inline Polar get_connector_end(const Polar& from, const Polar& to)
 	{
-		return Polar(to.r() - 0.1 * (to.r() - from.r()), to.phi());
+		return Polar(to.radius() - 0.1 * (to.radius() - from.radius()), to.angle());
 	}
 
 	/** Creates a control point for a Bezier curve approximating a link.
@@ -301,7 +301,7 @@ protected:
 	inline Cartesian create_link_control_point(const Polar& point) const
 	{
 		Polar control(point);
-		control.r() -= LINK_CONTROL_STRENGTH;
+		control.radius() -= LINK_CONTROL_STRENGTH;
 
 		Cartesian control_c;
 		_pc.convert(control, control_c);

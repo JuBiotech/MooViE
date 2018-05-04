@@ -77,7 +77,7 @@ void CairoDrawer::draw_coord_grid(const CodomainGrid& grid)
 			+ conf.get_input_thickness() + grid.get_height();
 
 	// Radian distance (absolute!) between start and end angle
-	double span = angle_helper::rad_dist(grid.get_start().get(), grid.get_end().get());
+	double span = angle_helper::rad_dist(grid.get_start().value(), grid.get_end().value());
 
 	// Calculate how the CoordGrid is separated into thin and thick lines (ticks)
 	const std::size_t NUM_SEGMENTS = grid.get_major_ticks() * grid.get_minor_ticks();
@@ -86,7 +86,7 @@ void CairoDrawer::draw_coord_grid(const CodomainGrid& grid)
 	// Draw the ticks of the CoordGrid
 	for (size_t i = 0; i <= NUM_SEGMENTS; ++i)
 	{
-		Angle a((grid.get_start().get() + i * span / NUM_SEGMENTS));
+		Angle a((grid.get_start().value() + i * span / NUM_SEGMENTS));
 		if (i % NUM_THICK_LINES)
 			draw_line(
 					Polar(min_radius, a),
@@ -170,7 +170,7 @@ void CairoDrawer::draw_var_axis(const DomainAxis& axis)
 	);
 
 	// Radian distance (absolute!) between start and end angle
-	double span = angle_helper::rad_dist(axis.get_start().get(), axis.get_end().get());
+	double span = angle_helper::rad_dist(axis.get_start().value(), axis.get_end().value());
 
 	// Tick values as strings
 	std::vector<Label> tick_labels = axis.get_ticks().get_labels();
@@ -245,35 +245,35 @@ void CairoDrawer::draw_data_link(const RelationElement& link)
 	const Point from = link[connector_pos];
 
 	Polar target1(
-				from.coord.r() - CONNECTOR_ARROW_HEIGHT,
-				from.coord.phi() - ANGLE_DELTA_SMALL
+				from.coord.radius() - CONNECTOR_ARROW_HEIGHT,
+				from.coord.angle() - ANGLE_DELTA_SMALL
 		  ),
 		  target2(
-				from.coord.r() - CONNECTOR_ARROW_HEIGHT,
-				from.coord.phi() + ANGLE_DELTA_SMALL
+				from.coord.radius() - CONNECTOR_ARROW_HEIGHT,
+				from.coord.angle() + ANGLE_DELTA_SMALL
 		  );
 
 	// Draw links
 	for (std::size_t i = 0; i < RelationElement::num_inputs; ++i)
 	{
 		Polar origin1(
-				link[i].coord.r() - RADIUS_DELTA,
-				link[i].coord.phi() - ANGLE_DELTA_SMALL
+				link[i].coord.radius() - RADIUS_DELTA,
+				link[i].coord.angle() - ANGLE_DELTA_SMALL
 		),
 		origin2(
-				link[i].coord.r() - RADIUS_DELTA,
-				link[i].coord.phi() + ANGLE_DELTA_SMALL
+				link[i].coord.radius() - RADIUS_DELTA,
+				link[i].coord.angle() + ANGLE_DELTA_SMALL
 		);
 		draw_link(origin1, origin2, target1, target2, link[i].prop);
 	}
 
 	// Draw line from connector to first output
-	double connector_distance = (link[connector_pos + 1].coord.r() - from.coord.r()) * 0.1
+	double connector_distance = (link[connector_pos + 1].coord.radius() - from.coord.radius()) * 0.1
 			+ Configuration::get_instance().get_output_thickness();
 	draw_line(
 			from.coord,
-			Polar(link[connector_pos + 1].coord.r() + connector_distance,
-					link[connector_pos + 1].coord.phi()),
+			Polar(link[connector_pos + 1].coord.radius() + connector_distance,
+					link[connector_pos + 1].coord.angle()),
 			from.prop
 	);
 	draw_arrow(from.coord, from.prop);
@@ -290,7 +290,7 @@ void CairoDrawer::draw_data_link(const RelationElement& link)
 		draw_coord_point(
 				to,
 				COORDPOINT_ANGLE,
-				(to.r() - from.r()) * 0.2,
+				(to.radius() - from.radius()) * 0.2,
 				link[i].prop
 		);
 	}
@@ -353,7 +353,7 @@ void CairoDrawer::draw_histogram(const DomainAxis::Histogram& histogram,
 
 	// Draw the histogram graph filling
 	_cr->begin_new_path();
-	double span = angle_helper::rad_dist(start.get(), end.get());
+	double span = angle_helper::rad_dist(start.value(), end.value());
 	for (std::size_t i = 0; i < histogram.get_num_intervals(); ++i)
 	{
 		draw_ring_segment(
@@ -396,9 +396,9 @@ void CairoDrawer::draw_histogram(const DomainAxis::Histogram& histogram,
 		// Draw the histogram column
 		_cr->line_to(left_up_c.x(), left_up_c.y());
 	    draw_arc(
-	    		left_up.r(),
-				left_up.phi(),
-				right_down.phi(),
+	    		left_up.radius(),
+				left_up.angle(),
+				right_down.angle(),
 				Direction::DECREASING
 	    );
 	    _cr->line_to(right_down_c.x(), right_down_c.y());
@@ -456,9 +456,9 @@ void CairoDrawer::draw_connector(const Polar& from, const Polar& to,
 			(1 - Configuration::get_instance().get_ratio_connector_arc()) / 2;
 
 	// Calculate to intermediate coordinates to draw the arc from
-	double radial_dist = to.r() - from.r();
-	Polar curve_begin {from.r() + dist_factor * radial_dist, from.phi() };
-	Polar curve_end {to.r() - dist_factor * radial_dist, to.phi() };
+	double radial_dist = to.radius() - from.radius();
+	Polar curve_begin {from.radius() + dist_factor * radial_dist, from.angle() };
+	Polar curve_end {to.radius() - dist_factor * radial_dist, to.angle() };
 
 	// Convert to Cartesian coordinates
 	Cartesian from_c;
@@ -476,8 +476,8 @@ void CairoDrawer::draw_connector(const Polar& from, const Polar& to,
 	_cr->line_to(curve_begin_c.x(), curve_begin_c.y());
 
 	// Adjust angles so that their difference is lower than PI
-	double begin_angle = curve_begin.phi().get(),
-			end_angle = curve_end.phi().get();
+	double begin_angle = curve_begin.angle().value(),
+			end_angle = curve_end.angle().value();
 	double phi_diff_unadjusted = end_angle - begin_angle;
 	if (phi_diff_unadjusted > M_PI)
 	{
@@ -494,20 +494,20 @@ void CairoDrawer::draw_connector(const Polar& from, const Polar& to,
 	{
 		// Calculate coordinate between the curve begin and the curve end
 		double mid_angle = (begin_angle + end_angle) / 2.0;
-		double mid_radius = curve_begin.r()
-				+ (curve_end.r() - curve_begin.r()) / phi_diff * (mid_angle - begin_angle);
+		double mid_radius = curve_begin.radius()
+				+ (curve_end.radius() - curve_begin.radius()) / phi_diff * (mid_angle - begin_angle);
 
-		draw_connector_segment(curve_begin.r(), begin_angle,
+		draw_connector_segment(curve_begin.radius(), begin_angle,
 				mid_radius, mid_angle,
 				prop);
 		draw_connector_segment(mid_radius, mid_angle,
-				curve_end.r(), end_angle,
+				curve_end.radius(), end_angle,
 				prop);
 	}
 	else
 	{
-		draw_connector_segment(curve_begin.r(), begin_angle,
-				curve_end.r(), end_angle,
+		draw_connector_segment(curve_begin.radius(), begin_angle,
+				curve_end.radius(), end_angle,
 				prop);
 	}
 	
@@ -535,7 +535,7 @@ void CairoDrawer::draw_segment_axis(double inner_radius, double thickness,
 	const static std::size_t NUM_SPLITS = 10;
 
 	// Calculate segment size
-	double segment_size = angle_helper::rad_dist(start.get(), end.get()) / NUM_SPLITS;
+	double segment_size = angle_helper::rad_dist(start.value(), end.value()) / NUM_SPLITS;
 
 	// Draw segments
 	for (size_t i = 0; i < NUM_SPLITS; ++i)
@@ -552,9 +552,9 @@ void CairoDrawer::draw_coord_point(const Polar& coord, const Angle& width,
 	_cr->set_identity_matrix();
 
 	// Calculate the radius and the angles between the box should be drawn
-	double inner_radius = coord.r() - 0.5 * height;
-	Angle begin = coord.phi() - width * 0.5;
-	Angle end = coord.phi() + width * 0.5;
+	double inner_radius = coord.radius() - 0.5 * height;
+	Angle begin = coord.angle() - width * 0.5;
+	Angle end = coord.angle() + width * 0.5;
 
 	// Draw segment
 	draw_ring_segment(inner_radius, height, begin, end, prop, Direction::INCREASING);
@@ -681,10 +681,10 @@ void CairoDrawer::draw_arrow(const Polar& start, const DrawerProperties<>& prop)
 	double height = CONNECTOR_ARROW_HEIGHT;
 
 	// Calculate arrow coordinates
-	Polar start_help(start.r() - height, start.phi()),
-			direction_help(start.r() - height / 2, start.phi()),
-			left_help(start.r() - height, start.phi() - height / 500),
-			right_help(start.r() - height, start.phi() + height / 500);
+	Polar start_help(start.radius() - height, start.angle()),
+			direction_help(start.radius() - height / 2, start.angle()),
+			left_help(start.radius() - height, start.angle() - height / 500),
+			right_help(start.radius() - height, start.angle() + height / 500);
 
 	// Convert arrow coordinates into Cartesian coordinates
 	Cartesian start_c, direction_c, left, right;
@@ -726,8 +726,8 @@ void CairoDrawer::draw_arc(double radius, const Angle& start, const Angle& end,
 		    _pc.center().x(),
 		    _pc.center().y(),
 		    radius,
-		    get_cairo_angle(end).get(),
-		    get_cairo_angle(start).get()
+		    get_cairo_angle(end).value(),
+		    get_cairo_angle(start).value()
 		);
 		break;
 	case Direction::DECREASING:
@@ -735,8 +735,8 @@ void CairoDrawer::draw_arc(double radius, const Angle& start, const Angle& end,
 		    _pc.center().x(),
 		    _pc.center().y(),
 		    radius,
-		    get_cairo_angle(start).get(),
-		    get_cairo_angle(end).get()
+		    get_cairo_angle(start).value(),
+		    get_cairo_angle(end).value()
 		);
 		break;
 	}
@@ -779,14 +779,14 @@ void CairoDrawer::draw_text_parallel(const Label& label, const Polar& start,
 	const Cairo::TextExtents & t_exts = get_text_extents(label);
 
 	// Calculate cairo angle
-	Angle cairo_angle = M_PI_2 - start.phi();
+	Angle cairo_angle = M_PI_2 - start.angle().value();
 
 	// Set cairo user-space origin and rotation
 	_cr->begin_new_path();
 	_cr->translate(_pc.center().x(), _pc.center().y());
-	_cr->rotate(cairo_angle.get());
-	_cr->translate(0, -start.r());
-	if (start.phi().get() > M_PI_2 && start.phi().get() < 3 * M_PI_2)
+	_cr->rotate(cairo_angle.value());
+	_cr->translate(0, -start.radius());
+	if (start.angle().value() > M_PI_2 && start.angle().value() < 3 * M_PI_2)
 	  _cr->rotate_degrees(90);
 	else
 	  _cr->rotate_degrees(270);
@@ -808,13 +808,13 @@ void CairoDrawer::draw_text_orthogonal(const Label& label, const Polar& start,
 	Cairo::TextExtents t_exts = get_text_extents(label);
 
 	// Create cairo angle
-	Angle cairo_angle = M_PI_2 - start.phi();
+	Angle cairo_angle = M_PI_2 - start.angle().value();
 
 	// Set cairo user-space origin and rotation
 	_cr->begin_new_path();
 	_cr->translate(_pc.center().x(), _pc.center().y());
-	_cr->rotate(cairo_angle.get());
-	_cr->translate(0, -start.r());
+	_cr->rotate(cairo_angle.value());
+	_cr->translate(0, -start.radius());
 	_cr->translate(-alignment.ratio * t_exts.width, (1 - alignment.ratio) * t_exts.height);
 
 	_cr->close_path();
