@@ -1,8 +1,8 @@
-#include "../PolarCartesian.h"
+#include "../Coordinates.h"
 #include <iostream>
 
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE PolarCartesian Tests
+#define BOOST_TEST_MODULE "Coordinates test"
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(angle_helper_conversion)
@@ -72,21 +72,21 @@ BOOST_AUTO_TEST_SUITE(Angle_base_test)
 BOOST_AUTO_TEST_CASE(constructor)
 {
 	double angle = 0.5;
-	BOOST_CHECK_EQUAL(Angle(angle).get(), angle);
+	BOOST_CHECK_EQUAL(Angle(angle).value(), angle);
 }
 
 BOOST_AUTO_TEST_CASE(constructor_wrap_large)
 {
 	double angle_wrapped = 0.5;
 	double angle = angle_wrapped + 2.0 * M_PI;
-	BOOST_CHECK_EQUAL(Angle(angle).get(), angle_wrapped);
+	BOOST_CHECK_EQUAL(Angle(angle).value(), angle_wrapped);
 }
 
 BOOST_AUTO_TEST_CASE(constructor_wrap_negative)
 {
 	double angle_wrapped = 0.5;
 	double angle = angle_wrapped - 2.0 * M_PI;
-	BOOST_CHECK_EQUAL(Angle(angle).get(), angle_wrapped);
+	BOOST_CHECK_EQUAL(Angle(angle).value(), angle_wrapped);
 }
 
 BOOST_AUTO_TEST_CASE(equality)
@@ -146,7 +146,7 @@ BOOST_AUTO_TEST_CASE(addition)
 	double add = 0.2;
 	Angle a(angle);
 	Angle b(add);
-	BOOST_CHECK_EQUAL((a + b).get(), angle + add);
+	BOOST_CHECK_EQUAL((a + b).value(), angle + add);
 }
 
 BOOST_AUTO_TEST_CASE(addition_wrap_to_0)
@@ -155,7 +155,7 @@ BOOST_AUTO_TEST_CASE(addition_wrap_to_0)
 	double add = M_PI;
 	Angle a(angle);
 	Angle b(add);
-	BOOST_CHECK_EQUAL((a + b).get(), 0);
+	BOOST_CHECK_EQUAL((a + b).value(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(addition_wrap)
@@ -192,7 +192,7 @@ BOOST_AUTO_TEST_CASE(substraction)
 	double minus = 0.2;
 	Angle a(angle);
 	Angle b(minus);
-	BOOST_CHECK_EQUAL((a - b).get(), angle - minus);
+	BOOST_CHECK_EQUAL((a - b).value(), angle - minus);
 }
 
 BOOST_AUTO_TEST_CASE(substraction_wrap_to_0)
@@ -201,7 +201,7 @@ BOOST_AUTO_TEST_CASE(substraction_wrap_to_0)
 	double minus = 3.0 * M_PI;
 	Angle a(angle);
 	Angle b(minus);
-	BOOST_CHECK_EQUAL((a - b).get(), 0);
+	BOOST_CHECK_EQUAL((a - b).value(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(substraction_wrap)
@@ -277,7 +277,7 @@ BOOST_AUTO_TEST_CASE(multiplication)
 	double angle = 0.5;
 	double times = 2;
 	Angle a(angle);
-	BOOST_CHECK_EQUAL((a * times).get(), angle * times);
+	BOOST_CHECK_EQUAL((a * times).value(), angle * times);
 }
 
 BOOST_AUTO_TEST_CASE(multiplication_wrap_to_0)
@@ -285,7 +285,7 @@ BOOST_AUTO_TEST_CASE(multiplication_wrap_to_0)
 	double angle = M_PI;
 	double times = 2;
 	Angle a(angle);
-	BOOST_CHECK_EQUAL((a * times).get(), 0);
+	BOOST_CHECK_EQUAL((a * times).value(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(multiplication_wrap)
@@ -293,7 +293,7 @@ BOOST_AUTO_TEST_CASE(multiplication_wrap)
 	double angle = 17;
 	double times = 33;
 	Angle a(angle);
-	BOOST_CHECK_CLOSE((a * times).get(), Angle(angle * times).get(), 0.000001);
+	BOOST_CHECK_CLOSE((a * times).value(), Angle(angle * times).value(), 0.000001);
 }
 
 BOOST_AUTO_TEST_CASE(multiplication_programatic)
@@ -320,7 +320,7 @@ BOOST_AUTO_TEST_CASE(division)
 	double angle = 0.8;
 	double by = 2.0;
 	Angle a(angle);
-	BOOST_CHECK_EQUAL((a / by).get(), angle / by);
+	BOOST_CHECK_EQUAL((a / by).value(), angle / by);
 }
 
 BOOST_AUTO_TEST_CASE(division_programatic)
@@ -406,7 +406,7 @@ BOOST_AUTO_TEST_CASE(center_programatic)
 			Angle a(angle1);
 			Angle b(angle2);
 			Angle c = Angle::center(a, b);
-			BOOST_CHECK_CLOSE((c - a).get(), (b - c).get(), 0.00001);
+			BOOST_CHECK_CLOSE((c - a).value(), (b - c).value(), 0.00001);
 			angle2 -= step2;
 		}
 		angle1 += step1;
@@ -445,8 +445,8 @@ BOOST_AUTO_TEST_CASE(interpolate_asc_programatic)
 	while (p < 0.95)
 	{
 		Angle c = Angle::interpolate(a, b, p);
-		BOOST_CHECK_CLOSE((c - a).get(), (b - a).get() * p, 0.00001);
-		BOOST_CHECK_CLOSE((b - c).get(), (b - a).get() * (1 - p), 0.00001);
+		BOOST_CHECK_CLOSE((c - a).value(), (b - a).value() * p, 0.00001);
+		BOOST_CHECK_CLOSE((b - c).value(), (b - a).value() * (1 - p), 0.00001);
 		p += step;
 	}
 }
@@ -463,8 +463,8 @@ BOOST_AUTO_TEST_CASE(interpolate_desc_programatic)
 	while (p < 0.95)
 	{
 		Angle c = Angle::interpolate(a, b, p);
-		BOOST_CHECK_CLOSE((a - c).get(), (a - b).get() * p, 0.00001);
-		BOOST_CHECK_CLOSE((c - b).get(), (a - b).get() * (1 - p), 0.00001);
+		BOOST_CHECK_CLOSE((a - c).value(), (a - b).value() * p, 0.00001);
+		BOOST_CHECK_CLOSE((c - b).value(), (a - b).value() * (1 - p), 0.00001);
 		p += step;
 	}
 }
