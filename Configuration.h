@@ -29,8 +29,9 @@ public:
 	  return *_instance; // TODO: throw exception if empty
 	}
 
-	static void initialize(const std::string & fname, const std::string & cpath = ".");
+	static void initialize(const std::string & fname, const std::string & cpath);
 
+	static void initialize(const std::string & fname);
 
 	// Generell
 
@@ -292,6 +293,8 @@ public:
 
 private:
 	Configuration(const std::string & fname, const std::string & cpath);
+
+	Configuration(const std::string & fname);
 
 	/* Absolute file paths for data (input) and image (output) */
 	std::string 		_input_file;

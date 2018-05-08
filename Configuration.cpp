@@ -14,6 +14,11 @@ void Configuration::initialize(const std::string & fname, const std::string & cp
     _instance = std::shared_ptr<Configuration>(new Configuration(fname, cpath));
 }
 
+void Configuration::initialize(const std::string & fname)
+{
+	_instance = std::shared_ptr<Configuration>(new Configuration(fname));
+}
+
 Configuration::Configuration(const std::string & fname, const std::string & cpath)
 : _input_file(fname)
 {
@@ -162,5 +167,10 @@ Configuration::Configuration(const std::string & fname, const std::string & cpat
 	{
 		_height = _width;
 	}
+}
+
+Configuration::Configuration(const std::string & fname)
+: _input_file(fname)
+{
 }
 
