@@ -602,8 +602,8 @@ void CairoDrawer::draw_connector_segment(double begin_radius, double begin_angle
 	double k = 70 * std::abs(phi_diff);
 
 	// Calculate in which direction the derivative vector should be added
-	double phi_p1 = std::atan2(-(P0.y() + k * P1_y - _pc.center().y()),
-			P0.x() + k * P1_x - _pc.center().x());
+	double phi_p1 = std::atan2(-(P0.y() + k * P1_y - _pc.get_center_y()),
+			P0.x() + k * P1_x - _pc.get_center_x());
 	if (phi_p1 < 0)
 	{
 		phi_p1 += 2*M_PI;
@@ -613,8 +613,8 @@ void CairoDrawer::draw_connector_segment(double begin_radius, double begin_angle
 		phi_p1 += 2*M_PI;
 	}
 
-	double phi_p2 = std::atan2(-(P3.y() + k * P2_y - _pc.center().y()),
-			P3.x() + k * P2_x - _pc.center().x());
+	double phi_p2 = std::atan2(-(P3.y() + k * P2_y - _pc.get_center_y()),
+			P3.x() + k * P2_x - _pc.get_center_x());
 	if (phi_p2 < 0)
 	{
 		phi_p2 += 2*M_PI;
@@ -723,8 +723,8 @@ void CairoDrawer::draw_arc(double radius, const Angle& start, const Angle& end,
 	{
 	case Direction::INCREASING:
 		_cr->arc(
-		    _pc.center().x(),
-		    _pc.center().y(),
+		    _pc.get_center_x(),
+		    _pc.get_center_y(),
 		    radius,
 		    get_cairo_angle(end).value(),
 		    get_cairo_angle(start).value()
@@ -732,8 +732,8 @@ void CairoDrawer::draw_arc(double radius, const Angle& start, const Angle& end,
 		break;
 	case Direction::DECREASING:
 		_cr->arc_negative(
-		    _pc.center().x(),
-		    _pc.center().y(),
+		    _pc.get_center_x(),
+		    _pc.get_center_y(),
 		    radius,
 		    get_cairo_angle(start).value(),
 		    get_cairo_angle(end).value()
@@ -783,7 +783,7 @@ void CairoDrawer::draw_text_parallel(const Label& label, const Polar& start,
 
 	// Set cairo user-space origin and rotation
 	_cr->begin_new_path();
-	_cr->translate(_pc.center().x(), _pc.center().y());
+	_cr->translate(_pc.get_center_x(), _pc.get_center_y());
 	_cr->rotate(cairo_angle.value());
 	_cr->translate(0, -start.radius());
 	if (start.angle().value() > M_PI_2 && start.angle().value() < 3 * M_PI_2)
@@ -812,7 +812,7 @@ void CairoDrawer::draw_text_orthogonal(const Label& label, const Polar& start,
 
 	// Set cairo user-space origin and rotation
 	_cr->begin_new_path();
-	_cr->translate(_pc.center().x(), _pc.center().y());
+	_cr->translate(_pc.get_center_x(), _pc.get_center_y());
 	_cr->rotate(cairo_angle.value());
 	_cr->translate(0, -start.radius());
 	_cr->translate(-alignment.ratio * t_exts.width, (1 - alignment.ratio) * t_exts.height);

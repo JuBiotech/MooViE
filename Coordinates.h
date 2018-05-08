@@ -567,9 +567,9 @@ class CoordinateConverter
 {
 public:
     /** Creates a new coordinate system with given width and height.
-     * The middle coordinate is (width / 2, height / 2).
+     * The center coordinate is at (width / 2, height / 2).
      *
-     * @brief PolarCartesian
+     * @brief a converter for coordinates
      *
      * @param width the coordinate system width
      * @param height the coordinate system system
@@ -578,8 +578,6 @@ public:
     : width { width }, height { height }, center_x { width / 2.0 }, center_y { height / 2.0 }
     {
     }
-
-    virtual ~CoordinateConverter() {}
 
     /** Converts a Cartesian coordinate to a Polar coordinate.
      *
@@ -612,23 +610,24 @@ public:
             to.y() = y + center_y;
     }
 
-    /** Returns the center as cartesian coordinate.
+    /** Returns the x value of the center coordinate.
      *
-     * @brief center
+     * @brief center x value
      *
-     * @return the center coordinate
+     * @return the center's x value
      */
-    Cartesian center() const
-    {
-        return Cartesian(center_x, center_y);
-    }
-
-    Cartesian get_center_x() const
+    double get_center_x() const
     {
     	return center_x;
     }
 
-    Cartesian get_center_y() const
+    /** Returns the y value of the center coordinate.
+     *
+     * @brief center y value
+     *
+     * @return the center's y value
+     */
+    double get_center_y() const
     {
     	return center_y;
     }
