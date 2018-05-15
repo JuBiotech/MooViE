@@ -80,8 +80,9 @@ void CairoDrawer::draw_codomain_grid(const CodomainGrid& grid)
 	double span = angle_helper::rad_dist(grid.get_start().value(), grid.get_end().value());
 
 	// Calculate how the CoordGrid is separated into thin and thick lines (ticks)
-	const std::size_t NUM_SEGMENTS = grid.get_major_ticks() * grid.get_minor_ticks();
-	const std::size_t NUM_THICK_LINES = grid.get_major_ticks();
+	const std::size_t NUM_SEGMENTS = grid.get_scale().get_major_intersections()
+			* grid.get_scale().get_minor_intersections();
+	const std::size_t NUM_THICK_LINES = grid.get_scale().get_minor_intersections();
 
 	// Draw the ticks of the CoordGrid
 	for (size_t i = 0; i <= NUM_SEGMENTS; ++i)
@@ -104,7 +105,7 @@ void CairoDrawer::draw_codomain_grid(const CodomainGrid& grid)
 	// Adjusted difference between the radial lines of the CoordGrid (outputs)
 	double y_dist = grid.get_height() / (grid.get_num_outputs() - COORDGRID_ADJUSTMENT);
 
-	const std::vector<Scale> ticks = grid.get_ticks();
+	const MultiScale& scale = grid.get_scale();
 
 	// Draw the description of the first output
 	static TextProperties name_prop("Liberation Serif", 6, Color::BLACK, true, false);
@@ -114,12 +115,12 @@ void CairoDrawer::draw_codomain_grid(const CodomainGrid& grid)
 		TextAlignment::RIGHT
 	);
 	draw_text_orthogonal(
-	    Label(std::to_string(ticks[0].get_extremes().second), conf.get_tick_label()),
+	    Label(std::to_string(scale.get_extremes(0).second), conf.get_tick_label()),
 	    Polar(min_radius, grid.get_start() - TEXT_DELTA),
 		TextAlignment::RIGHT
 	);
 	draw_text_orthogonal(
-	    Label(std::to_string(ticks[0].get_extremes().first), conf.get_tick_label()),
+	    Label(std::to_string(scale.get_extremes(0).first), conf.get_tick_label()),
 	    Polar(min_radius, grid.get_end() + TEXT_DELTA),
 		TextAlignment::LEFT
 	);
@@ -134,12 +135,12 @@ void CairoDrawer::draw_codomain_grid(const CodomainGrid& grid)
 			TextAlignment::RIGHT
 		);
 		draw_text_orthogonal(
-		    Label(std::to_string(ticks[i].get_extremes().second), conf.get_tick_label()),
+		    Label(std::to_string(scale.get_extremes(i).second), conf.get_tick_label()),
 		    Polar(min_radius + i * y_dist, grid.get_start() - TEXT_DELTA),
 			TextAlignment::RIGHT
 		);
 		draw_text_orthogonal(
-		    Label(std::to_string(ticks[0].get_extremes().first), conf.get_tick_label()),
+		    Label(std::to_string(scale.get_extremes(0).first), conf.get_tick_label()),
 		    Polar(min_radius + i * y_dist, grid.get_end() + TEXT_DELTA),
 			TextAlignment::LEFT
 		);
@@ -173,7 +174,7 @@ void CairoDrawer::draw_domain_axis(const DomainAxis& axis)
 	double span = angle_helper::rad_dist(axis.get_start().value(), axis.get_end().value());
 
 	// Tick values as strings
-	std::vector<Label> tick_labels = axis.get_ticks().get_labels();
+	std::vector<Label> tick_labels = axis.get_ticks().make_labels();
 	std::size_t label_pos = 0;
 
 	// Calculate radii for axis and ticks
@@ -200,8 +201,8 @@ void CairoDrawer::draw_domain_axis(const DomainAxis& axis)
 	double radius_histogram = radius_label + label_ext.height + RADIUS_HISTOGRAM_DELTA;
 
 	// Calculate how the VarAxis' ticks is separated into thin and thick lines (ticks)
-	const std::size_t NUM_SEGMENTS = axis.get_ticks().get_major_ticks() * axis.get_ticks().get_minor_ticks();
-	const std::size_t NUM_THICK_LINES = axis.get_ticks().get_major_ticks();
+	const std::size_t NUM_SEGMENTS = axis.get_ticks().get_major_intersections() * axis.get_ticks().get_minor_intersections();
+	const std::size_t NUM_THICK_LINES = axis.get_ticks().get_major_intersections();
 
 	// Draw the ticks and the associated values
 	for (size_t i = 0; i <= NUM_SEGMENTS; ++i)

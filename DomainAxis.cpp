@@ -8,8 +8,8 @@
 #include "DomainAxis.h"
 #include <iostream>
 
-DomainAxis::Histogram::Histogram(DefVar var)
-: _var(var), _num_intervals(0)
+DomainAxis::Histogram::Histogram(DefVar _var)
+: _var(_var), _num_intervals(0)
 {
 }
 
@@ -33,25 +33,25 @@ double DomainAxis::Histogram::get_section_frequency(std::size_t i) const
     return _frequencies[i];
 }
 
-DomainAxis::DomainAxis(DefVar var,
+DomainAxis::DomainAxis(DefVar _var,
 		 const Angle & start, const Angle & end,
 		 double radius, std::size_t height,
 		 const DrawerProperties<> & prop,
 		 const TextProperties & text_prop)
-: _var(var),
-  _ticks(
+: var(_var),
+  scale(
 		  Configuration::get_instance().get_num_major_ticks_va(),
 		  Configuration::get_instance().get_num_minor_ticks_va(),
-		  create_axis(var.min, var.max),
-		  Configuration::get_instance().get_tick_label(), var.unit
+		  Configuration::get_instance().get_tick_label(), _var.unit,
+		  create_rounded_interval(_var.min, _var.max)
   ),
-  _histogram(var),
-  _start(start), _end(end),_radius(radius),  _height(height),
-  _label(_var.name, text_prop), _prop(prop)
+  histogram(_var),
+  start(start), end(end),radius(radius),  height(height),
+  label(_var.name, text_prop), prop(prop)
 {}
 
 void DomainAxis::calculate_histogram(const std::vector<double> & data)
 {
-	_histogram.set_num_intervals(Configuration::get_instance().get_num_histogram_classes());
-    _histogram.calculate(data);
+	histogram.set_num_intervals(Configuration::get_instance().get_num_histogram_classes());
+    histogram.calculate(data);
 }

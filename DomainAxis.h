@@ -76,105 +76,105 @@ public:
 
 	const Histogram& get_histogram () const
 	{
-	      return _histogram;
+	      return histogram;
 	}
 
 	Angle get_end () const
 	{
-	      return _end;
+	      return end;
 	}
 
 	void set_end (const Angle& end)
 	{
-	      this->_end = end;
+	      this->end = end;
 	}
 
 	std::size_t get_height () const
 	{
-	      return _height;
+	      return height;
 	}
 
 	void set_height (std::size_t height)
 	{
-	      this->_height = height;
+	      this->height = height;
 	}
 
 	const Label& get_label () const
 	{
-	      return _label;
+	      return label;
 	}
 
 	void set_label (const Label& label)
 	{
-	      this->_label = label;
+	      this->label = label;
 	}
 
 	const DrawerProperties<>& get_prop () const
 	{
-	      return _prop;
+	      return prop;
 	}
 
 	void set_prop (const DrawerProperties<>& prop)
 	{
-	      this->_prop = prop;
+	      this->prop = prop;
 	}
 
 	double get_radius () const
 	{
-	      return _radius;
+	      return radius;
 	}
 
 	void set_radius (double radius)
 	{
-	      this->_radius = radius;
+	      this->radius = radius;
 	}
 
 	Angle get_start () const
 	{
-	      return _start;
+	      return start;
 	}
 
 	void set_start (const Angle& start)
 	{
-	      this->_start = start;
+	      this->start = start;
 	}
 
-	const Scale & get_ticks () const
+	const SimpleScale& get_ticks () const
 	{
-	      return _ticks;
+	      return scale;
 	}
 
-	void set_ticks (const Scale& ticks)
+	void set_ticks (const SimpleScale& ticks)
 	{
-	      this->_ticks = ticks;
+	      this->scale = ticks;
 	}
 
 	const DefVar & get_var () const
 	{
-	      return _var;
+	      return var;
 	}
 
 	void calculate_histogram(const std::vector<double>& data);
 
 private:
 	/* The Variable this VarAxis represents */
-	DefVar 				_var;
+	DefVar 				var;
 	/** The ticks of this variable */
-	Scale 				_ticks;
+	SimpleScale 		scale;
 	/** The histogram describing the frequencies of the intervals */
-	Histogram			_histogram;
+	Histogram			histogram;
 
 	/** Start and end angle for drawing the VarAxis */
-	Angle 				_start, _end;
+	Angle 				start, end;
 	/** Start radius of the VarAxis */
-	double 				_radius;
+	double 				radius;
 	/** Height of the VarAxis */
-	std::size_t 		_height;
+	std::size_t 		height;
 
 	/** Label showing the variable name */
-	Label 				_label;
+	Label 				label;
 	/** Style defining how the VarAxis is drawn */
-	DrawerProperties<> 	_prop;
+	DrawerProperties<> 	prop;
 };
 
 #endif /* DOMAINAXIS_H_ */

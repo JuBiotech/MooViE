@@ -54,105 +54,84 @@ public:
 
 	Direction get_direction() const
 	{
-		return _direction;
+		return direction;
 	}
 
 	void set_direction(Direction direction)
 	{
-		this->_direction = direction;
+		this->direction = direction;
 	}
 
 	Angle get_end() const
 	{
-		return _end;
+		return end;
 	}
 
 	void set_end(const Angle& end)
 	{
-		this->_end = end;
+		this->end = end;
 	}
 
 	double get_height() const
 	{
-		return _height;
+		return height;
 	}
 
 	void set_height(double height)
 	{
-		this->_height = height;
+		this->height = height;
 	}
 
-	std::size_t get_major_ticks() const
+	const MultiScale& get_scale() const
 	{
-		return _major_ticks;
-	}
-
-	void set_major_ticks(std::size_t major_ticks)
-	{
-		this->_major_ticks = major_ticks;
-	}
-
-	std::size_t get_minor_ticks() const
-	{
-		return _minor_ticks;
-	}
-
-	void set_minor_ticks(std::size_t minor_ticks)
-	{
-		this->_minor_ticks = minor_ticks;
-	}
-
-	const std::vector<Scale> & get_ticks() const
-	{
-		return _ticks;
+		return scale;
 	}
 
 	std::size_t get_num_outputs() const
 	{
-		return _num_outputs;
+		return num_outputs;
 	}
 
 	double get_radius() const
 	{
-		return _radius;
+		return radius;
 	}
 
 	void set_radius(double radius)
 	{
-		this->_radius = radius;
+		this->radius = radius;
 	}
 
 	Angle get_start() const
 	{
-		return _start;
+		return start;
 	}
 
 	void set_start(const Angle& start)
 	{
-		this->_start = start;
+		this->start = start;
 	}
 
 	const DefVar& get_var(std::size_t num_output) const;
 
 private:
     /** The number of outputs. */
-    std::size_t 		_num_outputs;
+    std::size_t 		num_outputs;
 
-    /** The major and minor sections */
-    std::size_t 		_major_ticks, _minor_ticks;
-    std::vector<Scale>	_ticks;
+    /** The Scale information */
+    MultiScale			scale;
 
     /** Start and end angle for drawing the CoordGrid */
-    Angle 				_start, _end;
+    Angle 				start, end;
     /** Radius of the CoordGrid */
-    double 				_radius;
+    double 				radius;
     /** Height of the CoordGrid */
-    double 				_height;
+    double 				height;
     /** Direction of the CoordGrid's values */
-    Direction 			_direction;
+    Direction 			direction;
 
     /* The output variables */
-    std::vector<DefVar> _output_variables;
+    std::vector<DefVar> output_variables;
 };
 
 #endif /* CODOMAINGRID_H_ */

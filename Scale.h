@@ -1,10 +1,3 @@
-/*
- * Ticks.h
- *
- *  Created on: 22.08.2017
- *      Author: beyss
- */
-
 #ifndef TICKS_H_
 #define TICKS_H_
 
@@ -14,122 +7,202 @@
 #include <sstream>
 #include "Label.h"
 
-/** Ticks are the .
- * @brief The Ticks class
+/** The Scale class represents a graphical scale of an axis
+ * by its extreme values and intersections counts.
+ *
+ * @brief a scale
+ *
+ * @author beyss
+ * @date 22.08.2017
  */
 class Scale
 {
 public:
-    /**
-     * @brief Ticks
-     * @param ticks_major
-     * @param ticks_minor
-     * @param extreme_vals
-     * @param label_prop
-     * @param label_suffix
+    /** Creates a Scale from major (big) and minor intersections,
+     * label properties and a label suffix (unit).
+     *
+     * @brief constructor
+     *
+     * @param major_intersections number of big intersection lines
+     * @param minor_intersections number of small intersection lines
+     * @param label_prop the style of the label text
+     * @param label_suffix the unit of the presented data
      */
-    Scale(size_t ticks_major, size_t ticks_minor,
-          const std::pair<double, double>& extreme_vals,
-          const TextProperties& label_prop, const std::string& label_suffix = "")
-    : _ticks_major(ticks_major), _ticks_minor(ticks_minor), _extreme_vals(extreme_vals),
-      _label_prop(label_prop), _label_suffix(label_suffix)
-    {
-    }
+    Scale(size_t _major_intersections, size_t _minor_intersections,
+          const TextProperties& _label_prop, const std::string& _label_suffix = "")
+    : major_intersections(_major_intersections), minor_intersections(_minor_intersections),
+      label_prop(_label_prop), label_suffix(_label_suffix)
+    {}
 
     virtual ~Scale() {}
 
-    /** Access function for the Ticks extreme values.
-     * @brief extreme_vals
-     * @return a reference to the extreme values
+    /** Returns the number of major intersection lines
+     * of this scale.
+     *
+     * @brief number of big intersection lines
+     *
+     * @return number of major intersections
      */
-    const std::pair<double,double> & get_extremes() const
+    size_t get_major_intersections(void) const
     {
-        return _extreme_vals;
+        return major_intersections;
     }
 
-    /**
-     * @brief label
-     * @return
+    /** Returns the number of major intersection lines
+     * of this scale.
+     *
+     * @brief number of small intersection lines
+     *
+     * @return number of minor intersections
      */
-    std::vector<Label> get_labels() const
-    {
-        std::vector<Label> label;
-        label.reserve(get_major_ticks() + 1);
-        double step = (get_extremes().second - get_extremes().first)
-                        / double(get_major_ticks());
-        for (size_t i = 0; i <= _ticks_major; ++i)
-        {
-                double val = get_extremes().first + i * step;
-                std::stringstream ss;
-                ss << val << _label_suffix;
-                label.emplace_back(ss.str(), _label_prop);
-        }
-        return label;
-    }
-
-    /**
-     * @brief ticksmajor
-     * @return
-     */
-    size_t get_major_ticks() const
-    {
-        return _ticks_major;
-    }
-
-    /**
-     * @brief ticksminor
-     * @return
-     */
-    size_t get_minor_ticks() const
-    {
-        return _ticks_minor;
-    }
-private:
-	size_t _ticks_major;
-	size_t _ticks_minor;
-	std::pair<double, double> _extreme_vals;
-	TextProperties _label_prop;
-	std::string _label_suffix;
+	size_t get_minor_intersections(void) const
+	{
+		return minor_intersections;
+	}
+protected:
+	size_t major_intersections;
+	size_t minor_intersections;
+	TextProperties label_prop;
+	std::string label_suffix;
 };
 
-/**
- * @brief create_axis
- * @param min
- * @param max
- * @return
+/** A Scale that represents a graphical axis that can
+ * display data from the real numbers with two given
+ * extremes.
+ *
+ * @brief a 1-dimensional scale
+ *
+ * @author stratmann
+ * @date 15.05.2018
  */
-inline std::pair<double,double> create_axis(double min, double max)
+class SimpleScale: public Scale
 {
-	if (max < min)
-	{
-		std::pair<double,double> ret = create_axis(max, min);
-		return std::make_pair(ret.second, ret.first);
-	}
-	else
-	{
-		double diff = std::floor(std::log10(std::abs(max-min))) + 1;
-		double power_of_ten = std::pow(10, diff);
-		bool shift = false;
-		if (std::abs(std::abs(max - min) - power_of_ten) < 1.5 * power_of_ten)
-		{
-			diff -= 1;
-			power_of_ten = std::pow(10, diff);
-			shift = true;
-		}
+public:
+	/** Creates a new SimpleScale from major (big) and minor intersections,
+     * label properties, label suffix (unit) and extreme values.
+	 *
+	 * @brief constructor
+     *
+     * @param major_intersections number of big intersection lines
+     * @param minor_intersections number of small intersection lines
+     * @param label_prop the style of the label text
+     * @param label_suffix the unit of the presented data
+     * @param extremes the extreme values of the scale
+	 */
+	SimpleScale(size_t _major_intersections, size_t _minor_intersections,
+	          const TextProperties& _label_prop, const std::string& _label_suffix = "",
+			  const std::pair<double, double>& _extremes)
+	    : Scale(_major_intersections, _minor_intersections, _label_prop, _label_suffix),
+		  extremes(_extremes)
+	{}
 
-		double upper_val = std::round(max/power_of_ten)*power_of_ten;
-		if (upper_val < max)
-			upper_val += power_of_ten;
-		if ((upper_val - 0.5*power_of_ten >= max) && !shift)
-			upper_val -= 0.5*power_of_ten;
-
-		double lower_val = std::round(min/power_of_ten) * power_of_ten;
-		if (lower_val > min)
-			lower_val -= power_of_ten;
-		if ((lower_val + 0.5*power_of_ten <= min) && !shift)
-			lower_val += 0.5*power_of_ten;
-		return std::make_pair(lower_val, upper_val);
+	/** Access function for the Ticks extreme values.
+	 *
+	 * @brief extreme_vals
+	 *
+	 * @return a reference to the extreme values
+	 */
+	inline const std::pair<double,double> & get_extremes() const
+	{
+		return extremes;
 	}
-}
+
+	/** Constructs description labels from the
+	 *
+	 * @brief make description labels
+	 *
+	 * @return the labels
+	 */
+	std::vector<Label> make_labels(void) const;
+
+private:
+	std::pair<double, double> extremes;
+};
+
+/** A Scale that represents a graphical axis that can
+ * display data from the R^n with two given extremes for
+ * each entry.
+ *
+ * @brief a n-dimensional scale
+ *
+ * @author stratmann
+ * @date 15.05.2018
+ */
+class MultiScale: public Scale
+{
+public:
+	/** Creates a new MultiScale from major (big) and minor intersections,
+	 * label properties, label suffix (unit) and extreme values.
+	 * To use MultiScale, extreme values of each entry need to be
+	 * added.
+	 *
+	 * @brief constructor
+	 *
+	 * @param major_intersections number of big intersection lines
+	 * @param minor_intersections number of small intersection lines
+	 * @param label_prop the style of the label text
+	 * @param label_suffix the unit of the presented data
+	 */
+	MultiScale(size_t ticks_major, size_t ticks_minor,
+	          const TextProperties& label_prop, const std::string& label_suffix = "")
+	: Scale(ticks_major, ticks_minor, label_prop, label_suffix)
+	{}
+
+	/** Adds extreme value of another scalable entry to this MultiScale.
+	 *
+	 * @brief adds scale
+	 *
+	 * @param extremes the extreme values
+	 */
+	inline void add_scale(const std::pair<double, double>& extremes)
+	{
+		_extremes.push_back(extremes);
+	}
+
+	/** Returns the number of scales of this MultiScale.
+	 *
+	 * @brief gets the number of scales
+	 *
+	 * @return number of scales
+	 */
+	inline size_t get_scale_number(void) const
+	{
+		return _extremes.size();
+	}
+
+	/** Returns the extreme values of the i-th entry.
+	 *
+	 * @brief gets the i-th extremes
+	 *
+	 * @return the extremes
+	 */
+	inline const std::pair<double, double> get_extremes(size_t i) const
+	{
+		return _extremes[i];
+	}
+
+	/** Constructs description labels from the
+	 *
+	 * @brief make description labels
+	 *
+	 * @return the labels
+	 */
+	std::vector<Label> make_labels(size_t i) const;
+
+private:
+	std::vector<std::pair<double, double>> _extremes;
+};
+
+/** Creates an interval with rounded values. For this
+ * pair (a,b) is a <= min, max <= b.
+ *
+ * @brief rounded interval
+ *
+ * @param min the lowest value
+ * @param max the largest value
+ *
+ * @return the rounded interval
+ */
+std::pair<double, double> create_rounded_interval(double min, double max);
 
 #endif /* TICKS_H_ */

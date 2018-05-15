@@ -27,7 +27,7 @@ RelationElementFactory::RelationElementFactory(
 						grid.get_start() > grid.get_end() ?
 								grid.get_end().value() + 2 * M_PIl : grid.get_end().value()
 					);
-	for (const Scale & ticks: grid.get_ticks())
+	for (const Scale & ticks: grid.get_scale())
 	{
 		_output_mapper.emplace_back(
 				ticks.get_extremes(),
