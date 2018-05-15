@@ -43,11 +43,19 @@ BOOST_AUTO_TEST_SUITE(text_properties)
 
 BOOST_AUTO_TEST_CASE(constructor_access)
 {
-	std::string font_name;
-	double font_size;
-	Color color;
-	bool bold;
-	bool italic;
+	std::string font_name = "Sans serif";
+	double font_size = 20;
+	Color color(.4, .3, .2, .1);
+	bool bold = true;
+	bool italic = false;
+
+	TextProperties prop(font_name, font_size, color, bold, italic);
+	BOOST_CHECK_EQUAL(prop.font_name, font_name);
+	BOOST_CHECK_EQUAL(prop.font_size, font_size);
+	BOOST_CHECK_EQUAL(prop.color, color);
+	BOOST_CHECK_EQUAL(prop.bold, bold);
+	BOOST_CHECK_EQUAL(prop.italic, italic);
+
 }
 
 BOOST_AUTO_TEST_SUITE_END()
