@@ -100,5 +100,5 @@ const Color & RelationElementFactory::get_color(double val) const
 
 	std::size_t i = std::ceil(10 * (angle - _grid.get_start().value()) / range);
 
-	return Color::GLOW_10[i - 1];
+	return Configuration::GLOW_10[i - 1];
 }

@@ -66,7 +66,7 @@ void CairoDrawer::draw_coord_grid(const CodomainGrid& grid)
 	draw_segment_axis(
 			grid.get_radius(), conf.get_input_thickness(),
 			grid.get_start(), grid.get_end(),
-			DrawerProperties<std::array<Color, 10>>(1, Color::BLACK, Color::GLOW_10),
+			DrawerProperties<std::array<Color, 10>>(1, Color::BLACK, Configuration::GLOW_10),
 			grid.get_direction()
 	);
 

@@ -93,7 +93,7 @@ void Scene::initialize(void)
 				config.get_input_inner_radius(), config.get_input_thickness(),
 				DrawerProperties<>(
 					config.get_prop_thick().line_width,
-					Color::BLACK, Color::SET3.at(_set.input_variables().size(), axis_color_pos++)
+					Color::BLACK, Configuration::SET3.at(_set.input_variables().size(), axis_color_pos++)
 				),
 				config.get_var_label()
 		);

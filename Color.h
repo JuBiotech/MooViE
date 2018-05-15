@@ -11,13 +11,16 @@
 #include <array>
 #include "Triangle.h"
 
-/** Color class represents a color by RGB and alpha values.
+/** Color class represents a color by RGB and alpha value.
  * @brief The Color class
  * @author beyss
  * @date 27.07.2017
  */
 class Color
 {
+public:
+	/** A Color constant representing black (0,0,0,1) */
+	static const Color 					BLACK;
 public:
     /** Creates a Color from RGB and Alpha values.
     * @brief Color
@@ -30,12 +33,14 @@ public:
     : _r { limit(r) }, _g { limit(g) }, _b { limit(b) }, _a { limit(a) }
     {}
 
-    Color(const Color & c, double a)
+    Color(const Color& c, double a)
     : _r{ limit(c._r) }, _g { limit(c._g) }, _b { limit(c._b) }, _a { limit(a) }
     {}
 
     /** Access function for the color's red value.
+     *
      * @brief r
+     *
      * @return a reference to the colors red value
      */
     const double& r() const
@@ -44,7 +49,9 @@ public:
     }
 
     /** Access function for the color's green value.
+     *
      * @brief g
+     *
      * @return a reference to the colors green value
      */
     const double& g() const
@@ -53,7 +60,9 @@ public:
     }
 
     /** Access function for the color's blue value.
+     *
      * @brief b
+     *
      * @return a reference to the colors blue value
      */
     const double& b() const
@@ -62,7 +71,9 @@ public:
     }
 
     /** Access function for the color's alpha value.
+     *
      * @brief a
+     *
      * @return a reference to the colors alpha value
      */
     const double& a() const
@@ -70,10 +81,82 @@ public:
         return _a;
     }
 
+    /** Checks whether or not two colors are equal.
+     * This is the case if RGBA values are the same.
+     *
+     * @brief this == color
+     *
+     * @param color the other color
+     *
+     * @return equal or not
+     */
+    bool operator==(const Color& color) const
+    {
+    	return _r == color._r && _g == color._g
+    			&& _b == color._b && _a == color._a;
+    }
+
+    /** Checks whether or not two colors are not equal.
+     * Two colors would be equal if their RGBA values
+     * were the same.
+     *
+     * @brief this != color
+     *
+     * @param color the other color
+     *
+     * @return not equal or not
+     */
+    bool operator!=(const Color& color) const
+    {
+    	return _r != color._r || _g != color._g
+    			|| _b != color._b || _a != color._a;
+    }
+
+	/** Sets the red value of this Color.
+	 * Input values from 0 to 255 will be automatically corrected
+	 * to values from [0,1].
+	 *
+	 * @brief set red value
+	 *
+	 * @param red the red value to set
+	 */
+	void set_red(double red)
+	{
+		_r = limit(red);
+	}
+
+	/** Sets the green value of this Color.
+	 * Input values from 0 to 255 will be automatically corrected
+	 * to values from [0,1].
+	 *
+	 * @brief set green value
+	 *
+	 * @param green the green value to set
+	 */
+	void set_green(double green)
+	{
+		_g = limit(green);
+	}
+
+	/** Sets the blue value of this Color.
+	 * Input values from 0 to 255 will be automatically corrected
+	 * to values from [0,1].
+	 *
+	 * @brief set blue value
+	 *
+	 * @param blue the blue value to set
+	 */
+	void set_blue(double blue)
+	{
+		_b = limit(blue);
+	}
+
     /** Sets the alpha value of this Color.
-     * set_alpha automatically corrects the given input value
-     * to be in the range from 0 to 1.
-     * @brief set_alpha
+     * Input values from 0 to 255 will be automatically corrected
+	 * to values from [0,1].
+     *
+     * @brief set alpha value
+     *
      * @param alpha the alpha value to set
      */
     void set_alpha(double alpha)
@@ -81,24 +164,14 @@ public:
         _a = limit(alpha);
     }
 
-    /** Returns Color with the same RGB values as this Color,
-     * but with given alpha value. set_alpha automatically corrects
-     * the given input value to be in the range from 0 to 1.
-     * @brief set_alpha
-     * @param alpha the alpha value to set
-     */
-    Color set_alpha(double alpha) const
-    {
-        Color out(*this);
-        out.set_alpha(alpha);
-        return out;
-    }
-
 private:
     /** Corrects an input value to be from [0,1].
      * Used for correcting alpha values.
+     *
      * @brief limit
+     *
      * @param val the value to correct
+     *
      * @return the corrected value
      */
     double limit(const double& val)
@@ -109,28 +182,8 @@ private:
         return std::max(std::min(temp_val, 1.0), 0.0);
     }
 
-    /** double constants representing RGBA value.
-    * _a should be from [0,1].
-    */
+    /** double constants representing RGBA value. */
     double _r, _g, _b, _a;
-
-public:
-    /** An array of Colors */
-    static const std::array<Color, 10> 	GLOW_10;
-
-    /** A Triangular storage which contains i+1
-     * matching colors at the i-th index.
-     */
-    static const Triangle<Color, 12> 	SET3;
-
-    /** A Color constant representing black (0,0,0,1) */
-    static const Color 			BLACK;
-
-    /** Further color constants */
-    static const Color 			SET2_3_1;
-    static const Color 			SET2_3_2;
-    static const Color 			SET2_3_3;
-
 };
 
 #endif /* COLOR_H_ */

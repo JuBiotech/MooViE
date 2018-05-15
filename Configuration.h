@@ -21,6 +21,20 @@
  */
 class Configuration
 {
+public:
+	/** An array of Colors */
+	static const std::array<Color, 10> 	GLOW_10;
+
+	/** A Triangular storage which contains i+1
+	 * matching colors at the i-th index.
+	 */
+	static const Triangle<Color, 12> 	SET3;
+
+	/** Further color constants */
+	static const Color 					SET2_3_1;
+	static const Color 					SET2_3_2;
+	static const Color 					SET2_3_3;
+
 private:
 	static std::shared_ptr<Configuration> _instance;
 public:
@@ -33,7 +47,8 @@ public:
 
 	static void initialize(const std::string & fname);
 
-	// Generell
+
+	// General
 
 
 	inline const std::string & get_input_file() const
@@ -133,7 +148,7 @@ public:
 	}
 
 
-	// VarAxis
+	// DomainAxis
 
 
 	double get_input_inner_radius() const
