@@ -26,9 +26,9 @@ struct TextProperties
 	/** The text color */
 	Color color;
 	/** The boldness of the text */
-	double bold;
+	bool bold;
 	/** The skewness of the text */
-	double italic;
+	bool italic;
 
 	/**
      * @brief TextProperties

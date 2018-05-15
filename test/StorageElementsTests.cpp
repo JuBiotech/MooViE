@@ -46,8 +46,8 @@ BOOST_AUTO_TEST_CASE(constructor_access)
 	std::string font_name;
 	double font_size;
 	Color color;
-	double bold;
-	double italic;
+	bool bold;
+	bool italic;
 }
 
 BOOST_AUTO_TEST_SUITE_END()
