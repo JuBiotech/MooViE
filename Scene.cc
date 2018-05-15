@@ -61,14 +61,14 @@ void Scene::draw_components(void)
 {
 	for (RelationElement link: _links)
 	{
-		_drawer->draw_data_link(link);
+		_drawer->draw_relation_element(link);
 	}
 
-	_drawer->draw_coord_grid(_grid);
+	_drawer->draw_codomain_grid(_grid);
 
 	for (DomainAxis axis: _axis)
 	{
-		_drawer->draw_var_axis(axis);
+		_drawer->draw_domain_axis(axis);
 	}
 
 }

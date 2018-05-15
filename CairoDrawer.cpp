@@ -56,7 +56,7 @@ CairoDrawer::CairoDrawer(const std::string& fpath, int width, int height)
 	set_surface(fpath, width, height);
 }
 
-void CairoDrawer::draw_coord_grid(const CodomainGrid& grid)
+void CairoDrawer::draw_codomain_grid(const CodomainGrid& grid)
 {
 	_cr->set_identity_matrix();
 
@@ -157,7 +157,7 @@ void CairoDrawer::draw_coord_grid(const CodomainGrid& grid)
 	}
 }
 
-void CairoDrawer::draw_var_axis(const DomainAxis& axis)
+void CairoDrawer::draw_domain_axis(const DomainAxis& axis)
 {
 	_cr->set_identity_matrix();
 
@@ -238,11 +238,11 @@ void CairoDrawer::draw_var_axis(const DomainAxis& axis)
 	draw_histogram(axis.get_histogram(), radius_histogram, axis.get_start(), axis.get_end());
 }
 
-void CairoDrawer::draw_data_link(const RelationElement& link)
+void CairoDrawer::draw_relation_element(const RelationElement& rel)
 {
 	// Calculate target from connector coordinate
 	std::size_t connector_pos = RelationElement::num_inputs;
-	const Point from = link[connector_pos];
+	const Point from = rel[connector_pos];
 
 	Polar target1(
 				from.coord.radius() - CONNECTOR_ARROW_HEIGHT,
@@ -257,41 +257,41 @@ void CairoDrawer::draw_data_link(const RelationElement& link)
 	for (std::size_t i = 0; i < RelationElement::num_inputs; ++i)
 	{
 		Polar origin1(
-				link[i].coord.radius() - RADIUS_DELTA,
-				link[i].coord.angle() - ANGLE_DELTA_SMALL
+				rel[i].coord.radius() - RADIUS_DELTA,
+				rel[i].coord.angle() - ANGLE_DELTA_SMALL
 		),
 		origin2(
-				link[i].coord.radius() - RADIUS_DELTA,
-				link[i].coord.angle() + ANGLE_DELTA_SMALL
+				rel[i].coord.radius() - RADIUS_DELTA,
+				rel[i].coord.angle() + ANGLE_DELTA_SMALL
 		);
-		draw_link(origin1, origin2, target1, target2, link[i].prop);
+		draw_link(origin1, origin2, target1, target2, rel[i].prop);
 	}
 
 	// Draw line from connector to first output
-	double connector_distance = (link[connector_pos + 1].coord.radius() - from.coord.radius()) * 0.1
+	double connector_distance = (rel[connector_pos + 1].coord.radius() - from.coord.radius()) * 0.1
 			+ Configuration::get_instance().get_output_thickness();
 	draw_line(
 			from.coord,
-			Polar(link[connector_pos + 1].coord.radius() + connector_distance,
-					link[connector_pos + 1].coord.angle()),
+			Polar(rel[connector_pos + 1].coord.radius() + connector_distance,
+					rel[connector_pos + 1].coord.angle()),
 			from.prop
 	);
 	draw_arrow(from.coord, from.prop);
 
 	// Draw connector on CoordGrid
-	for (size_t i = connector_pos + 1; i < link.size() - 1; ++i)
+	for (size_t i = connector_pos + 1; i < rel.size() - 1; ++i)
 	{
-		Polar from = link[i].coord, to = link[i + 1].coord;
+		Polar from = rel[i].coord, to = rel[i + 1].coord;
 		draw_connector(
 				get_connector_start(from, to),
 				get_connector_end(from, to),
-				link[i].prop
+				rel[i].prop
 		);
 		draw_coord_point(
 				to,
 				COORDPOINT_ANGLE,
 				(to.radius() - from.radius()) * 0.2,
-				link[i].prop
+				rel[i].prop
 		);
 	}
 }

@@ -46,11 +46,11 @@ public:
 
     virtual void change_surface(const std::string& fpath, int width, int height);
 
-    virtual void draw_coord_grid(const CodomainGrid& grid);
+    virtual void draw_codomain_grid(const CodomainGrid& grid);
 
-    virtual void draw_var_axis(const DomainAxis& axis);
+    virtual void draw_domain_axis(const DomainAxis& axis);
 
-    virtual void draw_data_link(const RelationElement& link);
+    virtual void draw_relation_element(const RelationElement& link);
 
     virtual void finish();
 

@@ -64,7 +64,7 @@ public:
      *
      * @param grid the CodomainGrid to draw
     */
-    virtual void draw_coord_grid(const CodomainGrid& grid) = 0;
+    virtual void draw_codomain_grid(const CodomainGrid& grid) = 0;
 
     /** Draws a DomainAxis using its radius and angles. For thin or thick lines
      * the properties given by the Configuration instance are used.
@@ -73,7 +73,7 @@ public:
      *
      * @param axis the DomainAxis to draw
      */
-    virtual void draw_var_axis(const DomainAxis& axis) = 0;
+    virtual void draw_domain_axis(const DomainAxis& axis) = 0;
 
     /** Draws a RelationElement using its coordinates.
      *
@@ -81,7 +81,7 @@ public:
      *
      * @param elem the RelationElement to draw
      */
-    virtual void draw_data_link(const RelationElement& elem) = 0;
+    virtual void draw_relation_element(const RelationElement& elem) = 0;
 
 
     /** Save the Drawer's result to the given file.
