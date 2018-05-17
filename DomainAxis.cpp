@@ -42,8 +42,8 @@ DomainAxis::DomainAxis(DefVar _var,
   scale(
 		  Configuration::get_instance().get_num_major_ticks_va(),
 		  Configuration::get_instance().get_num_minor_ticks_va(),
-		  Configuration::get_instance().get_tick_label(), _var.unit,
-		  create_rounded_interval(_var.min, _var.max)
+		  create_rounded_interval(_var.min, _var.max),
+		  Configuration::get_instance().get_tick_label(), _var.unit
   ),
   histogram(_var),
   start(start), end(end),radius(radius),  height(height),

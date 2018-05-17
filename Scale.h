@@ -85,13 +85,13 @@ public:
      *
      * @param major_intersections number of big intersection lines
      * @param minor_intersections number of small intersection lines
+     * @param extremes the extreme values of the scale
      * @param label_prop the style of the label text
      * @param label_suffix the unit of the presented data
-     * @param extremes the extreme values of the scale
 	 */
 	SimpleScale(size_t _major_intersections, size_t _minor_intersections,
-	          const TextProperties& _label_prop, const std::string& _label_suffix = "",
-			  const std::pair<double, double>& _extremes)
+			  const std::pair<double, double>& _extremes,
+			  const TextProperties& _label_prop, const std::string& _label_suffix = "")
 	    : Scale(_major_intersections, _minor_intersections, _label_prop, _label_suffix),
 		  extremes(_extremes)
 	{}

@@ -27,10 +27,12 @@ RelationElementFactory::RelationElementFactory(
 						grid.get_start() > grid.get_end() ?
 								grid.get_end().value() + 2 * M_PIl : grid.get_end().value()
 					);
-	for (const Scale & ticks: grid.get_scale())
+
+	const MultiScale& scale = grid.get_scale();
+	for (size_t i = 0; i < scale.get_scale_number(); ++i)
 	{
 		_output_mapper.emplace_back(
-				ticks.get_extremes(),
+				scale.get_extremes(i),
 				out
 		);
 	}
