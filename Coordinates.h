@@ -10,6 +10,7 @@
 
 #include <cmath>
 #include <ostream>
+#include <cassert>
 
 /** A namespace for converter functions. */
 namespace angle_helper

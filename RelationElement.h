@@ -55,6 +55,8 @@ public:
 			const std::vector<DomainAxis>& axis);
 	RelationElement create(const DefDataRow& row) const;
 private:
+
+
 	const Color & get_color(double val) const;
 private:
 	double _line_width, _line_alpha, _fill_alpha;

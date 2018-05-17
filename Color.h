@@ -9,7 +9,7 @@
 #define COLOR_H_
 
 #include <array>
-#include "Triangle.h"
+#include "Utils.h"
 
 /** Color class represents a color by RGB and alpha value.
  * @brief The Color class
@@ -92,8 +92,9 @@ public:
      */
     bool operator==(const Color& color) const
     {
-    	return _r == color._r && _g == color._g
-    			&& _b == color._b && _a == color._a;
+    	return Util::double_equal(_r, color._r)
+    			&& Util::double_equal(_g, color._g)
+    			&& Util::double_equal(_b, color._b);
     }
 
     /** Checks whether or not two colors are not equal.
@@ -108,8 +109,9 @@ public:
      */
     bool operator!=(const Color& color) const
     {
-    	return _r != color._r || _g != color._g
-    			|| _b != color._b || _a != color._a;
+    	return !Util::double_equal(_r, color._r)
+    			|| !Util::double_equal(_g, color._g)
+    			|| !Util::double_equal(_b, color._b);
     }
 
 	/** Sets the red value of this Color.
