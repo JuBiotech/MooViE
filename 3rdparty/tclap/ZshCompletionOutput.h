@@ -34,11 +34,11 @@
 #include <iostream>
 #include <map>
 
-#include "CmdLineInterface.h"
-#include "CmdLineOutput.h"
-#include "XorHandler.h"
-#include "Arg.h"
-#include "sstream.h"
+#include <CmdLineInterface.h>
+#include <CmdLineOutput.h>
+#include <XorHandler.h>
+#include <Arg.h>
+#include <sstream.h>
 
 namespace TCLAP {
 

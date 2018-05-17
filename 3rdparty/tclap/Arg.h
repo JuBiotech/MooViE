@@ -37,7 +37,7 @@
 #include <iomanip>
 #include <cstdio>
 
-#include "sstream.h"
+#include <sstream.h>
 
 #if defined(HAVE_SSTREAM)
 #include <sstream>
@@ -49,11 +49,11 @@ typedef std::istrstream istringstream;
 #error "Need a stringstream (sstream or strstream) to compile!"
 #endif
 
-#include "ArgException.h"
-#include "Visitor.h"
-#include "CmdLineInterface.h"
-#include "ArgTraits.h"
-#include "StandardTraits.h"
+#include <ArgException.h>
+#include <Visitor.h>
+#include <CmdLineInterface.h>
+#include <ArgTraits.h>
+#include <StandardTraits.h>
 
 namespace TCLAP {
 

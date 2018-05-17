@@ -29,8 +29,8 @@
 
 #include <string>
 #include <vector>
-#include "Constraint.h"
-#include "sstream.h"
+#include <Constraint.h>
+#include <sstream.h>
 
 namespace TCLAP {
 
