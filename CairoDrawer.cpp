@@ -28,8 +28,12 @@ const double 	CairoDrawer::RADIUS_LABEL_DELTA = 5,
 				CairoDrawer::CONNECTOR_DELTA = 10,
 				CairoDrawer::TEXT_DELTA = 0.01,
 				CairoDrawer::ANGLE_DELTA_SMALL = 0.001,
+				CairoDrawer::ANGLE_DELTA_MEDIUM = 0.01,
 				CairoDrawer::ANGLE_DELTA_LARGE = 0.1,
-				CairoDrawer::RADIUS_DELTA = 10;
+				CairoDrawer::RADIUS_DELTA = 10,
+				CairoDrawer::OUTPUT_EXTREME_RADIUS_DELTA = 2,
+				CairoDrawer::OUTPUT_LABEL_LINE_END_DELTA = 3,
+				CairoDrawer::OUTPUT_LABEL_RADIUS_DELTA = 7;
 
 const CairoDrawer::TextAlignment CairoDrawer::TextAlignment::LEFT(1),
 							CairoDrawer::TextAlignment::HALF_LEFT(0.75),
@@ -41,13 +45,14 @@ CairoDrawer::TextAlignment::TextAlignment(double ratio)
 {
 	if (0 > ratio)
 	{
-		this->ratio = std::abs(ratio);
+		ratio = std::abs(ratio);
 	}
 
 	if (ratio > 1)
 	{
-		this->ratio /= std::floor(std::log10(ratio));
+		ratio /= std::floor(std::log10(ratio));
 	}
+	this->ratio = ratio;
 }
 
 CairoDrawer::CairoDrawer(const std::string& fpath, int width, int height)
@@ -109,10 +114,14 @@ void CairoDrawer::draw_codomain_grid(const CodomainGrid& grid)
 
 	// Draw the description of the first output
 	static TextProperties name_prop("Liberation Serif", 6, Color::BLACK, true, false);
-	draw_text_parallel(
-	    Label(grid.get_var(0).name, name_prop),
-	    Polar(min_radius, COORDGRID_DESCRIPTION_ANGLE),
-		TextAlignment::RIGHT
+
+
+	draw_output_label(
+		Label(grid.get_var(0).name, name_prop),
+		max_radius,
+		grid.get_radius() + conf.get_input_thickness() / 2,
+		grid.get_end(),
+		M_PI_2
 	);
 	draw_text_orthogonal(
 	    Label(std::to_string(scale.get_extremes(0).second), conf.get_tick_label()),
@@ -129,19 +138,21 @@ void CairoDrawer::draw_codomain_grid(const CodomainGrid& grid)
 	for (size_t i = 1; i < grid.get_num_outputs(); ++i)
 	{
 		// Draw the description of the i-th output
-		draw_text_parallel(
-		    Label(grid.get_var(i).name, name_prop),
-		    Polar(min_radius + i * y_dist, COORDGRID_DESCRIPTION_ANGLE),
-			TextAlignment::RIGHT
+		draw_output_label(
+			Label(grid.get_var(i).name, name_prop),
+			max_radius + i * OUTPUT_LABEL_RADIUS_DELTA,
+			min_radius + i * y_dist,
+			grid.get_end(),
+			M_PI_2 - i * 2 * ANGLE_DELTA_MEDIUM
 		);
 		draw_text_orthogonal(
 		    Label(std::to_string(scale.get_extremes(i).second), conf.get_tick_label()),
-		    Polar(min_radius + i * y_dist, grid.get_start() - TEXT_DELTA),
+		    Polar(min_radius + i * y_dist + OUTPUT_EXTREME_RADIUS_DELTA, grid.get_start() - TEXT_DELTA),
 			TextAlignment::RIGHT
 		);
 		draw_text_orthogonal(
 		    Label(std::to_string(scale.get_extremes(0).first), conf.get_tick_label()),
-		    Polar(min_radius + i * y_dist, grid.get_end() + TEXT_DELTA),
+		    Polar(min_radius + i * y_dist + OUTPUT_EXTREME_RADIUS_DELTA, grid.get_end() + TEXT_DELTA),
 			TextAlignment::LEFT
 		);
 
@@ -547,6 +558,73 @@ void CairoDrawer::draw_segment_axis(double inner_radius, double thickness,
 	}
 }
 
+void CairoDrawer::draw_output_label(const Label& output_label,
+		double radius_label, double radius_output,
+		const Angle& begin, const Angle& end)
+{
+	_cr->set_identity_matrix();
+	_cr->begin_new_path();
+
+	draw_arc(radius_output, begin, end, Direction::DECREASING);
+
+	Cartesian tmp;
+	_pc.convert(Polar(radius_output, end), tmp);
+	Cartesian line_end(tmp.x(), tmp.y() - radius_label + radius_output - OUTPUT_LABEL_LINE_END_DELTA);
+
+	_cr->line_to(line_end.x(), line_end.y());
+	_cr->line_to(_pc.get_center_x(), line_end.y());
+
+	_cr->set_line_width(Configuration::get_instance().get_prop_thin().line_width);
+	_cr->stroke();
+
+	draw_text_orthogonal(
+		output_label,
+		Polar(radius_label, M_PI_2 + 3 * ANGLE_DELTA_SMALL),
+		TextAlignment::LEFT
+	);
+}
+
+void CairoDrawer::draw_arrow(const Polar& start, const DrawerProperties<>& prop)
+{
+	_cr->set_identity_matrix();
+	_cr->begin_new_path();
+
+	// Only draw arrows with height of 5
+	double height = CONNECTOR_ARROW_HEIGHT;
+
+	// Calculate arrow coordinates
+	Polar start_help(start.radius() - height, start.angle()),
+			direction_help(start.radius() - height / 2, start.angle()),
+			left_help(start.radius() - height, start.angle() - height / 500),
+			right_help(start.radius() - height, start.angle() + height / 500);
+
+	// Convert arrow coordinates into Cartesian coordinates
+	Cartesian start_c, direction_c, left, right;
+	_pc.convert(start_help, start_c);
+	_pc.convert(direction_help, direction_c);
+	_pc.convert(left_help, left);
+	_pc.convert(right_help, right);
+
+	// Calculate head coordinate h = p + height * (d - p) / ||d-p||
+	double p_x = start_c.x(), p_y = start_c.y(), d_x = direction_c.x(), d_y = direction_c.y();
+	double diff_len = std::sqrt(std::pow(d_x - p_x, 2) + std::pow(d_y - p_y, 2));
+	Cartesian head(p_x + height * (d_x - p_x) / diff_len, p_y + height * (d_y - p_y) / diff_len);
+
+	// Draw path and apply after setting line and fill style
+	_cr->move_to(head.x(), head.y());
+	_cr->line_to(right.x(), right.y());
+	_cr->line_to(left.x(), left.y());
+	_cr->set_source_rgba(
+			prop.line_color.r(),
+			prop.line_color.g(),
+			prop.line_color.b(),
+			1
+	);
+	_cr->set_line_width(DATA_LINK_LINE_WIDTH);
+	_cr->fill_preserve();
+	_cr->stroke();
+}
+
 void CairoDrawer::draw_coord_point(const Polar& coord, const Angle& width,
 		double height, const DrawerProperties<>& prop)
 {
@@ -670,47 +748,6 @@ void CairoDrawer::draw_ring_segment(double inner_radius, double thickness,
 			prop.line_color.a()
 	);
 	_cr->set_line_width(prop.line_width);
-	_cr->stroke();
-}
-
-void CairoDrawer::draw_arrow(const Polar& start, const DrawerProperties<>& prop)
-{
-	_cr->set_identity_matrix();
-	_cr->begin_new_path();
-
-	// Only draw arrows with height of 5
-	double height = CONNECTOR_ARROW_HEIGHT;
-
-	// Calculate arrow coordinates
-	Polar start_help(start.radius() - height, start.angle()),
-			direction_help(start.radius() - height / 2, start.angle()),
-			left_help(start.radius() - height, start.angle() - height / 500),
-			right_help(start.radius() - height, start.angle() + height / 500);
-
-	// Convert arrow coordinates into Cartesian coordinates
-	Cartesian start_c, direction_c, left, right;
-	_pc.convert(start_help, start_c);
-	_pc.convert(direction_help, direction_c);
-	_pc.convert(left_help, left);
-	_pc.convert(right_help, right);
-
-	// Calculate head coordinate h = p + height * (d - p) / ||d-p||
-	double p_x = start_c.x(), p_y = start_c.y(), d_x = direction_c.x(), d_y = direction_c.y();
-	double diff_len = std::sqrt(std::pow(d_x - p_x, 2) + std::pow(d_y - p_y, 2));
-	Cartesian head(p_x + height * (d_x - p_x) / diff_len, p_y + height * (d_y - p_y) / diff_len);
-
-	// Draw path and apply after setting line and fill style
-	_cr->move_to(head.x(), head.y());
-	_cr->line_to(right.x(), right.y());
-	_cr->line_to(left.x(), left.y());
-	_cr->set_source_rgba(
-			prop.line_color.r(),
-			prop.line_color.g(),
-			prop.line_color.b(),
-			1
-	);
-	_cr->set_line_width(DATA_LINK_LINE_WIDTH);
-	_cr->fill_preserve();
 	_cr->stroke();
 }
 

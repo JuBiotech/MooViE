@@ -37,8 +37,12 @@ public:
 						CONNECTOR_DELTA,
 						TEXT_DELTA,
 						ANGLE_DELTA_SMALL,
+						ANGLE_DELTA_MEDIUM,
 						ANGLE_DELTA_LARGE,
-						RADIUS_DELTA;
+						RADIUS_DELTA,
+						OUTPUT_EXTREME_RADIUS_DELTA,
+						OUTPUT_LABEL_LINE_END_DELTA,
+						OUTPUT_LABEL_RADIUS_DELTA;
 
     CairoDrawer(const std::string & fpath, int width, int height);
 
@@ -71,14 +75,18 @@ protected:
 			const Angle& start, const Angle& end,
 			const DrawerProperties<std::array<Color, 10>>& prop, Direction dir);
 
+    virtual void draw_output_label(const Label& output_label,
+        	double radius_label, double radius_output,
+        	const Angle& begin, const Angle& end);
+
+    virtual void draw_arrow(const Polar& start, const DrawerProperties<>& prop);
+
     virtual void draw_ring_segment(double radius, double thickness, const Angle& begin,
 			const Angle & end, const DrawerProperties<> & prop, Direction dir);
 
     virtual void draw_connector_segment(double begin_radius, double begin_angle,
 			double end_radius, double end_angle,
 			const DrawerProperties<>& prop);
-
-    virtual void draw_arrow(const Polar& start, const DrawerProperties<>& prop);
 
     virtual void draw_line(const Polar& from, const Polar& to,
 			const DrawerProperties<> & prop);

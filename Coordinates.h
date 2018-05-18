@@ -590,7 +590,7 @@ public:
     inline void convert(const Cartesian& from, Polar& to) const
     {
             double x { from.x() - center_x };
-            double y { from.y() - center_y };
+            double y { center_y - from.y() };
             to.radius() = std::hypot(x, y);
             to.angle() = std::atan2(y, x);
     }

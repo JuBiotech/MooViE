@@ -161,6 +161,31 @@ protected:
 			const Angle& begin, const Angle& end,
 			const DrawerProperties<std::array<Color, 10>>& prop, Direction dir) = 0;
 
+	/** Draws the given Label output_label with the radius radius_label
+	 * and a descriptive path that connects the output label with the
+	 * associated output. The path consists of an arc segment and a line.
+	 *
+	 * @brief draws an output label
+	 *
+	 * @param output_label the output label to draw
+	 * @param radius_label the radius of the output label
+	 * @param radius_output the radius of the associated output
+	 * @param begin the angle at which the output ends
+	 * @param end the angle at which the arc ends
+	 */
+	virtual void draw_output_label(const Label& output_label,
+			double radius_label, double radius_output,
+			const Angle& begin, const Angle& end) = 0;
+
+	/** Draws a arrow head from a given start pointing.
+	 *
+	 * @brief draws arrow
+     *
+     * @param start the start of the arrow head
+	 * @param prop DrawerProperties for the arrow head
+	 */
+	virtual void draw_arrow(const Polar& start, const DrawerProperties<>& prop) = 0;
+
 	/** Draws a filled ring segment around the center of its
 	 * coordinate system between the two given Angles and with
 	 * the given radius.
@@ -194,15 +219,6 @@ protected:
 	virtual void draw_connector_segment(double start_radius, double start_angle,
 			double end_radius, double end_angle,
 			const DrawerProperties<>& prop) = 0;
-
-	/** Draws a arrow head from a given start pointing.
-	 *
-	 * @brief draws arrow
-	 *
-	 * @param start the start of the arrow head
-	 * @param prop DrawerProperties for the arrow head
-	 */
-	virtual void draw_arrow(const Polar& start, const DrawerProperties<>& prop) = 0;
 
 	/** Draws a line from a given starting vertice to a given end vertice.
 	 *
