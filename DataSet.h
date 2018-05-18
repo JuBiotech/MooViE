@@ -10,6 +10,7 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <iterator>
 #include <cfloat>
 #include <stdexcept>
@@ -32,17 +33,6 @@ public:
 	 */
 	struct Var
 	{
-		/** Creates a Variable with the given name, min and max value.
-		 * @brief Var
-		 * @param min the min value
-		 * @param max the max value
-		 * @param name the name
-		 */
-		Var(T min_, T max_, const std::string & name_, const std::string & unit_ = "") :
-				min(min_), max(max_), error(0), name(name_), unit(unit_)
-		{
-		}
-
 		/** Minimal value */
 		T min;
 
@@ -57,6 +47,18 @@ public:
 
 		/* Unit of the Variables values */
 		std::string unit;
+
+		/** Creates a Variable with the given name, min and max value.
+		 *
+		 * @brief Var
+		 *
+		 * @param min the min value
+		 * @param max the max value
+		 * @param name the name
+		 */
+		Var(T min_, T max_, const std::string & name_, const std::string & unit_ = "") :
+				min(min_), max(max_), error(0), name(name_), unit(unit_)
+		{}
 	};
 
 	/** Stores the value of a cell. The value is 0 if

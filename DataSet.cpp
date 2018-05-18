@@ -63,6 +63,32 @@ DataSet<double> DataSet<double>::parse_from_csv(const std::string & cont,
 		++i;
 	}
 
+	while (i < header.size() && header[i].find_first_of("ie#") == 0)
+	{
+		std::string name = header[i].substr(3, header[i].length() - 3);
+		auto pos = std::find_if(input_vars.begin(), input_vars.end(),
+				[&] (const DefVar& v){ return v.name == name;});
+
+		if (pos != input_vars.end())
+		{
+
+		}
+		++i;
+	}
+
+	while (i < header.size() && header[i].find_first_of("oe#") == 0)
+	{
+		std::string name = header[i].substr(3, header[i].length() - 3);
+		auto pos = std::find_if(input_vars.begin(), input_vars.end(),
+				[&] (const DefVar& v){ return v.name == name;});
+
+		if (pos != input_vars.end())
+		{
+
+		}
+		++i;
+	}
+
 	// Add values from table body
 	for (std::size_t i = header_pos + 1; i < lines.size(); ++i)
 	{
