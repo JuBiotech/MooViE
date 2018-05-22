@@ -39,9 +39,6 @@ public:
 		/** Maximal value */
 		T max;
 
-		/** Maximal possible error */
-		T error;
-
 		/** Variable name */
 		std::string name;
 
@@ -57,7 +54,7 @@ public:
 		 * @param name the name
 		 */
 		Var(T min_, T max_, const std::string & name_, const std::string & unit_ = "") :
-				min(min_), max(max_), error(0), name(name_), unit(unit_)
+				min(min_), max(max_), name(name_), unit(unit_)
 		{}
 	};
 
