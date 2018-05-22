@@ -39,8 +39,8 @@ public:
 	 * @param width the surface width
 	 * @param height the surface height
 	 */
-	Drawer(int width, int height)
-	: _pc(width, height)
+	Drawer(int width, int height, std::size_t _num_inputs)
+	: coord_converter(width, height), num_inputs(_num_inputs)
 	{}
 
 	virtual ~Drawer()
@@ -320,14 +320,16 @@ protected:
 		control.radius() -= LINK_CONTROL_STRENGTH;
 
 		Cartesian control_c;
-		_pc.convert(control, control_c);
+		coord_converter.convert(control, control_c);
 
 		return control_c;
 	}
 
 protected:
     /** Polar-Cartesian converting */
-    const CoordinateConverter 	_pc;
+    const CoordinateConverter 	coord_converter;
+    /** Number of input variables of the multi-objective data to draw */
+    std::size_t 				num_inputs;
 };
 
 

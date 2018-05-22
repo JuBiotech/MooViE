@@ -55,15 +55,15 @@ CairoDrawer::TextAlignment::TextAlignment(double ratio)
 	this->ratio = ratio;
 }
 
-CairoDrawer::CairoDrawer(const std::string& fpath, int width, int height)
-: Drawer(width, height)
+CairoDrawer::CairoDrawer(const std::string& fpath, int width, int height, std::size_t _num_inputs)
+: Drawer(width, height, _num_inputs)
 {
 	set_surface(fpath, width, height);
 }
 
 void CairoDrawer::draw_codomain_grid(const CodomainGrid& grid)
 {
-	_cr->set_identity_matrix();
+	cairo_context->set_identity_matrix();
 
 	const Configuration & conf = Configuration::get_instance();
 
@@ -156,22 +156,22 @@ void CairoDrawer::draw_codomain_grid(const CodomainGrid& grid)
 			TextAlignment::LEFT
 		);
 
-		_cr->begin_new_path();
+		cairo_context->begin_new_path();
 		draw_arc(min_radius + i * y_dist, grid.get_start(), grid.get_end(), Direction::INCREASING);
-		_cr->set_source_rgba(
+		cairo_context->set_source_rgba(
 			conf.get_prop_thin().line_color.r(),
 			conf.get_prop_thin().line_color.g(),
 			conf.get_prop_thin().line_color.b(),
 			conf.get_prop_thin().line_color.a()
 		 );
-		_cr->set_line_width(conf.get_prop_thin().line_width);
-		_cr->stroke();
+		cairo_context->set_line_width(conf.get_prop_thin().line_width);
+		cairo_context->stroke();
 	}
 }
 
 void CairoDrawer::draw_domain_axis(const DomainAxis& axis)
 {
-	_cr->set_identity_matrix();
+	cairo_context->set_identity_matrix();
 
 	// Draw the base of the VarAxis: a filled ring segment
 	draw_ring_segment(
@@ -253,7 +253,7 @@ void CairoDrawer::draw_domain_axis(const DomainAxis& axis)
 void CairoDrawer::draw_relation_element(const RelationElement& rel)
 {
 	// Calculate target from connector coordinate
-	std::size_t connector_pos = RelationElement::num_inputs;
+	std::size_t connector_pos = num_inputs;
 	const Point from = rel[connector_pos];
 
 	Polar target1(
@@ -266,7 +266,7 @@ void CairoDrawer::draw_relation_element(const RelationElement& rel)
 		  );
 
 	// Draw links
-	for (std::size_t i = 0; i < RelationElement::num_inputs; ++i)
+	for (std::size_t i = 0; i < num_inputs; ++i)
 	{
 		Polar origin1(
 				rel[i].coord.radius() - RADIUS_DELTA,
@@ -317,14 +317,14 @@ void CairoDrawer::change_surface(const std::string& fpath, int width, int height
 void CairoDrawer::finish()
 {
 	// Save the state of the context
-	_cr->save();
-	_cr->show_page();
+	cairo_context->save();
+	cairo_context->show_page();
 }
 
 void CairoDrawer::draw_histogram(const DomainAxis::Histogram& histogram,
 			double radius, const Angle& start, const Angle& end)
 {
-	_cr->set_identity_matrix();
+	cairo_context->set_identity_matrix();
 
 	const Configuration & conf = Configuration::get_instance();
 
@@ -351,20 +351,20 @@ void CairoDrawer::draw_histogram(const DomainAxis::Histogram& histogram,
 	);
 
 	// Draw thin lines for histogram background
-	_cr->set_line_width(prop_thin.line_width);
+	cairo_context->set_line_width(prop_thin.line_width);
 	for (std::size_t i = 1; i < 6; ++i)
 	{
-	    _cr->begin_new_path();
+	    cairo_context->begin_new_path();
 	    draw_arc(
 	    		radius + conf.get_histogram_height() * (i / 6.),
 				start, end,
 				Direction::INCREASING
 	    );
-	    _cr->stroke();
+	    cairo_context->stroke();
 	}
 
 	// Draw the histogram graph filling
-	_cr->begin_new_path();
+	cairo_context->begin_new_path();
 	double span = angle_helper::rad_dist(start.value(), end.value());
 	for (std::size_t i = 0; i < histogram.get_num_intervals(); ++i)
 	{
@@ -377,19 +377,19 @@ void CairoDrawer::draw_histogram(const DomainAxis::Histogram& histogram,
 				Direction::INCREASING
 		);
 	}
-	_cr->stroke();
+	cairo_context->stroke();
 
 	// Draw the histogram graph outline
 	Cartesian start_point;
-	_pc.convert(Polar(radius, start), start_point);
-	_cr->begin_new_path();
-	_cr->set_source_rgba(
+	coord_converter.convert(Polar(radius, start), start_point);
+	cairo_context->begin_new_path();
+	cairo_context->set_source_rgba(
 		prop_thin.line_color.r(),
 		prop_thin.line_color.g(),
 		prop_thin.line_color.b(),
 		prop_thin.line_color.a()
 	);
-	_cr->move_to(start_point.x(), start_point.y());
+	cairo_context->move_to(start_point.x(), start_point.y());
 	for (std::size_t i = 0; i < histogram.get_num_intervals(); ++i)
 	{
 		// Create the lower right and upper left coordinates of the histogram column
@@ -402,34 +402,34 @@ void CairoDrawer::draw_histogram(const DomainAxis::Histogram& histogram,
 						start + (span / histogram.get_num_intervals()) * i
 				);
 		Cartesian right_down_c, left_up_c;
-		_pc.convert(right_down, right_down_c);
-		_pc.convert(left_up, left_up_c);
+		coord_converter.convert(right_down, right_down_c);
+		coord_converter.convert(left_up, left_up_c);
 
 		// Draw the histogram column
-		_cr->line_to(left_up_c.x(), left_up_c.y());
+		cairo_context->line_to(left_up_c.x(), left_up_c.y());
 	    draw_arc(
 	    		left_up.radius(),
 				left_up.angle(),
 				right_down.angle(),
 				Direction::DECREASING
 	    );
-	    _cr->line_to(right_down_c.x(), right_down_c.y());
+	    cairo_context->line_to(right_down_c.x(), right_down_c.y());
 	}
-	_cr->stroke();
+	cairo_context->stroke();
 }
 
 void CairoDrawer::draw_link(const Polar& origin1, const Polar& origin2,
 		const Polar& target1, const Polar& target2,
 		const DrawerProperties<>& prop)
 {
-	_cr->set_identity_matrix();
+	cairo_context->set_identity_matrix();
 
 	// Convert given Polar to Cartesian coordinates
 	Cartesian origin1_c, origin2_c, target1_c, target2_c;
-	_pc.convert(origin1, origin1_c);
-	_pc.convert(origin2, origin2_c);
-	_pc.convert(target1, target1_c);
-	_pc.convert(target2, target2_c);
+	coord_converter.convert(origin1, origin1_c);
+	coord_converter.convert(origin2, origin2_c);
+	coord_converter.convert(target1, target1_c);
+	coord_converter.convert(target2, target2_c);
 
 	// Calculate control points for Bezier curve
 	Cartesian CTRL_ORIG1 = create_link_control_point(origin1);
@@ -437,31 +437,31 @@ void CairoDrawer::draw_link(const Polar& origin1, const Polar& origin2,
 	Cartesian CTRL_TARG1 = create_link_control_point(target1);
 	Cartesian CTRL_TARG2 = create_link_control_point(target2);
 
-	_cr->begin_new_path();
-	_cr->move_to(origin1_c.x(), origin1_c.y());
+	cairo_context->begin_new_path();
+	cairo_context->move_to(origin1_c.x(), origin1_c.y());
 
 	// Draw first Bezier curve from origin to target
-	_cr->curve_to(CTRL_ORIG1.x(), CTRL_ORIG1.y(), CTRL_TARG1.x(), CTRL_TARG1.y(),
+	cairo_context->curve_to(CTRL_ORIG1.x(), CTRL_ORIG1.y(), CTRL_TARG1.x(), CTRL_TARG1.y(),
 			target1_c.x(), target1_c.y());
 	// Draw second Bezier curve from target to origin
-	_cr->curve_to(CTRL_TARG2.x(), CTRL_TARG2.y(), CTRL_ORIG2.x(), CTRL_ORIG2.y(),
+	cairo_context->curve_to(CTRL_TARG2.x(), CTRL_TARG2.y(), CTRL_ORIG2.x(), CTRL_ORIG2.y(),
 			origin2_c.x(), origin2_c.y());
 
 	// Set line and fill style and apply drawing
-	_cr->set_source_rgba(prop.fill_color.r(), prop.fill_color.g(),
+	cairo_context->set_source_rgba(prop.fill_color.r(), prop.fill_color.g(),
 			prop.fill_color.b(), prop.fill_color.a());
-	_cr->fill_preserve();
-	_cr->set_source_rgba(prop.fill_color.r(), prop.fill_color.g(),
+	cairo_context->fill_preserve();
+	cairo_context->set_source_rgba(prop.fill_color.r(), prop.fill_color.g(),
 			prop.fill_color.b(), prop.fill_color.a());
-	_cr->set_line_width(prop.line_width);
-	_cr->stroke();
+	cairo_context->set_line_width(prop.line_width);
+	cairo_context->stroke();
 }
 
 void CairoDrawer::draw_connector(const Polar& from, const Polar& to,
 		const DrawerProperties<>& prop)
 {
-	_cr->set_identity_matrix();
-  	_cr->begin_new_path();
+	cairo_context->set_identity_matrix();
+  	cairo_context->begin_new_path();
 
 	// Only use 0.2 as distance factor
 	static const double dist_factor =
@@ -477,15 +477,15 @@ void CairoDrawer::draw_connector(const Polar& from, const Polar& to,
 	Cartesian to_c;
 	Cartesian curve_begin_c;
 	Cartesian curve_end_c;
-	_pc.convert(from, from_c);
-	_pc.convert(to, to_c);
-	_pc.convert(curve_begin, curve_begin_c);
-	_pc.convert(curve_end, curve_end_c);
+	coord_converter.convert(from, from_c);
+	coord_converter.convert(to, to_c);
+	coord_converter.convert(curve_begin, curve_begin_c);
+	coord_converter.convert(curve_end, curve_end_c);
 
 	// Line from start to the curve begin
-	_cr->move_to(from_c.x(), from_c.y());
+	cairo_context->move_to(from_c.x(), from_c.y());
 
-	_cr->line_to(curve_begin_c.x(), curve_begin_c.y());
+	cairo_context->line_to(curve_begin_c.x(), curve_begin_c.y());
 
 	// Adjust angles so that their difference is lower than PI
 	double begin_angle = curve_begin.angle().value(),
@@ -524,24 +524,24 @@ void CairoDrawer::draw_connector(const Polar& from, const Polar& to,
 	}
 	
 	// Line from the curve end to end
-	_cr->line_to(to_c.x(), to_c.y());
+	cairo_context->line_to(to_c.x(), to_c.y());
 
 	// Set line style and apply drawing
-	_cr->set_source_rgba(
+	cairo_context->set_source_rgba(
 			prop.line_color.r(),
 			prop.line_color.g(),
 			prop.line_color.b(),
 			prop.line_color.a()
 	);
-	_cr->set_line_width(prop.line_width);
-	_cr->stroke();
+	cairo_context->set_line_width(prop.line_width);
+	cairo_context->stroke();
 }
 
 void CairoDrawer::draw_segment_axis(double inner_radius, double thickness,
 		const Angle& start, const Angle& end,
 		const DrawerProperties<std::array<Color, 10>>& prop, Direction dir)
 {
-	_cr->set_identity_matrix();
+	cairo_context->set_identity_matrix();
 
 	// Only draw axis with ten segments
 	const static std::size_t NUM_SPLITS = 10;
@@ -562,20 +562,20 @@ void CairoDrawer::draw_output_label(const Label& output_label,
 		double radius_label, double radius_output,
 		const Angle& begin, const Angle& end)
 {
-	_cr->set_identity_matrix();
-	_cr->begin_new_path();
+	cairo_context->set_identity_matrix();
+	cairo_context->begin_new_path();
 
 	draw_arc(radius_output, begin, end, Direction::DECREASING);
 
 	Cartesian tmp;
-	_pc.convert(Polar(radius_output, end), tmp);
+	coord_converter.convert(Polar(radius_output, end), tmp);
 	Cartesian line_end(tmp.x(), tmp.y() - radius_label + radius_output - OUTPUT_LABEL_LINE_END_DELTA);
 
-	_cr->line_to(line_end.x(), line_end.y());
-	_cr->line_to(_pc.get_center_x(), line_end.y());
+	cairo_context->line_to(line_end.x(), line_end.y());
+	cairo_context->line_to(coord_converter.get_center_x(), line_end.y());
 
-	_cr->set_line_width(Configuration::get_instance().get_prop_thin().line_width);
-	_cr->stroke();
+	cairo_context->set_line_width(Configuration::get_instance().get_prop_thin().line_width);
+	cairo_context->stroke();
 
 	draw_text_orthogonal(
 		output_label,
@@ -586,8 +586,8 @@ void CairoDrawer::draw_output_label(const Label& output_label,
 
 void CairoDrawer::draw_arrow(const Polar& start, const DrawerProperties<>& prop)
 {
-	_cr->set_identity_matrix();
-	_cr->begin_new_path();
+	cairo_context->set_identity_matrix();
+	cairo_context->begin_new_path();
 
 	// Only draw arrows with height of 5
 	double height = CONNECTOR_ARROW_HEIGHT;
@@ -600,10 +600,10 @@ void CairoDrawer::draw_arrow(const Polar& start, const DrawerProperties<>& prop)
 
 	// Convert arrow coordinates into Cartesian coordinates
 	Cartesian start_c, direction_c, left, right;
-	_pc.convert(start_help, start_c);
-	_pc.convert(direction_help, direction_c);
-	_pc.convert(left_help, left);
-	_pc.convert(right_help, right);
+	coord_converter.convert(start_help, start_c);
+	coord_converter.convert(direction_help, direction_c);
+	coord_converter.convert(left_help, left);
+	coord_converter.convert(right_help, right);
 
 	// Calculate head coordinate h = p + height * (d - p) / ||d-p||
 	double p_x = start_c.x(), p_y = start_c.y(), d_x = direction_c.x(), d_y = direction_c.y();
@@ -611,24 +611,24 @@ void CairoDrawer::draw_arrow(const Polar& start, const DrawerProperties<>& prop)
 	Cartesian head(p_x + height * (d_x - p_x) / diff_len, p_y + height * (d_y - p_y) / diff_len);
 
 	// Draw path and apply after setting line and fill style
-	_cr->move_to(head.x(), head.y());
-	_cr->line_to(right.x(), right.y());
-	_cr->line_to(left.x(), left.y());
-	_cr->set_source_rgba(
+	cairo_context->move_to(head.x(), head.y());
+	cairo_context->line_to(right.x(), right.y());
+	cairo_context->line_to(left.x(), left.y());
+	cairo_context->set_source_rgba(
 			prop.line_color.r(),
 			prop.line_color.g(),
 			prop.line_color.b(),
 			1
 	);
-	_cr->set_line_width(DATA_LINK_LINE_WIDTH);
-	_cr->fill_preserve();
-	_cr->stroke();
+	cairo_context->set_line_width(DATA_LINK_LINE_WIDTH);
+	cairo_context->fill_preserve();
+	cairo_context->stroke();
 }
 
 void CairoDrawer::draw_coord_point(const Polar& coord, const Angle& width,
 		double height, const DrawerProperties<>& prop)
 {
-	_cr->set_identity_matrix();
+	cairo_context->set_identity_matrix();
 
 	// Calculate the radius and the angles between the box should be drawn
 	double inner_radius = coord.radius() - 0.5 * height;
@@ -645,8 +645,8 @@ void CairoDrawer::draw_connector_segment(double begin_radius, double begin_angle
 {
 	// Calculate the Cartesian coordinates of start and end
 	Cartesian P0, P3;
-	_pc.convert(Polar(begin_radius, begin_angle), P0);
-	_pc.convert(Polar(end_radius, end_angle), P3);
+	coord_converter.convert(Polar(begin_radius, begin_angle), P0);
+	coord_converter.convert(Polar(end_radius, end_angle), P3);
 
 	double phi_diff = end_angle - begin_angle,
 			r_diff = end_radius - begin_radius;
@@ -681,8 +681,8 @@ void CairoDrawer::draw_connector_segment(double begin_radius, double begin_angle
 	double k = 70 * std::abs(phi_diff);
 
 	// Calculate in which direction the derivative vector should be added
-	double phi_p1 = std::atan2(-(P0.y() + k * P1_y - _pc.get_center_y()),
-			P0.x() + k * P1_x - _pc.get_center_x());
+	double phi_p1 = std::atan2(-(P0.y() + k * P1_y - coord_converter.get_center_y()),
+			P0.x() + k * P1_x - coord_converter.get_center_x());
 	if (phi_p1 < 0)
 	{
 		phi_p1 += 2*M_PI;
@@ -692,8 +692,8 @@ void CairoDrawer::draw_connector_segment(double begin_radius, double begin_angle
 		phi_p1 += 2*M_PI;
 	}
 
-	double phi_p2 = std::atan2(-(P3.y() + k * P2_y - _pc.get_center_y()),
-			P3.x() + k * P2_x - _pc.get_center_x());
+	double phi_p2 = std::atan2(-(P3.y() + k * P2_y - coord_converter.get_center_y()),
+			P3.x() + k * P2_x - coord_converter.get_center_x());
 	if (phi_p2 < 0)
 	{
 		phi_p2 += 2*M_PI;
@@ -714,15 +714,15 @@ void CairoDrawer::draw_connector_segment(double begin_radius, double begin_angle
 			  P2(P3.x() + k * P2_x * sign_2,
 					P3.y() + k * P2_y * sign_2);
 
-	_cr->curve_to(P1.x(), P1.y(), P2.x(), P2.y(), P3.x(), P3.y());
+	cairo_context->curve_to(P1.x(), P1.y(), P2.x(), P2.y(), P3.x(), P3.y());
 }
 
 void CairoDrawer::draw_ring_segment(double inner_radius, double thickness,
 		const Angle& start, const Angle& end, const DrawerProperties<>& prop,
 		Direction dir)
 {
-	_cr->set_identity_matrix();
-	_cr->begin_new_path();
+	cairo_context->set_identity_matrix();
+	cairo_context->begin_new_path();
 
 	// Draw first arc
 	draw_arc(inner_radius, start, end, Direction::INCREASING);
@@ -731,47 +731,47 @@ void CairoDrawer::draw_ring_segment(double inner_radius, double thickness,
 	draw_arc(inner_radius + thickness, start, end,
 		 dir == Direction::INCREASING ? Direction::DECREASING : Direction::INCREASING);
 
-	_cr->close_path();
+	cairo_context->close_path();
 
 	// Set line and fill color and apply drawing
-	_cr->set_source_rgba(
+	cairo_context->set_source_rgba(
 			prop.fill_color.r(),
 			prop.fill_color.g(),
 			prop.fill_color.b(),
 			prop.fill_color.a()
 	);
-	_cr->fill_preserve();
-	_cr->set_source_rgba(
+	cairo_context->fill_preserve();
+	cairo_context->set_source_rgba(
 			prop.line_color.r(),
 			prop.line_color.g(),
 			prop.line_color.b(),
 			prop.line_color.a()
 	);
-	_cr->set_line_width(prop.line_width);
-	_cr->stroke();
+	cairo_context->set_line_width(prop.line_width);
+	cairo_context->stroke();
 }
 
 void CairoDrawer::draw_arc(double radius, const Angle& start, const Angle& end,
 		Direction dir)
 {
-	_cr->set_identity_matrix();
+	cairo_context->set_identity_matrix();
 
 	// Draw arc begin->end or end->begin depending on direction
 	switch (dir)
 	{
 	case Direction::INCREASING:
-		_cr->arc(
-		    _pc.get_center_x(),
-		    _pc.get_center_y(),
+		cairo_context->arc(
+		    coord_converter.get_center_x(),
+		    coord_converter.get_center_y(),
 		    radius,
 		    get_cairo_angle(end).value(),
 		    get_cairo_angle(start).value()
 		);
 		break;
 	case Direction::DECREASING:
-		_cr->arc_negative(
-		    _pc.get_center_x(),
-		    _pc.get_center_y(),
+		cairo_context->arc_negative(
+		    coord_converter.get_center_x(),
+		    coord_converter.get_center_y(),
 		    radius,
 		    get_cairo_angle(start).value(),
 		    get_cairo_angle(end).value()
@@ -783,32 +783,32 @@ void CairoDrawer::draw_arc(double radius, const Angle& start, const Angle& end,
 void CairoDrawer::draw_line(const Polar& from, const Polar& to,
 		const DrawerProperties<>& prop)
 {
-	_cr->set_identity_matrix();
-	_cr->begin_new_path();
+	cairo_context->set_identity_matrix();
+	cairo_context->begin_new_path();
 
 	// Convert to Cartesian coordinates
 	Cartesian from_c, to_c;
-	_pc.convert(from, from_c);
-	_pc.convert(to, to_c);
+	coord_converter.convert(from, from_c);
+	coord_converter.convert(to, to_c);
 
 	// Draw path and apply after setting line style
-	_cr->move_to(from_c.x(), from_c.y());
-	_cr->line_to(to_c.x(), to_c.y());
-	_cr->set_source_rgba(
+	cairo_context->move_to(from_c.x(), from_c.y());
+	cairo_context->line_to(to_c.x(), to_c.y());
+	cairo_context->set_source_rgba(
 			prop.line_color.r(),
 			prop.line_color.g(),
 			prop.line_color.b(),
 			prop.line_color.a()
 	);
-	_cr->set_line_width(prop.line_width);
-	_cr->stroke();
+	cairo_context->set_line_width(prop.line_width);
+	cairo_context->stroke();
 
 }
 
 void CairoDrawer::draw_text_parallel(const Label& label, const Polar& start,
 		const TextAlignment& alignment)
 {
-	_cr->set_identity_matrix();
+	cairo_context->set_identity_matrix();
 
 	// Set font style
 	set_font_face(label);
@@ -820,24 +820,24 @@ void CairoDrawer::draw_text_parallel(const Label& label, const Polar& start,
 	Angle cairo_angle = M_PI_2 - start.angle().value();
 
 	// Set cairo user-space origin and rotation
-	_cr->begin_new_path();
-	_cr->translate(_pc.get_center_x(), _pc.get_center_y());
-	_cr->rotate(cairo_angle.value());
-	_cr->translate(0, -start.radius());
+	cairo_context->begin_new_path();
+	cairo_context->translate(coord_converter.get_center_x(), coord_converter.get_center_y());
+	cairo_context->rotate(cairo_angle.value());
+	cairo_context->translate(0, -start.radius());
 	if (start.angle().value() > M_PI_2 && start.angle().value() < 3 * M_PI_2)
-	  _cr->rotate_degrees(90);
+	  cairo_context->rotate_degrees(90);
 	else
-	  _cr->rotate_degrees(270);
-	_cr->translate(-alignment.ratio * t_exts.width, (1 - alignment.ratio) * t_exts.height);
+	  cairo_context->rotate_degrees(270);
+	cairo_context->translate(-alignment.ratio * t_exts.width, (1 - alignment.ratio) * t_exts.height);
 
-	_cr->close_path();
-	_cr->show_text(label.get_text());
+	cairo_context->close_path();
+	cairo_context->show_text(label.get_text());
 }
 
 void CairoDrawer::draw_text_orthogonal(const Label& label, const Polar& start,
 		const TextAlignment & alignment)
 {
-	_cr->set_identity_matrix();
+	cairo_context->set_identity_matrix();
 
 	// Set font style
 	set_font_face(label);
@@ -849,14 +849,14 @@ void CairoDrawer::draw_text_orthogonal(const Label& label, const Polar& start,
 	Angle cairo_angle = M_PI_2 - start.angle().value();
 
 	// Set cairo user-space origin and rotation
-	_cr->begin_new_path();
-	_cr->translate(_pc.get_center_x(), _pc.get_center_y());
-	_cr->rotate(cairo_angle.value());
-	_cr->translate(0, -start.radius());
-	_cr->translate(-alignment.ratio * t_exts.width, (1 - alignment.ratio) * t_exts.height);
+	cairo_context->begin_new_path();
+	cairo_context->translate(coord_converter.get_center_x(), coord_converter.get_center_y());
+	cairo_context->rotate(cairo_angle.value());
+	cairo_context->translate(0, -start.radius());
+	cairo_context->translate(-alignment.ratio * t_exts.width, (1 - alignment.ratio) * t_exts.height);
 
-	_cr->close_path();
-	_cr->show_text(label.get_text());
+	cairo_context->close_path();
+	cairo_context->show_text(label.get_text());
 }
 
 void CairoDrawer::set_font_face(const Label& label)
@@ -869,9 +869,9 @@ void CairoDrawer::set_font_face(const Label& label)
 		prop.italic ? Cairo::FONT_SLANT_ITALIC : Cairo::FONT_SLANT_NORMAL,
 		prop.bold ? Cairo::FONT_WEIGHT_BOLD : Cairo::FONT_WEIGHT_NORMAL
 	);
-	_cr->set_font_face(font);
-	_cr->set_font_size(label.get_properties().font_size);
-	_cr->set_source_rgba(
+	cairo_context->set_font_face(font);
+	cairo_context->set_font_size(label.get_properties().font_size);
+	cairo_context->set_source_rgba(
 		prop.color.r(),
 		prop.color.g(),
 		prop.color.b(),
@@ -884,7 +884,7 @@ Cairo::TextExtents CairoDrawer::get_text_extents(const Label& label) const
 	// Calculate the width and height of the textbox
 	Cairo::TextExtents t_exts;
 	std::string message { label.get_text() };
-	_cr->get_text_extents(message, t_exts);
+	cairo_context->get_text_extents(message, t_exts);
 
 	return t_exts;
 }
@@ -892,5 +892,5 @@ Cairo::TextExtents CairoDrawer::get_text_extents(const Label& label) const
 void CairoDrawer::set_surface(const std::string& fpath, int width, int height)
 {
 	const Cairo::RefPtr<Cairo::Surface> ptr = Cairo::SvgSurface::create(fpath, width, height);
-	_cr = Cairo::Context::create(ptr);
+	cairo_context = Cairo::Context::create(ptr);
 }

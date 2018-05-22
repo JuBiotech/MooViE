@@ -26,8 +26,6 @@ struct Point
 class RelationElement
 {
 public:
-	static std::size_t num_inputs;
-
 	const Point & operator[](std::size_t i) const
 	{
 		return points[i];

@@ -8,16 +8,12 @@
 #include "RelationElement.h"
 #include "CairoDrawer.h"
 
-std::size_t RelationElement::num_inputs = 0;
-
 RelationElementFactory::RelationElementFactory(
 		std::size_t num_data_rows,
 		const CodomainGrid & grid,
 		const std::vector<DomainAxis> & axis)
 : _grid(grid), _axis(axis)
 {
-	RelationElement::num_inputs = axis.size();
-
 	_line_width = 0.1 * (1 + std::exp(-(num_data_rows * 0.0006)));
 	_line_alpha = 0.3 * (1 + 3 * std::exp(-(num_data_rows * 0.04)));
 	_fill_alpha = 0.25 * (1 + 3 * std::exp(-(num_data_rows * 0.04)));

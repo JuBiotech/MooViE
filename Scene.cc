@@ -18,7 +18,8 @@ Scene::Scene()
 		  new CairoDrawer(
 				  Configuration::get_instance().get_output_file(),
 				  Configuration::get_instance().get_width(),
-				  Configuration::get_instance().get_height()
+				  Configuration::get_instance().get_height(),
+				  _set.input_variables().size()
 				  )
   ),
   _grid(

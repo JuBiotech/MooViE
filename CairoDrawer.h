@@ -44,7 +44,7 @@ public:
 						OUTPUT_LABEL_LINE_END_DELTA,
 						OUTPUT_LABEL_RADIUS_DELTA;
 
-    CairoDrawer(const std::string & fpath, int width, int height);
+    CairoDrawer(const std::string & fpath, int width, int height, std::size_t _num_inputs);
 
     virtual ~CairoDrawer() { this->finish(); }
 
@@ -128,7 +128,7 @@ protected:
 
 private:
     /** Smart pointer for calling Cairo functions */
-    Cairo::RefPtr<Cairo::Context> _cr;
+    Cairo::RefPtr<Cairo::Context> cairo_context;
 
 };
 
