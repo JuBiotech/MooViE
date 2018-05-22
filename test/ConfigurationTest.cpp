@@ -7,9 +7,10 @@
 
 BOOST_AUTO_TEST_SUITE(configuration_test)
 
+// TODO: Implement so that a more specific exception is caught
 BOOST_AUTO_TEST_CASE(check_get_instance)
 {
-	BOOST_CHECK_EQUAL(Configuration::get_instance(), nullptr);
+	BOOST_CHECK_THROW(Configuration::get_instance(), std::exception);
 }
 
 BOOST_AUTO_TEST_CASE(standard_values)
