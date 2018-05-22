@@ -68,10 +68,10 @@ DataSet<double> DataSet<double>::parse_from_csv(const std::string & cont,
 	{
 		// Remove empty/comment lines
 		if (lines[i].find_first_not_of(' ') != std::string::npos
-				|| lines[i].find_first_of(comment) == lines[i].find_first_not_of(' ') + 1)
+				|| lines[i].find_first_of(comment) != lines[i].find_first_not_of(' ') + 1)
 		{
 			DefDataRow row;
-			const std::vector<std::string> & cells = Util::split(lines[i], ",");
+			const std::vector<std::string> & cells = Util::split(lines[i], ",", false);
 
 			// Add input variable values from this table line
 			for (std::size_t i = 0; i < input_vars.size(); ++i)
