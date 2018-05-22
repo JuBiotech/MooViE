@@ -70,13 +70,18 @@ inline int string_to_int(const std::string & str) throw(ParseException)
 	try
 	{
 		return std::stoi(str);
-	} catch (std::invalid_argument & ia)
+	}
+	catch (std::invalid_argument & ia)
 	{
 		throw ParseException("Invalid integer value.");
 	}
+	catch (std::out_of_range & oor)
+	{
+		throw ParseException("Integer value too big");
+	}
 }
 
-/** Tries to parse an double from the given string.
+/** Tries to parse a double from the given string.
  *
  * @param str the string to convert
  *
@@ -89,9 +94,14 @@ inline double string_to_double(const std::string & str) throw(ParseException)
 	try
 	{
 		return std::stod(str);
-	} catch (std::invalid_argument & ia)
+	}
+	catch (std::invalid_argument & ia)
 	{
-		throw ParseException("Invalid integer value.");
+		throw ParseException("Invalid double value.");
+	}
+	catch (std::out_of_range & oor)
+	{
+		throw ParseException("Double value too big");
 	}
 }
 
