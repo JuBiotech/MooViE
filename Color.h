@@ -94,7 +94,8 @@ public:
     {
     	return Util::double_equal(_r, color._r)
     			&& Util::double_equal(_g, color._g)
-    			&& Util::double_equal(_b, color._b);
+    			&& Util::double_equal(_b, color._b)
+    			&& Util::double_equal(_a, color._a);
     }
 
     /** Checks whether or not two colors are not equal.
@@ -109,9 +110,10 @@ public:
      */
     bool operator!=(const Color& color) const
     {
-    	return !Util::double_equal(_r, color._r)
-    			|| !Util::double_equal(_g, color._g)
-    			|| !Util::double_equal(_b, color._b);
+    	return not Util::double_equal(_r, color._r)
+    			|| not Util::double_equal(_g, color._g)
+    			|| not Util::double_equal(_b, color._b)
+    			|| not Util::double_equal(_a, color._a);
     }
 
 	/** Sets the red value of this Color.
@@ -164,6 +166,19 @@ public:
     void set_alpha(double alpha)
     {
         _a = limit(alpha);
+    }
+
+    /** Puts string representation of Color c to the output stream o.
+     *
+     * @brief ostream operator
+     *
+     * @param o the ostream to put into
+     * @param c the color to put
+     */
+    friend std::ostream& operator<<(std::ostream& o, const Color& c)
+    {
+    	return o << "[r=" << c._r << ", g=" << c._g << ", b=" << c._b
+    			<< ", a=" << c._a << "]";
     }
 
 private:

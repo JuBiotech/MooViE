@@ -113,10 +113,12 @@ inline double string_to_double(const std::string & str) throw(ParseException)
  *
  * @return approximately equal or not
  */
-inline bool double_equal(double a, double b)
+inline bool double_equal(double a, double b, int ulp=15)
 {
-	double eps = std::numeric_limits<double>().epsilon();
-	return std::fabs(a - b) < eps;
+	double eps = std::numeric_limits<double>::epsilon(),
+			min = std::numeric_limits<double>::min();
+	return std::abs(a - b) <= eps * std::abs(a+b) * ulp
+			|| std::abs(a-b) < min;
 }
 
 }

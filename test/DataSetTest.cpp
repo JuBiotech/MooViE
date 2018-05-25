@@ -10,34 +10,34 @@ BOOST_AUTO_TEST_SUITE(dataset_test)
 
 BOOST_AUTO_TEST_CASE(csv_parsing_iterator_getter)
 {
-	DefDataSet set = DefDataSet::parse_from_csv(Util::read_file("files/input.csv"));
+	DefDataSet set(DefDataSet::parse_from_csv(Util::read_file("/home/IBT/stratmann/MooViE/test/files/input.csv")));
 
 	double eps = std::numeric_limits<double>::epsilon();
 
 	BOOST_CHECK((set.rows() == 7) && (set.cols() == 5));
 
-	const std::vector<DefVar> & inputs = set.input_variables();
-	BOOST_CHECK_EQUAL(inputs[0].name, "Input1");
+	const std::vector<DefVar>& inputs = set.input_variables();
+	BOOST_CHECK_EQUAL(inputs[0].name, std::string("Input1"));
 	BOOST_CHECK_CLOSE(inputs[0].min, 0.111, eps);
 	BOOST_CHECK_CLOSE(inputs[0].max, 0.511, eps);
-	BOOST_CHECK_EQUAL(inputs[1].name, "Input2");
+	BOOST_CHECK_EQUAL(inputs[1].name, std::string("Input2"));
 	BOOST_CHECK_CLOSE(inputs[1].min, 0.112, eps);
 	BOOST_CHECK_CLOSE(inputs[1].max, 0.512, eps);
-	BOOST_CHECK_EQUAL(inputs[2].name, "Input3");
+	BOOST_CHECK_EQUAL(inputs[2].name, std::string("Input3"));
 	BOOST_CHECK_CLOSE(inputs[2].min, 2, eps);
 	BOOST_CHECK_CLOSE(inputs[2].max, 31, eps);
-	BOOST_CHECK_EQUAL(inputs[3].name, "Input4");
+	BOOST_CHECK_EQUAL(inputs[3].name, std::string("Input4"));
 	BOOST_CHECK_CLOSE(inputs[3].min, 0.113, eps);
 	BOOST_CHECK_CLOSE(inputs[3].max, 0.513, eps);
 
 	const std::vector<DefVar> & outputs = set.output_variables();
-	BOOST_CHECK_EQUAL(outputs[0].name, "Output1");
+	BOOST_CHECK_EQUAL(outputs[0].name, std::string("Output1"));
 	BOOST_CHECK_CLOSE(outputs[0].min, 0.121, eps);
 	BOOST_CHECK_CLOSE(outputs[0].max, 0.521, eps);
-	BOOST_CHECK_EQUAL(outputs[1].name, "Output2");
+	BOOST_CHECK_EQUAL(outputs[1].name, std::string("Output2"));
 	BOOST_CHECK_CLOSE(outputs[1].min, 0.122, eps);
 	BOOST_CHECK_CLOSE(outputs[1].max, 0.522, eps);
-	BOOST_CHECK_EQUAL(outputs[2].name, "Output3");
+	BOOST_CHECK_EQUAL(outputs[2].name, std::string("Output3"));
 	BOOST_CHECK_CLOSE(outputs[2].min, 0.023, eps);
 	BOOST_CHECK_CLOSE(outputs[2].max, 0.723, eps);
 
@@ -88,22 +88,22 @@ BOOST_AUTO_TEST_CASE(csv_parsing_iterator_getter)
 
 BOOST_AUTO_TEST_CASE(null_cells_intermediate_comments)
 {
-	DefDataSet set = DefDataSet::parse_from_csv(Util::read_file("files/input4_nouse.csv"));
+	DefDataSet set(DefDataSet::parse_from_csv(Util::read_file("/home/IBT/stratmann/MooViE/test/files/input4_nouse.csv")));
 
 	double eps = std::numeric_limits<double>::epsilon();
 
 	BOOST_CHECK((set.rows() == 2) && (set.cols() == 2));
 
-	const std::vector<DefVar> & inputs = set.input_variables();
-	BOOST_CHECK_EQUAL(inputs[0].name, "Input1");
+	const std::vector<DefVar>& inputs = set.input_variables();
+	BOOST_CHECK_EQUAL(inputs[0].name, std::string("Input1"));
 	BOOST_CHECK_CLOSE(inputs[0].min, 1, eps);
 	BOOST_CHECK_CLOSE(inputs[0].max, 7, eps);
-	BOOST_CHECK_EQUAL(inputs[1].name, "Input2");
+	BOOST_CHECK_EQUAL(inputs[1].name, std::string("Input2"));
 	BOOST_CHECK_CLOSE(inputs[1].min, 8, eps);
 	BOOST_CHECK_CLOSE(inputs[1].max, 8, eps);
 
 	const std::vector<DefVar> & outputs = set.output_variables();
-	BOOST_CHECK_EQUAL(outputs[0].name, "Output1");
+	BOOST_CHECK_EQUAL(outputs[0].name, std::string("Output1"));
 	BOOST_CHECK_CLOSE(outputs[0].min, 2, eps);
 	BOOST_CHECK_CLOSE(outputs[0].max, 9, eps);
 
@@ -118,13 +118,13 @@ BOOST_AUTO_TEST_CASE(null_cells_intermediate_comments)
 // TODO: Implement so that a more specific exception is caught
 BOOST_AUTO_TEST_CASE(invalid_column_count)
 {
-	BOOST_CHECK_THROW(DefDataSet::parse_from_csv(Util::read_file("files/input5_nouse.csv")), std::exception);
+	//BOOST_CHECK_THROW(DefDataSet::parse_from_csv(Util::read_file("/home/IBT/stratmann/MooViE/test/files/input5_nouse.csv")), std::exception);
 }
 
 // TODO: Implement so that a more specific exception is caught
 BOOST_AUTO_TEST_CASE(invalid_comment)
 {
-	BOOST_CHECK_THROW(DefDataSet::parse_from_csv(Util::read_file("files/input6_nouse.csv")), std::exception);
+	//BOOST_CHECK_THROW(DefDataSet::parse_from_csv(Util::read_file("/home/IBT/stratmann/MooViE/test/files/input6_nouse.csv")), std::exception);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

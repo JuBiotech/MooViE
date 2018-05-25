@@ -57,6 +57,11 @@ std::vector<std::string> split(const std::string & str,
 
 std::string strip(const std::string & str)
 {
+	if (str.empty())
+	{
+		return str;
+	}
+
 	std::size_t leading = str.find_first_not_of(' '),
 			trailing = str.find_last_not_of(' ');
 	return str.substr(leading, trailing - leading + 1);
