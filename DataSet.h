@@ -142,7 +142,7 @@ public:
 	 * @param newline the newline indicator used in this csv string
 	 * @return the DataSet object
 	 */
-	static DataSet parse_from_csv(const std::string & cont,
+	static DataSet* parse_from_csv(const std::string & cont,
 			std::string separator = ",", std::string comment = "#", std::string newline = "\n");
 
 	/** Returns the number of columns in this table.
@@ -228,7 +228,7 @@ private:
 };
 
 template<typename T>
-DataSet<T> DataSet<T>::parse_from_csv(const std::string & cont,
+DataSet<T>* DataSet<T>::parse_from_csv(const std::string & cont,
 		std::string separator, std::string comment, std::string newline)
 {
 	static_assert(std::is_same<T, double>::value, "Should not be compiled.");

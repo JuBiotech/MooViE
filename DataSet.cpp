@@ -8,7 +8,7 @@
 #include "DataSet.h"
 
 template<>
-DataSet<double> DataSet<double>::parse_from_csv(const std::string & cont,
+DataSet<double>* DataSet<double>::parse_from_csv(const std::string & cont,
 		std::string separator, std::string comment, std::string newline)
 {
 	std::vector<DefVar> input_vars, output_vars;
@@ -53,12 +53,12 @@ DataSet<double> DataSet<double>::parse_from_csv(const std::string & cont,
 		{
 			std::string name = header[i].substr(2, open_bracket - 2),
 					unit = header[i].substr(open_bracket + 1, close_bracket - open_bracket - 2);
-			output_vars.push_back(DefVar(DBL_MAX, DBL_MIN, Util::strip(name), Util::strip(unit)));
+			output_vars.emplace_back(DBL_MAX, DBL_MIN, Util::strip(name), Util::strip(unit));
 		}
 		else
 		{
 			std::string name = header[i].substr(2, header[i].length() - 2);
-			output_vars.push_back(DefVar(DBL_MAX, DBL_MIN, Util::strip(name)));
+			output_vars.emplace_back(DBL_MAX, DBL_MIN, Util::strip(name));
 		}
 		++i;
 	}
@@ -86,7 +86,7 @@ DataSet<double> DataSet<double>::parse_from_csv(const std::string & cont,
 					row.push_back(cell);
 				} catch (std::invalid_argument & e)
 				{
-					row.push_back(DefCell());
+					row.emplace_back();
 				}
 			}
 
@@ -103,13 +103,13 @@ DataSet<double> DataSet<double>::parse_from_csv(const std::string & cont,
 					row.push_back(cell);
 				} catch (std::invalid_argument & e)
 				{
-					row.push_back(DefCell());
+					row.emplace_back();
 				}
 			}
 			rows.push_back(row);
 		}
 	}
 
-	return DataSet(input_vars, output_vars, rows);
+	return new DataSet(input_vars, output_vars, rows);
 }
 

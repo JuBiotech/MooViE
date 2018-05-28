@@ -41,17 +41,17 @@ private:
     void initialize(void);
 private:
     /** Data set */
-    DefDataSet 									_set;
+    std::unique_ptr<DefDataSet>					set;
 
     /** Draws data to file */
-    std::unique_ptr<Drawer> 					_drawer;
+    std::unique_ptr<Drawer> 					drawer;
 
     /** Output data section of the diagram */
-    CodomainGrid 								_grid;
+    CodomainGrid 								grid;
     /** Variable axis */
-    std::vector<DomainAxis> 					_axis;
+    std::vector<DomainAxis> 					axis;
     /** Data links */
-    std::vector<RelationElement> 				_links;
+    std::vector<RelationElement> 				links;
 };
 
 #endif /* SCENE_H_ */
