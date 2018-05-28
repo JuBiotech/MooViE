@@ -95,8 +95,7 @@ void Scene::initialize(void)
 				DrawerProperties<>(
 					config.get_prop_thick().line_width,
 					Color::BLACK, Configuration::SET3.at(set->input_variables().size(), axis_color_pos++)
-				),
-				config.get_var_label()
+				)
 		);
 		start += angle + config.get_input_separation_angle();
 		end += angle + config.get_input_separation_angle();

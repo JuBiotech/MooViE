@@ -8,7 +8,7 @@
 #include "DataSet.h"
 
 template<>
-DataSet<double>* DataSet<double>::parse_from_csv(const std::string & cont,
+DataSet<double>* DataSet<double>::parse_from_csv(const std::string& cont,
 		std::string separator, std::string comment, std::string newline)
 {
 	std::vector<DefVar> input_vars, output_vars;

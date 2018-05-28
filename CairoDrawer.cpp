@@ -173,6 +173,8 @@ void CairoDrawer::draw_domain_axis(const DomainAxis& axis)
 {
 	cairo_context->set_identity_matrix();
 
+	const Configuration& conf = Configuration::get_instance();
+
 	// Draw the base of the VarAxis: a filled ring segment
 	draw_ring_segment(
 	    axis.get_radius(), axis.get_height(),
@@ -204,8 +206,8 @@ void CairoDrawer::draw_domain_axis(const DomainAxis& axis)
 	}
 	set_font_face(tick_labels[max_tick_label_pos]);
 	const Cairo::TextExtents & tick_ext = get_text_extents(tick_labels[max_tick_label_pos]);
-	set_font_face(axis.get_label());
-	const Cairo::TextExtents & label_ext = get_text_extents(axis.get_label());
+	set_font_face(axis.make_label(conf.get_var_label()));
+	const Cairo::TextExtents & label_ext = get_text_extents(axis.make_label(conf.get_var_label()));
 
 	double radius_tick_label = end_radius_major + RADIUS_TICK_LABEL_FACTOR * axis.get_height();
 	double radius_label = radius_tick_label + tick_ext.width + RADIUS_LABEL_DELTA;
@@ -243,7 +245,7 @@ void CairoDrawer::draw_domain_axis(const DomainAxis& axis)
 
 	// Draw the name of the Variable
 	draw_text_orthogonal(
-	    axis.get_label(),
+	    axis.make_label(conf.get_var_label()),
 	    Polar(radius_label, Angle::center(axis.get_start(), axis.get_end()))
 	);
 

@@ -9,35 +9,34 @@
 #include <iostream>
 
 DomainAxis::Histogram::Histogram(DefVar _var)
-: _var(_var), _num_intervals(0)
+: var(_var), num_intervals(0)
 {
 }
 
 void DomainAxis::Histogram::calculate(const std::vector<double> & data)
 {
-    double span = std::abs(_var.max - _var.min);
-    double section_width = span / _num_intervals;
+    double span = std::abs(var.max - var.min);
+    double section_width = span / num_intervals;
 
     for (double value: data)
     {
-    	std::size_t pos = std::floor((value - _var.min) / section_width);
-		++_frequencies.at(pos < _num_intervals ? pos : _num_intervals - 1);
+    	std::size_t pos = std::floor((value - var.min) / section_width);
+		++frequencies.at(pos < num_intervals ? pos : num_intervals - 1);
     }
-    for (std::size_t i = 0; i < _frequencies.size(); ++i)
-    	_frequencies[i] /= data.size();
+    for (std::size_t i = 0; i < frequencies.size(); ++i)
+    	frequencies[i] /= data.size();
 }
 
 double DomainAxis::Histogram::get_section_frequency(std::size_t i) const
 {
-    if (i >= _num_intervals); // TODO: exception handling
-    return _frequencies[i];
+    if (i >= num_intervals); // TODO: exception handling
+    return frequencies[i];
 }
 
 DomainAxis::DomainAxis(DefVar _var,
-		 const Angle & start, const Angle & end,
-		 double radius, std::size_t height,
-		 const DrawerProperties<> & prop,
-		 const TextProperties & text_prop)
+		 const Angle& _start, const Angle& _end,
+		 double _radius, double _height,
+		 const DrawerProperties<> & _prop)
 : var(_var),
   scale(
 		  Configuration::get_instance().get_num_major_ticks_va(),
@@ -46,8 +45,8 @@ DomainAxis::DomainAxis(DefVar _var,
 		  Configuration::get_instance().get_tick_label(), _var.unit
   ),
   histogram(_var),
-  start(start), end(end),radius(radius),  height(height),
-  label(_var.name, text_prop), prop(prop)
+  start(_start), end(_end),radius(_radius),  height(_height),
+  prop(_prop)
 {}
 
 void DomainAxis::calculate_histogram(const std::vector<double> & data)
