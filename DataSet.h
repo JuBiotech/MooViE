@@ -232,6 +232,7 @@ DataSet<T>* DataSet<T>::parse_from_csv(const std::string & cont,
 		std::string separator, std::string comment, std::string newline)
 {
 	static_assert(std::is_same<T, double>::value, "Should not be compiled.");
+	return nullptr;
 }
 
 typedef DataSet<double> DefDataSet;
