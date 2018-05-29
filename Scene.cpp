@@ -23,11 +23,11 @@ Scene::Scene()
 				  )
   ),
   grid(
-		  10, 10,
+		  set->output_variables(),
 		  angle_helper::deg_to_rad(360 - Configuration::get_instance().get_output_angle_span() / 2),
 		  angle_helper::deg_to_rad(Configuration::get_instance().get_output_angle_span() / 2),
 		  Configuration::get_instance().get_output_inner_radius(), Configuration::get_instance().get_grid_size(),
-		  Direction::INCREASING, set->output_variables()
+		  Direction::COUNTER_CLOCKWISE
   )
 {
 	initialize();

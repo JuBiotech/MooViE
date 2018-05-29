@@ -157,7 +157,7 @@ void CairoDrawer::draw_codomain_grid(const CodomainGrid& grid)
 		);
 
 		cairo_context->begin_new_path();
-		draw_arc(min_radius + i * y_dist, grid.get_start(), grid.get_end(), Direction::INCREASING);
+		draw_arc(min_radius + i * y_dist, grid.get_start(), grid.get_end(), Direction::COUNTER_CLOCKWISE);
 		cairo_context->set_source_rgba(
 			conf.get_prop_thin().line_color.r(),
 			conf.get_prop_thin().line_color.g(),
@@ -180,14 +180,14 @@ void CairoDrawer::draw_domain_axis(const DomainAxis& axis)
 	    axis.get_radius(), axis.get_height(),
 	    axis.get_start(), axis.get_end(),
 	    axis.get_prop(),
-	    Direction::INCREASING
+	    Direction::COUNTER_CLOCKWISE
 	);
 
 	// Radian distance (absolute!) between start and end angle
 	double span = angle_helper::rad_dist(axis.get_start().value(), axis.get_end().value());
 
 	// Tick values as strings
-	std::vector<Label> tick_labels = axis.get_ticks().make_labels();
+	std::vector<Label> tick_labels = axis.get_scale().make_labels();
 	std::size_t label_pos = 0;
 
 	// Calculate radii for axis and ticks
@@ -214,8 +214,8 @@ void CairoDrawer::draw_domain_axis(const DomainAxis& axis)
 	double radius_histogram = radius_label + label_ext.height + RADIUS_HISTOGRAM_DELTA;
 
 	// Calculate how the VarAxis' ticks is separated into thin and thick lines (ticks)
-	const std::size_t NUM_SEGMENTS = axis.get_ticks().get_major_intersections() * axis.get_ticks().get_minor_intersections();
-	const std::size_t NUM_THICK_LINES = axis.get_ticks().get_major_intersections();
+	const std::size_t NUM_SEGMENTS = axis.get_scale().get_major_intersections() * axis.get_scale().get_minor_intersections();
+	const std::size_t NUM_THICK_LINES = axis.get_scale().get_major_intersections();
 
 	// Draw the ticks and the associated values
 	for (size_t i = 0; i <= NUM_SEGMENTS; ++i)
@@ -349,7 +349,7 @@ void CairoDrawer::draw_histogram(const DomainAxis::Histogram& histogram,
 	    conf.get_histogram_height(),
 	    start, end,
 	    histogram_background,
-	    Direction::INCREASING
+	    Direction::COUNTER_CLOCKWISE
 	);
 
 	// Draw thin lines for histogram background
@@ -360,7 +360,7 @@ void CairoDrawer::draw_histogram(const DomainAxis::Histogram& histogram,
 	    draw_arc(
 	    		radius + conf.get_histogram_height() * (i / 6.),
 				start, end,
-				Direction::INCREASING
+				Direction::COUNTER_CLOCKWISE
 	    );
 	    cairo_context->stroke();
 	}
@@ -376,7 +376,7 @@ void CairoDrawer::draw_histogram(const DomainAxis::Histogram& histogram,
 				start + (span / histogram.get_num_intervals()) * i,
 				start + (span / histogram.get_num_intervals()) * (i + 1),
 				histogram_fill,
-				Direction::INCREASING
+				Direction::COUNTER_CLOCKWISE
 		);
 	}
 	cairo_context->stroke();
@@ -413,7 +413,7 @@ void CairoDrawer::draw_histogram(const DomainAxis::Histogram& histogram,
 	    		left_up.radius(),
 				left_up.angle(),
 				right_down.angle(),
-				Direction::DECREASING
+				Direction::CLOCKWISE
 	    );
 	    cairo_context->line_to(right_down_c.x(), right_down_c.y());
 	}
@@ -567,7 +567,7 @@ void CairoDrawer::draw_output_label(const Label& output_label,
 	cairo_context->set_identity_matrix();
 	cairo_context->begin_new_path();
 
-	draw_arc(radius_output, begin, end, Direction::DECREASING);
+	draw_arc(radius_output, begin, end, Direction::CLOCKWISE);
 
 	Cartesian tmp;
 	coord_converter.convert(Polar(radius_output, end), tmp);
@@ -638,7 +638,7 @@ void CairoDrawer::draw_coord_point(const Polar& coord, const Angle& width,
 	Angle end = coord.angle() + width * 0.5;
 
 	// Draw segment
-	draw_ring_segment(inner_radius, height, begin, end, prop, Direction::INCREASING);
+	draw_ring_segment(inner_radius, height, begin, end, prop, Direction::COUNTER_CLOCKWISE);
 }
 
 void CairoDrawer::draw_connector_segment(double begin_radius, double begin_angle,
@@ -727,11 +727,11 @@ void CairoDrawer::draw_ring_segment(double inner_radius, double thickness,
 	cairo_context->begin_new_path();
 
 	// Draw first arc
-	draw_arc(inner_radius, start, end, Direction::INCREASING);
+	draw_arc(inner_radius, start, end, Direction::COUNTER_CLOCKWISE);
 
 	// Draw second arc depending on first one
 	draw_arc(inner_radius + thickness, start, end,
-		 dir == Direction::INCREASING ? Direction::DECREASING : Direction::INCREASING);
+		 dir == Direction::COUNTER_CLOCKWISE ? Direction::CLOCKWISE : Direction::COUNTER_CLOCKWISE);
 
 	cairo_context->close_path();
 
@@ -761,7 +761,7 @@ void CairoDrawer::draw_arc(double radius, const Angle& start, const Angle& end,
 	// Draw arc begin->end or end->begin depending on direction
 	switch (dir)
 	{
-	case Direction::INCREASING:
+	case Direction::COUNTER_CLOCKWISE:
 		cairo_context->arc(
 		    coord_converter.get_center_x(),
 		    coord_converter.get_center_y(),
@@ -770,7 +770,7 @@ void CairoDrawer::draw_arc(double radius, const Angle& start, const Angle& end,
 		    get_cairo_angle(start).value()
 		);
 		break;
-	case Direction::DECREASING:
+	case Direction::CLOCKWISE:
 		cairo_context->arc_negative(
 		    coord_converter.get_center_x(),
 		    coord_converter.get_center_y(),

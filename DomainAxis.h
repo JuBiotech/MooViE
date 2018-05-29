@@ -93,9 +93,9 @@ public:
 	};
 
 public:
-	/** Creates a new DomainAxis presenting a given variable
-	 * and is drawn between given angles with given radius,
-	 * height and properties.
+	/** Creates a DomainAxis presenting a given variable and
+	 * is drawn between given angles with given radius, height
+	 * and properties.
 	 *
 	 * @brief constructor
 	 *
@@ -144,7 +144,7 @@ public:
 	 *
 	 * @return the start Angle
 	 */
-	Angle get_start () const
+	const Angle& get_start () const
 	{
 		return start;
 	}
@@ -154,7 +154,7 @@ public:
 	 *
 	 * @brief sets the start Angle
 	 *
-	 * @param the start Angle to set
+	 * @param _start the start Angle to set
 	 */
 	void set_start (const Angle& _start)
 	{
@@ -168,7 +168,7 @@ public:
 	 *
 	 * @return the end Angle
 	 */
-	Angle get_end () const
+	const Angle& get_end () const
 	{
 		return end;
 	}
@@ -183,28 +183,6 @@ public:
 	void set_end (const Angle& _end)
 	{
 		end = _end;
-	}
-
-	/** Returns the height measured from the radius.
-	 *
-	 * @brief gets the height
-	 *
-	 * @return the height
-	 */
-	double get_height () const
-	{
-		return height;
-	}
-
-	/** Sets the height measured from the radius.
-	 *
-	 * @brief sets the height
-	 *
-	 * @param the height to set
-	 */
-	void set_height (double _height)
-	{
-		height = _height;
 	}
 
 	/** Returns the radius measured from the center
@@ -224,65 +202,111 @@ public:
 	 *
 	 * @brief sets the radius
 	 *
-	 * @param the radius to set
+	 * @param _radius the radius to set
 	 */
 	void set_radius (double _radius)
 	{
 		radius = _radius;
 	}
 
-	/** Sets the radius measured from the center
-	 * of the coordinate system.
+	/** Returns the height measured from the radius.
 	 *
-	 * @brief sets the radius
+	 * @brief gets the height
 	 *
-	 * @param the radius to set
+	 * @return the height
+	 */
+	double get_height () const
+	{
+		return height;
+	}
+
+	/** Sets the height measured from the radius.
+	 *
+	 * @brief sets the height
+	 *
+	 * @param _height the height to set
+	 */
+	void set_height (double _height)
+	{
+		height = _height;
+	}
+
+	/** Returns the DrawerProperties that will be used
+	 * to draw this DomainAxis.
+	 *
+	 * @brief gets the DrawerProperties
+	 *
+	 * @return the DrawerProperties
 	 */
 	const DrawerProperties<>& get_prop () const
 	{
 		return prop;
 	}
 
-
+	/** Sets the DrawerProperties that will be used to
+	 * draw this DomainAxis.
+	 *
+	 * @brief sets the DrawerProperties
+	 *
+	 * @param _prop the DrawerProperties to set
+	 */
 	void set_prop (const DrawerProperties<>& _prop)
 	{
 		prop = _prop;
 	}
 
-	const SimpleScale& get_ticks () const
+	/** Returns the SimpleScale of this DomainAxis. This
+	 * scale instance defines how the graphical scale will
+	 * be drawn.
+	 *
+	 * @brief gets the SimpleScale
+	 *
+	 * @return the SimpleScale
+	 */
+	const SimpleScale& get_scale () const
 	{
 		return scale;
 	}
 
-	void set_ticks (const SimpleScale& _scale)
-	{
-		scale = _scale;
-	}
-
+	/** Constructs a label using the given TextProperties'
+	 * style and this DomainAxis' variable name.
+	 *
+	 * @brief makes a label for this DomainAxis
+	 *
+	 * @param _prop
+	 */
 	Label make_label (const TextProperties& _prop) const
 	{
 		return Label(var.name, _prop);
 	}
 
+	/** Calculates the frequencies of the Histogram.
+	 *
+	 * @brief calculates Histogram frequencies
+	 *
+	 * @param data the data used
+	 */
 	void calculate_histogram(const std::vector<double>& data);
 
 private:
 	/* The Variable this VarAxis represents */
 	DefVar 				var;
-	/** The ticks of this variable */
-	SimpleScale 		scale;
-	/** The histogram describing the frequencies of the intervals */
-	Histogram			histogram;
 
-	/** Start and end angle for drawing the VarAxis */
+	/* The ticks of this variable */
+	SimpleScale 		scale;
+
+	/* Start and end angle for drawing the VarAxis */
 	Angle 				start, end;
-	/** Start radius of the VarAxis */
+	/* Start radius of the VarAxis */
 	double 				radius;
-	/** Height of the VarAxis */
+	/* Height of the VarAxis */
 	double		 		height;
 
-	/** Style defining how the VarAxis is drawn */
+	/* Style defining how the VarAxis is drawn */
 	DrawerProperties<> 	prop;
+
+	/* The histogram describing the frequencies of the intervals */
+	Histogram			histogram;
 };
 
 #endif /* DOMAINAXIS_H_ */

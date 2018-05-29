@@ -7,16 +7,19 @@
 
 #include "CodomainGrid.h"
 
-CodomainGrid::CodomainGrid(std::size_t major_ticks_, std::size_t minor_ticks_,
-		const Angle & start_, const Angle & end_,
-		double radius_, double height_, Direction dir_,
-		const std::vector<DefVar> output_vars)
-	: num_outputs(output_vars.size()),
-	  scale(major_ticks_, minor_ticks_, Configuration::get_instance().get_tick_label()),
-	  start(start_), end(end_), radius(radius_), height(height_), direction(dir_),
-	  output_variables(output_vars)
+CodomainGrid::CodomainGrid(const std::vector<DefVar>& _output_vars,
+		const Angle& _start, const Angle& _end,
+		double _radius, double _height, Direction _dir)
+	: num_outputs(_output_vars.size()),
+	  scale(
+			  Configuration::get_instance().get_num_major_ticks_cg(),
+			  Configuration::get_instance().get_num_minor_ticks_cg(),
+			  Configuration::get_instance().get_tick_label()
+	  ),
+	  start(_start), end(_end), radius(_radius), height(_height), direction(_dir),
+	  output_variables(_output_vars)
 	{
-		for (DefVar var: output_vars)
+		for (DefVar var: _output_vars)
 		{
 			scale.add_scale(create_rounded_interval(var.min, var.max));
 		}

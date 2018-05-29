@@ -19,7 +19,7 @@
 /** A enum for drawer direction */
 enum Direction
 {
-	INCREASING, DECREASING
+	COUNTER_CLOCKWISE, CLOCKWISE
 };
 
 /** Representing a coordinate grid by its dimensional constraints.
@@ -30,7 +30,7 @@ enum Direction
  * ╟───┼───┼───┼───╫───┼───┼───┼───╢
  * ║   │   │   │   ║   │   │   │   ║
  * ╟───┼───┼───┼───╫───┼───┼───┼───╢
- * 4 outputs, 4 ticks
+ * 4 outputs, 4 scale ticks
  * @brief The CoordGrid class
  * @author beyss
  * @date 26.07.2017
@@ -38,84 +38,179 @@ enum Direction
 class CodomainGrid
 {
 public:
-    /** Creates a CoordGrid which can be drawn between two angles in a
-     * polar coordinate system.
-     * @brief CoordGrid
-     * @param num_ticks the number of ticks
-     * @param start the start angle
-     * @param end the end angle
-     * @param height the height of the CoordGrid
-     * @param output_vars a vector containing the output variables
+    /** Creates a CodomainGrid presenting given variables and is drawn
+     * between given angles with given radius and height.
+     *
+     * @brief constructor
+     *
+     * @param _output_vars a vector containing the output variables
+     * @param _start the start angle
+     * @param _end the end angle
+     * @param _radius the radius from the center
+     * @param _height the height beginning at the radius
+     * @param _dir the Direction the outputs values increase
      */
-    CodomainGrid(std::size_t major_ticks_, std::size_t minor_ticks_,
-    		const Angle & start_, const Angle & end_,
-			double radius_, double height_, Direction dir_,
-			const std::vector<DefVar> output_vars);
+    CodomainGrid(const std::vector<DefVar>& _output_vars,
+    		const Angle & _start, const Angle & _end,
+			double _radius, double _height, Direction _dir);
 
-	Direction get_direction() const
-	{
-		return direction;
-	}
+    /** Returns the i-th output variable. If num_output >= num_outputs
+     * an exception is thrown.
+     *
+     * @brief gets output variable
+     *
+     * @param num_output the number of the output to return
+     */
+    const DefVar& get_var(std::size_t num_output) const;
 
-	void set_direction(Direction direction)
-	{
-		this->direction = direction;
-	}
+    /** Returns the total number of stored output variables.
+     *
+     * @brief gets number of outputs
+     *
+     * @return the number of outputs
+     */
+    std::size_t get_num_outputs() const
+    {
+    	return num_outputs;
+    }
 
-	Angle get_end() const
-	{
-		return end;
-	}
+    /** Returns the start Angle of this CodomainGrid's
+     * drawing span.
+     *
+     * @brief gets the start Angle
+     *
+     * @return the start Angle
+     */
+    const Angle& get_start() const
+    {
+    	return start;
+    }
 
-	void set_end(const Angle& end)
-	{
-		this->end = end;
-	}
+    /** Starts the start Angle of this CodomainGrid's
+     * drawing span.
+     *
+     * @brief sets the start Angle
+     *
+     * @param _start the start Angle to set
+     */
+    void set_start(const Angle& _start)
+    {
+    	start = _start;
+    }
 
+    /** Returns the end Angle of this CodomainGrid's
+     * drawing span.
+     *
+     * @brief gets the end Angle
+     *
+     * @return the end Angle
+     */
+    const Angle& get_end() const
+    {
+    	return end;
+    }
+
+    /** Sets the end Angle of this CodomainGrid's
+     * drawing span.
+     *
+     * @brief gets the end Angle
+     *
+     * @param _end the end Angle to set
+     */
+    void set_end(const Angle& _end)
+    {
+    	end = _end;
+    }
+
+    /** Returns the radius measured from the center
+     * of the coordinate system.
+     *
+     * @brief gets the radius
+     *
+     * @return the radius
+     */
+    double get_radius() const
+    {
+    		return radius;
+    }
+
+    /** Sets the radius measured from the center
+     * of the coordinate system.
+     *
+     * @brief sets the radius
+     *
+     * @param _radius the radius to set
+     */
+    void set_radius(double _radius)
+    {
+    	radius = _radius;
+    }
+
+    /** Returns the height measured from the radius.
+     *
+     * @brief gets the height
+     *
+     * @return the height
+     */
 	double get_height() const
 	{
 		return height;
 	}
 
-	void set_height(double height)
+	/** Sets the height measured from the radius.
+	 *
+	 * @brief sets the height
+	 *
+	 * @param _height the height to set
+	 */
+	void set_height(double _height)
 	{
-		this->height = height;
+		height = _height;
 	}
 
+	/** Returns the direction this CodomainGrid's output values
+	 * increase. The Direction is either COUNTER_CLOCKWISE (with
+	 * increasing Angle) or CLOCKWISE (with decreasing Angle).
+	 *
+	 * @brief gets the Direction
+	 *
+	 * @return the Direction
+	 */
+	Direction get_direction() const
+	{
+		return direction;
+	}
+
+	/** Sets the direction this CodomainGrid's output values
+	 * increase. The Direction is either COUNTER_CLOCKWISE (with
+	 * increasing Angle) or CLOCKWISE (with decreasing Angle).
+	 *
+	 * @brief sets the Direction
+	 *
+	 * @param _dir the Direction to set
+	 */
+	void set_direction(Direction _dir)
+	{
+		direction = _dir;
+	}
+
+	/** Returns the MultiScale of this CodomainGrid. This
+	 * scale instance defines how the graphical scale will
+	 * be drawn for each output.
+	 *
+	 * @brief gets the MultiScale
+	 *
+	 * @return the MultiScale
+	 */
 	const MultiScale& get_scale() const
 	{
 		return scale;
 	}
 
-	std::size_t get_num_outputs() const
-	{
-		return num_outputs;
-	}
-
-	double get_radius() const
-	{
-		return radius;
-	}
-
-	void set_radius(double radius)
-	{
-		this->radius = radius;
-	}
-
-	Angle get_start() const
-	{
-		return start;
-	}
-
-	void set_start(const Angle& start)
-	{
-		this->start = start;
-	}
-
-	const DefVar& get_var(std::size_t num_output) const;
-
 private:
-    /** The number of outputs. */
+	/* The output variables */
+	std::vector<DefVar> output_variables;
+    /** The number of outputs */
     std::size_t 		num_outputs;
 
     /** The Scale information */
@@ -129,9 +224,6 @@ private:
     double 				height;
     /** Direction of the CoordGrid's values */
     Direction 			direction;
-
-    /* The output variables */
-    std::vector<DefVar> output_variables;
 };
 
 #endif /* CODOMAINGRID_H_ */
