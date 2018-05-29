@@ -32,8 +32,9 @@ double DomainAxis::Histogram::get_section_frequency(std::size_t i) const
 	if (i >= num_intervals)
 	{
 		throw std::out_of_range(
-				"Variable index (" + std::to_string(i) +
-				") is out of range 0-" + std::to_string(num_intervals - 1)
+				"Histogram section index is out of range (value: "
+				+ std::to_string(i) + ", range: 0-"
+				+ std::to_string(num_intervals - 1) + ")"
 		);
 	}
 
@@ -51,9 +52,9 @@ DomainAxis::DomainAxis(DefVar _var,
 		  create_rounded_interval(_var.min, _var.max),
 		  Configuration::get_instance().get_tick_label(), _var.unit
   ),
-  histogram(_var),
   start(_start), end(_end),radius(_radius),  height(_height),
-  prop(_prop)
+  prop(_prop),
+  histogram(_var)
 {}
 
 void DomainAxis::calculate_histogram(const std::vector<double> & data)
