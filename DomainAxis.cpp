@@ -29,7 +29,14 @@ void DomainAxis::Histogram::calculate(const std::vector<double> & data)
 
 double DomainAxis::Histogram::get_section_frequency(std::size_t i) const
 {
-    if (i >= num_intervals); // TODO: exception handling
+	if (i >= num_intervals)
+	{
+		throw std::out_of_range(
+				"Variable index (" + std::to_string(i) +
+				") is out of range 0-" + std::to_string(num_intervals - 1)
+		);
+	}
+
     return frequencies[i];
 }
 

@@ -170,7 +170,15 @@ Configuration::Configuration(const std::string & fname, const std::string & cpat
 			else if (key.compare("moovie.histogram_background") == 0)
 			{
 				std::vector<std::string> values = Util::split(value, ",");
-				if (values.size() != 3);
+
+				if (values.size() != 3)
+				{
+					throw std::length_error(
+							"histogram_background should be defined with 3 comma-separated values ("
+							+ std::to_string(values.size()) + " given) which represent RGB values"
+					);
+				}
+
 				_histogram_background = Color(
 						Util::string_to_double(values[0]),
 						Util::string_to_double(values[1]),
@@ -181,7 +189,15 @@ Configuration::Configuration(const std::string & fname, const std::string & cpat
 			else if (key.compare("moovie.histogram_fill") == 0)
 			{
 				std::vector<std::string> values = Util::split(value, ",");
-				if (values.size() != 3);
+
+				if (values.size() != 3)
+				{
+					throw std::length_error(
+							"histogram_background should be defined with 3 comma-separated values ("
+							+ std::to_string(values.size()) + " given) which represent RGB values"
+					);
+				}
+
 				_histogram_fill = Color(
 						Util::string_to_double(values[0]),
 						Util::string_to_double(values[1]),

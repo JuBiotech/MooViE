@@ -73,6 +73,16 @@ DataSet<double>* DataSet<double>::parse_from_csv(const std::string& cont,
 			DefDataRow row;
 			const std::vector<std::string> & cells = Util::split(lines[i], ",", false);
 
+			if (input_vars.size() + output_vars.size()
+					!= cells.size())
+			{
+				throw std::length_error(
+						"Row " + std::to_string(i) + " has an invalid count of cells"
+						+ "(expected: " + std::to_string(input_vars.size() + output_vars.size())
+						+ ", given: " + std::to_string(cells.size()) + ")"
+				);
+			}
+
 			// Add input variable values from this table line
 			for (std::size_t i = 0; i < input_vars.size(); ++i)
 			{

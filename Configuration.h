@@ -41,7 +41,12 @@ private:
 public:
 	inline static Configuration & get_instance()
 	{
-	  return *_instance; // TODO: throw exception if empty
+		if (_instance.get() == nullptr)
+		{
+			throw std::bad_function_call();
+		}
+
+		return *_instance;
 	}
 
 	static void initialize(const std::string & fname, const std::string & cpath);

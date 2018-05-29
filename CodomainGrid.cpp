@@ -27,6 +27,13 @@ CodomainGrid::CodomainGrid(const std::vector<DefVar>& _output_vars,
 
 const DefVar & CodomainGrid::get_var(std::size_t num_output) const
 {
-	if (num_output >= num_outputs);
+	if (num_output >= num_outputs)
+	{
+		throw std::out_of_range(
+				"Variable index (" + std::to_string(num_output) +
+				") is out of range " + std::to_string(num_outputs - 1)
+		);
+	}
+
 	return output_variables[num_output];
 }
