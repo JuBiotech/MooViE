@@ -230,58 +230,59 @@ public:
     /** Multiplication assignment operator multiplying this Angle's value with the given
      * double value. If necessary, the value is corrected to be consistent.
      *
-     * @brief this *= rhs
+     * @brief this *= val
      *
      * @param rhs the factor
      *
      * @return a reference to this angle
      */
-    Angle& operator*=(const Angle& rhs)
+    Angle& operator*=(double val)
     {
-        _angle = adjust_angle(_angle * rhs._angle);
+        _angle = adjust_angle(_angle * val);
         return *this;
     }
 
-    /** Friend multiplication operator returning an Angle equal to the return of this * rhs.
-     * It operates on a copy of lhs so that the original object is not changed.
+    /** Multiplication operator returning an Angle with the value of adjusted
+     * this * val.
      *
-     * @brief operator this * rhs
+     * @brief operator this * val
      *
-     * @param rhs the factor
+     * @param val the factor
      *
-     * @return a new Angle equal to this * rhs
+     * @return a new Angle equal to this * val
      */
-    Angle operator*(const Angle& rhs) const
+    Angle operator*(double val) const
     {
-        return _angle * rhs._angle;
+        return _angle * val;
     }
 
     /** Division assignment operator divides this Angle's value by the given
      * double value. If necessary, the value is corrected to be consistent.
      *
-     * @brief this /= rhs
+     * @brief this /= val
      *
-     * @param rhs the dividend
+     * @param val the dividend
      *
      * @return a reference to this angle
      */
-    Angle& operator/=(const Angle& rhs)
+    Angle& operator/=(double val)
     {
-        _angle = adjust_angle(_angle / rhs._angle);
+        _angle = adjust_angle(_angle / val);
         return *this;
     }
 
-    /** Division operator returning an Angle equal to the return of this / rhs.
+    /** Division operator returning an Angle with the value of adjusted
+     * this / val.
      *
-     * @brief this / rhs
+     * @brief this / val
      *
-     * @param rhs the dividend
+     * @param val the dividend
      *
-     * @return a new Angle equal to this / rhs
+     * @return a new Angle equal to this / val
      */
-    Angle operator/(const Angle& rhs)
+    Angle operator/(double val)
     {
-        return _angle / rhs._angle;
+        return _angle / val;
     }
 
     /** Returns an Angle that is (1-p) percent of a1 and p percent
