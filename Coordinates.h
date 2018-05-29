@@ -11,6 +11,7 @@
 #include <cmath>
 #include <ostream>
 #include <cassert>
+#include "Utils.h"
 
 /** A namespace for converter functions. */
 namespace angle_helper
@@ -107,7 +108,7 @@ public:
      */
     bool operator==(const Angle& rhs) const
     {
-        return (value() == rhs.value());
+        return Util::double_equal(_angle, rhs._angle);
     }
 
     /** Smaller than operator checking wether this Angle's value
@@ -121,7 +122,7 @@ public:
      */
     bool operator<(const Angle& rhs) const
     {
-    	return this->value() < rhs.value();
+    	return _angle < rhs._angle;
     }
 
     /** Smaller than or equal to operator checking wether this Angle's
@@ -135,7 +136,7 @@ public:
      */
     bool operator<=(const Angle& rhs) const
     {
-    	return this->value() <= rhs.value();
+    	return _angle <= rhs._angle;
     }
 
     /** Greater than operator checking wether this Angle's value
@@ -149,7 +150,7 @@ public:
      */
     bool operator>(const Angle& rhs) const
     {
-    	return this->value() > rhs.value();
+    	return _angle > rhs._angle;
     }
 
     /** Greater than or equal to operator checking wether this Angle's
@@ -163,7 +164,7 @@ public:
      */
     bool operator>=(const Angle& rhs) const
 	{
-    	return this->value() >= rhs.value();
+    	return _angle >= rhs._angle;
 	}
 
     /** Addition assignment operator increasing this Angle's value by
@@ -178,7 +179,7 @@ public:
      */
     Angle& operator+=(const Angle& rhs)
     {
-        _angle = adjust_angle(_angle + rhs.value());
+        _angle = adjust_angle(_angle + rhs._angle);
         return *this;
     }
 
@@ -193,7 +194,7 @@ public:
      */
     Angle operator+(const Angle& rhs) const
     {
-        return this->_angle + rhs._angle;
+        return _angle + rhs._angle;
     }
 
     /** Subtraction assignment operator decreasing this Angle's value by
@@ -208,7 +209,7 @@ public:
      */
     Angle& operator-=(const Angle& rhs)
     {
-        _angle = adjust_angle(_angle - rhs.value());
+        _angle = adjust_angle(_angle - rhs._angle);
         return *this;
     }
 
@@ -223,7 +224,7 @@ public:
      */
     Angle operator-(const Angle& rhs) const
     {
-        return this->_angle - rhs._angle;
+        return _angle - rhs._angle;
     }
 
     /** Multiplication assignment operator multiplying this Angle's value with the given
@@ -237,7 +238,7 @@ public:
      */
     Angle& operator*=(const Angle& rhs)
     {
-        _angle *= adjust_angle(_angle * rhs.value());
+        _angle = adjust_angle(_angle * rhs._angle);
         return *this;
     }
 
@@ -252,7 +253,7 @@ public:
      */
     Angle operator*(const Angle& rhs) const
     {
-        return this->_angle * rhs._angle;
+        return _angle * rhs._angle;
     }
 
     /** Division assignment operator divides this Angle's value by the given
@@ -266,7 +267,7 @@ public:
      */
     Angle& operator/=(const Angle& rhs)
     {
-        _angle = adjust_angle(_angle / rhs.value());
+        _angle = adjust_angle(_angle / rhs._angle);
         return *this;
     }
 
@@ -280,7 +281,7 @@ public:
      */
     Angle operator/(const Angle& rhs)
     {
-        return this->_angle / rhs._angle;
+        return _angle / rhs._angle;
     }
 
     /** Returns an Angle that is (1-p) percent of a1 and p percent
