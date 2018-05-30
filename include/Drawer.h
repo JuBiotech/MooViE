@@ -1,7 +1,7 @@
 #ifndef DRAWER_H_
 #define DRAWER_H_
 
-#include "RelationElement.h"
+#include <RelationElement.h>
 
 /** An abstract Drawer class that can be used to draw
  * MooViE elements. Drawer is supposed to cover the strategy that is used to

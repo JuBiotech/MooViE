@@ -5,7 +5,7 @@
 #include <cstddef>
 #include <vector>
 #include <sstream>
-#include "Label.h"
+#include <Label.h>
 
 /** The Scale class represents a graphical scale of an axis
  * by its extreme values and intersections counts.

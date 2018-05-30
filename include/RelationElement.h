@@ -2,10 +2,10 @@
 #define RELATIONELEMENT_H_
 
 #include <vector>
-#include "CodomainGrid.h"
-#include "DomainAxis.h"
-#include "Coordinates.h"
-#include "Mapper.h"
+#include <CodomainGrid.h>
+#include <DomainAxis.h>
+#include <Coordinates.h>
+#include <Mapper.h>
 
 /** A point in a polar coordinate system. The point has
  * additional properties specifying how a curve starting

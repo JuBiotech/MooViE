@@ -1,4 +1,4 @@
-#include "Scale.h"
+#include <Scale.h>
 
 std::vector<Label> SimpleScale::make_labels(void) const
 {

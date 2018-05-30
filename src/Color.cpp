@@ -5,6 +5,6 @@
  *      Author: beyss
  */
 
-#include "Color.h"
+#include <Color.h>
 
 const Color Color::BLACK { 0, 0, 0, 255 };

@@ -9,7 +9,7 @@
 #define LABEL_H_
 
 #include <string>
-#include "TextProperties.h"
+#include <TextProperties.h>
 
 /** A Label is a formatted text that is stored as a text string
  * and a TextProperties object.

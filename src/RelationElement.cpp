@@ -5,7 +5,7 @@
  *      Author: IBT\stratmann
  */
 
-#include "RelationElement.h"
+#include <RelationElement.h>
 #include "CairoDrawer.h"
 
 RelationElementFactory::RelationElementFactory(

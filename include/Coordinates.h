@@ -11,7 +11,7 @@
 #include <cmath>
 #include <ostream>
 #include <cassert>
-#include "Utils.h"
+#include <Utils.h>
 
 /** A namespace for converter functions. */
 namespace angle_helper

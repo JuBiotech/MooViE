@@ -9,10 +9,10 @@
 #define SCENE_H_
 
 #include <algorithm>
-#include "CairoDrawer.h"
-#include "RelationElement.h"
-#include "DataSet.h"
-#include "Configuration.h"
+#include <CairoDrawer.h>
+#include <RelationElement.h>
+#include <DataSet.h>
+#include <Configuration.h>
 
 /** Scene constructs a diagram that displays data vectors
  * @brief The Scene class

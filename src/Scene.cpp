@@ -5,8 +5,7 @@
  *      Author: beyss
  */
 
-#include "Scene.h"
-#include <iostream>
+#include <Scene.h>
 
 Scene::Scene()
 : set(

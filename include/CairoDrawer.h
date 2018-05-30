@@ -1,12 +1,11 @@
 #ifndef CAIRODRAWER_H_
 #define CAIRODRAWER_H_
 
-#include "Drawer.h"
+#include <Drawer.h>
 #include <cairommconfig.h>
 #include <cairomm/context.h>
 #include <cairomm/surface.h>
 #include <array>
-#include <iostream>
 
 /** CairoDrawer is a wrapper class for MooViE's basic drawing abilities
  * which are realized using Cairo.

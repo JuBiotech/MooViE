@@ -9,9 +9,9 @@
 #include <string>
 #include <iostream>
 #include <chrono>
-#include "Scene.h"
-#include "CmdLine.h"
-#include "Configuration.h"
+#include <Scene.h>
+#include <CmdLine.h>
+#include <Configuration.h>
 
 using namespace TCLAP;
 

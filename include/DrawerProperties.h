@@ -9,7 +9,7 @@
 #define DRAWERPROPERTIES_H_
 
 #include <algorithm>
-#include "Color.h"
+#include <Color.h>
 
 /** DrawerProperties can be used to control the line thinkness, stroke and
  * fill color of a Drawer.

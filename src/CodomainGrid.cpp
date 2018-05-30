@@ -5,7 +5,7 @@
  *      Author: beyss
  */
 
-#include "CodomainGrid.h"
+#include <CodomainGrid.h>
 
 CodomainGrid::CodomainGrid(const std::vector<DefVariable>& _output_vars,
 		const Angle& _start, const Angle& _end,

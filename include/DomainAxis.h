@@ -8,10 +8,10 @@
 #ifndef DOMAINAXIS_H_
 #define DOMAINAXIS_H_
 
-#include "Scale.h"
-#include "DataSet.h"
-#include "Configuration.h"
-#include "Coordinates.h"
+#include <Scale.h>
+#include <DataSet.h>
+#include <Configuration.h>
+#include <Coordinates.h>
 
 /** A DomainAxis is an axis which displays the possible values
  * of a input variable. It is visualized as a ring segment

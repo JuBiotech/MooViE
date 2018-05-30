@@ -9,7 +9,7 @@
 #define COLOR_H_
 
 #include <array>
-#include "Utils.h"
+#include <Utils.h>
 
 /** Color class represents a color by RGB and alpha value.
  * @brief The Color class

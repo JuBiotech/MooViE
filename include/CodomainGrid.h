@@ -11,10 +11,10 @@
 #include <cstddef>
 #include <vector>
 
-#include "Scale.h"
-#include "DataSet.h"
-#include "Configuration.h"
-#include "Coordinates.h"
+#include <Scale.h>
+#include <DataSet.h>
+#include <Configuration.h>
+#include <Coordinates.h>
 
 /** A enum for drawer direction */
 enum Direction

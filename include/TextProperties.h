@@ -9,7 +9,7 @@
 #define TEXTPROPERTIES_H_
 
 #include <string>
-#include "Color.h"
+#include <Color.h>
 
 /** TextProperties can be used to control font, size, color and style of
  * a drawn text.

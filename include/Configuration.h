@@ -12,10 +12,10 @@
 #include <vector>
 #include <regex>
 #include <memory>
-#include "Utils.h"
-#include "DrawerProperties.h"
-#include "TextProperties.h"
-#include "Triangle.h"
+#include <Utils.h>
+#include <DrawerProperties.h>
+#include <TextProperties.h>
+#include <Triangle.h>
 
 /**
  *

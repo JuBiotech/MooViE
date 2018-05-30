@@ -5,8 +5,7 @@
  *      Author: IBT\stratmann
  */
 
-#include "DomainAxis.h"
-#include <iostream>
+#include <DomainAxis.h>
 
 DomainAxis::Histogram::Histogram(DefVariable _var)
 : var(_var), num_intervals(0)

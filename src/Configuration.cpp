@@ -5,7 +5,7 @@
  *      Author: stratmann
  */
 
-#include "Configuration.h"
+#include <Configuration.h>
 
 
 // Instance pointer

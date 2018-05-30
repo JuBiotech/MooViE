@@ -5,7 +5,7 @@
  *      Author: IBT\stratmann
  */
 
-#include "DataSet.h"
+#include <DataSet.h>
 
 template<>
 DataSet<double>* DataSet<double>::parse_from_csv(const std::string& cont,
