@@ -14,17 +14,17 @@ find_package (cairo REQUIRED)
 find_package (cairomm-1.0 REQUIRED)
 
 # Add includes and linking
-include_directories(FREETYPE2_INCLUDE_DIR SIGCPP_CONFIG_DIR SIGCPP_INCLUDE_DIR
-                    CAIRO_INCLUDE_DIR CAIROMM_CONFIG_DIR CAIRO_CAIROMM_INCLUDE_DIR)
+include_directories("include" "include/thirdparty/tclap" FREETYPE2_INCLUDE_DIR SIGCPP_CONFIG_DIR SIGCPP_INCLUDE_DIR CAIRO_INCLUDE_DIR CAIROMM_CONFIG_DIR CAIRO_CAIROMM_INCLUDE_DIR)
 link_directories(CAIRO_LIBRARY_DIR CAIROMM_LIBRARY_DIR)
 
 # Build MooViE library
 file (GLOB SOURCES src/*.cpp)
+list(REMOVE_ITEM SOURCES "moovie.cpp")
 add_library (libmoovie SHARED ${SOURCES})
 install (TARGETS libmoovie DESTINATION /usr/lib RENAME moovie)
 
 # Build MooViE executable
-add_executable (moovie moovie.cpp)
+add_executable (moovie "src/moovie.cpp")
 add_dependencies (moovie libmoovie)
 target_link_libraries(moovie libmoovie)
 install (TARGETS moovie DESTINATION /usr/bin)
