@@ -6,7 +6,7 @@
 # SIGCPP_CONFIG_DIR
 
 find_path(SIGCPP_INCLUDE NAMES sigc++-2.0/sigc++/sigc++.h)
-find_path(SIGCPP_CONFIG NAMES sigc++-2.0/include)
+find_path(SIGCPP_CONFIG NAMES sigc++-2.0/include HINTS /usr/lib/x86_64-linux-gnu)
 
 message("Sigc++ include directory = ${SIGCPP_INCLUDE}")
 message("Sigc++ config directory = ${SIGCPP_CONFIG}")

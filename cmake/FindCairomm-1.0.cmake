@@ -8,7 +8,7 @@
 # CAIROMM_CONFIG_DIR
 
 find_path(CAIROMM_INCLUDE NAMES cairomm-1.0/cairomm.h)
-find_path(CAIROMM_CONFIG NAMES cairomm-1.0/include)
+find_path(CAIROMM_CONFIG NAMES cairomm-1.0/include HINTS /usr/lib/x86_64-linux-gnu)
 find_library(CAIROMM_LIBRARY NAMES libcairomm-1.0 cairomm-1.0)
 
 message("Cairomm include directory = ${CAIROMM_INCLUDE}")
