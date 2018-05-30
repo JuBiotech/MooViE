@@ -50,7 +50,7 @@ public:
      * @param _height the height beginning at the radius
      * @param _dir the Direction the outputs values increase
      */
-    CodomainGrid(const std::vector<DefVar>& _output_vars,
+    CodomainGrid(const std::vector<DefVariable>& _output_vars,
     		const Angle & _start, const Angle & _end,
 			double _radius, double _height, Direction _dir);
 
@@ -61,7 +61,7 @@ public:
      *
      * @param num_output the number of the output to return
      */
-    const DefVar& get_var(std::size_t num_output) const;
+    const DefVariable& get_var(std::size_t num_output) const;
 
     /** Returns the total number of stored output variables.
      *
@@ -209,7 +209,7 @@ public:
 
 private:
 	/* The output variables */
-	std::vector<DefVar> output_variables;
+	std::vector<DefVariable> output_variables;
     /** The number of outputs */
     std::size_t 		num_outputs;
 

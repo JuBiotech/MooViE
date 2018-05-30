@@ -33,7 +33,7 @@ public:
 	     *
 	     * @param _var the variable to present
 	     */
-	    Histogram(DefVar _var);
+	    Histogram(DefVariable _var);
 
 	    /** Calculates equidistant data sections and stores
 	     * them.
@@ -85,7 +85,7 @@ public:
 
 	private:
 	    /* The variable whose frequencies to present */
-	    DefVar 				var;
+	    DefVariable 				var;
 	    /* The number of intervals to use */
 	    std::size_t 		num_intervals;
 	    /* The stored frequencies for the intervals */
@@ -106,7 +106,7 @@ public:
 	 * @param _height the height beginning at the radius
 	 * @param _prop the DrawerProperties
 	 */
-	DomainAxis(DefVar _var,
+	DomainAxis(DefVariable _var,
 		const Angle& _start, const Angle& _end,
 		double _radius, double _height,
 		const DrawerProperties<>& _prop);
@@ -118,7 +118,7 @@ public:
 	 *
 	 * @return the Var
 	 */
-	const DefVar& get_var () const
+	const DefVariable& get_var () const
 	{
 		return var;
 	}
@@ -290,7 +290,7 @@ public:
 
 private:
 	/* The Variable this VarAxis represents */
-	DefVar 				var;
+	DefVariable 				var;
 
 	/* The ticks of this variable */
 	SimpleScale 		scale;

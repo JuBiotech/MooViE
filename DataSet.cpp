@@ -11,7 +11,7 @@ template<>
 DataSet<double>* DataSet<double>::parse_from_csv(const std::string& cont,
 		std::string separator, std::string comment, std::string newline)
 {
-	std::vector<DefVar> input_vars, output_vars;
+	std::vector<DefVariable> input_vars, output_vars;
 	std::vector<DefDataRow> rows;
 	const std::vector<std::string> & lines = Util::split(cont, newline);
 
@@ -33,12 +33,12 @@ DataSet<double>* DataSet<double>::parse_from_csv(const std::string& cont,
 		{
 			std::string name = header[i].substr(2, open_bracket - 2),
 					unit = header[i].substr(open_bracket + 1, close_bracket - open_bracket - 1);
-			input_vars.push_back(DefVar(DBL_MAX, DBL_MIN, Util::strip(name), Util::strip(unit)));
+			input_vars.push_back(DefVariable(DBL_MAX, DBL_MIN, Util::strip(name), Util::strip(unit)));
 		}
 		else
 		{
 			std::string name = header[i].substr(2, header[i].length() - 2);
-			input_vars.push_back(DefVar(DBL_MAX, DBL_MIN, Util::strip(header[i])));
+			input_vars.push_back(DefVariable(DBL_MAX, DBL_MIN, Util::strip(header[i])));
 		}
 		++i;
 	}

@@ -8,7 +8,7 @@
 #include "DomainAxis.h"
 #include <iostream>
 
-DomainAxis::Histogram::Histogram(DefVar _var)
+DomainAxis::Histogram::Histogram(DefVariable _var)
 : var(_var), num_intervals(0)
 {
 }
@@ -41,7 +41,7 @@ double DomainAxis::Histogram::get_section_frequency(std::size_t i) const
     return frequencies[i];
 }
 
-DomainAxis::DomainAxis(DefVar _var,
+DomainAxis::DomainAxis(DefVariable _var,
 		 const Angle& _start, const Angle& _end,
 		 double _radius, double _height,
 		 const DrawerProperties<> & _prop)

@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_CASE(domainaxis)
 
 	std::string var_name = "var", unit = "mT", font_name = "Liberation Sans";
 	double min = 1, max = 10;
-	DefVar var(min, max, var_name, unit);
+	DefVariable var(min, max, var_name, unit);
 	Angle start = M_PI, end = M_PI + M_PI_2;
 	double radius = 10.0, height = 20.0, line_width = 1.0, font_size = 40;
 	Color line_color(.123, .8, .1, .071), fill_color(.94, .81, .7316, .5);
@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_CASE(codomaingrid)
 	Configuration::initialize("files/input.csv");
 	const Configuration& conf = Configuration::get_instance();
 
-	std::vector<DefVar> output_vars;
+	std::vector<DefVariable> output_vars;
 
 	std::string var_name0 = "var0", unit0 = "mT";
 	double min0 = 0, max0 = 10;
@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE(relationelement)
 
 	std::string var_name = "var", unit = "mT", font_name = "Liberation Sans";
 	double min = 0, max = 10;
-	DefVar var(min, max, var_name, unit);
+	DefVariable var(min, max, var_name, unit);
 	Angle start = M_PI, end = M_PI + M_PI_2;
 	double radius = 10.0, height = 20.0, line_width = 1.0, font_size = 40;
 	Color line_color(.123, .8, .1, .071), fill_color(.94, .81, .7316, .5);
@@ -189,7 +189,7 @@ BOOST_AUTO_TEST_CASE(relationelement)
 	std::vector<DomainAxis> axis { {var, start, end, radius, height, prop} };
 
 
-	std::vector<DefVar> output_vars;
+	std::vector<DefVariable> output_vars;
 
 	std::string var_name1 = "var1", unit1 = "V";
 	double min1 = -27, max1 = -9;

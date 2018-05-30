@@ -85,7 +85,7 @@ void Scene::initialize(void)
 	double angle = 180 / set->input_variables().size() - config.get_input_separation_angle();
 	double start = 90 + config.get_input_separation_angle() / 2, end = start+angle;
 	std::size_t axis_color_pos = 0;
-	for (DefVar var: set->input_variables())
+	for (DefVariable var: set->input_variables())
 	{
 		axis.emplace_back(
 				var,

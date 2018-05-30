@@ -19,7 +19,7 @@ BOOST_AUTO_TEST_CASE(csv_parsing_iterator_getter)
 
 	BOOST_CHECK((set->rows() == 7) && (set->cols() == 5));
 
-	const std::vector<DefVar>& inputs = set->input_variables();
+	const std::vector<DefVariable>& inputs = set->input_variables();
 	BOOST_CHECK_EQUAL(inputs[0].name, std::string("Input1"));
 	BOOST_CHECK_CLOSE(inputs[0].min, 0.111, eps);
 	BOOST_CHECK_CLOSE(inputs[0].max, 0.511, eps);
@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(csv_parsing_iterator_getter)
 	BOOST_CHECK_CLOSE(inputs[3].min, 0.113, eps);
 	BOOST_CHECK_CLOSE(inputs[3].max, 0.513, eps);
 
-	const std::vector<DefVar> & outputs = set->output_variables();
+	const std::vector<DefVariable> & outputs = set->output_variables();
 	BOOST_CHECK_EQUAL(outputs[0].name, std::string("Output1"));
 	BOOST_CHECK_CLOSE(outputs[0].min, 0.121, eps);
 	BOOST_CHECK_CLOSE(outputs[0].max, 0.521, eps);
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(null_cells_intermediate_comments)
 
 	BOOST_CHECK((set->rows() == 2) && (set->cols() == 2));
 
-	const std::vector<DefVar>& inputs = set->input_variables();
+	const std::vector<DefVariable>& inputs = set->input_variables();
 	BOOST_CHECK_EQUAL(inputs[0].name, std::string("Input1"));
 	BOOST_CHECK_CLOSE(inputs[0].min, 1, eps);
 	BOOST_CHECK_CLOSE(inputs[0].max, 7, eps);
@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(null_cells_intermediate_comments)
 	BOOST_CHECK_CLOSE(inputs[1].min, 8, eps);
 	BOOST_CHECK_CLOSE(inputs[1].max, 8, eps);
 
-	const std::vector<DefVar> & outputs = set->output_variables();
+	const std::vector<DefVariable> & outputs = set->output_variables();
 	BOOST_CHECK_EQUAL(outputs[0].name, std::string("Output1"));
 	BOOST_CHECK_CLOSE(outputs[0].min, 2, eps);
 	BOOST_CHECK_CLOSE(outputs[0].max, 9, eps);

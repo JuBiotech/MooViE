@@ -31,7 +31,7 @@ public:
 	 * maximal and minimal value.
 	 * @brief The Var struct
 	 */
-	struct Var
+	struct Variable
 	{
 		/** Minimal value */
 		T min;
@@ -53,7 +53,7 @@ public:
 		 * @param max the max value
 		 * @param name the name
 		 */
-		Var(T min_, T max_, const std::string & name_, const std::string & unit_ = "") :
+		Variable(T min_, T max_, const std::string & name_, const std::string & unit_ = "") :
 				min(min_), max(max_), name(name_), unit(unit_)
 		{}
 	};
@@ -175,7 +175,7 @@ public:
 	 * of the selected row.
 	 * @return the input variables
 	 */
-	inline const std::vector<Var> & input_variables(void) const
+	inline const std::vector<Variable> & input_variables(void) const
 	{
 		return _input_vars;
 	}
@@ -185,7 +185,7 @@ public:
 	 * of the selected row.
 	 * @return the output variables
 	 */
-	inline const std::vector<Var> & output_variables(void) const
+	inline const std::vector<Variable> & output_variables(void) const
 	{
 		return _output_vars;
 	}
@@ -210,7 +210,7 @@ private:
 	/** Creates a DataSet from a vector of DataRows.
 	 * @param rows the rows of the table
 	 */
-	DataSet(const std::vector<Var> & input_vars, const std::vector<Var> & output_vars,
+	DataSet(const std::vector<Variable> & input_vars, const std::vector<Variable> & output_vars,
 			const std::vector<DataRow> & rows) :
 			_number_rows(rows.size()), _number_cols(input_vars.size()),
 			_input_vars(input_vars), _output_vars(output_vars), _rows(rows)
@@ -220,9 +220,9 @@ private:
 	/** The row and column numbers */
 	const std::size_t _number_rows, _number_cols;
 	/** The column names and extremes of this table */
-	const std::vector<Var> _input_vars;
+	const std::vector<Variable> _input_vars;
 	/** The input names and extremes of this table */
-	const std::vector<Var> _output_vars;
+	const std::vector<Variable> _output_vars;
 	/** The rows of this data table */
 	const std::vector<DataRow> _rows;
 };
@@ -236,7 +236,7 @@ DataSet<T>* DataSet<T>::parse_from_csv(const std::string & cont,
 }
 
 typedef DataSet<double> DefDataSet;
-typedef DefDataSet::Var DefVar;
+typedef DefDataSet::Variable DefVariable;
 typedef DefDataSet::DataRow DefDataRow;
 typedef DefDataSet::Cell DefCell;
 

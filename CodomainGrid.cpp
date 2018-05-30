@@ -7,7 +7,7 @@
 
 #include "CodomainGrid.h"
 
-CodomainGrid::CodomainGrid(const std::vector<DefVar>& _output_vars,
+CodomainGrid::CodomainGrid(const std::vector<DefVariable>& _output_vars,
 		const Angle& _start, const Angle& _end,
 		double _radius, double _height, Direction _dir)
 	: output_variables(_output_vars), num_outputs(_output_vars.size()),
@@ -18,13 +18,13 @@ CodomainGrid::CodomainGrid(const std::vector<DefVar>& _output_vars,
 	  ),
 	  start(_start), end(_end), radius(_radius), height(_height), direction(_dir)
 	{
-		for (DefVar var: _output_vars)
+		for (DefVariable var: _output_vars)
 		{
 			scale.add_scale(create_rounded_interval(var.min, var.max));
 		}
 	}
 
-const DefVar & CodomainGrid::get_var(std::size_t num_output) const
+const DefVariable & CodomainGrid::get_var(std::size_t num_output) const
 {
 	if (num_output >= num_outputs)
 	{
