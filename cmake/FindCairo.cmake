@@ -3,7 +3,7 @@
 # Following are set afterwards:
 # CAIRO_FOUND
 # CAIRO_INCLUDE_DIR
-# CAIRO_LIBRARY_DIR
+# CAIRO_LIBRARY_LOC
 # CAIRO_LIBRARIES
 
 find_path(CAIRO_INCLUDE NAMES cairo/cairo.h)
@@ -13,7 +13,7 @@ message("Cairo include directory = ${CAIRO_INCLUDE}")
 message("Cairo library = ${CAIRO_LIBRARY}")
 
 set(CAIRO_INCLUDE_DIR ${CAIRO_INCLUDE})
-set(CAIRO_LIBRARY_DIR ${CAIRO_LIBRARY})
+set(CAIRO_LIBRARY_LOC ${CAIRO_LIBRARY})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(CAIRO DEFAULT_MSG CAIRO_LIBRARY CAIRO_INCLUDE)

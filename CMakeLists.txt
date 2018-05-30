@@ -15,7 +15,6 @@ find_package (cairomm-1.0 REQUIRED)
 
 # Add includes and linking
 include_directories("include" "include/thirdparty/tclap" FREETYPE2_INCLUDE_DIR SIGCPP_CONFIG_DIR SIGCPP_INCLUDE_DIR CAIRO_INCLUDE_DIR CAIROMM_CONFIG_DIR CAIRO_CAIROMM_INCLUDE_DIR)
-link_directories(CAIRO_LIBRARY_DIR CAIROMM_LIBRARY_DIR)
 
 # Build MooViE library
 file (GLOB SOURCES src/*.cpp)
@@ -26,5 +25,5 @@ install (TARGETS libmoovie DESTINATION /usr/lib RENAME moovie)
 # Build MooViE executable
 add_executable (moovie "src/moovie.cpp")
 add_dependencies (moovie libmoovie)
-target_link_libraries(moovie libmoovie)
+target_link_libraries(moovie PUBLIC libmoovie ${CAIRO_LIBRARY_LOC} ${CAIROMM_LIBRARY_LOC})
 install (TARGETS moovie DESTINATION /usr/bin)
