@@ -10,7 +10,7 @@
 #include <iostream>
 #include <chrono>
 #include "Scene.h"
-#include "3rdparty/tclap/CmdLine.h"
+#include "CmdLine.h"
 #include "Configuration.h"
 
 using namespace TCLAP;
