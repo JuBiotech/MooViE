@@ -1,6 +1,6 @@
-#include "../DomainAxis.h"
-#include "../CodomainGrid.h"
-#include "../RelationElement.h"
+#include <DomainAxis.h>
+#include <CodomainGrid.h>
+#include <RelationElement.h>
 #include <limits>
 
 #define BOOST_TEST_DYN_LINK

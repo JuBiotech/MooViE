@@ -1,5 +1,5 @@
-#include "../DrawerProperties.h"
-#include "../TextProperties.h"
+#include "../include/DrawerProperties.h"
+#include "../include/TextProperties.h"
 #include <iostream>
 
 #define BOOST_TEST_DYN_LINK

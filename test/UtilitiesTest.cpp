@@ -1,5 +1,5 @@
-#include "../Utils.h"
-#include "../Mapper.h"
+#include <Utils.h>
+#include <Mapper.h>
 #include <limits>
 
 #define BOOST_TEST_DYN_LINK

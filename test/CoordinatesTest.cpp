@@ -1,4 +1,4 @@
-#include "../Coordinates.h"
+#include <Coordinates.h>
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE "Coordinates test"
