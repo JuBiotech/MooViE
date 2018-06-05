@@ -73,8 +73,6 @@ BOOST_AUTO_TEST_CASE(string_to_int)
 			too_large = "10000000000",
 			too_small = "-10000000000";
 
-	double eps = std::numeric_limits<double>::epsilon();
-
 	BOOST_CHECK_EQUAL(Util::string_to_int(regular), 3);
 	BOOST_CHECK_EQUAL(Util::string_to_int(negative), -3);
 	BOOST_CHECK_EQUAL(Util::string_to_int(null), 0);

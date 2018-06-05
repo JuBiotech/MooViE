@@ -175,13 +175,12 @@ BOOST_AUTO_TEST_CASE(codomaingrid)
 BOOST_AUTO_TEST_CASE(relationelement)
 {
 	Configuration::initialize("files/input.csv");
-	const Configuration& conf = Configuration::get_instance();
 
 	std::string var_name = "var", unit = "mT", font_name = "Liberation Sans";
 	double min = 0, max = 10;
 	DefVariable var(min, max, var_name, unit);
 	Angle start = M_PI, end = M_PI + M_PI_2;
-	double radius = 10.0, height = 20.0, line_width = 1.0, font_size = 40;
+	double radius = 10.0, height = 20.0, line_width = 1.0;
 	Color line_color(.123, .8, .1, .071), fill_color(.94, .81, .7316, .5);
 	DrawerProperties<> prop(line_width, line_color, fill_color);
 
