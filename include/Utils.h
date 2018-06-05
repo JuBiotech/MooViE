@@ -35,6 +35,8 @@ namespace Util {
  * @param fname the path of the file to read
  *
  * @return the files content
+ *
+ * @throws invalid_argument if file is not readable
  */
 std::string read_file(const std::string & fpath);
 

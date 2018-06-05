@@ -20,7 +20,7 @@ std::string read_file(const std::string & fpath)
 	}
 	else
 	{
-		throw 0;
+		throw std::invalid_argument("invalid file path: " + fpath);
 	}
 }
 
