@@ -36,7 +36,7 @@ namespace Util {
  *
  * @return the files content
  *
- * @throws invalid_argument if file is not readable
+ * @throw invalid_argument if file is not readable
  */
 std::string read_file(const std::string & fpath);
 
@@ -65,7 +65,7 @@ std::string strip(const std::string & str);
  *
  * @return the integer value
  *
- * @throws ParseException if string is not an integer literal
+ * @throw ParseException if string is not an integer literal
  */
 inline int string_to_int(const std::string & str) throw(ParseException)
 {
@@ -89,7 +89,7 @@ inline int string_to_int(const std::string & str) throw(ParseException)
  *
  * @return the double value
  *
- * @throws ParseException if string is not an double literal
+ * @throw ParseException if string is not an double literal
  */
 inline double string_to_double(const std::string & str) throw(ParseException)
 {
