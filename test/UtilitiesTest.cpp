@@ -17,10 +17,9 @@ BOOST_AUTO_TEST_CASE(read_file_existing)
 			"1,2\n");
 }
 
-// TODO: Implement so that a more specific exception is caught
 BOOST_AUTO_TEST_CASE(read_file_not_existing)
 {
-	//BOOST_CHECK_THROW(Util::read_file("files/not_existing"), std::exception);
+	BOOST_CHECK_THROW(Util::read_file("files/not_existing"), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(split)

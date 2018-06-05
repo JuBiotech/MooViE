@@ -7,10 +7,9 @@
 
 BOOST_AUTO_TEST_SUITE(configuration_test)
 
-// TODO: Implement so that a more specific exception is caught
 BOOST_AUTO_TEST_CASE(check_get_instance)
 {
-	//BOOST_CHECK_THROW(Configuration::get_instance(), std::exception);
+	BOOST_CHECK_THROW(Configuration::get_instance(), std::bad_function_call);
 }
 
 BOOST_AUTO_TEST_CASE(standard_values)
@@ -96,10 +95,9 @@ BOOST_AUTO_TEST_CASE(file_values)
     BOOST_CHECK_EQUAL(c.get_var_label().font_size, 10);
 }
 
-// TODO: Implement so that a more specific exception is caught
 BOOST_AUTO_TEST_CASE(invalid_file)
 {
-	//BOOST_CHECK_THROW(Configuration::initialize("."), std::exception);
+	BOOST_CHECK_THROW(Configuration::initialize("image.svg", "."), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

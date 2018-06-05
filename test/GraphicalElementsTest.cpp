@@ -133,8 +133,7 @@ BOOST_AUTO_TEST_CASE(codomaingrid)
 	BOOST_CHECK_CLOSE(grid.get_var(1).max, max1, eps);
 	BOOST_CHECK_EQUAL(grid.get_var(0).unit, unit0);
 	BOOST_CHECK_EQUAL(grid.get_var(1).unit, unit1);
-	// TODO: Implement so that a more specific exception is caught
-	//BOOST_CHECK_THROW(grid.get_var(2), std::exception)
+	BOOST_CHECK_THROW(grid.get_var(2), std::out_of_range)
 	BOOST_CHECK_EQUAL(grid.get_num_outputs(), output_vars.size());
 	BOOST_CHECK_CLOSE(grid.get_start().value(), start.value(), eps);
 	BOOST_CHECK_CLOSE(grid.get_end().value(), end.value(), eps);

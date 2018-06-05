@@ -120,16 +120,20 @@ BOOST_AUTO_TEST_CASE(null_cells_intermediate_comments)
 	BOOST_CHECK_CLOSE((*set)[1][2].value, 9, eps); BOOST_CHECK(not (*set)[1][2].null);
 }
 
-// TODO: Implement so that a more specific exception is caught
 BOOST_AUTO_TEST_CASE(invalid_column_count)
 {
-	//BOOST_CHECK_THROW(DefDataSet::parse_from_csv(Util::read_file("/home/IBT/stratmann/MooViE/test/files/input5_nouse.csv")), std::exception);
+	BOOST_CHECK_THROW(
+			DefDataSet::parse_from_csv(
+					Util::read_file("/home/IBT/stratmann/MooViE/test/files/input5_nouse.csv")
+	), std::length_error);
 }
 
-// TODO: Implement so that a more specific exception is caught
 BOOST_AUTO_TEST_CASE(invalid_comment)
 {
-	//BOOST_CHECK_THROW(DefDataSet::parse_from_csv(Util::read_file("/home/IBT/stratmann/MooViE/test/files/input6_nouse.csv")), std::exception);
+	BOOST_CHECK_THROW(
+			DefDataSet::parse_from_csv(
+					Util::read_file("/home/IBT/stratmann/MooViE/test/files/input6_nouse.csv")
+	), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
