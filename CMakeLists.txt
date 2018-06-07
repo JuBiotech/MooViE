@@ -17,9 +17,8 @@ find_package (cairomm-1.0 REQUIRED)
 include_directories("include" "include/thirdparty/tclap" FREETYPE2_INCLUDE_DIR SIGCPP_CONFIG_DIR SIGCPP_INCLUDE_DIR CAIRO_INCLUDE_DIR CAIROMM_CONFIG_DIR CAIRO_CAIROMM_INCLUDE_DIR)
 
 # Build MooViE library
-file (GLOB SOURCES src/*.cpp)
-list(REMOVE_ITEM SOURCES "moovie.cpp")
-add_library (libmoovie SHARED ${SOURCES})
+add_library (libmoovie SHARED "")
+target_sources(libmoovie PUBLIC "src/DataSet.cpp" "src/Scale.cpp" "src/Color.cpp" "src/Configuration.cpp" "src/CodomainGrid.cpp" "src/RelationElement.cpp" "src/CairoDrawer.cpp" "src/Scene.cpp" "src/Utils.cpp" "src/DomainAxis.cpp")
 install (TARGETS libmoovie DESTINATION /usr/lib RENAME moovie)
 
 # Build MooViE executable
