@@ -13,43 +13,53 @@
 
 /** A Label is a formatted text that is stored as a text string
  * and a TextProperties object.
+ *
  * @brief The Label class
+ *
+ * @author stratmann
+ * @date 27.04.2018
  */
 class Label
 {
 public:
-    /**
-     * @brief Label
-     * @param text
-     * @param prop
+    /** Creates a Label from given text and TextProperties.
+     *
+     * @brief constructor
+     *
+     * @param text the text to be displayed
+     * @param prop the TextProperties to be used
      */
-    Label(const std::string& text, const TextProperties& prop)
-    : _text(text), _prop(prop)
+    Label(const std::string& _text, const TextProperties& _prop)
+    : text(_text), prop(_prop)
     {
     }
 
-    /** Access function for this Label's text.
-     * @brief text
-     * @return a reference to text
+    /** Returns a const reference to this Labels text.
+     *
+     * @brief gets text
+     *
+     * @return a reference to the text
      */
     const std::string& get_text() const
     {
-        return _text;
+        return text;
     }
 
-    /** Access function for this Label's TextProperties.
-     * @brief prop
-     * @return a reference to prop
+    /** Returns a const reference to this Labels TextProperties.
+     *
+     * @brief gets TextProperties
+     *
+     * @return a reference to the TextProperties
      */
     const TextProperties& get_properties() const
     {
-        return _prop;
+        return prop;
     }
 private:
     /** The text of this Label */
-    std::string _text;
+    std::string text;
     /** The TextProperties of this Label */
-    TextProperties _prop;
+    TextProperties prop;
 };
 
 
