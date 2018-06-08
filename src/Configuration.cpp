@@ -143,11 +143,11 @@ Configuration::Configuration(const std::string & fname, const std::string & cpat
 			{
 				grid_size = Util::string_to_double(value);
 			}
-			else if (key.compare("moovie.num_major_ticks_coordgrid") == 0)
+			else if (key.compare("moovie.num_major_sections_grid") == 0)
 			{
 				num_major_sections_grid = Util::string_to_int(value);
 			}
-			else if (key.compare("moovie.num_minor_ticks_coordgrid") == 0)
+			else if (key.compare("moovie.num_minor_sections_grid") == 0)
 			{
 				num_minor_sections_grid = Util::string_to_int(value);
 			}
@@ -163,11 +163,11 @@ Configuration::Configuration(const std::string & fname, const std::string & cpat
 			{
 				input_separation_angle = Util::string_to_double(value);
 			}
-			else if (key.compare("moovie.num_major_ticks_varaxis") == 0)
+			else if (key.compare("moovie.num_major_sections_axis") == 0)
 			{
 				num_major_sections_axis = Util::string_to_int(value);
 			}
-			else if (key.compare("moovie.num_minor_ticks_varaxis") == 0)
+			else if (key.compare("moovie.num_minor_sections_axis") == 0)
 			{
 				num_minor_sections_axis = Util::string_to_int(value);
 			}
@@ -217,31 +217,31 @@ Configuration::Configuration(const std::string & fname, const std::string & cpat
 						1
 				);
 			}
-			else if (key.compare("moovie.ratio_connector_arc") == 0)
+			else if (key.compare("moovie.connector_arc_ratio") == 0)
 			{
 				connector_arc_ratio = Util::string_to_double(value);
 			}
-			else if (key.compare("moovie.thick_line") == 0)
+			else if (key.compare("moovie.thick_line_width") == 0)
 			{
 				prop_thick.line_width = Util::string_to_double(value);
 			}
-			else if (key.compare("moovie.thick_line") == 0)
+			else if (key.compare("moovie.thick_line_width") == 0)
 			{
 				prop_thin.line_width = Util::string_to_double(value);
 			}
-			else if (key.compare("moovie.tick_label_font") == 0)
+			else if (key.compare("moovie.scale_label_font") == 0)
 			{
 				prop_scale_label.font_name = value;
 			}
-			else if (key.compare("moovie.tick_label_font_size") == 0)
+			else if (key.compare("moovie.scale_label_font_size") == 0)
 			{
 				prop_scale_label.font_size = Util::string_to_double(value);
 			}
-			else if (key.compare("moovie.var_label_font") == 0)
+			else if (key.compare("moovie.axis_label_font") == 0)
 			{
 				prop_axis_label.font_name = value;
 			}
-			else if (key.compare("moovie.var_label_font_size") == 0)
+			else if (key.compare("moovie.axis_label_font_size") == 0)
 			{
 				prop_axis_label.font_size = Util::string_to_double(value);
 			}
