@@ -5,10 +5,7 @@
  *      Author: beyss
  */
 
-#include "CairoDrawer.h"
-#include <iostream>
-#include <functional>
-#include <cmath>
+#include <CairoDrawer.h>
 
 const double 	CairoDrawer::RADIAL_TEXT_FACTOR = 0.3;
 
