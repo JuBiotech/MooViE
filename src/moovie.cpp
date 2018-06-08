@@ -34,7 +34,7 @@ int run_moovie(int argc, const char * argv[])
 	cmd.add(height);
 
 	ValueArg<std::string> output("o", "output-file", "path to the output file",
-				false, "./image.svg", "string");
+				false, "", "string");
 	cmd.add(output);
 
 	ValueArg<std::string> config("c", "configuration-file", "path to a moovie config file",
@@ -59,15 +59,23 @@ int run_moovie(int argc, const char * argv[])
 						input.getValue(),
 						config.getValue()
 				);
-				if (not output.getValue().empty())
-					Configuration::get_instance().set_output_file(output.getValue());
-				Scene main;
 			}
 			else
 			{
 				Configuration::initialize(input.getValue());
-				Scene main;
 			}
+
+			Configuration& conf = Configuration::get_instance();
+
+			if (width.getValue() != 0)
+				conf.set_width(width.getValue());
+			if (height.getValue() != 0)
+				conf.set_height(height.getValue());
+			if (not output.getValue().empty())
+				conf.set_output_file(output.getValue());
+
+			Scene main;
+
 			end = std::chrono::system_clock::now();
 			std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end -start).count() << std::endl;
 		} catch (ParseException & e)

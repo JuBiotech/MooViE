@@ -6,7 +6,7 @@
  */
 
 #include <Configuration.h>
-
+#include <iostream>
 
 // Instance pointer
 
@@ -86,6 +86,22 @@ void Configuration::initialize(const std::string & fname, const std::string & cp
 void Configuration::initialize(const std::string & fname)
 {
 	_instance = std::shared_ptr<Configuration>(new Configuration(fname));
+}
+
+void Configuration::adjust_height()
+{
+	if (_width == 0 && _height == 0)
+	{
+		_width = _height = 2 * (_output_inner_radius + _output_thickness + _grid_size) + 100;
+	}
+	else if (_width == 0)
+	{
+		_width = _height;
+	}
+	else if (_height == 0)
+	{
+		_height = _width;
+	}
 }
 
 Configuration::Configuration(const std::string & fname, const std::string & cpath)
@@ -240,34 +256,12 @@ Configuration::Configuration(const std::string & fname, const std::string & cpat
 		}
 	}
 
-	if (_width == 0 && _height == 0)
-	{
-		_width = _height = _output_inner_radius + _output_thickness + _grid_size;
-	}
-	else if (_width == 0)
-	{
-		_width = _height;
-	}
-	else if (_height == 0)
-	{
-		_height = _width;
-	}
+	adjust_height();
 }
 
 Configuration::Configuration(const std::string & fname)
 : _input_file(fname)
 {
-	if (_width == 0 && _height == 0)
-	{
-		_width = _height = _output_inner_radius + _output_thickness + _grid_size;
-	}
-	else if (_width == 0)
-	{
-		_width = _height;
-	}
-	else if (_height == 0)
-	{
-		_height = _width;
-	}
+	adjust_height();
 }
 

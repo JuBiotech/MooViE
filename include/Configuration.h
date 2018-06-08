@@ -76,8 +76,16 @@ public:
 		return _width;
 	}
 
+	inline void set_width(int width) {
+		_width = width;
+	}
+
 	inline int get_height() const {
 		return _height;
+	}
+
+	inline void set_height(int height) {
+		_height = height;
 	}
 
 
@@ -313,6 +321,9 @@ public:
 	}
 
 private:
+	void adjust_height();
+
+private:
 	Configuration(const std::string & fname, const std::string & cpath);
 
 	Configuration(const std::string & fname);
@@ -326,17 +337,17 @@ private:
 	int 				_height 				= 0;
 
 	/* CoordGrid modification values */
-	double				_output_angle_span		= 100;
+	double				_output_angle_span		= 160;
 	double 				_output_inner_radius 	= 160;
-	double 				_output_thickness 		= 10;
+	double 				_output_thickness 		= 5;
 	double 				_grid_size 				= 150;
 	int					_num_major_ticks_cg		= 10;
 	int					_num_minor_ticks_cg		= 10;
 	int					_num_segments			= 10;
 
 	/* VarAxis modification values */
-	double 				_input_inner_radius 	= 150;
-	double 				_input_thickness 		= 10;
+	double 				_input_inner_radius 	= 180;
+	double 				_input_thickness 		= 5;
 	double 				_input_separation_angle = 5;
 	int					_num_major_ticks_va		= 10;
 	int					_num_minor_ticks_va		= 10;
@@ -353,11 +364,11 @@ private:
 
 	/* General line and fill styles */
 	DrawerProperties<> 	_prop_thick 			= {0.5, Color::BLACK, Color::BLACK};
-	DrawerProperties<> 	_prop_thin 				= {0.2, Color::BLACK, Color::BLACK};
+	DrawerProperties<> 	_prop_thin 				= {0.1, Color::BLACK, Color::BLACK};
 
 	/* General font and font size */
-	TextProperties 		_tick_label 			= {"Sans Serif", 8};
-	TextProperties 		_var_label 				= {"Sans Serif", 20};
+	TextProperties 		_tick_label 			= {"Liberation Serif", 5};
+	TextProperties 		_var_label 				= {"Liberation Serif", 10};
 };
 
 #endif /* CONFIGURATION_H_ */
