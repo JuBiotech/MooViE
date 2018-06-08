@@ -12,9 +12,9 @@ CodomainGrid::CodomainGrid(const std::vector<DefVariable>& _output_vars,
 		double _radius, double _height, Direction _dir)
 	: output_variables(_output_vars), num_outputs(_output_vars.size()),
 	  scale(
-			  Configuration::get_instance().get_num_major_ticks_cg(),
-			  Configuration::get_instance().get_num_minor_ticks_cg(),
-			  Configuration::get_instance().get_tick_label()
+			  Configuration::get_instance().get_num_major_sections_grid(),
+			  Configuration::get_instance().get_num_minor_sections_grid(),
+			  Configuration::get_instance().get_prop_scale_label()
 	  ),
 	  start(_start), end(_end), radius(_radius), height(_height), direction(_dir)
 	{

@@ -121,12 +121,12 @@ void CairoDrawer::draw_codomain_grid(const CodomainGrid& grid)
 		M_PI_2
 	);
 	draw_text_orthogonal(
-	    Label(std::to_string(scale.get_extremes(0).second), conf.get_tick_label()),
+	    Label(std::to_string(scale.get_extremes(0).second), conf.get_prop_scale_label()),
 	    Polar(min_radius, grid.get_start() - TEXT_DELTA),
 		TextAlignment::RIGHT
 	);
 	draw_text_orthogonal(
-	    Label(std::to_string(scale.get_extremes(0).first), conf.get_tick_label()),
+	    Label(std::to_string(scale.get_extremes(0).first), conf.get_prop_scale_label()),
 	    Polar(min_radius, grid.get_end() + TEXT_DELTA),
 		TextAlignment::LEFT
 	);
@@ -143,12 +143,12 @@ void CairoDrawer::draw_codomain_grid(const CodomainGrid& grid)
 			M_PI_2 - i * 2 * ANGLE_DELTA_MEDIUM
 		);
 		draw_text_orthogonal(
-		    Label(std::to_string(scale.get_extremes(i).second), conf.get_tick_label()),
+		    Label(std::to_string(scale.get_extremes(i).second), conf.get_prop_scale_label()),
 		    Polar(min_radius + i * y_dist + OUTPUT_EXTREME_RADIUS_DELTA, grid.get_start() - TEXT_DELTA),
 			TextAlignment::RIGHT
 		);
 		draw_text_orthogonal(
-		    Label(std::to_string(scale.get_extremes(0).first), conf.get_tick_label()),
+		    Label(std::to_string(scale.get_extremes(0).first), conf.get_prop_scale_label()),
 		    Polar(min_radius + i * y_dist + OUTPUT_EXTREME_RADIUS_DELTA, grid.get_end() + TEXT_DELTA),
 			TextAlignment::LEFT
 		);
@@ -203,8 +203,8 @@ void CairoDrawer::draw_domain_axis(const DomainAxis& axis)
 	}
 	set_font_face(tick_labels[max_tick_label_pos]);
 	const Cairo::TextExtents & tick_ext = get_text_extents(tick_labels[max_tick_label_pos]);
-	set_font_face(axis.make_label(conf.get_var_label()));
-	const Cairo::TextExtents & label_ext = get_text_extents(axis.make_label(conf.get_var_label()));
+	set_font_face(axis.make_label(conf.get_prop_axis_label()));
+	const Cairo::TextExtents & label_ext = get_text_extents(axis.make_label(conf.get_prop_axis_label()));
 
 	double radius_tick_label = end_radius_major + RADIUS_TICK_LABEL_FACTOR * axis.get_height();
 	double radius_label = radius_tick_label + tick_ext.width + RADIUS_LABEL_DELTA;
@@ -242,7 +242,7 @@ void CairoDrawer::draw_domain_axis(const DomainAxis& axis)
 
 	// Draw the name of the Variable
 	draw_text_orthogonal(
-	    axis.make_label(conf.get_var_label()),
+	    axis.make_label(conf.get_prop_axis_label()),
 	    Polar(radius_label, Angle::center(axis.get_start(), axis.get_end()))
 	);
 
@@ -464,7 +464,7 @@ void CairoDrawer::draw_connector(const Polar& from, const Polar& to,
 
 	// Only use 0.2 as distance factor
 	static const double dist_factor =
-			(1 - Configuration::get_instance().get_ratio_connector_arc()) / 2;
+			(1 - Configuration::get_instance().get_connector_arc_ratio()) / 2;
 
 	// Calculate to intermediate coordinates to draw the arc from
 	double radial_dist = to.radius() - from.radius();

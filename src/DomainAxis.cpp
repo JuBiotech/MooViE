@@ -46,10 +46,10 @@ DomainAxis::DomainAxis(DefVariable _var,
 		 const DrawerProperties<> & _prop)
 : var(_var),
   scale(
-		  Configuration::get_instance().get_num_major_ticks_va(),
-		  Configuration::get_instance().get_num_minor_ticks_va(),
+		  Configuration::get_instance().get_num_major_sections_axis(),
+		  Configuration::get_instance().get_num_minor_sections_axis(),
 		  create_rounded_interval(_var.min, _var.max),
-		  Configuration::get_instance().get_tick_label(), _var.unit
+		  Configuration::get_instance().get_prop_scale_label(), _var.unit
   ),
   start(_start), end(_end),radius(_radius),  height(_height),
   prop(_prop),

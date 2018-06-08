@@ -31,15 +31,15 @@ BOOST_AUTO_TEST_CASE(standard_values)
     BOOST_CHECK_EQUAL(c.get_output_inner_radius(), 160);
     BOOST_CHECK_EQUAL(c.get_output_thickness(), 5);
     BOOST_CHECK_EQUAL(c.get_grid_size(), 150);
-    BOOST_CHECK_EQUAL(c.get_num_major_ticks_cg(), 10);
-    BOOST_CHECK_EQUAL(c.get_num_minor_ticks_cg(), 10);
+    BOOST_CHECK_EQUAL(c.get_num_sections_cg(), 10);
+    BOOST_CHECK_EQUAL(c.get_minor_intersections_grid(), 10);
     BOOST_CHECK_EQUAL(c.get_num_segments(), 10);
 
     BOOST_CHECK_EQUAL(c.get_input_inner_radius(), 180);
     BOOST_CHECK_EQUAL(c.get_input_thickness(), 5);
     BOOST_CHECK_EQUAL(c.get_input_separation_angle(), 5);
-    BOOST_CHECK_EQUAL(c.get_num_major_ticks_va(), 10);
-    BOOST_CHECK_EQUAL(c.get_num_minor_ticks_va(), 10);
+    BOOST_CHECK_EQUAL(c.get_major_segments_axis(), 10);
+    BOOST_CHECK_EQUAL(c.get_minor_sections_axis(), 10);
 
     BOOST_CHECK_EQUAL(c.get_num_histogram_classes(), 10);
     BOOST_CHECK_EQUAL(c.get_histogram_height(), 20);
@@ -47,15 +47,15 @@ BOOST_AUTO_TEST_CASE(standard_values)
     BOOST_CHECK_EQUAL(c.get_histogram_fill(), Color(0.5,0.5,0.5));
 
     BOOST_CHECK_EQUAL(c.get_line_with_dl(), 0.1);
-    BOOST_CHECK_EQUAL(c.get_ratio_connector_arc(), 0.6);
+    BOOST_CHECK_EQUAL(c.get_connector_arc_ratio(), 0.6);
 
     BOOST_CHECK_EQUAL(c.get_prop_thick().line_width, 0.5);
     BOOST_CHECK_EQUAL(c.get_prop_thin().line_width, 0.1);
 
-    BOOST_CHECK_EQUAL(c.get_tick_label().font_name, "Liberation Serif");
-    BOOST_CHECK_EQUAL(c.get_tick_label().font_size, 5);
-    BOOST_CHECK_EQUAL(c.get_var_label().font_name, "Liberation Serif");
-    BOOST_CHECK_EQUAL(c.get_var_label().font_size, 10);
+    BOOST_CHECK_EQUAL(c.get_scale_label().font_name, "Liberation Serif");
+    BOOST_CHECK_EQUAL(c.get_scale_label().font_size, 5);
+    BOOST_CHECK_EQUAL(c.get_axis_label().font_name, "Liberation Serif");
+    BOOST_CHECK_EQUAL(c.get_axis_label().font_size, 10);
 }
 
 BOOST_AUTO_TEST_CASE(file_values)
@@ -72,15 +72,15 @@ BOOST_AUTO_TEST_CASE(file_values)
     BOOST_CHECK_EQUAL(c.get_output_inner_radius(), 160);
     BOOST_CHECK_EQUAL(c.get_output_thickness(), 5);
     BOOST_CHECK_EQUAL(c.get_grid_size(), 150);
-    BOOST_CHECK_EQUAL(c.get_num_major_ticks_cg(), 10);
-    BOOST_CHECK_EQUAL(c.get_num_minor_ticks_cg(), 10);
+    BOOST_CHECK_EQUAL(c.get_num_sections_cg(), 10);
+    BOOST_CHECK_EQUAL(c.get_minor_intersections_grid(), 10);
     BOOST_CHECK_EQUAL(c.get_num_segments(), 10);
 
     BOOST_CHECK_EQUAL(c.get_input_inner_radius(), 180);
     BOOST_CHECK_EQUAL(c.get_input_thickness(), 5);
     BOOST_CHECK_EQUAL(c.get_input_separation_angle(), 5);
-    BOOST_CHECK_EQUAL(c.get_num_major_ticks_va(), 10);
-    BOOST_CHECK_EQUAL(c.get_num_minor_ticks_va(), 10);
+    BOOST_CHECK_EQUAL(c.get_major_segments_axis(), 10);
+    BOOST_CHECK_EQUAL(c.get_minor_sections_axis(), 10);
 
     BOOST_CHECK_EQUAL(c.get_num_histogram_classes(), 10);
     BOOST_CHECK_EQUAL(c.get_histogram_height(), 20);
@@ -88,15 +88,15 @@ BOOST_AUTO_TEST_CASE(file_values)
     BOOST_CHECK_EQUAL(c.get_histogram_fill(), Color(0.5,0.5,0.5));
 
     BOOST_CHECK_EQUAL(c.get_line_with_dl(), 0.1);
-    BOOST_CHECK_EQUAL(c.get_ratio_connector_arc(), 0.6);
+    BOOST_CHECK_EQUAL(c.get_connector_arc_ratio(), 0.6);
 
     BOOST_CHECK_EQUAL(c.get_prop_thick().line_width, 0.5);
     BOOST_CHECK_EQUAL(c.get_prop_thin().line_width, 0.1);
 
-    BOOST_CHECK_EQUAL(c.get_tick_label().font_name, "Liberation Serif");
-    BOOST_CHECK_EQUAL(c.get_tick_label().font_size, 5);
-    BOOST_CHECK_EQUAL(c.get_var_label().font_name, "Liberation Serif");
-    BOOST_CHECK_EQUAL(c.get_var_label().font_size, 10);
+    BOOST_CHECK_EQUAL(c.get_scale_label().font_name, "Liberation Serif");
+    BOOST_CHECK_EQUAL(c.get_scale_label().font_size, 5);
+    BOOST_CHECK_EQUAL(c.get_axis_label().font_name, "Liberation Serif");
+    BOOST_CHECK_EQUAL(c.get_axis_label().font_size, 10);
 }
 
 BOOST_AUTO_TEST_CASE(invalid_file)
