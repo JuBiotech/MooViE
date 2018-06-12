@@ -122,62 +122,137 @@ Configuration::Configuration(const std::string & fname, const std::string & cpat
 			if (key.compare("moovie.width") == 0)
 			{
 				width = Util::string_to_int(value);
+
+				if (width <= 0)
+				{
+					throw std::out_of_range("\"width\" cannot be set <= 0");
+				}
 			}
 			else if (key.compare("moovie.height") == 0)
 			{
 				height = Util::string_to_int(value);
+
+				if (height <= 0)
+				{
+					throw std::out_of_range("\"height\" cannot be set <= 0");
+				}
 			}
 			else if (key.compare("moovie.output_angle_span") == 0)
 			{
 				output_angle_span = Util::string_to_double(value);
+
+				if (output_angle_span <= 0 || output_angle_span > 175)
+				{
+					throw std::out_of_range("\"output_angle_span\" exceeded range (0, 175)");
+				}
 			}
 			else if (key.compare("moovie.output_inner_radius") == 0)
 			{
 				output_inner_radius = Util::string_to_double(value);
+
+				if (output_inner_radius <= 0)
+				{
+					throw std::out_of_range("\"output_inner_radius\" cannot be <= 0");
+				}
 			}
 			else if (key.compare("moovie.output_thickness") == 0)
 			{
 				output_thickness = Util::string_to_double(value);
+
+				if (output_thickness <= 0)
+				{
+					throw std::out_of_range("\"output_thickness\" cannot be <= 0");
+				}
 			}
 			else if (key.compare("moovie.grid_size") == 0)
 			{
 				grid_size = Util::string_to_double(value);
+
+				if (grid_size <= 0)
+				{
+					throw std::out_of_range("\"grid_size\" cannot be <= 0");
+				}
 			}
 			else if (key.compare("moovie.num_major_sections_grid") == 0)
 			{
 				num_major_sections_grid = Util::string_to_int(value);
+
+				if (num_major_sections_grid <= 0)
+				{
+					throw std::out_of_range("\"num_major_sections_grid\" cannot be <= 0");
+				}
 			}
 			else if (key.compare("moovie.num_minor_sections_grid") == 0)
 			{
 				num_minor_sections_grid = Util::string_to_int(value);
+
+				if (num_minor_sections_grid <= 0)
+				{
+					throw std::out_of_range("\"num_minor_sections_grid\" cannot be <= 0");
+				}
 			}
 			else if (key.compare("moovie.input_inner_radius") == 0)
 			{
 				input_inner_radius = Util::string_to_double(value);
+
+				if (input_inner_radius <= 0)
+				{
+					throw std::out_of_range("\"input_inner_radius\" cannot be <= 0");
+				}
 			}
 			else if (key.compare("moovie.input_thickness") == 0)
 			{
 				input_thickness = Util::string_to_double(value);
+
+				if (input_thickness <= 0)
+				{
+					throw std::out_of_range("\"input_thickness\" cannot be <= 0");
+				}
 			}
 			else if (key.compare("moovie.input_separation_angle") == 0)
 			{
 				input_separation_angle = Util::string_to_double(value);
+
+				if (input_separation_angle <= 0 || input_separation_angle >= 180)
+				{
+					throw std::out_of_range("\"input_separation_angle\" cannot be <= 0");
+				}
 			}
 			else if (key.compare("moovie.num_major_sections_axis") == 0)
 			{
 				num_major_sections_axis = Util::string_to_int(value);
+
+				if (num_major_sections_axis <= 0)
+				{
+					throw std::out_of_range("\"num_major_sections_axis\" cannot be <= 0");
+				}
 			}
 			else if (key.compare("moovie.num_minor_sections_axis") == 0)
 			{
 				num_minor_sections_axis = Util::string_to_int(value);
+
+				if (num_minor_sections_axis <= 0)
+				{
+					throw std::out_of_range("\"num_minor_sections_axis\" cannot be <= 0");
+				}
 			}
 			else if (key.compare("moovie.num_histogram_classes") == 0)
 			{
 				num_histogram_classes = Util::string_to_int(value);
+
+				if (num_histogram_classes <= 0)
+				{
+					throw std::out_of_range("\"num_histogram_classes\" cannot be <= 0");
+				}
 			}
 			else if (key.compare("moovie.histogram_height") == 0)
 			{
 				histogram_height = Util::string_to_double(value);
+
+				if (histogram_height <= 0)
+				{
+					throw std::out_of_range("\"histogram_height\" cannot be <= 0");
+				}
 			}
 			else if (key.compare("moovie.histogram_background") == 0)
 			{
@@ -220,14 +295,29 @@ Configuration::Configuration(const std::string & fname, const std::string & cpat
 			else if (key.compare("moovie.connector_arc_ratio") == 0)
 			{
 				connector_arc_ratio = Util::string_to_double(value);
+
+				if (connector_arc_ratio < 0 || connector_arc_ratio > 1)
+				{
+					throw std::out_of_range("\"connector_arc_ratio\" exceeds range [0,1]");
+				}
 			}
 			else if (key.compare("moovie.thick_line_width") == 0)
 			{
 				prop_thick.line_width = Util::string_to_double(value);
+
+				if (prop_thick.line_width <= 0)
+				{
+					throw std::out_of_range("\"thick_line_width\" cannot be <= 0");
+				}
 			}
 			else if (key.compare("moovie.thick_line_width") == 0)
 			{
 				prop_thin.line_width = Util::string_to_double(value);
+
+				if (prop_thin.line_width <= 0)
+				{
+					throw std::out_of_range("\"thick_line_width\" cannot be <= 0");
+				}
 			}
 			else if (key.compare("moovie.scale_label_font") == 0)
 			{
@@ -236,6 +326,11 @@ Configuration::Configuration(const std::string & fname, const std::string & cpat
 			else if (key.compare("moovie.scale_label_font_size") == 0)
 			{
 				prop_scale_label.font_size = Util::string_to_double(value);
+
+				if (prop_scale_label.font_size <= 0)
+				{
+					throw std::out_of_range("\"scale_label_font_size\" cannot be <= 0");
+				}
 			}
 			else if (key.compare("moovie.axis_label_font") == 0)
 			{
@@ -244,6 +339,11 @@ Configuration::Configuration(const std::string & fname, const std::string & cpat
 			else if (key.compare("moovie.axis_label_font_size") == 0)
 			{
 				prop_axis_label.font_size = Util::string_to_double(value);
+
+				if (prop_axis_label.font_size <= 0)
+				{
+					throw std::out_of_range("\"axis_label_font_size\" cannot be <= 0");
+				}
 			}
 		}
 	}
