@@ -78,9 +78,9 @@ int run_moovie(int argc, const char * argv[])
 
 			end = std::chrono::system_clock::now();
 			std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end -start).count() << std::endl;
-		} catch (ParseException & e)
+		} catch (const std::exception& e)
 		{
-			std::cout << e.what() << std::endl;
+			std::cout << "MooViE execution failed: " << e.what() << std::endl;
 			return EXIT_FAILURE;
 		}
 	}
