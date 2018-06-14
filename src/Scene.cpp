@@ -112,8 +112,11 @@ void Scene::initialize(void)
 	}
 
 	// Calculate the histograms for the VarAxis'
-	for (std::size_t i = 0; i < axis.size(); ++i)
+	if (config.is_histograms_enabled())
 	{
-		axis[i].calculate_histogram(histogram_values[i]);
+		for (std::size_t i = 0; i < axis.size(); ++i)
+		{
+			axis[i].calculate_histogram(histogram_values[i]);
+		}
 	}
 }

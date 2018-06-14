@@ -368,6 +368,24 @@ public:
 		num_minor_sections_axis = minor_sections;
 	}
 
+	/** Returns whether or not histograms should be drawn.
+	 *
+	 * @return histograms enabled or not
+	 */
+	bool is_histograms_enabled() const
+	{
+		return histograms_enabled;
+	}
+
+	/** Sets whether or not histograms should be drawn.
+	 *
+	 * @param _histograms_enabled histograms enabled or not
+	 */
+	void set_histograms_enabled(bool _histograms_enabled)
+	{
+		histograms_enabled = _histograms_enabled;
+	}
+
 	/** Returns the number of classes that each histogram
 	 * consists of.
 	 *
@@ -581,6 +599,7 @@ private:
 	int					num_minor_sections_axis	= 10;
 
 	/* Histogram modification values */
+	bool				histograms_enabled		= true;
 	int					num_histogram_classes	= 10;
 	double				histogram_height		= 20;
 	Color				histogram_background	= {0, 0, 0, .1};

@@ -246,7 +246,10 @@ void CairoDrawer::draw_domain_axis(const DomainAxis& axis)
 	    Polar(radius_label, Angle::center(axis.get_start(), axis.get_end()))
 	);
 
-	draw_histogram(axis.get_histogram(), radius_histogram, axis.get_start(), axis.get_end());
+	if (conf.is_histograms_enabled())
+	{
+		draw_histogram(axis.get_histogram(), radius_histogram, axis.get_start(), axis.get_end());
+	}
 }
 
 void CairoDrawer::draw_relation_element(const RelationElement& rel)

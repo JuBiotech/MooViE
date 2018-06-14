@@ -236,6 +236,21 @@ Configuration::Configuration(const std::string & fname, const std::string & cpat
 					throw std::out_of_range("\"num_minor_sections_axis\" cannot be <= 0");
 				}
 			}
+			else if (key.compare("moovie.histograms_enabled") == 0)
+			{
+				if (value == "true")
+				{
+					histograms_enabled = true;
+				}
+				else if (value == "false")
+				{
+					histograms_enabled = false;
+				}
+				else
+				{
+					throw std::invalid_argument("\"histograms_enabled\" expects \"true\" or \"false\"");
+				}
+			}
 			else if (key.compare("moovie.num_histogram_classes") == 0)
 			{
 				num_histogram_classes = Util::string_to_int(value);
