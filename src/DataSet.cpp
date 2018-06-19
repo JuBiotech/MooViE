@@ -6,6 +6,7 @@
  */
 
 #include <DataSet.h>
+#include <iostream>
 
 template<>
 DataSet<double>* DataSet<double>::parse_from_csv(const std::string& cont,
@@ -38,7 +39,7 @@ DataSet<double>* DataSet<double>::parse_from_csv(const std::string& cont,
 		else
 		{
 			std::string name = header[i].substr(2, header[i].length() - 2);
-			input_vars.push_back(DefVariable(DBL_MAX, DBL_MIN, Util::strip(header[i])));
+			input_vars.push_back(DefVariable(DBL_MAX, DBL_MIN, Util::strip(name)));
 		}
 		++i;
 	}
