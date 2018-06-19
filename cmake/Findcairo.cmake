@@ -9,11 +9,11 @@
 find_path(CAIRO_INCLUDE NAMES cairo/cairo.h)
 find_library(CAIRO_LIBRARY NAMES libcairo cairo)
 
-message("Cairo include directory = ${CAIRO_INCLUDE}")
-message("Cairo library = ${CAIRO_LIBRARY}")
+set(CAIRO_INCLUDE_DIR "${CAIRO_INCLUDE}/cairo")
+set(CAIRO_LIBRARY_LOC "${CAIRO_LIBRARY}")
 
-set(CAIRO_INCLUDE_DIR ${CAIRO_INCLUDE})
-set(CAIRO_LIBRARY_LOC ${CAIRO_LIBRARY})
+message("Cairo include directory = ${CAIRO_INCLUDE_DIR}")
+message("Cairo library = ${CAIRO_LIBRARY_LOC}")
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(CAIRO DEFAULT_MSG CAIRO_LIBRARY CAIRO_INCLUDE)

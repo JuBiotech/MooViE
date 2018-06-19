@@ -4,11 +4,11 @@
 # FREETYPE2_FOUND
 # FREETYPE2_INCLUDE_DIR
 
-find_path(FREETYPE2_INCLUDE NAMES freetype2/freetype/freetype.h)
+find_path(FREETYPE2_INCLUDE NAMES freetype2/ft2build.h)
 
-message("Freetype2 include directory = ${FREETYPE2_INCLUDE}")
+set(FREETYPE2_INCLUDE_DIR "${FREETYPE2_INCLUDE}/freetype2")
 
-set(FREETYPE2_INCLUDE_DIR ${FREETYPE2_INCLUDE})
+message("Freetype2 include directory = ${FREETYPE2_INCLUDE_DIR}")
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(FREETYPE2 DEFAULT_MSG FREETYPE2_INCLUDE)
