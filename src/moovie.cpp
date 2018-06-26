@@ -25,12 +25,12 @@ int run_moovie(int argc, const char * argv[])
 			true, "", "string");
 	cmd.add(input);
 
-	ValueArg<std::size_t> width("x", "width", "width of the resulting svg",
-			false, 0, "positive integral");
+	ValueArg<int> width("x", "width", "width of the resulting svg",
+			false, 0, "positive integer");
 	cmd.add(width);
 
-	ValueArg<std::size_t> height("y", "height", "height of the resulting svg",
-				false, 0, "positive integral");
+	ValueArg<int> height("y", "height", "height of the resulting svg",
+				false, 0, "positive integer");
 	cmd.add(height);
 
 	ValueArg<std::string> output("o", "output-file", "path to the output file",
@@ -40,10 +40,6 @@ int run_moovie(int argc, const char * argv[])
 	ValueArg<std::string> config("c", "configuration-file", "path to a moovie config file",
 					false, "", "string");
 	cmd.add(config);
-
-	ValueArg<std::string> file_type("f", "file-type", "file type of the input file",
-					false, "csv", "string");
-	cmd.add(file_type);
 
 	if (input.getValue().empty())
 	{
