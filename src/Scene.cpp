@@ -6,6 +6,7 @@
  */
 
 #include <Scene.h>
+#include <iostream>
 
 Scene::Scene()
 : set(
@@ -29,6 +30,19 @@ Scene::Scene()
 		  Direction::COUNTER_CLOCKWISE
   )
 {
+	if (set->input_variables().size() > 12)
+	{
+		throw std::out_of_range("cannot have more than 12 inputs");
+	}
+	if (set->output_variables().size() > 8)
+	{
+		throw std::out_of_range("cannot have more than 8 outputs");
+	}
+	if (set->rows() > 20000)
+	{
+		throw std::out_of_range("cannot have more than 20,000 data rows");
+	}
+
 	initialize();
 
 	draw_components();
