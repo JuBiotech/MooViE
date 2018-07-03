@@ -29,6 +29,18 @@ public:
 
     void update(void);
 
+    void toggle_input(int index, bool mode);
+
+    void toggle_output(int index, bool mode);
+
+    void restrict_input(int index, double restriction);
+
+    void restrict_input(int index, double restriction);
+
+    void change_input_order(int from_index, int to_index);
+
+    void change_output_order(int from_index, int to_index);
+
 private:
     /** Draws the Scene components CoordGrid, VarAxis' and DataLinks.
      * @brief draw_components
@@ -50,7 +62,7 @@ private:
     CodomainGrid 								grid;
     /** Variable axis */
     std::vector<DomainAxis> 					axis;
-    /** Data links */
+    /** Relation elements*/
     std::vector<RelationElement> 				links;
 };
 

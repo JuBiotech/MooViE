@@ -50,13 +50,13 @@ Scene::Scene()
 
 void Scene::update(void)
 {
-	// Update CoordGrid
+	// Update CodomainGrid
 	grid.set_start(angle_helper::deg_to_rad(360 - Configuration::get_instance().get_output_angle_span() / 2));
 	grid.set_end(angle_helper::deg_to_rad(Configuration::get_instance().get_output_angle_span() / 2));
 	grid.set_radius(Configuration::get_instance().get_output_inner_radius());
 	grid.set_height(Configuration::get_instance().get_grid_size());
 
-	// Update VarAxis and DataLinks
+	// Update DomainAxis and RelationElements
 	axis.clear();
 	links.clear();
 	initialize();
@@ -91,10 +91,10 @@ void Scene::initialize(void)
 {
 	const Configuration & config = Configuration::get_instance();
 
-	// DataRows of the later histogram
+	// RelationElements of the later histogram
 	std::vector<std::vector<double>> histogram_values(set->input_variables().size());
 
-	// Create VarAxis' from DataSet's input variables
+	// Create DomainAxis' from DataSet's input variables
 	double angle = 180 / set->input_variables().size() - config.get_input_separation_angle();
 	double start = 90 + config.get_input_separation_angle() / 2, end = start+angle;
 	std::size_t axis_color_pos = 0;
@@ -114,7 +114,7 @@ void Scene::initialize(void)
 		end += angle + config.get_input_separation_angle();
 	}
 
-	// Create DataLinks from DataSet's input/output values
+	// Create RelationElements from DataSet's input/output values
 	RelationElementFactory factory(set->rows(), grid, axis);
 	for (const DefDataRow & row: *set)
 	{
@@ -125,7 +125,7 @@ void Scene::initialize(void)
 		}
 	}
 
-	// Calculate the histograms for the VarAxis'
+	// Calculate the histograms for the DomainAxis'
 	if (config.is_histograms_enabled())
 	{
 		for (std::size_t i = 0; i < axis.size(); ++i)
