@@ -29,17 +29,17 @@ public:
 
     void update(void);
 
-    void toggle_input(int index, bool mode);
+    void toggle_input(std::size_t index, bool mode);
 
-    void toggle_output(int index, bool mode);
+    void toggle_output(std::size_t index, bool mode);
 
-    void restrict_input(int index, double restriction);
+    void restrict_input(std::size_t index, double upper_restr, double lower_restr);
 
-    void restrict_input(int index, double restriction);
+    void restrict_output(std::size_t index, double upper_restr, double lower_restr);
 
-    void change_input_order(int from_index, int to_index);
+    void change_input_order(std::size_t from_index, std::size_t to_index);
 
-    void change_output_order(int from_index, int to_index);
+    void change_output_order(std::size_t from_index, std::size_t to_index);
 
 private:
     /** Draws the Scene components CoordGrid, VarAxis' and DataLinks.

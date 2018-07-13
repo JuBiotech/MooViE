@@ -30,15 +30,15 @@ Scene::Scene()
 		  Direction::COUNTER_CLOCKWISE
   )
 {
-	if (set->input_variables().size() > 12)
+	if (set->get_num_inputs() > 12)
 	{
 		throw std::out_of_range("cannot have more than 12 inputs");
 	}
-	if (set->output_variables().size() > 8)
+	if (set->get_num_outputs() > 8)
 	{
 		throw std::out_of_range("cannot have more than 8 outputs");
 	}
-	if (set->rows() > 20000)
+	if (set->get_num_rows() > 20000)
 	{
 		throw std::out_of_range("cannot have more than 20,000 data rows");
 	}
@@ -46,6 +46,136 @@ Scene::Scene()
 	initialize();
 
 	draw_components();
+}
+
+
+void Scene::toggle_input(std::size_t index, bool mode)
+{
+	if (index >= set->input_variables().size())
+	{
+		throw std::out_of_range("index " + std::to_string(index)
+				+ " exceeds input index range 0 to"
+				+ std::to_string(set->input_variables().size()));
+	}
+
+	// TODO eliminate columns in DataSet
+}
+
+void Scene::toggle_output(std::size_t index, bool mode)
+{
+	if (index >= set->output_variables().size())
+	{
+		throw std::out_of_range("index " + std::to_string(index)
+				+ " exceeds output index range 0 to"
+				+ std::to_string(set->output_variables().size()));
+	}
+
+	// TODO eliminate columns in DataSet
+}
+
+void Scene::restrict_input(std::size_t index, double upper_restr, double lower_restr)
+{
+	if (index >= set->output_variables().size())
+	{
+		throw std::out_of_range("index " + std::to_string(index)
+				+ " exceeds input index range 0 to"
+				+ std::to_string(set->output_variables().size()));
+	}
+	if (upper_restr < lower_restr)
+	{
+		throw std::invalid_argument("lower bound is bigger than upper bound");
+	}
+
+	const DomainAxis& axis0 = axis[index];
+	Mapper in_ang_mapper(
+			axis0.get_scale().get_extremes(),
+			std::make_pair(axis0.get_start().value(), axis0.get_end().value())
+	);
+
+	double lower_ang_restr = in_ang_mapper.map(lower_restr);
+	double upper_ang_restr = in_ang_mapper.map(upper_restr);
+
+	for (RelationElement& elem: links)
+	{
+
+		if (elem[index].coord.angle() > upper_ang_restr
+				|| elem[index].coord.angle() < lower_ang_restr)
+		{
+			// TODO eliminate row
+		}
+	}
+}
+
+void Scene::restrict_output(std::size_t index, double upper_restr, double lower_restr)
+{
+	if (index >= set->output_variables().size())
+	{
+		throw std::out_of_range("index " + std::to_string(index)
+				+ " exceeds output index range 0 to"
+				+ std::to_string(set->output_variables().size()));
+	}
+	if (upper_restr < lower_restr)
+	{
+		throw std::invalid_argument("lower bound is bigger than upper bound");
+	}
+
+	Mapper out_ang_mapper(
+			grid.get_scale().get_extremes(index),
+			std::make_pair(
+					grid.get_start().value(),
+					grid.get_start() > grid.get_end() ?
+							grid.get_end().value() + 2 * M_PIl : grid.get_end().value()
+			)
+	);
+
+	double lower_ang_restr = out_ang_mapper.map(lower_restr);
+	double upper_ang_restr = out_ang_mapper.map(upper_restr);
+
+	for (RelationElement& elem: links)
+	{
+
+		if (elem[index].coord.angle() > upper_ang_restr
+				|| elem[index].coord.angle() < lower_ang_restr)
+		{
+			// TODO eliminate row
+		}
+	}
+}
+
+void Scene::change_input_order(std::size_t from_index, std::size_t to_index)
+{
+	if (from_index >= set->input_variables().size())
+	{
+		throw std::out_of_range("from_index " + std::to_string(from_index)
+				+ " exceeds input index range 0 to"
+				+ std::to_string(set->input_variables().size()));
+	}
+	if (to_index >= set->input_variables().size())
+	{
+		throw std::out_of_range("to_index " + std::to_string(to_index)
+				+ " exceeds input index range 0 to"
+				+ std::to_string(set->input_variables().size()));
+	}
+
+	// TODO permutate columns in DataSet
+}
+
+void Scene::change_output_order(std::size_t from_index, std::size_t to_index)
+{
+	if (from_index >= set->output_variables().size())
+	{
+		throw std::out_of_range("from_index " + std::to_string(from_index)
+				+ " exceeds output index range 0 to"
+				+ std::to_string(set->output_variables().size()));
+	}
+	if (to_index >= set->output_variables().size())
+	{
+		throw std::out_of_range("to_index " + std::to_string(to_index)
+				+ " exceeds input index range 0 to"
+				+ std::to_string(set->output_variables().size()));
+	}
+
+	// TODO permutate columns in DataSet
 }
 
 void Scene::update(void)
@@ -115,7 +245,7 @@ void Scene::initialize(void)
 	}
 
 	// Create RelationElements from DataSet's input/output values
-	RelationElementFactory factory(set->rows(), grid, axis);
+	RelationElementFactory factory(set->get_num_rows(), grid, axis);
 	for (const DefDataRow & row: *set)
 	{
 		links.push_back(factory.create(row));
