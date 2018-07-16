@@ -310,10 +310,11 @@ void CairoDrawer::draw_relation_element(const RelationElement& rel)
 	}
 }
 
-void CairoDrawer::change_surface(const std::string& fpath, int width, int height)
+void CairoDrawer::change_surface(const std::string& fpath, int width, int height, std::size_t _num_inputs)
 {
 	finish();
 	set_surface(fpath, width, height);
+	num_inputs = _num_inputs;
 }
 
 void CairoDrawer::finish()

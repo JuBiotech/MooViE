@@ -38,6 +38,7 @@ public:
 	 *
 	 * @param width the surface width
 	 * @param height the surface height
+	 * @param num_inputs the number of inputs
 	 */
 	Drawer(int width, int height, std::size_t _num_inputs)
 	: coord_converter(width, height), num_inputs(_num_inputs)
@@ -46,16 +47,17 @@ public:
 	virtual ~Drawer()
 	{}
 
-	/** Alters the surface of this Drawer in with, height and storage path. All unsafed
-	 * changes will be stored and all kept resources freed correctly.
+	/** Alters the surface of this Drawer in number of inputs, width, height and storage path.
+	 * All unsafed changes will be stored and all kept resources freed correctly.
 	 *
 	 * @brief changes the underlying surface by the given parameters
 	 *
 	 * @param fpath a string containing an valid existing or accessible not existing path
 	 * @param width an integer between 0 and MAX_INT
 	 * @param height an integer between 0 and MAX_INT
+	 * @param num_inputs the number of inputs
 	 */
-	virtual void change_surface(const std::string& fpath, int width, int height) = 0;
+	virtual void change_surface(const std::string& fpath, int width, int height, std::size_t _num_inputs) = 0;
 
     /** Draws a CodomainGrid using its radius and angles. For thin or thick lines
      * the properties given by the Configuration instance are used. On

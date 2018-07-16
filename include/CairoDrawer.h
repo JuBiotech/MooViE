@@ -47,7 +47,7 @@ public:
 
     virtual ~CairoDrawer() { this->finish(); }
 
-    virtual void change_surface(const std::string& fpath, int width, int height);
+    virtual void change_surface(const std::string& fpath, int width, int height, std::size_t _num_inputs);
 
     virtual void draw_codomain_grid(const CodomainGrid& grid);
 
