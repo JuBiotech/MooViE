@@ -58,7 +58,7 @@ void Scene::toggle_input(std::size_t index, bool mode)
 				+ std::to_string(set->input_variables().size()));
 	}
 
-	// TODO eliminate columns in DataSet
+	set->toggle_column(index, mode);
 }
 
 void Scene::toggle_output(std::size_t index, bool mode)
@@ -70,79 +70,10 @@ void Scene::toggle_output(std::size_t index, bool mode)
 				+ std::to_string(set->output_variables().size()));
 	}
 
-	// TODO eliminate columns in DataSet
+	set->toggle_column(index, mode);
 }
 
-void Scene::restrict_input(std::size_t index, double upper_restr, double lower_restr)
-{
-	if (index >= set->output_variables().size())
-	{
-		throw std::out_of_range("index " + std::to_string(index)
-				+ " exceeds input index range 0 to"
-				+ std::to_string(set->output_variables().size()));
-	}
-	if (upper_restr < lower_restr)
-	{
-		throw std::invalid_argument("lower bound is bigger than upper bound");
-	}
-
-	const DomainAxis& axis0 = axis[index];
-	Mapper in_ang_mapper(
-			axis0.get_scale().get_extremes(),
-			std::make_pair(axis0.get_start().value(), axis0.get_end().value())
-	);
-
-	double lower_ang_restr = in_ang_mapper.map(lower_restr);
-	double upper_ang_restr = in_ang_mapper.map(upper_restr);
-
-	for (RelationElement& elem: links)
-	{
-
-		if (elem[index].coord.angle() > upper_ang_restr
-				|| elem[index].coord.angle() < lower_ang_restr)
-		{
-			// TODO eliminate row
-		}
-	}
-}
-
-void Scene::restrict_output(std::size_t index, double upper_restr, double lower_restr)
-{
-	if (index >= set->output_variables().size())
-	{
-		throw std::out_of_range("index " + std::to_string(index)
-				+ " exceeds output index range 0 to"
-				+ std::to_string(set->output_variables().size()));
-	}
-	if (upper_restr < lower_restr)
-	{
-		throw std::invalid_argument("lower bound is bigger than upper bound");
-	}
-
-	Mapper out_ang_mapper(
-			grid.get_scale().get_extremes(index),
-			std::make_pair(
-					grid.get_start().value(),
-					grid.get_start() > grid.get_end() ?
-							grid.get_end().value() + 2 * M_PIl : grid.get_end().value()
-			)
-	);
-
-	double lower_ang_restr = out_ang_mapper.map(lower_restr);
-	double upper_ang_restr = out_ang_mapper.map(upper_restr);
-
-	for (RelationElement& elem: links)
-	{
-
-		if (elem[index].coord.angle() > upper_ang_restr
-				|| elem[index].coord.angle() < lower_ang_restr)
-		{
-			// TODO eliminate row
-		}
-	}
-}
-
-void Scene::change_input_order(std::size_t from_index, std::size_t to_index)
+void Scene::swap_inputs(std::size_t from_index, std::size_t to_index)
 {
 	if (from_index >= set->input_variables().size())
 	{
@@ -157,10 +88,11 @@ void Scene::change_input_order(std::size_t from_index, std::size_t to_index)
 				+ std::to_string(set->input_variables().size()));
 	}
 
-	// TODO permutate columns in DataSet
+	set->swap_columns(set->get_num_inputs() + from_index,
+			set->get_num_inputs() + to_index);
 }
 
-void Scene::change_output_order(std::size_t from_index, std::size_t to_index)
+void Scene::swap_outputs(std::size_t from_index, std::size_t to_index)
 {
 	if (from_index >= set->output_variables().size())
 	{
@@ -175,16 +107,52 @@ void Scene::change_output_order(std::size_t from_index, std::size_t to_index)
 				+ std::to_string(set->output_variables().size()));
 	}
 
-	// TODO permutate columns in DataSet
+	set->swap_columns(set->get_num_outputs() + from_index,
+			set->get_num_outputs() + to_index);
+}
+
+void Scene::restrict_input(std::size_t index, double lower_restr, double upper_restr)
+{
+	if (index >= set->output_variables().size())
+	{
+		throw std::out_of_range("index " + std::to_string(index)
+				+ " exceeds input index range 0 to"
+				+ std::to_string(set->output_variables().size()));
+	}
+	if (upper_restr < lower_restr)
+	{
+		throw std::invalid_argument("lower bound is bigger than upper bound");
+	}
+
+	set->restrict_column(index, lower_restr, upper_restr);
+}
+
+void Scene::restrict_output(std::size_t index, double lower_restr, double upper_restr)
+{
+	if (index >= set->output_variables().size())
+	{
+		throw std::out_of_range("index " + std::to_string(index)
+				+ " exceeds output index range 0 to"
+				+ std::to_string(set->output_variables().size()));
+	}
+	if (upper_restr < lower_restr)
+	{
+		throw std::invalid_argument("lower bound is bigger than upper bound");
+	}
+
+	set->restrict_column(index, lower_restr, upper_restr);
 }
 
 void Scene::update(void)
 {
 	// Update CodomainGrid
-	grid.set_start(angle_helper::deg_to_rad(360 - Configuration::get_instance().get_output_angle_span() / 2));
-	grid.set_end(angle_helper::deg_to_rad(Configuration::get_instance().get_output_angle_span() / 2));
-	grid.set_radius(Configuration::get_instance().get_output_inner_radius());
-	grid.set_height(Configuration::get_instance().get_grid_size());
+	grid = CodomainGrid(
+			  set->output_variables(),
+			  angle_helper::deg_to_rad(360 - Configuration::get_instance().get_output_angle_span() / 2),
+			  angle_helper::deg_to_rad(Configuration::get_instance().get_output_angle_span() / 2),
+			  Configuration::get_instance().get_output_inner_radius(), Configuration::get_instance().get_grid_size(),
+			  Direction::COUNTER_CLOCKWISE
+	);
 
 	// Update DomainAxis and RelationElements
 	axis.clear();
@@ -195,7 +163,8 @@ void Scene::update(void)
 	drawer->change_surface(
 			Configuration::get_instance().get_output_file(),
 			Configuration::get_instance().get_width(),
-			Configuration::get_instance().get_height()
+			Configuration::get_instance().get_height(),
+			set->get_num_inputs()
 	);
 
 	draw_components();
@@ -222,10 +191,10 @@ void Scene::initialize(void)
 	const Configuration & config = Configuration::get_instance();
 
 	// RelationElements of the later histogram
-	std::vector<std::vector<double>> histogram_values(set->input_variables().size());
+	std::vector<std::vector<double>> histogram_values(set->get_num_inputs());
 
 	// Create DomainAxis' from DataSet's input variables
-	double angle = 180 / set->input_variables().size() - config.get_input_separation_angle();
+	double angle = 180 / set->get_num_inputs() - config.get_input_separation_angle();
 	double start = 90 + config.get_input_separation_angle() / 2, end = start+angle;
 	std::size_t axis_color_pos = 0;
 	for (DefVariable var: set->input_variables())
@@ -237,7 +206,7 @@ void Scene::initialize(void)
 				config.get_input_inner_radius(), config.get_input_thickness(),
 				DrawerProperties<>(
 					config.get_prop_thick().line_width,
-					Color::BLACK, Configuration::SET3.at(set->input_variables().size() - 1, axis_color_pos++)
+					Color::BLACK, Configuration::SET3.at(set->get_num_inputs() - 1, axis_color_pos++)
 				)
 		);
 		start += angle + config.get_input_separation_angle();
