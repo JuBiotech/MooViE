@@ -12,14 +12,15 @@ template<>
 DataSet<double>* DataSet<double>::parse_from_csv(const std::string& cont,
 		std::string separator, std::string comment, std::string newline)
 {
-	std::vector<DefVariable> input_vars, output_vars;
-	std::vector<DefDataRow> rows;
+	std::vector<DataColumn*> columns;
 	const std::vector<std::string> & lines = Util::split(cont, newline);
 
 	std::size_t header_pos = 0;
 	while (lines[header_pos].find_first_not_of(' ') == std::string::npos ||
 			lines[header_pos][lines[header_pos].find_first_not_of(' ')] == '#')
+	{
 		++header_pos;
+	}
 	const std::vector<std::string> & header = Util::split(lines[header_pos], separator);
 
 	size_t i = 0;
@@ -34,15 +35,26 @@ DataSet<double>* DataSet<double>::parse_from_csv(const std::string& cont,
 		{
 			std::string name = header[i].substr(2, open_bracket - 2),
 					unit = header[i].substr(open_bracket + 1, close_bracket - open_bracket - 1);
-			input_vars.push_back(DefVariable(DBL_MAX, DBL_MIN, Util::strip(name), Util::strip(unit)));
+			columns.push_back(
+					new DataColumn(
+							ColumnType::INPUT,
+							DefVariable(DBL_MAX, DBL_MIN, Util::strip(name), Util::strip(unit))
+					)
+			);
 		}
 		else
 		{
 			std::string name = header[i].substr(2, header[i].length() - 2);
-			input_vars.push_back(DefVariable(DBL_MAX, DBL_MIN, Util::strip(name)));
+			columns.push_back(
+					new DataColumn(
+							ColumnType::INPUT,
+							DefVariable(DBL_MAX, DBL_MIN, Util::strip(name))
+					)
+			);
 		}
 		++i;
 	}
+	std::size_t num_inputs = i;
 
 	// Add output variables from table header
 	while (i < header.size() && header[i].find_first_of("o#") == 0)
@@ -54,15 +66,26 @@ DataSet<double>* DataSet<double>::parse_from_csv(const std::string& cont,
 		{
 			std::string name = header[i].substr(2, open_bracket - 2),
 					unit = header[i].substr(open_bracket + 1, close_bracket - open_bracket - 2);
-			output_vars.emplace_back(DBL_MAX, DBL_MIN, Util::strip(name), Util::strip(unit));
+			columns.push_back(
+					new DataColumn(
+							ColumnType::OUTPUT,
+							DefVariable(DBL_MAX, DBL_MIN, Util::strip(name), Util::strip(unit))
+					)
+			);
 		}
 		else
 		{
 			std::string name = header[i].substr(2, header[i].length() - 2);
-			output_vars.emplace_back(DBL_MAX, DBL_MIN, Util::strip(name));
+			columns.push_back(
+					new DataColumn(
+							ColumnType::OUTPUT,
+							DefVariable(DBL_MAX, DBL_MIN, Util::strip(name))
+					)
+			);
 		}
 		++i;
 	}
+	std::size_t num_outputs = i - num_inputs;
 
 	// Add values from table body
 	for (std::size_t i = header_pos + 1; i < lines.size(); ++i)
@@ -71,56 +94,59 @@ DataSet<double>* DataSet<double>::parse_from_csv(const std::string& cont,
 		if (lines[i].find_first_not_of(' ') != std::string::npos
 				|| lines[i].find_first_of(comment) != lines[i].find_first_not_of(' ') + 1)
 		{
-			DefDataRow row;
 			const std::vector<std::string> & cells = Util::split(lines[i], ",", false);
 
-			if (input_vars.size() + output_vars.size()
-					!= cells.size())
+			if (num_inputs + num_outputs != cells.size())
 			{
 				throw std::length_error(
 						"Row " + std::to_string(i) + " has an invalid count of cells"
-						+ "(expected: " + std::to_string(input_vars.size() + output_vars.size())
+						+ "(expected: " + std::to_string(num_inputs + num_outputs)
 						+ ", given: " + std::to_string(cells.size()) + ")"
 				);
 			}
 
 			// Add input variable values from this table line
-			for (std::size_t i = 0; i < input_vars.size(); ++i)
+			for (std::size_t i = 0; i < num_inputs; ++i)
 			{
 				try
 				{
 					DefCell cell(std::stod(Util::strip(cells[i])));
-					if (cell.value < input_vars[i].min)
-						input_vars[i].min = cell.value;
-					if (cell.value > input_vars[i].max)
-						input_vars[i].max = cell.value;
-					row.push_back(cell);
+					if (cell.value < columns[i]->var.min)
+						columns[i]->var.min = cell.value;
+					if (cell.value > columns[i]->var.max)
+						columns[i]->var.max = cell.value;
+					columns[i]->cells.push_back(cell);
 				} catch (std::invalid_argument & e)
 				{
-					row.emplace_back();
+					columns[i]->cells.emplace_back();
 				}
 			}
 
 			// Add output variables values from this table line
-			for (std::size_t i = input_vars.size(); i < cells.size(); ++i)
+			for (std::size_t i = num_inputs; i < cells.size(); ++i)
 			{
 				try
 				{
 					DefCell cell(std::stod(Util::strip(cells[i])));
-					if (cell.value < output_vars[i - input_vars.size()].min)
-						output_vars[i - input_vars.size()].min = cell.value;
-					if (cell.value > output_vars[i - input_vars.size()].max)
-						output_vars[i - input_vars.size()].max = cell.value;
-					row.push_back(cell);
+					if (cell.value < columns[i]->var.min)
+						columns[i]->var.min = cell.value;
+					if (cell.value > columns[i]->var.max)
+						columns[i]->var.max = cell.value;
+					columns[i]->cells.push_back(cell);
 				} catch (std::invalid_argument & e)
 				{
-					row.emplace_back();
+					columns[i]->cells.emplace_back();
 				}
 			}
-			rows.push_back(row);
 		}
 	}
 
-	return new DataSet(input_vars, output_vars, rows);
+	std::vector<MockColumn> mock_columns;
+	mock_columns.reserve(columns.size());
+	for (std::size_t i = 0; i < columns.size(); ++i)
+	{
+		mock_columns.emplace_back(columns[i]);
+	}
+	return new DataSet(mock_columns);
 }
 
