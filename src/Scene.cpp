@@ -217,6 +217,8 @@ void Scene::initialize(void)
 	RelationElementFactory factory(set->get_num_rows(), grid, axis);
 	for (const DefDataRow & row: *set)
 	{
+		std::cout << row[0].value << " " << row[1].value << " " << row[2].value << " " << row[3].value
+				<< " " << row[4].value << " " << row[5].value /*<< " " << row[6].value*/ << std::endl;
 		links.push_back(factory.create(row));
 		for (std::size_t i = 0; i < histogram_values.size(); ++i)
 		{
