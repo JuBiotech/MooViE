@@ -51,7 +51,7 @@ CairoDrawer::CairoDrawer(const std::string& fpath, int width, int height, std::s
 	set_surface(fpath, width, height);
 }
 
-void CairoDrawer::draw_codomain_grid(const CodomainGrid& grid)
+void CairoDrawer::draw_output_grid(const OutputGrid& grid)
 {
 	cairo_context->set_identity_matrix();
 
@@ -65,7 +65,7 @@ void CairoDrawer::draw_codomain_grid(const CodomainGrid& grid)
 			grid.get_direction()
 	);
 
-	// Calculate the inner and outer radius of the CoordGrid
+	// Calculate the inner and outer radius of the OutputGrid
 	double min_radius = grid.get_radius()
 			+ conf.get_input_thickness();
 	double max_radius = grid.get_radius()
@@ -74,12 +74,12 @@ void CairoDrawer::draw_codomain_grid(const CodomainGrid& grid)
 	// Radian distance (absolute!) between start and end angle
 	double span = angle_helper::rad_dist(grid.get_start().value(), grid.get_end().value());
 
-	// Calculate how the CoordGrid is separated into thin and thick lines (ticks)
+	// Calculate how the OutputGrid is separated into thin and thick lines (ticks)
 	const std::size_t NUM_SEGMENTS = grid.get_scale().get_major_intersections()
 			* grid.get_scale().get_minor_intersections();
 	const std::size_t NUM_THICK_LINES = grid.get_scale().get_minor_intersections();
 
-	// Draw the ticks of the CoordGrid
+	// Draw the ticks of the OutputGrid
 	for (size_t i = 0; i <= NUM_SEGMENTS; ++i)
 	{
 		Angle a((grid.get_start().value() + i * span / NUM_SEGMENTS));
@@ -97,7 +97,7 @@ void CairoDrawer::draw_codomain_grid(const CodomainGrid& grid)
 			);
 	}
 
-	// Adjusted difference between the radial lines of the CoordGrid (outputs)
+	// Adjusted difference between the radial lines of the OutputGrid (outputs)
 	double y_dist = grid.get_height() / (grid.get_num_outputs() - COORDGRID_ADJUSTMENT);
 
 	const MultiScale& scale = grid.get_scale();
@@ -124,7 +124,7 @@ void CairoDrawer::draw_codomain_grid(const CodomainGrid& grid)
 		TextAlignment::LEFT
 	);
 
-	// Draw the output lines of the CoordGrid
+	// Draw the output lines of the OutputGrid
 	for (size_t i = 1; i < grid.get_num_outputs(); ++i)
 	{
 		// Draw the description of the i-th output
@@ -159,13 +159,13 @@ void CairoDrawer::draw_codomain_grid(const CodomainGrid& grid)
 	}
 }
 
-void CairoDrawer::draw_domain_axis(const DomainAxis& axis)
+void CairoDrawer::draw_input_axis(const InputAxis& axis)
 {
 	cairo_context->set_identity_matrix();
 
 	const Configuration& conf = Configuration::get_instance();
 
-	// Draw the base of the VarAxis: a filled ring segment
+	// Draw the base of the InputAxis: a filled ring segment
 	draw_ring_segment(
 	    axis.get_radius(), axis.get_height(),
 	    axis.get_start(), axis.get_end(),
@@ -203,7 +203,7 @@ void CairoDrawer::draw_domain_axis(const DomainAxis& axis)
 	double radius_label = radius_tick_label + tick_ext.width + RADIUS_LABEL_DELTA;
 	double radius_histogram = radius_label + label_ext.height + RADIUS_HISTOGRAM_DELTA;
 
-	// Calculate how the VarAxis' ticks is separated into thin and thick lines (ticks)
+	// Calculate how the InputAxis' ticks is separated into thin and thick lines (ticks)
 	const std::size_t NUM_SEGMENTS = axis.get_scale().get_major_intersections() * axis.get_scale().get_minor_intersections();
 	const std::size_t NUM_THICK_LINES = axis.get_scale().get_major_intersections();
 
@@ -245,7 +245,7 @@ void CairoDrawer::draw_domain_axis(const DomainAxis& axis)
 	}
 }
 
-void CairoDrawer::draw_relation_element(const RelationElement& rel)
+void CairoDrawer::draw_relation_element(const IOVector& rel)
 {
 	// Calculate target from connector coordinate
 	std::size_t connector_pos = num_inputs;
@@ -285,7 +285,7 @@ void CairoDrawer::draw_relation_element(const RelationElement& rel)
 	);
 	draw_arrow(from.coord, from.prop);
 
-	// Draw connector on CoordGrid
+	// Draw connector on OutputGrid
 	for (size_t i = connector_pos + 1; i < rel.size() - 1; ++i)
 	{
 		Polar from = rel[i].coord, to = rel[i + 1].coord;
@@ -317,7 +317,7 @@ void CairoDrawer::finish()
 	cairo_context->show_page();
 }
 
-void CairoDrawer::draw_histogram(const DomainAxis::Histogram& histogram,
+void CairoDrawer::draw_histogram(const InputAxis::Histogram& histogram,
 			double radius, const Angle& start, const Angle& end)
 {
 	cairo_context->set_identity_matrix();

@@ -2,10 +2,10 @@
 #define RELATIONELEMENT_H_
 
 #include <vector>
-#include <CodomainGrid.h>
-#include <DomainAxis.h>
 #include <Coordinates.h>
+#include <InputAxis.h>
 #include <Mapper.h>
+#include <OutputGrid.h>
 
 /** A point in a polar coordinate system. The point has
  * additional properties specifying how a curve starting
@@ -40,19 +40,19 @@ struct Point
  * of n inputs and m outputs.
  * It can be drawn using n links and m connectors using the style
  * specified for each Point. It is necessary to know the index i=n-1
- * to draw a RelationElement.
+ * to draw a IOVector.
  *
  * @brief a row of input/output data
  *
  * @author stratmann
  * @date 07.03.2018
  */
-class RelationElement
+class IOVector
 {
 public:
 	/** Returns a const-reference to the Point of the i-th
-	 * position of this RelationElement. There is no boundry
-	 * check so that the result for i > RelationElement#size
+	 * position of this IOVector. There is no boundry
+	 * check so that the result for i > IOVector#size
 	 * is undefined.
 	 *
 	 * @brief access i-th point
@@ -67,7 +67,7 @@ public:
 	}
 
 	/** Returns the total number of Points n+m of this
-	 * RelationElement.
+	 * IOVector.
 	 *
 	 * @brief the number of Point
 	 *
@@ -95,42 +95,42 @@ private:
 	std::vector<Point> points;
 };
 
-/** A class for constructing RelationElements. It follows the
+/** A class for constructing IOVectors. It follows the
  * factory pattern.
  *
- * @brief a factory for RelationElements
+ * @brief a factory for IOVectors
  *
  * @author stratmann
  * @date 07.03.2018
  */
-class RelationElementFactory
+class IOVectorFactory
 {
 public:
-	/** Creates a new RelationElement factory which needs
-	 * the number of rows in the data set and the CodomainGrid
-	 * and the DomainAxis' with wich the RelationElement will
+	/** Creates a new IOVector factory which needs
+	 * the number of rows in the data set and the OutputGrid
+	 * and the InputAxis' with wich the IOVector will
 	 * be drawn.
 	 *
 	 * @brief constructor
 	 *
 	 * @param num_data_rows the number of rows of the data set
-	 * @param grid the CodomainGrid
-	 * @param axis the DomainAxis'
+	 * @param grid the OutputGrid
+	 * @param axis the InputAxis'
 	 */
-	RelationElementFactory(std::size_t num_data_rows,
-			const CodomainGrid& grid,
-			const std::vector<DomainAxis>& axis);
+	IOVectorFactory(std::size_t num_data_rows,
+			const OutputGrid& grid,
+			const std::vector<InputAxis>& axis);
 
-	/** Creates a new RelationElement from a given DefDataRow
+	/** Creates a new IOVector from a given DefDataRow
 	 * with
 	 *
-	 * @brief creates a new RelationElement
+	 * @brief creates a new IOVector
 	 *
 	 * @param row the DefDataRow
 	 *
-	 * @return the so created RelationElement
+	 * @return the so created IOVector
 	 */
-	RelationElement create(const DefDataRow& row) const;
+	IOVector create(const DefDataRow& row) const;
 private:
 
 	/** Returns the color of the interval that the given value
@@ -147,10 +147,10 @@ private:
 	/* Precalculated values that will be applied to the style of each point */
 	double line_width, line_alpha, fill_alpha;
 
-	/* The CodomainGrid that fits the RelationElement */
-	const CodomainGrid& grid;
-	/* The DomainAxis' that fit the RelationElement */
-	const std::vector<DomainAxis>& axis;
+	/* The OutputGrid that fits the IOVector */
+	const OutputGrid& grid;
+	/* The InputAxis' that fit the IOVector */
+	const std::vector<InputAxis>& axis;
 
 	/* Mapper that convert value from data set to angle */
 	std::vector<Mapper> input_mapper,

@@ -49,18 +49,18 @@ public:
 
     virtual void change_surface(const std::string& fpath, int width, int height, std::size_t _num_inputs);
 
-    virtual void draw_codomain_grid(const CodomainGrid& grid);
+    virtual void draw_output_grid(const OutputGrid& grid);
 
-    virtual void draw_domain_axis(const DomainAxis& axis);
+    virtual void draw_input_axis(const InputAxis& axis);
 
-    virtual void draw_relation_element(const RelationElement& link);
+    virtual void draw_relation_element(const IOVector& link);
 
     virtual void finish();
 
 protected:
     virtual void set_surface(const std::string& fpath, int width, int height);
 
-    virtual void draw_histogram(const DomainAxis::Histogram& histogram,
+    virtual void draw_histogram(const InputAxis::Histogram& histogram,
 			double radius, const Angle& start, const Angle& end);
 
     virtual void draw_link(const Polar& origin1, const Polar& origin2,

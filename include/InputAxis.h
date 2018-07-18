@@ -1,19 +1,19 @@
-#ifndef DOMAINAXIS_H_
-#define DOMAINAXIS_H_
+#ifndef INPUTAXIS_H_
+#define INPUTAXIS_H_
 
 #include <Scale.h>
 #include <DataSet.h>
 #include <Configuration.h>
 #include <Coordinates.h>
 
-/** A DomainAxis is an axis which displays the possible values
+/** A InputAxis is an axis which displays the possible values
  * of a input variable. It is visualized as a ring segment
  * with a distinct color and has ticks for better readability.
  *
  * @author stratmann
  * @date 12.12.2017
  */
-class DomainAxis
+class InputAxis
 {
 public:
 	class Histogram
@@ -86,7 +86,7 @@ public:
 	};
 
 public:
-	/** Creates a DomainAxis presenting a given variable and
+	/** Creates a InputAxis presenting a given variable and
 	 * is drawn between given angles with given radius, height
 	 * and properties.
 	 *
@@ -99,13 +99,13 @@ public:
 	 * @param _height the height beginning at the radius
 	 * @param _prop the DrawerProperties
 	 */
-	DomainAxis(DefVariable _var,
+	InputAxis(DefVariable _var,
 		const Angle& _start, const Angle& _end,
 		double _radius, double _height,
 		const DrawerProperties<>& _prop);
 
 	/** Returns a const reference to the variable this
-	 * DomainAxis presents.
+	 * InputAxis presents.
 	 *
 	 * @brief gets the Var
 	 *
@@ -117,7 +117,7 @@ public:
 	}
 
 	/** Returns a reference to its histogram. The
-	 * DomainAxis#calculate_histogram function has to called
+	 * InputAxis#calculate_histogram function has to called
 	 * before drawing the histogram because it is empty by
 	 * default.
 	 *
@@ -130,7 +130,7 @@ public:
 	      return histogram;
 	}
 
-	/** Returns the start Angle of this DomainAxis'
+	/** Returns the start Angle of this InputAxis'
 	 * drawing span.
 	 *
 	 * @brief gets the start Angle
@@ -142,7 +142,7 @@ public:
 		return start;
 	}
 
-	/** Starts the start Angle of this DomainAxis'
+	/** Starts the start Angle of this InputAxis'
 	 * drawing span.
 	 *
 	 * @brief sets the start Angle
@@ -154,7 +154,7 @@ public:
 		start = _start;
 	}
 
-	/** Returns the end Angle of this DomainAxis'
+	/** Returns the end Angle of this InputAxis'
 	 * drawing span.
 	 *
 	 * @brief gets the end Angle
@@ -166,7 +166,7 @@ public:
 		return end;
 	}
 
-	/** Sets the end Angle of this DomainAxis'
+	/** Sets the end Angle of this InputAxis'
  	 * drawing span.
  	 *
  	 * @brief gets the end Angle
@@ -225,7 +225,7 @@ public:
 	}
 
 	/** Returns the DrawerProperties that will be used
-	 * to draw this DomainAxis.
+	 * to draw this InputAxis.
 	 *
 	 * @brief gets the DrawerProperties
 	 *
@@ -237,7 +237,7 @@ public:
 	}
 
 	/** Sets the DrawerProperties that will be used to
-	 * draw this DomainAxis.
+	 * draw this InputAxis.
 	 *
 	 * @brief sets the DrawerProperties
 	 *
@@ -248,7 +248,7 @@ public:
 		prop = _prop;
 	}
 
-	/** Returns the SimpleScale of this DomainAxis. This
+	/** Returns the SimpleScale of this InputAxis. This
 	 * scale instance defines how the graphical scale will
 	 * be drawn.
 	 *
@@ -262,9 +262,9 @@ public:
 	}
 
 	/** Constructs a label using the given TextProperties'
-	 * style and this DomainAxis' variable name.
+	 * style and this InputAxis' variable name.
 	 *
-	 * @brief makes a label for this DomainAxis
+	 * @brief makes a label for this InputAxis
 	 *
 	 * @param _prop
 	 */
@@ -282,24 +282,24 @@ public:
 	void calculate_histogram(const std::vector<double>& data);
 
 private:
-	/* The Variable this VarAxis represents */
+	/* The Variable this InputAxis represents */
 	DefVariable 				var;
 
 	/* The ticks of this variable */
 	SimpleScale 		scale;
 
-	/* Start and end angle for drawing the VarAxis */
+	/* Start and end angle for drawing the InputAxis */
 	Angle 				start, end;
-	/* Start radius of the VarAxis */
+	/* Start radius of the InputAxis */
 	double 				radius;
-	/* Height of the VarAxis */
+	/* Height of the InputAxis */
 	double		 		height;
 
-	/* Style defining how the VarAxis is drawn */
+	/* Style defining how the InputAxis is drawn */
 	DrawerProperties<> 	prop;
 
 	/* The histogram describing the frequencies of the intervals */
 	Histogram			histogram;
 };
 
-#endif /* DOMAINAXIS_H_ */
+#endif /* INPUTAXIS_H_ */

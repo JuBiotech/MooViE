@@ -137,11 +137,11 @@ public:
 	}
 
 
-	// CoordGrid
+	// OutputGrid
 
 
 	/** Returns the output angle span, the angle span
-	 * for the CodomainGrid.
+	 * for the OutputGrid.
 	 *
 	 * @return the output angle span
 	 */
@@ -151,7 +151,7 @@ public:
 	}
 
 	/** Sets the output angle span, the angle span
-	 * for the CodomainGrid.
+	 * for the OutputGrid.
 	 *
 	 * @param output_angle_span the output angle span to set
 	 */
@@ -161,7 +161,7 @@ public:
 	}
 
 	/** Returns the inner radius of the output, the radius
-	 * at which the CodomainGrid starts.
+	 * at which the OutputGrid starts.
 	 *
 	 * @return the output inner radius
 	 */
@@ -171,7 +171,7 @@ public:
 	}
 
 	/** Sets the inner radius of the output, the radius
-	 * at which the CodomainGrid starts.
+	 * at which the OutputGrid starts.
 	 *
 	 * @param output_inner_radius the output inner radius to set
 	 */
@@ -200,7 +200,7 @@ public:
 	}
 
 	/** Returns the size of actual grid that is a part
-	 * of the CodomainGrid.
+	 * of the OutputGrid.
 	 *
 	 * @return the grid_size
 	 */
@@ -210,7 +210,7 @@ public:
 	}
 
 	/** Sets the size of actual grid that is a part
-	 * of the CodomainGrid.
+	 * of the OutputGrid.
 	 *
 	 * @param grid_size the grid_size to set
 	 */
@@ -220,7 +220,7 @@ public:
 	}
 
 	/** Returns the number of bold sections of
-	 * the scale of the CodomainGrid.
+	 * the scale of the OutputGrid.
 	 *
 	 * @return the number of major sections
 	 */
@@ -230,7 +230,7 @@ public:
 	}
 
 	/** Sets the number of bold sections of
-	 * the scale of the CodomainGrid.
+	 * the scale of the OutputGrid.
 	 *
 	 * @param major_sections the number of major sections to set
 	 */
@@ -240,7 +240,7 @@ public:
 	}
 
 	/** Returns the number of narrow sections of
-	 * the scale of the CodomainGrid.
+	 * the scale of the OutputGrid.
 	 *
 	 * @return the number of minor sections
 	 */
@@ -250,7 +250,7 @@ public:
 	}
 
 	/** Sets the number of narrow sections of
-	 * the scale of the CodomainGrid.
+	 * the scale of the OutputGrid.
 	 *
 	 * @param minor_sections the number of minor sections to set
 	 */
@@ -260,11 +260,11 @@ public:
 	}
 
 
-	// DomainAxis
+	// InputAxis
 
 
 	/** Returns the inner radius of an input, the radius
-	 * where the DomainAxis start.
+	 * where the InputAxis start.
 	 *
 	 * @return the input inner radius
 	 */
@@ -274,7 +274,7 @@ public:
 	}
 
 	/** Sets the inner radius of an input, the radius
-	 * where the DomainAxis start.
+	 * where the InputAxis start.
 	 *
 	 * @param input_inner_radius the input inner radius to set
 	 */
@@ -302,7 +302,7 @@ public:
 	}
 
 	/** Returns the thickness of the colored ring of the
-	 * DomainAxis.
+	 * InputAxis.
 	 *
 	 * @return the input thickness
 	 */
@@ -312,7 +312,7 @@ public:
 	}
 
 	/** Sets the thickness of the colored ring of the
-	 * DomainAxis.
+	 * InputAxis.
 	 *
 	 * @param _input_thickness the input thickness to set
 	 */
@@ -322,7 +322,7 @@ public:
 	}
 
 	/** Returns the number of bold sections of
-	 * the scale of the DomainAxis.
+	 * the scale of the InputAxis.
 	 *
 	 * @return the number of major sections
 	 */
@@ -332,7 +332,7 @@ public:
 	}
 
 	/** Sets the number of bold sections of
-	 * the scale of the DomainAxis.
+	 * the scale of the InputAxis.
 	 *
 	 * @param major_sections the number of major sections to set
 	 */
@@ -342,7 +342,7 @@ public:
 	}
 
 	/** Returns the number of narrow sections of
-	 * the scale of the DomainAxis.
+	 * the scale of the InputAxis.
 	 *
 	 * @return the number of minor sections
 	 */
@@ -352,7 +352,7 @@ public:
 	}
 
 	/** Sets the number of narrow sections of
-	 * the scale of the DomainAxis.
+	 * the scale of the InputAxis.
 	 *
 	 * @param minor_sections the number minor sections to set
 	 */
@@ -456,7 +456,7 @@ public:
 	}
 
 
-	// RelationElement
+	// IOVector
 
 	/** Returns the ratio of the radial distance between two data
 	 * points that will be drawn as connector.
@@ -537,17 +537,17 @@ public:
 		prop_scale_label = _prop_scale_label;
 	}
 
-	/** Returns MooViEs TextProperties for DomainAxis
+	/** Returns MooViEs TextProperties for InputAxis
 	 * labels.
 	 *
-	 * @return the TextProperties for DomainAxis labels
+	 * @return the TextProperties for InputAxis labels
 	 */
 	const TextProperties & get_prop_axis_label() const
 	{
 		return prop_axis_label;
 	}
 
-	/** Sets MooViEs TextProperties for DomainAxis
+	/** Sets MooViEs TextProperties for InputAxis
 	 * labels.
 	 *
 	 * @param _prop_axis_label the TextProperties to set
@@ -576,7 +576,7 @@ private:
 	int 				width 					= 0;
 	int 				height 					= 0;
 
-	/* CodomainGrid modification values */
+	/* OutputGrid modification values */
 	double				output_angle_span		= 160;
 	double 				output_inner_radius 	= 160;
 	double 				output_thickness 		= 5;
@@ -584,7 +584,7 @@ private:
 	int					num_major_sections_grid	= 10;
 	int					num_minor_sections_grid	= 10;
 
-	/* DomainAxis modification values */
+	/* InputAxis modification values */
 	double 				input_inner_radius 		= 180;
 	double 				input_thickness 		= 5;
 	double 				input_separation_angle 	= 5;
@@ -598,7 +598,7 @@ private:
 	Color				histogram_background	= {0, 0, 0, .1};
 	Color				histogram_fill			= {.5, .5, .5, 1};
 
-	/* RelationElement modification values */
+	/* IOVector modification values */
 	double				connector_arc_ratio		= 0.6;
 
 	/* General line and fill styles */

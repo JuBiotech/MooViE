@@ -1,11 +1,11 @@
-#include <DomainAxis.h>
+#include <InputAxis.h>
 
-DomainAxis::Histogram::Histogram(DefVariable _var)
+InputAxis::Histogram::Histogram(DefVariable _var)
 : var(_var), num_intervals(0)
 {
 }
 
-void DomainAxis::Histogram::calculate(const std::vector<double> & data)
+void InputAxis::Histogram::calculate(const std::vector<double> & data)
 {
     double span = std::abs(var.max - var.min);
     double section_width = span / num_intervals;
@@ -25,7 +25,7 @@ void DomainAxis::Histogram::calculate(const std::vector<double> & data)
     }
 }
 
-double DomainAxis::Histogram::get_section_frequency(std::size_t i) const
+double InputAxis::Histogram::get_section_frequency(std::size_t i) const
 {
 	if (i >= num_intervals)
 	{
@@ -39,7 +39,7 @@ double DomainAxis::Histogram::get_section_frequency(std::size_t i) const
     return frequencies[i];
 }
 
-DomainAxis::DomainAxis(DefVariable _var,
+InputAxis::InputAxis(DefVariable _var,
 		 const Angle& _start, const Angle& _end,
 		 double _radius, double _height,
 		 const DrawerProperties<> & _prop)
@@ -55,7 +55,7 @@ DomainAxis::DomainAxis(DefVariable _var,
   histogram(_var)
 {}
 
-void DomainAxis::calculate_histogram(const std::vector<double> & data)
+void InputAxis::calculate_histogram(const std::vector<double> & data)
 {
 	histogram.set_num_intervals(Configuration::get_instance().get_num_histogram_classes());
     histogram.calculate(data);

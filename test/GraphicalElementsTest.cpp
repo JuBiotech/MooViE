@@ -1,6 +1,6 @@
-#include <DomainAxis.h>
-#include <CodomainGrid.h>
-#include <RelationElement.h>
+#include <InputAxis.h>
+#include <IOVector.h>
+#include <OutputGrid.h>
 #include <limits>
 
 #define BOOST_TEST_DYN_LINK
@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE(domainaxis)
 	Color line_color(.123, .8, .1, .071), fill_color(.94, .81, .7316, .5);
 	DrawerProperties<> prop(line_width, line_color, fill_color);
 
-	DomainAxis axis(var, start, end, radius, height, prop);
+	InputAxis axis(var, start, end, radius, height, prop);
 
 	// Test Constructor/Getters
 
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE(codomaingrid)
 	double radius = 1.0, height = 0.5;
 	Direction dir = Direction::COUNTER_CLOCKWISE;
 
-	CodomainGrid grid(output_vars, start, end, radius, height, dir);
+	OutputGrid grid(output_vars, start, end, radius, height, dir);
 
 	// Test Costructor/Getters
 
@@ -184,7 +184,7 @@ BOOST_AUTO_TEST_CASE(relationelement)
 	Color line_color(.123, .8, .1, .071), fill_color(.94, .81, .7316, .5);
 	DrawerProperties<> prop(line_width, line_color, fill_color);
 
-	std::vector<DomainAxis> axis { {var, start, end, radius, height, prop} };
+	std::vector<InputAxis> axis { {var, start, end, radius, height, prop} };
 
 
 	std::vector<DefVariable> output_vars;
@@ -197,14 +197,14 @@ BOOST_AUTO_TEST_CASE(relationelement)
 	radius = 30, height = 0.5;
 	Direction dir = Direction::COUNTER_CLOCKWISE;
 
-	CodomainGrid grid(output_vars, start, end, radius, height, dir);
+	OutputGrid grid(output_vars, start, end, radius, height, dir);
 
 
 	DefDataRow row = {{2.3, -10}};
 
 
 	RelationElementFactory factory(1, grid, axis);
-	RelationElement elem = factory.create(row);
+	IOVector elem = factory.create(row);
 
 	double eps = std::numeric_limits<double>::epsilon();
 

@@ -138,8 +138,8 @@ void Scene::restrict_output(std::size_t index, double lower_restr, double upper_
 
 void Scene::update(void)
 {
-	// Update CodomainGrid
-	grid = CodomainGrid(
+	// Update CoinputGrid
+	grid = OutputGrid(
 			  set->output_variables(),
 			  angle_helper::deg_to_rad(360 - Configuration::get_instance().get_output_angle_span() / 2),
 			  angle_helper::deg_to_rad(Configuration::get_instance().get_output_angle_span() / 2),
@@ -147,7 +147,7 @@ void Scene::update(void)
 			  Direction::COUNTER_CLOCKWISE
 	);
 
-	// Update DomainAxis and RelationElements
+	// Update DomainAxis and IOVectors
 	axis.clear();
 	links.clear();
 	initialize();
@@ -165,16 +165,16 @@ void Scene::update(void)
 
 void Scene::draw_components(void)
 {
-	for (RelationElement link: links)
+	for (IOVector link: links)
 	{
 		drawer->draw_relation_element(link);
 	}
 
-	drawer->draw_codomain_grid(grid);
+	drawer->draw_output_grid(grid);
 
-	for (DomainAxis axis0: axis)
+	for (InputAxis axis0: axis)
 	{
-		drawer->draw_domain_axis(axis0);
+		drawer->draw_input_axis(axis0);
 	}
 
 }
@@ -183,7 +183,7 @@ void Scene::initialize(void)
 {
 	const Configuration & config = Configuration::get_instance();
 
-	// RelationElements of the later histogram
+	// IOVectors of the later histogram
 	std::vector<std::vector<double>> histogram_values(set->get_num_inputs());
 
 	// Create DomainAxis' from DataSet's input variables
@@ -206,8 +206,8 @@ void Scene::initialize(void)
 		end += angle + config.get_input_separation_angle();
 	}
 
-	// Create RelationElements from DataSet's input/output values
-	RelationElementFactory factory(set->get_num_rows(), grid, axis);
+	// Create IOVectors from DataSet's input/output values
+	IOVectorFactory factory(set->get_num_rows(), grid, axis);
 	for (const DefDataRow & row: *set)
 	{
 		links.push_back(factory.create(row));

@@ -1,10 +1,10 @@
-#include <RelationElement.h>
+#include <IOVector.h>
 #include "CairoDrawer.h"
 
-RelationElementFactory::RelationElementFactory(
+IOVectorFactory::IOVectorFactory(
 		std::size_t _num_data_rows,
-		const CodomainGrid& _grid,
-		const std::vector<DomainAxis>& _axis)
+		const OutputGrid& _grid,
+		const std::vector<InputAxis>& _axis)
 : grid(_grid), axis(_axis)
 {
 	line_width = 0.1 * (1 + std::exp(-(_num_data_rows * 0.0006)));
@@ -26,7 +26,7 @@ RelationElementFactory::RelationElementFactory(
 		);
 	}
 
-	for (const DomainAxis& elem: axis)
+	for (const InputAxis& elem: axis)
 	{
 		input_mapper.emplace_back(
 				elem.get_scale().get_extremes(),
@@ -35,9 +35,9 @@ RelationElementFactory::RelationElementFactory(
 	}
 }
 
-RelationElement RelationElementFactory::create(const DefDataRow & row) const
+IOVector IOVectorFactory::create(const DefDataRow & row) const
 {
-	RelationElement elem;
+	IOVector elem;
 	std::size_t num_inputs = axis.size(),
 			num_cols = row.size();
 
@@ -81,7 +81,7 @@ RelationElement RelationElementFactory::create(const DefDataRow & row) const
 	return elem;
 }
 
-const Color& RelationElementFactory::get_color(double val) const
+const Color& IOVectorFactory::get_color(double val) const
 {
 	double range = angle_helper::rad_dist(
 				grid.get_start().value(),

@@ -1,6 +1,6 @@
-#include <CodomainGrid.h>
+#include <OutputGrid.h>
 
-CodomainGrid::CodomainGrid(const std::vector<DefVariable>& _output_vars,
+OutputGrid::OutputGrid(const std::vector<DefVariable>& _output_vars,
 		const Angle& _start, const Angle& _end,
 		double _radius, double _height, Direction _dir)
 	: output_variables(_output_vars), num_outputs(_output_vars.size()),
@@ -17,7 +17,7 @@ CodomainGrid::CodomainGrid(const std::vector<DefVariable>& _output_vars,
 		}
 	}
 
-const DefVariable & CodomainGrid::get_var(std::size_t num_output) const
+const DefVariable & OutputGrid::get_var(std::size_t num_output) const
 {
 	if (num_output >= num_outputs)
 	{

@@ -3,9 +3,9 @@
 
 #include <algorithm>
 #include <CairoDrawer.h>
-#include <RelationElement.h>
 #include <DataSet.h>
 #include <Configuration.h>
+#include <IOVector.h>
 
 /** Scene class represents a MooViE scene. It is initially drawn and every alteration
  * will require an update to be persistent.
@@ -88,11 +88,11 @@ public:
     void restrict_output(std::size_t index, double lower_restr, double upper_restr);
 
 private:
-    /** Draws the Scene components CodomainGrid, VariableAxis' and RelationElements.
+    /** Draws the Scene components OutputGrid, InputAxis' and IOVectors.
      */
     void draw_components(void);
 
-    /** Initializes DomainAxis' and RelationElements.
+    /** Initializes InputAxis' and IOVectors.
      */
     void initialize(void);
 private:
@@ -103,11 +103,11 @@ private:
     std::unique_ptr<Drawer> 					drawer;
 
     /** Output data section of the diagram */
-    CodomainGrid 								grid;
+    OutputGrid 								grid;
     /** Input data sections of the diagram */
-    std::vector<DomainAxis> 					axis;
+    std::vector<InputAxis> 					axis;
     /** Relation elements */
-    std::vector<RelationElement> 				links;
+    std::vector<IOVector> 				links;
 };
 
 #endif /* SCENE_H_ */

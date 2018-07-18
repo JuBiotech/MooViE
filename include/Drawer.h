@@ -1,7 +1,7 @@
 #ifndef DRAWER_H_
 #define DRAWER_H_
 
-#include <RelationElement.h>
+#include <IOVector.h>
 
 /** An abstract Drawer class that can be used to draw
  * MooViE elements. Drawer is supposed to cover the strategy that is used to
@@ -59,31 +59,31 @@ public:
 	 */
 	virtual void change_surface(const std::string& fpath, int width, int height, std::size_t _num_inputs) = 0;
 
-    /** Draws a CodomainGrid using its radius and angles. For thin or thick lines
+    /** Draws a OutputGrid using its radius and angles. For thin or thick lines
      * the properties given by the Configuration instance are used. On
      *
-     * @brief draws a CodomainGrid
+     * @brief draws a OutputGrid
      *
-     * @param grid the CodomainGrid to draw
+     * @param grid the OutputGrid to draw
     */
-    virtual void draw_codomain_grid(const CodomainGrid& grid) = 0;
+    virtual void draw_output_grid(const OutputGrid& grid) = 0;
 
-    /** Draws a DomainAxis using its radius and angles. For thin or thick lines
+    /** Draws a InputAxis using its radius and angles. For thin or thick lines
      * the properties given by the Configuration instance are used.
      *
-     * @brief draws a DomainAxis
+     * @brief draws a InputAxis
      *
-     * @param axis the DomainAxis to draw
+     * @param axis the InputAxis to draw
      */
-    virtual void draw_domain_axis(const DomainAxis& axis) = 0;
+    virtual void draw_input_axis(const InputAxis& axis) = 0;
 
-    /** Draws a RelationElement using its coordinates.
+    /** Draws a IOVector using its coordinates.
      *
-     * @brief draws a RelationElement
+     * @brief draws a IOVector
      *
-     * @param elem the RelationElement to draw
+     * @param elem the IOVector to draw
      */
-    virtual void draw_relation_element(const RelationElement& elem) = 0;
+    virtual void draw_relation_element(const IOVector& elem) = 0;
 
 
     /** Save the Drawer's result to the given file.
@@ -114,7 +114,7 @@ protected:
      * @param start the starting angle of the Histogram
      * @param end the end angle of the Histogram
      */
-    virtual void draw_histogram(const DomainAxis::Histogram& histogram,
+    virtual void draw_histogram(const InputAxis::Histogram& histogram,
 			double radius, const Angle& start, const Angle& end) = 0;
 
     /** Draws a bold line between the lines origin1-origin2

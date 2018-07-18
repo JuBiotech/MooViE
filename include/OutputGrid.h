@@ -1,5 +1,5 @@
-#ifndef CODOMAINGRID_H_
-#define CODOMAINGRID_H_
+#ifndef COINPUTGRID_H_
+#define COINPUTGRID_H_
 
 #include <cstddef>
 #include <vector>
@@ -16,22 +16,15 @@ enum Direction
 };
 
 /** Representing a coordinate grid by its dimensional constraints.
- * ╟───┼───┼───┼───╫───┼───┼───┼───╢
- * ║   │   │   │   ║   │   │   │   ║
- * ╟───┼───┼───┼───╫───┼───┼───┼───╢
- * ║   │   │   │   ║   │   │   │   ║
- * ╟───┼───┼───┼───╫───┼───┼───┼───╢
- * ║   │   │   │   ║   │   │   │   ║
- * ╟───┼───┼───┼───╫───┼───┼───┼───╢
- * 4 outputs, 4 scale ticks
- * @brief The CoordGrid class
+ *
+ * @brief The OutputGrid class
  * @author beyss
  * @date 26.07.2017
  */
-class CodomainGrid
+class OutputGrid
 {
 public:
-    /** Creates a CodomainGrid presenting given variables and is drawn
+    /** Creates a OutputGrid presenting given variables and is drawn
      * between given angles with given radius and height.
      *
      * @brief constructor
@@ -43,7 +36,7 @@ public:
      * @param _height the height beginning at the radius
      * @param _dir the Direction the outputs values increase
      */
-    CodomainGrid(const std::vector<DefVariable>& _output_vars,
+    OutputGrid(const std::vector<DefVariable>& _output_vars,
     		const Angle & _start, const Angle & _end,
 			double _radius, double _height, Direction _dir);
 
@@ -67,7 +60,7 @@ public:
     	return num_outputs;
     }
 
-    /** Returns the start Angle of this CodomainGrid's
+    /** Returns the start Angle of this OutputGrid's
      * drawing span.
      *
      * @brief gets the start Angle
@@ -79,7 +72,7 @@ public:
     	return start;
     }
 
-    /** Starts the start Angle of this CodomainGrid's
+    /** Starts the start Angle of this OutputGrid's
      * drawing span.
      *
      * @brief sets the start Angle
@@ -91,7 +84,7 @@ public:
     	start = _start;
     }
 
-    /** Returns the end Angle of this CodomainGrid's
+    /** Returns the end Angle of this OutputGrid's
      * drawing span.
      *
      * @brief gets the end Angle
@@ -103,7 +96,7 @@ public:
     	return end;
     }
 
-    /** Sets the end Angle of this CodomainGrid's
+    /** Sets the end Angle of this OutputGrid's
      * drawing span.
      *
      * @brief gets the end Angle
@@ -161,7 +154,7 @@ public:
 		height = _height;
 	}
 
-	/** Returns the direction this CodomainGrid's output values
+	/** Returns the direction this OutputGrid's output values
 	 * increase. The Direction is either COUNTER_CLOCKWISE (with
 	 * increasing Angle) or CLOCKWISE (with decreasing Angle).
 	 *
@@ -174,7 +167,7 @@ public:
 		return direction;
 	}
 
-	/** Sets the direction this CodomainGrid's output values
+	/** Sets the direction this OutputGrid's output values
 	 * increase. The Direction is either COUNTER_CLOCKWISE (with
 	 * increasing Angle) or CLOCKWISE (with decreasing Angle).
 	 *
@@ -187,7 +180,7 @@ public:
 		direction = _dir;
 	}
 
-	/** Returns the MultiScale of this CodomainGrid. This
+	/** Returns the MultiScale of this OutputGrid. This
 	 * scale instance defines how the graphical scale will
 	 * be drawn for each output.
 	 *
@@ -209,14 +202,14 @@ private:
     /** The Scale information */
     MultiScale			scale;
 
-    /** Start and end angle for drawing the CoordGrid */
+    /** Start and end angle for drawing the OutputGrid */
     Angle 				start, end;
-    /** Radius of the CoordGrid */
+    /** Radius of the OutputGrid */
     double 				radius;
-    /** Height of the CoordGrid */
+    /** Height of the OutputGrid */
     double 				height;
-    /** Direction of the CoordGrid's values */
+    /** Direction of the OutputGrid's values */
     Direction 			direction;
 };
 
-#endif /* CODOMAINGRID_H_ */
+#endif /* COINPUTGRID_H_ */
