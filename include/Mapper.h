@@ -1,10 +1,3 @@
-/*
- * Mapper.h
- *
- *  Created on: 05.07.2017
- *      Author: beyss
- */
-
 #ifndef MAPPER_H_
 #define MAPPER_H_
 

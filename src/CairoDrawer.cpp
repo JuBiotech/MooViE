@@ -1,10 +1,3 @@
-/*
- * CairoDrawer.cc
- *
- *  Created on: 05.07.2017
- *      Author: beyss
- */
-
 #include <CairoDrawer.h>
 
 const double 	CairoDrawer::RADIAL_TEXT_FACTOR = 0.3;

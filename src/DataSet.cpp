@@ -1,10 +1,3 @@
-/*
- * CSVParser.cpp
- *
- *  Created on: 28.11.2017
- *      Author: IBT\stratmann
- */
-
 #include <DataSet.h>
 #include <iostream>
 

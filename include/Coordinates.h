@@ -1,10 +1,3 @@
-/*
- * PolarCartesian.h
- *
- *  Created on: 03.07.2017
- *      Author: beyss
- */
-
 #ifndef POLARCARTESIAN_H_
 #define POLARCARTESIAN_H_
 

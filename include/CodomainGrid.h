@@ -1,10 +1,3 @@
- /*
- * CodomainGrid.h
- *
- *  Created on: 26.07.2017
- *      Author: beyss
- */
-
 #ifndef CODOMAINGRID_H_
 #define CODOMAINGRID_H_
 

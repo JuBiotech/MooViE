@@ -1,10 +1,3 @@
-/*
- * Scene.h
- *
- *  Created on: 28.08.2017
- *      Author: beyss
- */
-
 #ifndef SCENE_H_
 #define SCENE_H_
 

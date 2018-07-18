@@ -1,10 +1,3 @@
-/*
- * Scene.cc
- *
- *  Created on: 28.08.2017
- *      Author: beyss
- */
-
 #include <Scene.h>
 #include <iostream>
 

@@ -1,10 +1,3 @@
-/*
- * CoordGrid.cc
- *
- *  Created on: 26.07.2017
- *      Author: beyss
- */
-
 #include <CodomainGrid.h>
 
 CodomainGrid::CodomainGrid(const std::vector<DefVariable>& _output_vars,

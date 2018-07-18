@@ -1,10 +1,3 @@
-/*
- * Configuration.h
- *
- *  Created on: 16.01.2018
- *      Author: stratmann
- */
-
 #ifndef CONFIGURATION_H_
 #define CONFIGURATION_H_
 

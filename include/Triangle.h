@@ -1,10 +1,3 @@
-/*
- * Triangle.h
- *
- *  Created on: 23.08.2017
- *      Author: beyss
- */
-
 #ifndef TRIANGLE_H_
 #define TRIANGLE_H_
 

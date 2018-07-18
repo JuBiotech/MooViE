@@ -1,10 +1,3 @@
-/*
- * VarAxis.cpp
- *
- *  Created on: 12.12.2017
- *      Author: IBT\stratmann
- */
-
 #include <DomainAxis.h>
 
 DomainAxis::Histogram::Histogram(DefVariable _var)

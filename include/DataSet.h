@@ -1,10 +1,3 @@
-/*
- * CSVParser.h
- *
- *  Created on: 28.11.2017
- *      Author: IBT\stratmann
- */
-
 #ifndef DATASET_H_
 #define DATASET_H_
 

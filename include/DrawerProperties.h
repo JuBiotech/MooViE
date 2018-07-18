@@ -1,10 +1,3 @@
-/*
- * DrawerProperties.h
- *
- *  Created on: 05.07.2017
- *      Author: beyss
- */
-
 #ifndef DRAWERPROPERTIES_H_
 #define DRAWERPROPERTIES_H_
 

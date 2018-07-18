@@ -1,10 +1,3 @@
-/*
- * Utils.h
- *
- *  Created on: 30.11.2017
- *      Author: IBT\stratmann
- */
-
 #ifndef UTILS_H_
 #define UTILS_H_
 

@@ -1,10 +1,3 @@
-/*
- * MooViEUtils.cpp
- *
- *  Created on: 30.11.2017
- *      Author: IBT\stratmann
- */
-
 #include <Utils.h>
 
 namespace Util {

@@ -1,10 +1,3 @@
-/*
- * Label.h
- *
- *  Created on: Apr 27, 2018
- *      Author: stratmann
- */
-
 #ifndef LABEL_H_
 #define LABEL_H_
 

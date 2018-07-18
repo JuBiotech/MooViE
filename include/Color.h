@@ -1,10 +1,3 @@
-/*
- * Color.h
- *
- *  Created on: 27.07.2017
- *      Author: beyss
- */
-
 #ifndef COLOR_H_
 #define COLOR_H_
 

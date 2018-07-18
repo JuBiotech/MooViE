@@ -1,10 +1,3 @@
-/*
- * DomainAxis.h
- *
- *  Created on: 12.12.2017
- *      Author: IBT\stratmann
- */
-
 #ifndef DOMAINAXIS_H_
 #define DOMAINAXIS_H_
 

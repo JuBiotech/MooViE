@@ -1,10 +1,3 @@
-/*
- * DataLink.cpp
- *
- *  Created on: 12.12.2017
- *      Author: IBT\stratmann
- */
-
 #include <RelationElement.h>
 #include "CairoDrawer.h"
 

@@ -1,10 +1,3 @@
-/*
- * Configuration.cpp
- *
- *  Created on: 16.01.2018
- *      Author: stratmann
- */
-
 #include <Configuration.h>
 #include <iostream>
 

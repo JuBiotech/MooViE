@@ -1,10 +1,3 @@
-/*
- * TextProperties.h
- *
- *  Created on: Mar 23, 2018
- *      Author: stratmann
- */
-
 #ifndef TEXTPROPERTIES_H_
 #define TEXTPROPERTIES_H_
 
