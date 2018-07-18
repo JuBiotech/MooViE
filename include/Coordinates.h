@@ -1,5 +1,5 @@
-#ifndef POLARCARTESIAN_H_
-#define POLARCARTESIAN_H_
+#ifndef COORDINATES_H_
+#define COORDINATES_H_
 
 #include <cmath>
 #include <ostream>

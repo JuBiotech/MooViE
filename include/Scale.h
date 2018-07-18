@@ -1,5 +1,5 @@
-#ifndef TICKS_H_
-#define TICKS_H_
+#ifndef SCALE_H_
+#define SCALE_H_
 
 #include <cmath>
 #include <cstddef>
