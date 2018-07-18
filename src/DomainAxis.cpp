@@ -22,8 +22,14 @@ void DomainAxis::Histogram::calculate(const std::vector<double> & data)
     	std::size_t pos = std::floor((value - var.min) / section_width);
 		++frequencies.at(pos < num_intervals ? pos : num_intervals - 1);
     }
-    for (std::size_t i = 0; i < frequencies.size(); ++i)
-    	frequencies[i] /= data.size();
+
+    if (data.size() > 0)
+    {
+    	for (std::size_t i = 0; i < frequencies.size(); ++i)
+    	{
+    		frequencies[i] /= data.size();
+    	}
+    }
 }
 
 double DomainAxis::Histogram::get_section_frequency(std::size_t i) const
