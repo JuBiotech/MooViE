@@ -15,67 +15,66 @@
  */
 class Mapper
 {
-public:
-    /** Creates a Mapper from two given intervals.
-     *
-     * @brief constructor
-     *
-     * @param in the first interval
-     * @param out the second interval
-     */
-    Mapper(const std::pair<double, double>& _in, const std::pair<double, double>& _out)
-    : in { _in }, out { _out }
-    {
-    }
-
-    /** Returns the value associated to the given input using its linear
-     * mapping function.
-     *
-     * @brief maps [a,b] -> [c,d]
-     *
-     * @param out_val the value to map
-     *
-     * @return the mapped value
-     */
-    double map(const double& out_val) const
-    {
-        return transform(in, out, out_val);
-    }
-
-    /** Returns the value associated to the given input using the inverse
-     * of its linear mapping function.
-     *
-     * @brief maps [c,d] -> [a,b]
-     *
-     * @param in_val the value to map
-     *
-     * @return the mapped value
-     */
-    double inverse(const double& in_val) const
-    {
-        return transform(out, in, in_val);
-    }
 private:
-    /** Performs the actual linear transformation between two given intervals.
-     *
-     * @brief calculate f(val) using bijective f: IN -> OUT
-     *
-     * @param in the interval to map from
-     * @param out the interval to map to
-     * @param val the value to transform
-     *
-     * @return the tranformed value
-     */
-    double transform(const std::pair<double, double>& in,
-                     const std::pair<double, double>& out, const double& val) const
-    {
-        return (out.second - out.first) / (in.second - in.first)
-				* (val - in.first) + out.first;
-    }
-    /** The domain of the mapping function */
-    std::pair<double, double> in;
-    /** The image of the mapping function */
-    std::pair<double, double> out;
+  /** The domain of the mapping function */
+  std::pair<double, double> m_in;
+  /** The image of the mapping function */
+  std::pair<double, double> m_out;
+public:
+  /** Creates a Mapper from two given intervals.
+   *
+   * @param in the first interval
+   * @param out the second interval
+   */
+  Mapper (const std::pair<double, double>& in,
+	  const std::pair<double, double>& out) :
+      m_in
+	{ in }, m_out
+	{ out }
+  {
+  }
+
+  /** Returns the value associated to the given input using its linear
+   * mapping function.
+   *
+   * @param out_val the value to map
+   *
+   * @return the mapped value
+   */
+  double
+  map (const double& out_val) const
+  {
+    return transform (m_in, m_out, out_val);
+  }
+
+  /** Returns the value associated to the given input using the inverse
+   * of its linear mapping function.
+   *
+   * @param in_val the value to map
+   *
+   * @return the mapped value
+   */
+  double
+  inverse (const double& in_val) const
+  {
+    return transform (m_out, m_in, in_val);
+  }
+private:
+  /** Performs the actual linear transformation between two given intervals.
+   *
+   * @param in the interval to map from
+   * @param out the interval to map to
+   * @param val the value to transform
+   *
+   * @return the tranformed value
+   */
+  double
+  transform (const std::pair<double, double>& in,
+	     const std::pair<double, double>& out, const double& val) const
+  {
+    return (out.second - out.first) / (in.second - in.first) * (val - in.first)
+	+ out.first;
+  }
 };
 
 #endif /* MAPPER_H_ */

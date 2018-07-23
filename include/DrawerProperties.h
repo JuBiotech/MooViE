@@ -6,29 +6,33 @@
 
 /** DrawerProperties can be used to control the line thinkness, stroke and
  * fill color of a Drawer.
- * @brief The DrawerProperties class
+ *
+ * @brief Properties to modify a MooViE drawers behavior
+ *
  * @author beyss
  * @date 05.07.2017
  */
 template<typename FillT = Color>
-struct DrawerProperties
-{
-	/** The line width */
-	double line_width;
-	/** Line color */
-	Color line_color;
-	/** Fill color(s) */
-	FillT fill_color;
+  struct DrawerProperties
+  {
+    /** The line width */
+    double line_width;
+    /** Line color */
+    Color line_color;
+    /** Fill color(s) */
+    FillT fill_color;
 
     /** Creates a DrawerProperties instance storing the given line thinkness,
      * stroke and fill color of a Drawer.
-     * @brief DrawerProperties
+     *
      * @param _line_width the line width
      * @param _line_color the line color
      * @param _fill_color the fill color
      */
-    DrawerProperties(double _line_width, const Color & _line_color, const FillT& _fill_color)
-    : line_width(_line_width), line_color(_line_color), fill_color(_fill_color)
+    DrawerProperties (double line_width_, const Color& line_color_,
+		      const FillT& fill_color_) :
+	line_width (line_width_), line_color (line_color_), fill_color (
+	    fill_color_)
     {
     }
 };
