@@ -42,6 +42,22 @@ public:
   void
   update (void);
 
+  /** Returns the current input variables of this MooViE scene. Needs to
+   * be called again if Scene was altered.
+   *
+   * @return the input variables
+   */
+  std::vector<DefVariable>
+  get_input_variables () const;
+
+  /**  Returns the current output variables of this MooViE scene. Needs to
+   * be called again if Scene was altered.
+   *
+   * @return the output variables
+   */
+  std::vector<DefVariable>
+  get_output_variables () const;
+
   /** Enables/disables the input with the given index. The scene needs to be updated
    * afterwards.
    *

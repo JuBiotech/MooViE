@@ -37,6 +37,18 @@ Scene::Scene () :
   draw_components ();
 }
 
+std::vector<DefVariable>
+Scene::get_input_variables () const
+{
+  return m_set->input_variables ();
+}
+
+std::vector<DefVariable>
+Scene::get_output_variables () const
+{
+  return m_set->output_variables ();
+}
+
 void
 Scene::toggle_input (std::size_t index, bool mode)
 {
