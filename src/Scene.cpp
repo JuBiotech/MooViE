@@ -17,7 +17,7 @@ Scene::Scene () :
 	    Configuration::get_instance ().get_output_angle_span () / 2),
 	Configuration::get_instance ().get_output_inner_radius (),
 	Configuration::get_instance ().get_grid_size (),
-	Direction::COUNTER_CLOCKWISE)
+	Direction::CLOCKWISE)
 {
   if (m_set->get_num_inputs () > 12)
     {
@@ -30,6 +30,10 @@ Scene::Scene () :
   if (m_set->get_num_rows () > 20000)
     {
       throw std::out_of_range ("cannot have more than 20,000 data rows");
+    }
+  if (m_set->get_num_rows() == 1)
+    {
+      throw std::out_of_range ("cannot have just one row");
     }
 
   initialize ();

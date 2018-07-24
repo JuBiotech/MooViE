@@ -16,10 +16,25 @@ IOVectorFactory::IOVectorFactory (std::size_t num_data_rows,
 	  m_grid.get_end ().value () + 2 * M_PIl : m_grid.get_end ().value ());
 
   const MultiScale& scale = m_grid.get_scale ();
-  for (size_t i = 0; i < scale.get_scale_number (); ++i)
+  if (grid.get_direction () == Direction::COUNTER_CLOCKWISE)
     {
-      m_output_mapper.emplace_back (scale.get_extremes (i), out);
+      for (size_t i = 0; i < scale.get_scale_number (); ++i)
+	{
+	  m_output_mapper.emplace_back (scale.get_extremes (i), out);
+	}
     }
+  else
+    {
+      for (size_t i = 0; i < scale.get_scale_number (); ++i)
+	{
+	  m_output_mapper.emplace_back (
+	      std::make_pair (scale.get_extremes (i).second,
+			      scale.get_extremes (i).first),
+	      out);
+	}
+
+    }
+
 
   for (const InputAxis& elem : m_axis)
     {

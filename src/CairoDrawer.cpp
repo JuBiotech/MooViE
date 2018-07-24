@@ -107,15 +107,23 @@ CairoDrawer::draw_output_grid (const OutputGrid& grid)
 		     grid.get_radius () + conf.get_input_thickness () / 2,
 		     grid.get_end (),
 		     M_PI_2);
+  double first_bound, second_bound;
+  if (grid.get_direction () == Direction::COUNTER_CLOCKWISE)
+    {
+      first_bound = scale.get_extremes (0).first;
+      second_bound = scale.get_extremes (0).second;
+    }
+  else
+    {
+      first_bound = scale.get_extremes (0).second;
+      second_bound = scale.get_extremes (0).first;
+    }
   draw_text_orthogonal (
-      Label (std::to_string (scale.get_extremes (0).second),
-	     conf.get_prop_scale_label ()),
+      Label (std::to_string (first_bound), conf.get_prop_scale_label ()),
       Polar (min_radius, grid.get_start () - TEXT_DELTA), TextAlignment::RIGHT);
   draw_text_orthogonal (
-      Label (std::to_string (scale.get_extremes (0).first),
-	     conf.get_prop_scale_label ()),
+      Label (std::to_string (second_bound), conf.get_prop_scale_label ()),
       Polar (min_radius, grid.get_end () + TEXT_DELTA), TextAlignment::LEFT);
-
   // Draw the output lines of the OutputGrid
   for (size_t i = 1; i < grid.get_num_outputs (); ++i)
     {
@@ -124,15 +132,23 @@ CairoDrawer::draw_output_grid (const OutputGrid& grid)
 			 max_radius + i * OUTPUT_LABEL_RADIUS_DELTA,
 			 min_radius + i * y_dist, grid.get_end (),
 			 M_PI_2 - i * 2 * ANGLE_DELTA_MEDIUM);
+      if (grid.get_direction () == Direction::COUNTER_CLOCKWISE)
+	{
+	  first_bound = scale.get_extremes (i).first;
+	  second_bound = scale.get_extremes (i).second;
+	}
+      else
+	{
+	  first_bound = scale.get_extremes (i).second;
+	  second_bound = scale.get_extremes (i).first;
+	}
       draw_text_orthogonal (
-	  Label (std::to_string (scale.get_extremes (i).second),
-		 conf.get_prop_scale_label ()),
+	  Label (std::to_string (first_bound), conf.get_prop_scale_label ()),
 	  Polar (min_radius + i * y_dist + OUTPUT_EXTREME_RADIUS_DELTA,
 		 grid.get_start () - TEXT_DELTA),
 	  TextAlignment::RIGHT);
       draw_text_orthogonal (
-	  Label (std::to_string (scale.get_extremes (0).first),
-		 conf.get_prop_scale_label ()),
+	  Label (std::to_string (second_bound), conf.get_prop_scale_label ()),
 	  Polar (min_radius + i * y_dist + OUTPUT_EXTREME_RADIUS_DELTA,
 		 grid.get_end () + TEXT_DELTA),
 	  TextAlignment::LEFT);
@@ -518,7 +534,8 @@ CairoDrawer::draw_segment_axis (
       DrawerProperties<> inner_prop (prop.line_width, prop.line_color,
 				     prop.fill_color.at (i));
       draw_ring_segment (inner_radius, thickness, start + segment_size * i,
-			 start + segment_size * (i + 1), inner_prop, dir);
+			 start + segment_size * (i + 1), inner_prop,
+			 Direction::COUNTER_CLOCKWISE);
     }
 }
 
