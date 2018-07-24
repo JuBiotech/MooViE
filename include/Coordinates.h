@@ -80,15 +80,15 @@ public:
   /** Assignment operator setting this Angle's value. If necessary,
    * the value is corrected to be consistent.
    *
-   * @param angle
+   * @param angle the angle value in radians
    *
-   * @return
+   * @return the adjusted angle value
    */
   double
-  operator= (const double& angle)
+  operator= (double angle)
   {
-    angle = adjust_angle (angle);
-    return angle;
+    m_angle = adjust_angle (angle);
+    return m_angle;
   }
 
   /** Equal to operator checking wether this Angle's value
