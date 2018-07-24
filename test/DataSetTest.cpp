@@ -17,7 +17,7 @@ BOOST_AUTO_TEST_CASE(csv_parsing_iterator_getter)
 
 	double eps = std::numeric_limits<double>::epsilon();
 
-	BOOST_CHECK((set->rows() == 7) && (set->cols() == 5));
+	BOOST_CHECK((set->get_num_rows() == 7) && (set->get_num_cols() == 5));
 
 	const std::vector<DefVariable>& inputs = set->input_variables();
 	BOOST_CHECK_EQUAL(inputs[0].name, std::string("Input1"));
@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE(null_cells_intermediate_comments)
 
 	double eps = std::numeric_limits<double>::epsilon();
 
-	BOOST_CHECK((set->rows() == 2) && (set->cols() == 2));
+	BOOST_CHECK((set->get_num_rows() == 2) && (set->get_num_cols() == 2));
 
 	const std::vector<DefVariable>& inputs = set->input_variables();
 	BOOST_CHECK_EQUAL(inputs[0].name, std::string("Input1"));

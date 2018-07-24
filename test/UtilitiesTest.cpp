@@ -64,44 +64,6 @@ BOOST_AUTO_TEST_CASE(strip)
 	BOOST_CHECK_EQUAL(Util::strip(empty), empty);
 }
 
-BOOST_AUTO_TEST_CASE(string_to_int)
-{
-	std::string regular = "3",
-			negative = "-3",
-			null = "0",
-			wrong = "pi",
-			too_large = "10000000000",
-			too_small = "-10000000000";
-
-	BOOST_CHECK_EQUAL(Util::string_to_int(regular), 3);
-	BOOST_CHECK_EQUAL(Util::string_to_int(negative), -3);
-	BOOST_CHECK_EQUAL(Util::string_to_int(null), 0);
-	BOOST_CHECK_THROW(Util::string_to_int(wrong), ParseException);
-	BOOST_CHECK_THROW(Util::string_to_int(too_large), ParseException);
-	BOOST_CHECK_THROW(Util::string_to_int(too_small), ParseException);
-}
-
-BOOST_AUTO_TEST_CASE(string_to_double)
-{
-	std::string regular = "3.1415",
-			negative = "-3.1415",
-			integer = "0",
-			e_value = "-0.31415e-1",
-			wrong = "pi",
-			too_large = "10.0e-1000",
-			too_small = "-10.0e-1000";
-
-	double eps = std::numeric_limits<double>::epsilon();
-
-	BOOST_CHECK_CLOSE(Util::string_to_double(regular), 3.1415, eps);
-	BOOST_CHECK_CLOSE(Util::string_to_double(negative), -3.1415, eps);
-	BOOST_CHECK_CLOSE(Util::string_to_double(integer), 0, eps);
-	BOOST_CHECK_CLOSE(Util::string_to_double(e_value), -0.31415e-1, eps);
-	BOOST_CHECK_THROW(Util::string_to_double(wrong), ParseException);
-	BOOST_CHECK_THROW(Util::string_to_double(too_large), ParseException);
-	BOOST_CHECK_THROW(Util::string_to_double(too_small), ParseException);
-}
-
 BOOST_AUTO_TEST_CASE(double_equal)
 {
 	double a = 31415, b = 271828,

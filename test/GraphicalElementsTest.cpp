@@ -44,8 +44,8 @@ BOOST_AUTO_TEST_CASE(domainaxis)
 	BOOST_CHECK_EQUAL(axis.get_prop().fill_color, fill_color);
 
 	std::pair<double, double> extremes = create_rounded_interval(var.min, var.max);
-	BOOST_CHECK_EQUAL(axis.get_scale().get_major_intersections(), conf.get_major_segments_axis());
-	BOOST_CHECK_EQUAL(axis.get_scale().get_major_intersections(), conf.get_major_segments_axis());
+	BOOST_CHECK_EQUAL(axis.get_scale().get_major_intersections(), conf.get_num_major_sections_axis());
+	BOOST_CHECK_EQUAL(axis.get_scale().get_major_intersections(), conf.get_num_major_sections_axis());
 	BOOST_CHECK_CLOSE(axis.get_scale().get_extremes().first, extremes.first, eps);
 	BOOST_CHECK_CLOSE(axis.get_scale().get_extremes().second, extremes.second, eps);
 
@@ -144,8 +144,8 @@ BOOST_AUTO_TEST_CASE(codomaingrid)
 
 	std::pair<double, double> extremes0 = create_rounded_interval(min0, max0),
 			extremes1 = create_rounded_interval(min1, max1);
-	BOOST_CHECK_EQUAL(grid.get_scale().get_major_intersections(), conf.get_num_sections_cg());
-	BOOST_CHECK_EQUAL(grid.get_scale().get_minor_intersections(), conf.get_minor_intersections_grid());
+	BOOST_CHECK_EQUAL(grid.get_scale().get_major_intersections(), conf.get_num_major_sections_grid());
+	BOOST_CHECK_EQUAL(grid.get_scale().get_minor_intersections(), conf.get_num_minor_sections_grid());
 	BOOST_CHECK_EQUAL(grid.get_scale().get_scale_number(), output_vars.size());
 	BOOST_CHECK_CLOSE(grid.get_scale().get_extremes(0).first, extremes0.first, eps);
 	BOOST_CHECK_CLOSE(grid.get_scale().get_extremes(0).second, extremes0.second, eps);
@@ -199,11 +199,10 @@ BOOST_AUTO_TEST_CASE(relationelement)
 
 	OutputGrid grid(output_vars, start, end, radius, height, dir);
 
+	std::unique_ptr<DefDataSet> set(DefDataSet::parse_from_csv("/home/IBT/stratmann/MooViE/test/files/input.csv"));
+	DefDataRow row = set->operator[](0);
 
-	DefDataRow row = {{2.3, -10}};
-
-
-	RelationElementFactory factory(1, grid, axis);
+	IOVectorFactory factory(1, grid, axis);
 	IOVector elem = factory.create(row);
 
 	double eps = std::numeric_limits<double>::epsilon();
