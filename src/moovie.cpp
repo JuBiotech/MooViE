@@ -7,10 +7,9 @@
 
 #include <string>
 #include <iostream>
-#include <chrono>
 #include <Scene.h>
-#include <CmdLine.h>
 #include <Configuration.h>
+#include <CmdLine.h>
 
 using namespace TCLAP;
 
@@ -45,8 +44,6 @@ run_moovie (int argc, const char * argv[])
 
   if (input.getValue ().empty ())
     {
-      std::chrono::time_point<std::chrono::system_clock> start, end;
-      start = std::chrono::system_clock::now ();
       try
 	{
 	  cmd.parse (argc, argv);
@@ -70,11 +67,6 @@ run_moovie (int argc, const char * argv[])
 	    conf.set_output_file (output.getValue ());
 
 	  Scene main;
-
-	  end = std::chrono::system_clock::now ();
-	  std::cout
-	      << std::chrono::duration_cast<std::chrono::microseconds> (
-		  end - start).count () << std::endl;
 	}
       catch (const std::exception& e)
 	{
