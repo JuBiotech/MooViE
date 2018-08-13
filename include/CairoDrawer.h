@@ -44,7 +44,7 @@ public:
   virtual
   ~CairoDrawer ()
   {
-    this->finish ();
+    this->flush ();
   }
 
   virtual void
@@ -61,7 +61,7 @@ public:
   draw_relation_element (const IOVector& link);
 
   virtual void
-  finish ();
+  flush ();
 
 protected:
   virtual void
