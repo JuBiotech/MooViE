@@ -86,7 +86,7 @@ public:
    * @param elem the IOVector to draw
    */
   virtual void
-  draw_relation_element (const IOVector& elem) = 0;
+  draw_io_vector (const IOVector& elem) = 0;
 
   /** Save the Drawer's result to the given file.
    */

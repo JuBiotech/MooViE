@@ -58,7 +58,7 @@ public:
   draw_input_axis (const InputAxis& axis);
 
   virtual void
-  draw_relation_element (const IOVector& link);
+  draw_io_vector (const IOVector& iov);
 
   virtual void
   flush ();

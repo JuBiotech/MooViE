@@ -192,7 +192,7 @@ Scene::draw_components (void)
 {
   for (IOVector link : m_iov)
     {
-      m_drawer->draw_relation_element (link);
+      m_drawer->draw_io_vector (link);
     }
 
   m_drawer->draw_output_grid (m_grid);

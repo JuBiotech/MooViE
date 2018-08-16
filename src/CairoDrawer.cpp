@@ -259,11 +259,11 @@ CairoDrawer::draw_input_axis (const InputAxis& axis)
 }
 
 void
-CairoDrawer::draw_relation_element (const IOVector& rel)
+CairoDrawer::draw_io_vector (const IOVector& iov)
 {
   // Calculate target from connector coordinate
   std::size_t connector_pos = m_num_inputs;
-  const Point from = rel[connector_pos];
+  const Point from = iov[connector_pos];
 
   Polar target1 (from.coord.radius () - CONNECTOR_ARROW_HEIGHT,
 		 from.coord.angle () - ANGLE_DELTA_SMALL), target2 (
@@ -273,32 +273,32 @@ CairoDrawer::draw_relation_element (const IOVector& rel)
   // Draw links
   for (std::size_t i = 0; i < m_num_inputs; ++i)
     {
-      Polar origin1 (rel[i].coord.radius () - RADIUS_DELTA,
-		     rel[i].coord.angle () - ANGLE_DELTA_SMALL), origin2 (
-	  rel[i].coord.radius () - RADIUS_DELTA,
-	  rel[i].coord.angle () + ANGLE_DELTA_SMALL);
-      draw_link (origin1, origin2, target1, target2, rel[i].prop);
+      Polar origin1 (iov[i].coord.radius () - RADIUS_DELTA,
+		     iov[i].coord.angle () - ANGLE_DELTA_SMALL), origin2 (
+	  iov[i].coord.radius () - RADIUS_DELTA,
+	  iov[i].coord.angle () + ANGLE_DELTA_SMALL);
+      draw_link (origin1, origin2, target1, target2, iov[i].prop);
     }
 
   // Draw line from connector to first output
-  double connector_distance = (rel[connector_pos + 1].coord.radius ()
+  double connector_distance = (iov[connector_pos + 1].coord.radius ()
       - from.coord.radius ()) * 0.1
       + Configuration::get_instance ().get_output_thickness ();
   draw_line (
       from.coord,
-      Polar (rel[connector_pos + 1].coord.radius () + connector_distance,
-	     rel[connector_pos + 1].coord.angle ()),
+      Polar (iov[connector_pos + 1].coord.radius () + connector_distance,
+	     iov[connector_pos + 1].coord.angle ()),
       from.prop);
   draw_arrow (from.coord, from.prop);
 
   // Draw connector on OutputGrid
-  for (size_t i = connector_pos + 1; i < rel.size () - 1; ++i)
+  for (size_t i = connector_pos + 1; i < iov.size () - 1; ++i)
     {
-      Polar from = rel[i].coord, to = rel[i + 1].coord;
+      Polar from = iov[i].coord, to = iov[i + 1].coord;
       draw_connector (get_connector_start (from, to),
-		      get_connector_end (from, to), rel[i].prop);
+		      get_connector_end (from, to), iov[i].prop);
       draw_coord_point (to, COORDPOINT_ANGLE,
-			(to.radius () - from.radius ()) * 0.2, rel[i].prop);
+			(to.radius () - from.radius ()) * 0.2, iov[i].prop);
     }
 }
 
