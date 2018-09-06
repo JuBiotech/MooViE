@@ -1,6 +1,5 @@
 # Should produce a null cell for (row=0,col=1)
 
-i#Input1 i#Input2 o#Output1
-1,,2
-# Intermediate comment
+i#Input1,i#Input2,o#Output1
+1,a,2
 7,8,9

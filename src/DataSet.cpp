@@ -79,20 +79,20 @@ template<>
     std::size_t num_outputs = i - num_inputs;
 
     // Add values from table body
-    for (std::size_t i = header_pos + 1; i < lines.size (); ++i)
+    for (std::size_t rowc = header_pos + 1; rowc < lines.size (); ++rowc)
       {
 	// Remove empty/comment lines
-	if (lines[i].find_first_not_of (' ') != std::string::npos
-	    || lines[i].find_first_of (comment)
-		!= lines[i].find_first_not_of (' ') + 1)
+	if (lines[rowc].find_first_not_of (' ') != std::string::npos
+	    || lines[rowc].find_first_of (comment)
+		!= lines[rowc].find_first_not_of (' ') + 1)
 	  {
-	    const std::vector<std::string> & cells = Util::split (lines[i], ",",
+	    const std::vector<std::string> & cells = Util::split (lines[rowc], ",",
 								  false);
 
 	    if (num_inputs + num_outputs != cells.size ())
 	      {
 		throw std::length_error (
-		    "Row " + std::to_string (i)
+		    "Row " + std::to_string (rowc)
 			+ " has an invalid count of cells" + "(expected: "
 			+ std::to_string (num_inputs + num_outputs)
 			+ ", given: " + std::to_string (cells.size ()) + ")");
