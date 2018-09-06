@@ -273,11 +273,14 @@ CairoDrawer::draw_io_vector (const IOVector& iov)
   // Draw links
   for (std::size_t i = 0; i < m_num_inputs; ++i)
     {
-      Polar origin1 (iov[i].coord.radius () - RADIUS_DELTA,
-		     iov[i].coord.angle () - ANGLE_DELTA_SMALL), origin2 (
-	  iov[i].coord.radius () - RADIUS_DELTA,
-	  iov[i].coord.angle () + ANGLE_DELTA_SMALL);
-      draw_link (origin1, origin2, target1, target2, iov[i].prop);
+      if (not std::isnan (iov[i].coord.radius ()))
+	{
+	  Polar origin1 (iov[i].coord.radius () - RADIUS_DELTA,
+			 iov[i].coord.angle () - ANGLE_DELTA_SMALL), origin2 (
+	      iov[i].coord.radius () - RADIUS_DELTA,
+	      iov[i].coord.angle () + ANGLE_DELTA_SMALL);
+	  draw_link (origin1, origin2, target1, target2, iov[i].prop);
+	}
     }
 
   // Draw line from connector to first output

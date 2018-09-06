@@ -75,6 +75,7 @@ private:
 
   /** IOVector modification values */
   double m_connector_arc_ratio = 0.6;
+  int m_epsilon_places = 3;
 
   /** General line and fill styles */
   DrawerProperties<> m_prop_thick =
@@ -574,6 +575,30 @@ public:
   set_connector_arc_ratio (double connector_arc_ratio)
   {
     m_connector_arc_ratio = connector_arc_ratio;
+  }
+
+  /** Returns the number of decimal places that a number from
+   * [0,1] or [-1,0] can have zero before it is left out. This
+   * results in not drawing the corresponded link.
+   *
+   * @return the epsilon places
+   */
+  int
+  get_epsilon_places () const
+  {
+    return m_epsilon_places;
+  }
+
+  /** Sets the number of decimal places that a number from
+   * [0,1] or [-1,0] can have zero before it is left out. This
+   * results in not drawing the corresponded link.
+   *
+   * @param epsilon_places the epsilon places to set
+   */
+  void
+  set_epsilon_places (int epsilon_places)
+  {
+    m_epsilon_places = epsilon_places;
   }
 
   // Standard properties and labels

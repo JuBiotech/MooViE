@@ -103,7 +103,7 @@ class IOVectorFactory
 {
 private:
   /** Precalculated values that will be applied to the style of each point */
-  double m_line_width, m_line_alpha, m_fill_alpha;
+  double m_line_width, m_line_alpha, m_fill_alpha, m_ct_zero;
 
   /** The OutputGrid that fits the IOVector */
   const OutputGrid& m_grid;
@@ -125,7 +125,9 @@ public:
   IOVectorFactory (std::size_t num_data_rows, const OutputGrid& grid,
 		   const std::vector<InputAxis>& axis);
 
-  /** Creates a new IOVector from a given DefDataRow.
+  /** Creates a new IOVector from a given DefDataRow. If an input value
+   * is too close to zero (as defined by moovie.epsilon_places), an invalid
+   * coordinate is added that needs to be ignored by the Drawer.
    *
    * @param row the DefDataRow
    *

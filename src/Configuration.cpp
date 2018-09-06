@@ -361,6 +361,15 @@ Configuration::Configuration (const std::string & fpath,
 		      "\"connector_arc_ratio\" exceeds range [0,1]");
 		}
 	    }
+	  else if (key.compare ("moovie.epsilon_places") == 0)
+	    {
+	      m_epsilon_places = std::stoi (value);
+	      if (m_epsilon_places < -15 || m_epsilon_places > 15)
+		{
+		  throw std::out_of_range (
+		      "\"epsilon_places\" exceeds range [-15,15]");
+		}
+	    }
 	  else if (key.compare ("moovie.thick_line_width") == 0)
 	    {
 	      m_prop_thick.line_width = std::stod (value);
