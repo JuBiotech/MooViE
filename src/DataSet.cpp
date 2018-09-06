@@ -6,6 +6,8 @@ template<>
 				   std::string separator, std::string comment,
 				   std::string newline)
   {
+    std::setlocale(LC_NUMERIC, "en_US.UTF-8");
+
     std::vector<DataColumn*> columns;
     const std::vector<std::string> & lines = Util::split (cont, newline);
 
