@@ -1,8 +1,7 @@
 #include <DataSet.h>
-#include <iostream>
 
 template<>
-  DataSet<double>*
+  void
   DataSet<double>::parse_from_csv (const std::string& cont,
 				   std::string separator, std::string comment,
 				   std::string newline)
@@ -137,12 +136,21 @@ template<>
 	  }
       }
 
-    std::vector<MockColumn> mock_columns;
-    mock_columns.reserve (columns.size ());
+    m_num_cols = columns.size ();
+    m_num_rows = columns[0]->cells.size ();
+    m_cols.reserve (m_num_cols);
     for (std::size_t i = 0; i < columns.size (); ++i)
       {
-	mock_columns.emplace_back (columns[i]);
+	m_cols.emplace_back (columns[i]);
       }
-    return new DataSet (mock_columns);
+
+    m_num_inputs = m_separator = num_inputs;
+    m_num_outputs = m_cols.size () - m_num_inputs;
+
+    m_rows.reserve (m_cols[0].size ());
+    for (std::size_t i = 0; i < m_cols[0].size (); ++i)
+      {
+	m_rows.push_back (DataRow (m_cols, m_num_cols, i));
+      }
   }
 

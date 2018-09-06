@@ -276,6 +276,17 @@ template<typename T>
 	}
 	;
       };
+
+    private:
+      /** The array of MockColumns */
+      const std::vector<MockColumn>& m_columns;
+      /** The number of enabled columns */
+      const std::size_t& m_enabled_columns;
+      /** The number of this DataRow */
+      const std::size_t m_offset;
+      /** The enabled flag */
+      bool m_enabled;
+
     public:
       /** Creates a DataRow from given reference to the columns and to the number of enabled columns
        * (needed for update) and the row number (aka column offset).
@@ -355,7 +366,7 @@ template<typename T>
       const_iterator
       begin () const
       {
-	return const_iterator (m_columns.begin (), m_columns.end ());
+	return const_iterator (m_columns.begin (), m_columns.end (), m_offset);
       }
 
       /** Returns a const_iterator pointing to the end of this
@@ -366,17 +377,8 @@ template<typename T>
       const_iterator
       end () const
       {
-	return const_iterator (m_columns.end (), m_columns.end ());
+	return const_iterator (m_columns.end (), m_columns.end (), m_offset);
       }
-    private:
-      /** The array of MockColumns */
-      const std::vector<MockColumn>& m_columns;
-      /** The number of enabled columns */
-      const std::size_t& m_enabled_columns;
-      /** The number of this DataRow */
-      const std::size_t m_offset;
-      /** The enabled flag */
-      bool m_enabled;
     };
 
     class const_iterator : public std::iterator<std::input_iterator_tag,
@@ -443,6 +445,28 @@ template<typename T>
     std::vector<DataRow> m_rows;
 
   public:
+    /** Creates an empty DataSet.
+     */
+    DataSet () :
+	m_num_rows (0), m_num_cols (0), m_num_inputs (0), m_num_outputs (0), m_separator (
+	    0)
+    {
+    }
+
+    /** Parses a DataSet from a given CSV file. The table must have the form:
+     * <input1>[<uniti1>], ... , <inputN>[<unitiN>], <output1>[<unito1>], ... , <outputM>[<unitoM>]
+     * <datai1>, ... , <dataiN>, <datao1>, ... , <dataoM>
+     *
+     * @param fpath the CSV file path
+     */
+    DataSet (const std::string& fpath):
+	m_num_rows (0), m_num_cols (0), m_num_inputs (0), m_num_outputs (0), m_separator (
+	    0)
+    {
+      parse_from_csv(Util::read_file(fpath));
+    }
+
+
     /** Returns a data table parsed from a csv encoded string
      * and encapsulated in a DataSet object. The table must have the
      * form:
@@ -454,10 +478,8 @@ template<typename T>
      * @param separator the column seperator used in this csv string
      * @param comment the comment indicator used in this csv string
      * @param newline the newline indicator used in this csv string
-     *
-     * @return the DataSet object
      */
-    static DataSet*
+    void
     parse_from_csv (const std::string & cont, std::string separator = ",",
 		    std::string comment = "#", std::string newline = "\n");
 
@@ -670,37 +692,21 @@ template<typename T>
     {
       return const_iterator (m_rows.end (), m_rows.end ());
     }
-  private:
-    /** Creates a DataSet from a vector of DataRows.
-     *
-     * @param rows the rows of the table
-     */
-    DataSet (const std::vector<MockColumn>& _cols) :
-	m_num_rows (_cols[0].size ()), m_num_cols (_cols.size ()), m_cols (
-	    _cols)
-    {
-      std::size_t i = 0;
-      while (m_cols[i].get_type () == ColumnType::INPUT)
-	++i;
-      m_num_inputs = m_separator = i;
-      m_num_outputs = m_cols.size () - m_num_inputs;
-
-      m_rows.reserve (m_cols[0].size ());
-      for (std::size_t i = 0; i < m_cols[0].size (); ++i)
-	{
-	  m_rows.push_back (DataRow (m_cols, m_num_cols, i));
-	}
-    }
   };
 
 template<typename T>
-  DataSet<T>*
+  void
   DataSet<T>::parse_from_csv (const std::string & cont, std::string separator,
 			      std::string comment, std::string newline)
   {
     static_assert(std::is_same<T, double>::value, "Should not be compiled.");
-    return nullptr;
   }
+
+template<>
+  void
+  DataSet<double>::parse_from_csv (const std::string & cont,
+				   std::string separator, std::string comment,
+				   std::string newline);
 
 typedef DataSet<double> DefDataSet;
 typedef DefDataSet::Variable DefVariable;
