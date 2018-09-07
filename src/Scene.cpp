@@ -202,6 +202,7 @@ Scene::draw_components (void)
       m_drawer->draw_input_axis (axis0);
     }
 
+  m_drawer->finish ();
 }
 
 void

@@ -309,15 +309,15 @@ void
 CairoDrawer::change_surface (const std::string& fpath, int width, int height,
 			     std::size_t _num_inputs)
 {
-  flush ();
+  finish ();
   set_surface (fpath, width, height);
   m_num_inputs = _num_inputs;
 }
 
 void
-CairoDrawer::flush ()
+CairoDrawer::finish ()
 {
-  cairo_context->get_target ()->flush ();
+  cairo_context->get_target ()->finish ();
 }
 
 void

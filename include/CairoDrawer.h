@@ -44,7 +44,7 @@ public:
   virtual
   ~CairoDrawer ()
   {
-    this->flush ();
+    this->finish ();
   }
 
   virtual void
@@ -61,7 +61,7 @@ public:
   draw_io_vector (const IOVector& iov);
 
   virtual void
-  flush ();
+  finish ();
 
 protected:
   virtual void

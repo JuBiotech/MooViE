@@ -91,7 +91,7 @@ public:
   /** Save the Drawer's result to the given file.
    */
   virtual void
-  flush () = 0;
+  finish () = 0;
 
 protected:
   /** Alters the surface of this Drawer in with, height and storage path.
