@@ -19,7 +19,7 @@ class Scene
 {
 private:
   /** Data set */
-  std::unique_ptr<DefDataSet> m_set;
+  DefDataSet m_set;
 
   /** Draws data to file */
   std::unique_ptr<Drawer> m_drawer;

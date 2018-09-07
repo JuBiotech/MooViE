@@ -1,12 +1,13 @@
 #include <DataSet.h>
-#include <iostream>
 
 template<>
-  DataSet<double>*
+  void
   DataSet<double>::parse_from_csv (const std::string& cont,
 				   std::string separator, std::string comment,
 				   std::string newline)
   {
+    std::setlocale(LC_NUMERIC, "en_US.UTF-8");
+
     std::vector<DataColumn*> columns;
     const std::vector<std::string> & lines = Util::split (cont, newline);
 
@@ -80,20 +81,20 @@ template<>
     std::size_t num_outputs = i - num_inputs;
 
     // Add values from table body
-    for (std::size_t i = header_pos + 1; i < lines.size (); ++i)
+    for (std::size_t rowc = header_pos + 1; rowc < lines.size (); ++rowc)
       {
 	// Remove empty/comment lines
-	if (lines[i].find_first_not_of (' ') != std::string::npos
-	    || lines[i].find_first_of (comment)
-		!= lines[i].find_first_not_of (' ') + 1)
+	if (lines[rowc].find_first_not_of (' ') != std::string::npos
+	    || lines[rowc].find_first_of (comment)
+		!= lines[rowc].find_first_not_of (' ') + 1)
 	  {
-	    const std::vector<std::string> & cells = Util::split (lines[i], ",",
+	    const std::vector<std::string> & cells = Util::split (lines[rowc], ",",
 								  false);
 
 	    if (num_inputs + num_outputs != cells.size ())
 	      {
 		throw std::length_error (
-		    "Row " + std::to_string (i)
+		    "Row " + std::to_string (rowc)
 			+ " has an invalid count of cells" + "(expected: "
 			+ std::to_string (num_inputs + num_outputs)
 			+ ", given: " + std::to_string (cells.size ()) + ")");
@@ -137,12 +138,21 @@ template<>
 	  }
       }
 
-    std::vector<MockColumn> mock_columns;
-    mock_columns.reserve (columns.size ());
+    m_num_cols = columns.size ();
+    m_num_rows = columns[0]->cells.size ();
+    m_cols.reserve (m_num_cols);
     for (std::size_t i = 0; i < columns.size (); ++i)
       {
-	mock_columns.emplace_back (columns[i]);
+	m_cols.emplace_back (columns[i]);
       }
-    return new DataSet (mock_columns);
+
+    m_num_inputs = m_separator = num_inputs;
+    m_num_outputs = m_cols.size () - m_num_inputs;
+
+    m_rows.reserve (m_cols[0].size ());
+    for (std::size_t i = 0; i < m_cols[0].size (); ++i)
+      {
+	m_rows.push_back (DataRow (m_cols, m_num_cols, i));
+      }
   }
 
