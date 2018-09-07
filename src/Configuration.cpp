@@ -143,6 +143,8 @@ Configuration::Configuration (const std::string & fpath,
 			      const std::string & cpath) :
     m_input_file (fpath)
 {
+  std::setlocale(LC_NUMERIC, "en_US.UTF-8");
+
   std::string content = Util::read_file (cpath);
 
   for (std::string line : Util::split (content, "\n"))
