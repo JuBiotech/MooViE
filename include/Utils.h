@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <limits>
 #include <cmath>
+#include <unistd.h>
 
 namespace Util
 {
@@ -46,6 +47,18 @@ namespace Util
    */
   std::string
   strip (const std::string & str);
+
+  /** Returns the current working directory like getcwd.
+   *
+   * @return the current working directory
+   */
+  inline std::string
+  get_cwd (void)
+  {
+    char cwd[1000];
+    getcwd (cwd, sizeof(cwd));
+    return std::string (cwd);
+  }
 
   /** Compares to doubles for approximate equality
    * using |a - b| < machine_epsilon.
