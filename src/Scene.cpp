@@ -55,7 +55,7 @@ Scene::toggle_input (std::size_t index, bool mode)
   if (index >= m_set.input_variables ().size ())
     {
       throw std::out_of_range (
-	  "index " + std::to_string (index) + " exceeds input index range 0 to"
+	  "index " + std::to_string (index) + " exceeds input index range 0 to "
 	      + std::to_string (m_set.input_variables ().size ()));
     }
 
@@ -68,7 +68,7 @@ Scene::toggle_output (std::size_t index, bool mode)
   if (index >= m_set.output_variables ().size ())
     {
       throw std::out_of_range (
-	  "index " + std::to_string (index) + " exceeds output index range 0 to"
+	  "index " + std::to_string (index) + " exceeds output index range 0 to "
 	      + std::to_string (m_set.output_variables ().size ()));
     }
 
@@ -82,14 +82,14 @@ Scene::swap_inputs (std::size_t from_index, std::size_t to_index)
     {
       throw std::out_of_range (
 	  "from_index " + std::to_string (from_index)
-	      + " exceeds input index range 0 to"
+	      + " exceeds input index range 0 to "
 	      + std::to_string (m_set.input_variables ().size ()));
     }
   if (to_index >= m_set.input_variables ().size ())
     {
       throw std::out_of_range (
 	  "to_index " + std::to_string (to_index)
-	      + " exceeds input index range 0 to"
+	      + " exceeds input index range 0 to "
 	      + std::to_string (m_set.input_variables ().size ()));
     }
 
@@ -104,14 +104,14 @@ Scene::swap_outputs (std::size_t from_index, std::size_t to_index)
     {
       throw std::out_of_range (
 	  "from_index " + std::to_string (from_index)
-	      + " exceeds output index range 0 to"
+	      + " exceeds output index range 0 to "
 	      + std::to_string (m_set.output_variables ().size ()));
     }
   if (to_index >= m_set.output_variables ().size ())
     {
       throw std::out_of_range (
 	  "to_index " + std::to_string (to_index)
-	      + " exceeds input index range 0 to"
+	      + " exceeds input index range 0 to "
 	      + std::to_string (m_set.output_variables ().size ()));
     }
 
@@ -126,7 +126,7 @@ Scene::restrict_input (std::size_t index, double lower_restr,
   if (index >= m_set.output_variables ().size ())
     {
       throw std::out_of_range (
-	  "index " + std::to_string (index) + " exceeds input index range 0 to"
+	  "index " + std::to_string (index) + " exceeds input index range 0 to "
 	      + std::to_string (m_set.output_variables ().size ()));
     }
   if (upper_restr < lower_restr)
@@ -144,7 +144,7 @@ Scene::restrict_output (std::size_t index, double lower_restr,
   if (index >= m_set.output_variables ().size ())
     {
       throw std::out_of_range (
-	  "index " + std::to_string (index) + " exceeds output index range 0 to"
+	  "index " + std::to_string (index) + " exceeds output index range 0 to "
 	      + std::to_string (m_set.output_variables ().size ()));
     }
   if (upper_restr < lower_restr)
