@@ -493,7 +493,7 @@ template<typename T>
     void
     toggle_column (std::size_t c, bool mode)
     {
-      if (c >= m_num_cols)
+      if (c >= m_cols.size())
 	{
 	  throw std::out_of_range (
 	      "index exceeds range 0-" + std::to_string (m_num_cols - 1) + " ("
@@ -511,6 +511,19 @@ template<typename T>
 	  else
 	    {
 	      --m_num_outputs;
+	    }
+	}
+      else if (mode and not m_cols[c].is_enabled ())
+	{
+	  ++m_num_cols;
+
+	  if (m_cols[c].get_type () == ColumnType::INPUT)
+	    {
+	      ++m_num_inputs;
+	    }
+	  else
+	    {
+	      ++m_num_outputs;
 	    }
 	}
 
@@ -577,14 +590,26 @@ template<typename T>
 	}
     }
 
-    /** Returns the number of columns in this table.
+    /** Returns the number of active columns in this table. For every
+     * toggled-off column this size decreases by 1.
      *
-     * @return the number of columns
+     * @return the number of active columns
+     */
+    inline std::size_t
+    get_num_active_cols () const
+    {
+      return m_num_cols;
+    }
+
+    /** Returns the total number of columns in this table. This includes
+     * toggled-off columns.
+     *
+     * @return the number of total columns
      */
     inline std::size_t
     get_num_cols () const
     {
-      return m_num_cols;
+      return m_cols.size();
     }
 
     /** Returns the number of rows in this table.
@@ -597,24 +622,48 @@ template<typename T>
       return m_num_rows;
     }
 
-    /** Returns the number of inputs in this table.
+    /** Returns the number of active inputs in this table.
+     * For every toggled-off column this size decreases by 1.
      *
-     * @return the number of inputs
+     * @return the number of active inputs
      */
     inline std::size_t
-    get_num_inputs () const
+    get_num_active_inputs () const
     {
       return m_num_inputs;
     }
 
-    /** Returns the number of outputs in this table.
+    /** Returns the total number of inputs in this table. This includes
+     * toggled-off columns.
      *
-     * @return the number of outputs
+     * @return the total number of inputs
+     */
+    inline std::size_t
+    get_num_inputs () const
+    {
+      return m_separator;
+    }
+
+    /** Returns the number of outputs in this table. For every
+     * toggled-off column this size decreases by 1.
+     *
+     * @return the number of active outputs
+     */
+    inline std::size_t
+    get_num_active_outputs () const
+    {
+      return m_num_outputs;
+    }
+
+    /** Returns the total number of outputs in this table. This includes
+     * toggled-off columns.
+     *
+     * @return the total number of outputs
      */
     inline std::size_t
     get_num_outputs () const
     {
-      return m_num_outputs;
+      return m_cols.size() - m_separator;
     }
 
     /** Returns the row at position i in the table (starting at 0). DataRow can

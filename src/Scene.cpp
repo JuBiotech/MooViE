@@ -6,7 +6,7 @@ Scene::Scene () :
 	new CairoDrawer (Configuration::get_instance ().get_output_file (),
 			 Configuration::get_instance ().get_width (),
 			 Configuration::get_instance ().get_height (),
-			 m_set.input_variables ().size ())), m_grid (
+			 m_set.get_num_inputs ())), m_grid (
 	m_set.output_variables (),
 	angle_helper::deg_to_rad (
 	    360 - Configuration::get_instance ().get_output_angle_span () / 2),
@@ -27,10 +27,13 @@ Scene::Scene () :
     {
       throw std::out_of_range ("cannot have more than 20,000 data rows");
     }
-  if (m_set.get_num_rows() == 1)
+  if (m_set.get_num_rows () == 1)
     {
       throw std::out_of_range ("cannot have just one row");
     }
+
+  toggle_input(0, false);
+  //toggle_input(0, true);
 
   initialize ();
 
@@ -52,11 +55,11 @@ Scene::get_output_variables () const
 void
 Scene::toggle_input (std::size_t index, bool mode)
 {
-  if (index >= m_set.input_variables ().size ())
+  if (index >= m_set.get_num_inputs ())
     {
       throw std::out_of_range (
-	  "index " + std::to_string (index) + " exceeds input index range 0 to "
-	      + std::to_string (m_set.input_variables ().size ()));
+	  "index " + std::to_string (index) + " exceeds input index range [0, "
+	      + std::to_string (m_set.get_num_inputs ()) + ")");
     }
 
   m_set.toggle_column (index, mode);
@@ -65,69 +68,68 @@ Scene::toggle_input (std::size_t index, bool mode)
 void
 Scene::toggle_output (std::size_t index, bool mode)
 {
-  if (index >= m_set.output_variables ().size ())
+  if (index >= m_set.get_num_outputs ())
     {
       throw std::out_of_range (
-	  "index " + std::to_string (index) + " exceeds output index range 0 to "
-	      + std::to_string (m_set.output_variables ().size ()));
+	  "index " + std::to_string (index) + " exceeds output index range [0, "
+	      + std::to_string (m_set.get_num_outputs ()) + ")");
     }
 
-  m_set.toggle_column (index, mode);
+  m_set.toggle_column (index + m_set.get_num_inputs (), mode);
 }
 
 void
 Scene::swap_inputs (std::size_t from_index, std::size_t to_index)
 {
-  if (from_index >= m_set.input_variables ().size ())
+  if (from_index >= m_set.get_num_active_inputs ())
     {
       throw std::out_of_range (
 	  "from_index " + std::to_string (from_index)
-	      + " exceeds input index range 0 to "
-	      + std::to_string (m_set.input_variables ().size ()));
+	      + " exceeds input index range [0, "
+	      + std::to_string (m_set.get_num_active_inputs ()) + ")");
     }
-  if (to_index >= m_set.input_variables ().size ())
+  if (to_index >= m_set.get_num_active_inputs ())
     {
       throw std::out_of_range (
 	  "to_index " + std::to_string (to_index)
-	      + " exceeds input index range 0 to "
-	      + std::to_string (m_set.input_variables ().size ()));
+	      + " exceeds input index range [0, "
+	      + std::to_string (m_set.get_num_active_inputs ()) + ")");
     }
 
-  m_set.swap_columns (m_set.get_num_inputs () + from_index,
-		       m_set.get_num_inputs () + to_index);
+  m_set.swap_columns (from_index, to_index);
 }
 
 void
 Scene::swap_outputs (std::size_t from_index, std::size_t to_index)
 {
-  if (from_index >= m_set.output_variables ().size ())
+  if (from_index >= m_set.get_num_active_outputs ())
     {
       throw std::out_of_range (
 	  "from_index " + std::to_string (from_index)
-	      + " exceeds output index range 0 to "
-	      + std::to_string (m_set.output_variables ().size ()));
+	      + " exceeds output index range [0, "
+	      + std::to_string (m_set.get_num_active_outputs ()) + ")");
     }
-  if (to_index >= m_set.output_variables ().size ())
+  if (to_index >= m_set.get_num_active_outputs ())
     {
       throw std::out_of_range (
 	  "to_index " + std::to_string (to_index)
-	      + " exceeds input index range 0 to "
-	      + std::to_string (m_set.output_variables ().size ()));
+	      + " exceeds input index range [0, "
+	      + std::to_string (m_set.get_num_active_outputs ()) + ")");
     }
 
-  m_set.swap_columns (m_set.get_num_outputs () + from_index,
-		       m_set.get_num_outputs () + to_index);
+  m_set.swap_columns (from_index + m_set.get_num_active_inputs (),
+		      to_index + m_set.get_num_active_inputs ());
 }
 
 void
 Scene::restrict_input (std::size_t index, double lower_restr,
 		       double upper_restr)
 {
-  if (index >= m_set.output_variables ().size ())
+  if (index >= m_set.get_num_active_inputs ())
     {
       throw std::out_of_range (
-	  "index " + std::to_string (index) + " exceeds input index range 0 to "
-	      + std::to_string (m_set.output_variables ().size ()));
+	  "index " + std::to_string (index) + " exceeds input index range [0, "
+	      + std::to_string (m_set.get_num_active_outputs ()) + ")");
     }
   if (upper_restr < lower_restr)
     {
@@ -141,18 +143,19 @@ void
 Scene::restrict_output (std::size_t index, double lower_restr,
 			double upper_restr)
 {
-  if (index >= m_set.output_variables ().size ())
+  if (index >= m_set.get_num_active_outputs ())
     {
       throw std::out_of_range (
-	  "index " + std::to_string (index) + " exceeds output index range 0 to "
-	      + std::to_string (m_set.output_variables ().size ()));
+	  "index " + std::to_string (index) + " exceeds output index range [0, "
+	      + std::to_string (m_set.get_num_active_outputs ()) + ")");
     }
   if (upper_restr < lower_restr)
     {
       throw std::invalid_argument ("lower bound is bigger than upper bound");
     }
 
-  m_set.restrict_column (index, lower_restr, upper_restr);
+  m_set.restrict_column (index + m_set.get_num_active_inputs (), lower_restr,
+			 upper_restr);
 }
 
 void
@@ -204,6 +207,8 @@ Scene::draw_components (void)
 void
 Scene::initialize (void)
 {
+  m_drawer->set_num_inputs (m_set.get_num_active_inputs ());
+
   const Configuration & config = Configuration::get_instance ();
 
   // IOVectors of the later histogram

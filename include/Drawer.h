@@ -93,6 +93,12 @@ public:
   virtual void
   finish () = 0;
 
+  inline void
+  set_num_inputs (std::size_t num_inputs)
+  {
+    m_num_inputs = num_inputs;
+  }
+
 protected:
   /** Alters the surface of this Drawer in with, height and storage path.
    *
