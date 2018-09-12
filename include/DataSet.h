@@ -493,11 +493,11 @@ template<typename T>
     void
     toggle_column (std::size_t c, bool mode)
     {
-      if (c >= m_cols.size())
+      if (c >= m_cols.size ())
 	{
 	  throw std::out_of_range (
-	      "index exceeds range 0-" + std::to_string (m_num_cols - 1) + " ("
-		  + std::to_string (c) + " given)");
+	      "index exceeds range [0, " + std::to_string (m_num_cols)
+		  + "), given: " + std::to_string (c));
 	}
 
       if (not mode and m_cols[c].is_enabled ())
@@ -543,14 +543,14 @@ template<typename T>
       if (c0 >= m_num_cols)
 	{
 	  throw std::out_of_range (
-	      "index exceeds range 0-" + std::to_string (m_num_cols - 1) + " ("
-		  + std::to_string (c0) + " given)");
+	      "index exceeds range [0, " + std::to_string (m_num_cols)
+		  + "), given: " + std::to_string (c0));
 	}
       if (c1 >= m_num_cols)
 	{
 	  throw std::out_of_range (
-	      "index exceeds range 0-" + std::to_string (m_num_cols - 1) + " ("
-		  + std::to_string (c1) + " given)");
+	      "index exceeds range [0, " + std::to_string (m_num_cols)
+		  + "), given: " + std::to_string (c1));
 	}
 
       MockColumn::swap (m_cols[c0], m_cols[c1]);
@@ -571,8 +571,8 @@ template<typename T>
       if (c >= m_num_cols)
 	{
 	  throw std::out_of_range (
-	      "index exceeds range 0-" + std::to_string (m_num_cols - 1) + " ("
-		  + std::to_string (c) + " given)");
+	      "index exceeds range [0, " + std::to_string (m_num_cols)
+		  + "), given: " + std::to_string (c));
 	}
 
       for (DataRow& r : m_rows)
