@@ -167,7 +167,7 @@ Scene::update (void)
 	  Configuration::get_instance ().get_output_angle_span () / 2),
       Configuration::get_instance ().get_output_inner_radius (),
       Configuration::get_instance ().get_grid_size (),
-      Direction::COUNTER_CLOCKWISE);
+      Direction::CLOCKWISE);
 
   // Update DomainAxis and IOVectors
   m_axis.clear ();
