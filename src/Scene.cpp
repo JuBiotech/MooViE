@@ -178,7 +178,7 @@ Scene::update (void)
   m_drawer->change_surface (Configuration::get_instance ().get_output_file (),
 			    Configuration::get_instance ().get_width (),
 			    Configuration::get_instance ().get_height (),
-			    m_set.get_num_inputs ());
+			    m_set.get_num_active_inputs ());
 
   draw_components ();
 }
@@ -204,15 +204,13 @@ Scene::draw_components (void)
 void
 Scene::initialize (void)
 {
-  m_drawer->set_num_inputs (m_set.get_num_active_inputs ());
-
   const Configuration & config = Configuration::get_instance ();
 
   // IOVectors of the later histogram
   std::vector<std::vector<double>> histogram_values (m_set.get_num_inputs ());
 
   // Create DomainAxis' from DataSet's input variables
-  double angle = 180 / m_set.get_num_inputs ()
+  double angle = 180 / m_set.get_num_active_inputs ()
       - config.get_input_separation_angle ();
   double start = 90 + config.get_input_separation_angle () / 2, end = start
       + angle;
