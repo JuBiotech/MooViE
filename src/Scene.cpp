@@ -32,9 +32,6 @@ Scene::Scene () :
       throw std::out_of_range ("cannot have just one row");
     }
 
-  toggle_input(0, false);
-  //toggle_input(0, true);
-
   initialize ();
 
   draw_components ();
