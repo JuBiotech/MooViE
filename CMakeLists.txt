@@ -19,7 +19,7 @@ find_package (cairomm-1.0 REQUIRED)
 include_directories(${INCLUDE_DIR} "${INCLUDE_DIR}/thirdparty/tclap" ${FREETYPE2_INCLUDE_DIR} ${SIGCPP_CONFIG_DIR} ${SIGCPP_INCLUDE_DIR} ${CAIRO_INCLUDE_DIR} ${CAIROMM_CONFIG_DIR} ${CAIROMM_INCLUDE_DIR})
 
 # Build MooViE library
-add_library (libmoovie SHARED "")
+add_library (libmoovie STATIC "")
 target_sources(libmoovie PUBLIC "${SRC_DIR}/DataSet.cpp" "${SRC_DIR}/Scale.cpp" "${SRC_DIR}/Color.cpp" "${SRC_DIR}/Configuration.cpp" "${SRC_DIR}/OutputGrid.cpp" "${SRC_DIR}/IOVector.cpp" "${SRC_DIR}/CairoDrawer.cpp" "${SRC_DIR}/Scene.cpp" "${SRC_DIR}/Utils.cpp" "${SRC_DIR}/InputAxis.cpp")
 set_target_properties(libmoovie PROPERTIES OUTPUT_NAME moovie)
 install(FILES "${INCLUDE_DIR}/DataSet.h" "${INCLUDE_DIR}/Scale.h" "${INCLUDE_DIR}/Color.h" "${INCLUDE_DIR}/Configuration.h" "${INCLUDE_DIR}/OutputGrid.h" "${INCLUDE_DIR}/IOVector.h" "${INCLUDE_DIR}/CairoDrawer.h" "${INCLUDE_DIR}/Scene.h" "${INCLUDE_DIR}/Utils.h" "${INCLUDE_DIR}/InputAxis.h" "${INCLUDE_DIR}/Coordinates.h" "${INCLUDE_DIR}/DrawerProperties.h" "${INCLUDE_DIR}/Label.h" "${INCLUDE_DIR}/Mapper.h" "${INCLUDE_DIR}/TextProperties.h" "${INCLUDE_DIR}/Triangle.h" "${INCLUDE_DIR}/Drawer.h" DESTINATION /usr/include/moovie)
