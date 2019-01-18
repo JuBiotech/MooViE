@@ -1,0 +1,16 @@
+# explicit files
+status.py
+test/exe/*
+moovie
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+CMakeFiles
+
+# file patterns
+*.svg
+.*
+*.a
+
+# exceptions
+!.gitignore
