@@ -57,12 +57,33 @@ set (MOOVIE_INCLUDES
 )
 
 set (DESKTOP_SRC
+	${DESKTOP_SRC_DIR}/moovie-desktop.cpp
+	${DESKTOP_SRC_DIR}/MainWindow.cpp
+	${DESKTOP_SRC_DIR}/IOList.cpp
+	${DESKTOP_SRC_DIR}/IOListWidget.cpp
+	${DESKTOP_SRC_DIR}/ConfigurationDialog.cpp
+	${DESKTOP_SRC_DIR}/ConfIntWidget.cpp
+	${DESKTOP_SRC_DIR}/ConfDoubleWidget.cpp
+	${DESKTOP_SRC_DIR}/ConfStringWidget.cpp
 )
 
 set (DESKTOP_INCLUDES
+	${DESKTOP_INCLUDE_DIR}/MainWindow.h
+	${DESKTOP_INCLUDE_DIR}/IOList.h
+	${DESKTOP_INCLUDE_DIR}/IOListWidget.h
+	${DESKTOP_INCLUDE_DIR}/ConfigurationDialog.h
+	${DESKTOP_INCLUDE_DIR}/ConfIntWidget.h
+	${DESKTOP_INCLUDE_DIR}/ConfDoubleWidget.h
+	${DESKTOP_INCLUDE_DIR}/ConfStringWidget.h
 )
 
 set (UIS
+	${DESKTOP_UI_DIR}/MainWindow.ui
+	${DESKTOP_UI_DIR}/IOListWidget.ui
+	${DESKTOP_UI_DIR}/ConfigurationDialog.ui
+	${DESKTOP_UI_DIR}/ConfIntWidget.ui
+	${DESKTOP_UI_DIR}/ConfDoubleWidget.ui
+	${DESKTOP_UI_DIR}/ConfStringWidget.ui
 )
 
 
@@ -86,7 +107,6 @@ install (TARGETS moovie DESTINATION /usr/bin)
 
 
 # Build Qt4 application
-find_package (Qt4 REQUIRED)
 include (${QT_USE_FILE})
 add_definitions (${QT_DEFINITIONS})
 include_directories (${CMAKE_BINARY_DIR} ${DESKTOP_INCLUDE_DIR})
