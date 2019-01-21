@@ -2,6 +2,7 @@
 status.py
 test/exe/*
 moovie
+moovie-desktop
 CMakeCache.txt
 cmake_install.cmake
 Makefile
@@ -11,6 +12,7 @@ CMakeFiles
 *.svg
 .*
 *.a
+ui_*.h
 
 # exceptions
 !.gitignore
