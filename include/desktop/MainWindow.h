@@ -7,7 +7,6 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDropEvent>
-#include <thread>
 #include <Scene.h>
 #include <Configuration.h>
 #include <stdexcept>
