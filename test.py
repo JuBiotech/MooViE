@@ -10,6 +10,10 @@ ALL={"coordinates":"CoordinatesTest.cpp", "configuration":"ConfigurationTest.cpp
      "storage":"StorageElementsTest.cpp", "utilities":"UtilitiesTest.cpp", "graphical": "GraphicalElementsTest.cpp"}
 
 def execute_tests(test_v):
+    print "Making directory \"test/exe\"..."
+    os.system("mkdir -p test/exe")
+    
+    print "Building libsource.so..." 
     exit_val = os.system(r"g++ -std=c++11 -fPIC -shared " \
                   + "-I/home/IBT/stratmann/Dokumente/MooViE/include " \
                   + "-I/usr/include/cairomm-1.0/ -I/usr/lib/x86_64-linux-gnu/cairomm-1.0/include/ " \
@@ -22,19 +26,26 @@ def execute_tests(test_v):
     if exit_val != 0:
         exit("Exit due to compile time error")
         
+    print "Building and running tests..."
+        
+    failed = 0
     for option in test_v:
-        print "Running " + option + " test:"
+        print ">> " + option + ":",
         if os.system(r"g++ -std=c++11 -I/home/IBT/stratmann/Dokumente/MooViE/include " \
                   + "-L/home/IBT/stratmann/Dokumente/MooViE/test/exe/ " \
                   + "-L/largestorage/cluster_root/usr/lib/x86_64-linux-gnu/ -o " \
                   + EXEDIR + EXEPRE + option + " " \
                   + TESTDIR + ALL[option] \
                   + " -lsource " + "-lboost_unit_test_framework" ) == 0:
-            os.system(r"LD_LIBRARY_PATH=/largestorage/cluster_root/usr/lib/x86_64-linux-gnu/" \
+            if os.system(r"LD_LIBRARY_PATH=/largestorage/cluster_root/usr/lib/x86_64-linux-gnu/" \
                   + ":/home/IBT/stratmann/Dokumente/MooViE/test/exe/ ./" \
-                  + EXEDIR + EXEPRE + option)
-            #os.system(r"rm " + EXEDIR + EXEPRE + option)
-            print "\n"
+                  + EXEDIR + EXEPRE + option + " > " + EXEDIR + option + ".log 2>&1") == 0:
+                print "success"
+            else:
+                failed += 1
+                print "failure"
+            
+    return failed
     
 if __name__=='__main__':
     if len(sys.argv) > 1:
@@ -55,6 +66,10 @@ if __name__=='__main__':
                 test_vector.append(sys.argv[i])
 
         if not abort:
-            execute_tests(test_vector)
+            failed = execute_tests(test_vector)
+            if failed == 0:
+                print "=== All tests were passed"
+            else:
+                print "=== " + str(failed) + " tests were not passed"
     else:
         print "Need option to execute"
