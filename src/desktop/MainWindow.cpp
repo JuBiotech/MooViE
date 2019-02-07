@@ -25,10 +25,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->inputs_scr->setWidget(input_list);
     ui->outputs_scr->setWidget(output_list);
-
-    // For Debugging
-    ui->input_file_txt->setText("/home/IBT/stratmann/Dokumente/MooViE/test/files/input2.csv");
-    ui->output_file_txt->setText("/home/IBT/stratmann/Desktop/image.svg");
 }
 
 
