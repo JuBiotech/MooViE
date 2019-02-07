@@ -10,6 +10,7 @@
 #include <Scene.h>
 #include <Configuration.h>
 #include <stdexcept>
+#include <memory>
 #include <IOList.h>
 #include <IOListWidget.h>
 #include <ConfigurationDialog.h>
@@ -35,13 +36,16 @@ private slots:
 
     void on_actionConfiguration_triggered();
 
+    void on_actionUser_Manual_triggered();
+
+    void on_actionAbout_triggered();
+
 private:
     Ui::MainWindow *ui;
     QWebView* pic;
     IOList* input_list, * output_list;
 
-    bool cfg_init;
-    Scene* scene;
+    std::unique_ptr<Scene> scene;
 };
 
 #endif // MAINWINDOW_H

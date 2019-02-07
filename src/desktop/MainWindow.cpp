@@ -5,7 +5,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     pic(new QWebView(this)),
-    cfg_init(false),
     scene(nullptr)
 {
     ui->setupUi(this);
@@ -25,13 +24,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->inputs_scr->setWidget(input_list);
     ui->outputs_scr->setWidget(output_list);
+
+    Configuration::initialize("");
 }
 
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    if (scene) delete scene;
 }
 
 void MainWindow::on_input_file_btn_clicked()
@@ -43,7 +43,7 @@ void MainWindow::on_input_file_btn_clicked()
                 tr(""),
                 tr("CSV (*.csv)")
                 );
-    if (!fpath.isEmpty())
+    if (not fpath.isEmpty())
     {
         ui->input_file_txt->setText(fpath);
     }
@@ -70,18 +70,10 @@ void MainWindow::on_execute_btn_clicked()
             output_loc = ui->output_file_txt->text();
     if (!input_loc.isEmpty() && !output_loc.isEmpty())
     {
-        if (!cfg_init)
-        {
-            Configuration::initialize(input_loc.toStdString());
-            Configuration::get_instance().set_output_file(output_loc.toStdString());
-            cfg_init = true;
-        }
-
         Configuration& conf = Configuration::get_instance();
         if (conf.get_input_file() != input_loc.toStdString())
         {
-        	delete scene;
-        	scene = nullptr;
+        	scene.reset();
 
         	input_list->clear();
         	output_list->clear();
@@ -94,7 +86,7 @@ void MainWindow::on_execute_btn_clicked()
         {
             if (scene == nullptr)
             {
-                scene = new Scene;
+                scene.reset(new Scene);
 
                 std::vector<DefVariable> ivars = scene->get_input_variables(),
                         ovars = scene->get_output_variables();
@@ -206,18 +198,19 @@ void MainWindow::on_execute_btn_clicked()
 
 void MainWindow::on_actionConfiguration_triggered()
 {
-  try
-  {
-    ConfigurationDialog dialog;
-    dialog.setWindowTitle("Edit Configuration");
-    dialog.exec();
-  } catch (std::bad_function_call& e)
-  {
-    QMessageBox msg_box;
+  ConfigurationDialog dialog;
+  dialog.setWindowTitle("Edit Configuration");
+  dialog.exec();
+}
 
-    msg_box.setWindowTitle("Configuration loading error");
-    msg_box.setText("Configuration was not initialized, run execute before trying to edit it.");
-    msg_box.setStandardButtons(QMessageBox::Ok);
-    msg_box.exec();
-  }
+void MainWindow::on_actionUser_Manual_triggered()
+{
+
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+	QMessageBox::about(this,"About", "MooViE version 1.0 -- GPL-licensed, 2019\n"
+			"Anton Stratmann (a.stratmann@fz-juelich.de)");
+
 }
