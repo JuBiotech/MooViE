@@ -25,13 +25,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->inputs_scr->setWidget(input_list);
     ui->outputs_scr->setWidget(output_list);
+
+    // For Debugging
+    ui->input_file_txt->setText("/home/IBT/stratmann/Dokumente/MooViE/test/files/input2.csv");
+    ui->output_file_txt->setText("/home/IBT/stratmann/Desktop/image.svg");
 }
 
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete scene;
+    if (scene) delete scene;
 }
 
 void MainWindow::on_input_file_btn_clicked()
@@ -76,11 +80,19 @@ void MainWindow::on_execute_btn_clicked()
             Configuration::get_instance().set_output_file(output_loc.toStdString());
             cfg_init = true;
         }
-        else
+
+        Configuration& conf = Configuration::get_instance();
+        if (conf.get_input_file() != input_loc.toStdString())
         {
-            Configuration::get_instance().set_input_file(input_loc.toStdString());
-            Configuration::get_instance().set_output_file(output_loc.toStdString());
+        	delete scene;
+        	scene = nullptr;
+
+        	input_list->clear();
+        	output_list->clear();
+
+        	conf.set_input_file(input_loc.toStdString());
         }
+        conf.set_output_file(output_loc.toStdString());
 
         try
         {
@@ -113,10 +125,11 @@ void MainWindow::on_execute_btn_clicked()
             {
                 if (input_list->is_dirty())
                 {
-                    const QList<IOList::Swap>& swaps = input_list->get_swaps();
+                    const std::vector<IOList::Swap>& swaps = input_list->get_swaps();
 
-                    for (int i = 0; i < swaps.count(); ++i)
+                    for (int i = 0; i < swaps.size(); ++i)
                     {
+                    	std::cout << "Swapped " << swaps[i].before_pos << " with " << swaps[i].after_pos << std::endl;
                         scene->swap_inputs(static_cast<std::size_t>(swaps[i].before_pos),
                                            static_cast<std::size_t>(swaps[i].after_pos));
                     }
@@ -141,10 +154,11 @@ void MainWindow::on_execute_btn_clicked()
 
                 if (output_list->is_dirty())
                 {
-                    QList<IOList::Swap> swaps = output_list->get_swaps();
+                    const std::vector<IOList::Swap>& swaps = output_list->get_swaps();
 
-                    for (int i = 0; i < swaps.count(); ++i)
+                    for (int i = 0; i < swaps.size(); ++i)
                     {
+                    	std::cout << "Swapped " << swaps[i].before_pos << " with " << swaps[i].after_pos << std::endl;
                         scene->swap_outputs(static_cast<std::size_t>(swaps[i].before_pos),
                                            static_cast<std::size_t>(swaps[i].after_pos));
                     }

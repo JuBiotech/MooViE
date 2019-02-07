@@ -3,9 +3,8 @@
 
 #include <QListWidget>
 #include <QDropEvent>
-#include <QDragLeaveEvent>
-#include <QList>
-#include <iostream>
+#include <QMouseEvent>
+#include <vector>
 #include <IOListWidget.h>
 
 class IOList : public QListWidget
@@ -15,17 +14,20 @@ public:
     {
         int before_pos;
         int after_pos;
+
+        Swap (int before_pos_, int after_pos_)
+        : before_pos (before_pos_), after_pos (after_pos_) {}
     };
 
 private:
-    QList<Swap> swaps;
+    std::vector<Swap> swaps;
     int before_pos;
     bool dirty;
 
 public:
     IOList ();
 
-    inline const QList<Swap>& get_swaps() const
+    inline const std::vector<Swap>& get_swaps() const
     {
         return swaps;
     }
@@ -41,7 +43,7 @@ public:
         dirty = false;
     }
 
-    virtual void dragLeaveEvent(QDragLeaveEvent* event);
+    virtual void mousePressEvent(QMouseEvent* event);
 
     virtual void dropEvent(QDropEvent* event);
 };

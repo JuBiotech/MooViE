@@ -4,15 +4,15 @@ IOList::IOList()
     : QListWidget(), before_pos(0), dirty(false)
 {}
 
-void IOList::dragLeaveEvent(QDragLeaveEvent* event)
+void IOList::mousePressEvent(QMouseEvent* event)
 {
-    QListWidget::dragLeaveEvent(event);
+    QListWidget::mousePressEvent(event);
 
-    IOListWidget* sel = dynamic_cast<IOListWidget*>(this->itemWidget(this->currentItem()));
+    IOListWidget* selected = dynamic_cast<IOListWidget*>(this->itemWidget(this->currentItem()));
     for (int i = 0; i < this->count(); ++i)
     {
-        IOListWidget* wid = dynamic_cast<IOListWidget*>(this->itemWidget(this->item(i)));
-        if (wid->get_name().compare(sel->get_name()) == 0)
+        IOListWidget* widget = dynamic_cast<IOListWidget*>(this->itemWidget(this->item(i)));
+        if (widget->get_name().compare(selected->get_name()) == 0)
         {
             before_pos = i;
             return;
@@ -22,22 +22,30 @@ void IOList::dragLeaveEvent(QDragLeaveEvent* event)
 
 void IOList::dropEvent(QDropEvent* event)
 {
-    QListWidget::dropEvent(event);
+    IOListWidget* selected = dynamic_cast<IOListWidget*>(this->itemWidget(this->currentItem()));
 
-    IOListWidget* chng = dynamic_cast<IOListWidget*>(this->itemWidget(this->itemAt(event->pos())));
+    if (selected)
+    {
+    	QListWidget::dropEvent(event);
+    }
+    else
+    {
+    	return;
+    }
+
     for (int i = 0; i < this->count(); ++i)
     {
-        IOListWidget* wid = dynamic_cast<IOListWidget*>(this->itemWidget(this->item(i)));
-        if (wid->get_name().compare(chng->get_name()) == 0)
+        IOListWidget* widget = dynamic_cast<IOListWidget*>(this->itemWidget(this->item(i)));
+        if (widget->get_name().compare(selected->get_name()) == 0)
         {
             if (before_pos < i)
             {
                 int pos = before_pos;
 
-                swaps.push_back(Swap{before_pos, ++pos});
+                swaps.emplace_back(before_pos, ++pos);
                 while (pos < i)
                 {
-                    swaps.push_back(Swap{pos, pos + 1});
+                    swaps.emplace_back(pos, pos + 1);
                     ++pos;
                 }
                 dirty = true;
@@ -46,17 +54,15 @@ void IOList::dropEvent(QDropEvent* event)
             {
                 int pos = before_pos;
 
-                swaps.push_back(Swap{before_pos, --pos});
+                swaps.emplace_back(before_pos, --pos);
                 while (pos > i)
                 {
-                    swaps.push_back(Swap{pos, pos - 1});
+                    swaps.emplace_back(pos, pos - 1);
                     --pos;
                 }
                 dirty = true;
             }
-            else {
-                swaps.pop_front();
-            }
+
             return;
         }
     }
