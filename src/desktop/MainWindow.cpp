@@ -196,21 +196,9 @@ void MainWindow::on_execute_btn_clicked()
     }
 }
 
-void MainWindow::on_actionConfiguration_triggered()
+void MainWindow::on_config_btn_clicked()
 {
   ConfigurationDialog dialog;
   dialog.setWindowTitle("Edit Configuration");
   dialog.exec();
-}
-
-void MainWindow::on_actionUser_Manual_triggered()
-{
-
-}
-
-void MainWindow::on_actionAbout_triggered()
-{
-	QMessageBox::about(this,"About", "MooViE version 1.0 -- GPL-licensed, 2019\n"
-			"Anton Stratmann (a.stratmann@fz-juelich.de)");
-
 }

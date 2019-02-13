@@ -28,17 +28,14 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_execute_btn_clicked();
 
     void on_input_file_btn_clicked();
 
     void on_output_file_btn_clicked();
 
-    void on_actionConfiguration_triggered();
+    void on_execute_btn_clicked();
 
-    void on_actionUser_Manual_triggered();
-
-    void on_actionAbout_triggered();
+    void on_config_btn_clicked();
 
 private:
     Ui::MainWindow *ui;
