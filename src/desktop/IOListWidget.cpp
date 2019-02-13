@@ -8,10 +8,15 @@ IOListWidget::IOListWidget(const DefVariable& var, QWidget *parent) :
     ui->setupUi(this);
 
     ui->io_name_lbl->setText(QString::fromStdString(var.name));
+
     ui->toggle_rbtn->setChecked(true);
+
+    double max = std::numeric_limits<double>::max();
+    ui->lower_dbox->setRange(-max, max);
     ui->lower_dbox->setDecimals(5);
-    ui->upper_dbox->setDecimals(5);
     ui->lower_dbox->setValue(var.min);
+    ui->upper_dbox->setRange(-max, max);
+    ui->upper_dbox->setDecimals(5);
     ui->upper_dbox->setValue(var.max);
 
     toggle_dirty = false;
