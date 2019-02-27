@@ -287,11 +287,16 @@ CairoDrawer::draw_io_vector (const IOVector& iov)
   double connector_distance = (iov[connector_pos + 1].coord.radius ()
       - from.coord.radius ()) * 0.1
       + Configuration::get_instance ().get_output_thickness ();
-  draw_line (
-      from.coord,
-      Polar (iov[connector_pos + 1].coord.radius () + connector_distance,
-	     iov[connector_pos + 1].coord.angle ()),
-      from.prop);
+	if (iov.size() > connector_pos + 2)
+	{
+		draw_line(from.coord,
+				get_connector_start(iov[connector_pos + 1].coord,
+						iov[connector_pos + 2].coord), from.prop);
+	}
+	else
+	{
+		draw_line(from.coord, iov[connector_pos + 1].coord, from.prop);
+	}
   draw_arrow (from.coord, from.prop);
 
   // Draw connector on OutputGrid
@@ -445,11 +450,11 @@ CairoDrawer::draw_connector (const Polar& from, const Polar& to,
   cairo_context->set_identity_matrix ();
   cairo_context->begin_new_path ();
 
-  // Only use 0.2 as distance factor
+  // Calculate distance factor
   static const double dist_factor = (1
       - Configuration::get_instance ().get_connector_arc_ratio ()) / 2;
 
-  // Calculate to intermediate coordinates to draw the arc from
+  // Calculate intermediate coordinates to draw the arc from
   double radial_dist = to.radius () - from.radius ();
   Polar curve_begin
     { from.radius () + dist_factor * radial_dist, from.angle () };
