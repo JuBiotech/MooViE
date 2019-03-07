@@ -95,15 +95,12 @@ include_directories (${MOOVIE_INCLUDE_DIR} ${MOOVIE_INCLUDE_DIR}/thirdparty/tcla
 add_library (libmoovie STATIC "")
 target_sources (libmoovie PUBLIC ${MOOVIE_SRC})
 set_target_properties (libmoovie PROPERTIES OUTPUT_NAME moovie)
-install (FILES ${MOOVIE_INCLUDES} DESTINATION /usr/include/moovie)
-install (TARGETS libmoovie DESTINATION /usr/lib)
 
 
 # Build MooViE executable
 add_executable (moovie ${MOOVIE_SRC_DIR}/moovie.cpp)
 add_dependencies (moovie libmoovie)
 target_link_libraries (moovie PUBLIC libmoovie ${CAIRO_LIBRARY_LOC} ${CAIROMM_LIBRARY_LOC})
-install (TARGETS moovie DESTINATION /usr/bin)
 
 
 # Build Qt4 application
@@ -116,3 +113,11 @@ QT4_WRAP_CPP (MOC_SRCS ${DESKTOP_INCLUDES})
 
 add_executable (moovie-desktop ${DESKTOP_SRC} ${MOC_SRCS} ${UI_HEADERS})
 target_link_libraries (moovie-desktop ${QT_LIBRARIES} Qt4::QtGui Qt4::QtWebKit libmoovie ${CAIRO_LIBRARY_LOC} ${CAIROMM_LIBRARY_LOC})
+
+
+# Installation
+install (FILES ${MOOVIE_INCLUDES} DESTINATION /usr/include/moovie)
+install (TARGETS libmoovie DESTINATION /usr/lib)
+install (TARGETS moovie-desktop DESTINATION /usr/bin)
+install (FILES moovie.png DESTINATION /usr/share/pixmaps)
+install (FILES moovie.desktop DESTINATION /usr/share/applications)

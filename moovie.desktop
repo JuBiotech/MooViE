@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=MooViE
+Exec=/usr/bin/moovie-desktop
+Icon=/usr/share/pixmaps/moovie.png
+Terminal=false
+Type=Application
