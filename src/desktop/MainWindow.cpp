@@ -39,7 +39,7 @@ void MainWindow::on_input_file_btn_clicked()
     static const QString filter = tr("CSV (*.csv");
     QString fpath = QFileDialog::getOpenFileName(
                 this,
-                tr("Choose output file"),
+                tr("Choose input file"),
                 tr(""),
                 tr("CSV (*.csv)")
                 );
@@ -52,7 +52,7 @@ void MainWindow::on_input_file_btn_clicked()
 void MainWindow::on_output_file_btn_clicked()
 {
     static const QString filter = tr("SVG (*.svg");
-    QString fpath = QFileDialog::getOpenFileName(
+    QString fpath = QFileDialog::getSaveFileName(
                 this,
                 "Choose output file",
                 "",
