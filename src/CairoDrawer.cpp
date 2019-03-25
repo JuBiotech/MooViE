@@ -60,7 +60,7 @@ CairoDrawer::draw_output_grid (const OutputGrid& grid)
   // Draw ring with colored segments which are used to color and distinguish the connectors
   draw_segment_axis (
       grid.get_radius (),
-      conf.get_input_thickness (),
+      conf.get_output_thickness (),
       grid.get_start (),
       grid.get_end (),
       DrawerProperties<std::array<Color, 10>> (1, Color::BLACK,
@@ -68,8 +68,8 @@ CairoDrawer::draw_output_grid (const OutputGrid& grid)
       grid.get_direction ());
 
   // Calculate the inner and outer radius of the OutputGrid
-  double min_radius = grid.get_radius () + conf.get_input_thickness ();
-  double max_radius = grid.get_radius () + conf.get_input_thickness ()
+  double min_radius = grid.get_radius () + conf.get_output_thickness ();
+  double max_radius = grid.get_radius () + conf.get_output_thickness ()
       + grid.get_height ();
 
   // Radian distance (absolute!) between start and end angle
@@ -103,7 +103,7 @@ CairoDrawer::draw_output_grid (const OutputGrid& grid)
   Label first_label (grid.get_var (0).name, name_prop);
   Cairo::TextExtents extends = get_text_extents(first_label);
   draw_output_label (first_label, max_radius,
-		     grid.get_radius () + conf.get_input_thickness () / 2,
+		     grid.get_radius () + conf.get_output_thickness () / 2,
 		     grid.get_end (),
 		     M_PI_2);
 
