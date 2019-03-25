@@ -319,11 +319,12 @@ CairoDrawer::draw_io_vector (const IOVector& iov)
 
 void
 CairoDrawer::change_surface (const std::string& fpath, int width, int height,
-			     std::size_t _num_inputs)
+			     std::size_t num_inputs_)
 {
   finish ();
   set_surface (fpath, width, height);
-  m_num_inputs = _num_inputs;
+  m_coord_converter = CoordinateConverter(width, height);
+  m_num_inputs = num_inputs_;
 }
 
 void
@@ -890,7 +891,7 @@ CairoDrawer::get_text_extents (const Label& label) const
 void
 CairoDrawer::set_surface (const std::string& fpath, int width, int height)
 {
-  const Cairo::RefPtr<Cairo::Surface> ptr = Cairo::SvgSurface::create (fpath,
+  Cairo::RefPtr<Cairo::Surface> ptr = Cairo::SvgSurface::create (fpath,
 								       width,
 								       height);
   cairo_context = Cairo::Context::create (ptr);

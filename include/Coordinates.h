@@ -559,9 +559,9 @@ class CoordinateConverter
 {
 private:
   /** Width and height of the coordinate system */
-  const size_t m_width, m_height;
+  size_t m_width, m_height;
   /** Center coordinate of the coordinate system */
-  const double m_center_x, m_center_y;
+  double m_center_x, m_center_y;
 public:
   /** Creates a new coordinate system with given width and height.
    * The center coordinate is at (width / 2, height / 2).
