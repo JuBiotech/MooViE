@@ -34,13 +34,10 @@ template<typename T>
     {
       /** Minimal value */
       T min;
-
       /** Maximal value */
       T max;
-
       /** Variable name */
       std::string name;
-
       /** Unit of the Variables values */
       std::string unit;
 
@@ -132,7 +129,7 @@ template<typename T>
        * @param _column the DataColumn
        */
       MockColumn (DataColumn* column) :
-	  m_column (column), m_enabled (true)
+	  m_column (column), m_var (column->var), m_enabled (true)
       {
       }
 
@@ -146,6 +143,13 @@ template<typename T>
       operator[] (std::size_t i) const
       {
 	return m_column->cells[i];
+      }
+
+      void
+	  set_range (double l_restr, double u_restr)
+      {
+    m_var.min = l_restr;
+    m_var.max = u_restr;
       }
 
       /** Sets the enabled flag of this MockColumn to the specified
@@ -177,7 +181,7 @@ template<typename T>
       Variable
       get_var () const
       {
-	return m_column->var;
+	return m_var;
       }
 
       /** Returns the size of this MockColumn.
@@ -213,6 +217,8 @@ template<typename T>
     private:
       /** A shared pointer which points to the actual m_column */
       std::shared_ptr<DataColumn> m_column;
+      /** Variable range header information */
+      Variable m_var;
       /** The enabled flag */
       bool m_enabled;
     };
@@ -575,6 +581,7 @@ template<typename T>
 		  + "), given: " + std::to_string (c));
 	}
 
+      m_cols[c].set_range (l_restr, u_restr);
       for (DataRow& r : m_rows)
 	{
 	  if (r[c].value < l_restr || r[c].value > u_restr)
