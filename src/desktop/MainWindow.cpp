@@ -120,7 +120,6 @@ void MainWindow::on_execute_btn_clicked()
 
                     for (int i = 0; i < swaps.size(); ++i)
                     {
-                    	std::cout << "Swapped " << swaps[i].before_pos << " with " << swaps[i].after_pos << std::endl;
                         scene->swap_inputs(static_cast<std::size_t>(swaps[i].before_pos),
                                            static_cast<std::size_t>(swaps[i].after_pos));
                     }
@@ -149,7 +148,6 @@ void MainWindow::on_execute_btn_clicked()
 
                     for (int i = 0; i < swaps.size(); ++i)
                     {
-                    	std::cout << "Swapped " << swaps[i].before_pos << " with " << swaps[i].after_pos << std::endl;
                         scene->swap_outputs(static_cast<std::size_t>(swaps[i].before_pos),
                                            static_cast<std::size_t>(swaps[i].after_pos));
                     }
@@ -182,7 +180,7 @@ void MainWindow::on_execute_btn_clicked()
         {
             QMessageBox msg_box;
 
-            msg_box.setWindowTitle("MooViE execution error");
+            msg_box.setWindowTitle("MooViE execution failed");
             msg_box.setText(e.what());
             msg_box.setStandardButtons(QMessageBox::Ok);
             msg_box.exec();
@@ -192,7 +190,7 @@ void MainWindow::on_execute_btn_clicked()
     {
         QMessageBox msg_box;
 
-        msg_box.setWindowTitle("Missing information error");
+        msg_box.setWindowTitle("Missing information");
         msg_box.setText("Input or output file box are empty");
         msg_box.setStandardButtons(QMessageBox::Ok);
         msg_box.exec();
