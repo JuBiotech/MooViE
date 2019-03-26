@@ -39,13 +39,16 @@ void MainWindow::on_input_file_btn_clicked()
     static const QString filter = tr("CSV (*.csv");
     QString fpath = QFileDialog::getOpenFileName(
                 this,
-                tr("Choose input file"),
-                tr(""),
-                tr("CSV (*.csv)")
+                "Choose input file",
+                ui->input_file_txt->text(),
+                "CSV (*.csv)"
                 );
     if (not fpath.isEmpty())
     {
         ui->input_file_txt->setText(fpath);
+
+        QStringList split_list = fpath.split(QRegExp("csv$"));
+        ui->output_file_txt->setText(split_list[0] + "svg");
     }
 }
 
@@ -55,8 +58,8 @@ void MainWindow::on_output_file_btn_clicked()
     QString fpath = QFileDialog::getSaveFileName(
                 this,
                 "Choose output file",
-                "",
-                tr("SVG (*.svg)")
+                ui->output_file_txt->text(),
+				"SVG (*.svg)"
                 );
     if (!fpath.isEmpty())
     {
@@ -117,7 +120,6 @@ void MainWindow::on_execute_btn_clicked()
 
                     for (int i = 0; i < swaps.size(); ++i)
                     {
-                    	std::cout << "Swapped " << swaps[i].before_pos << " with " << swaps[i].after_pos << std::endl;
                         scene->swap_inputs(static_cast<std::size_t>(swaps[i].before_pos),
                                            static_cast<std::size_t>(swaps[i].after_pos));
                     }
@@ -146,7 +148,6 @@ void MainWindow::on_execute_btn_clicked()
 
                     for (int i = 0; i < swaps.size(); ++i)
                     {
-                    	std::cout << "Swapped " << swaps[i].before_pos << " with " << swaps[i].after_pos << std::endl;
                         scene->swap_outputs(static_cast<std::size_t>(swaps[i].before_pos),
                                            static_cast<std::size_t>(swaps[i].after_pos));
                     }
@@ -179,7 +180,7 @@ void MainWindow::on_execute_btn_clicked()
         {
             QMessageBox msg_box;
 
-            msg_box.setWindowTitle("MooViE execution error");
+            msg_box.setWindowTitle("MooViE execution failed");
             msg_box.setText(e.what());
             msg_box.setStandardButtons(QMessageBox::Ok);
             msg_box.exec();
@@ -189,7 +190,7 @@ void MainWindow::on_execute_btn_clicked()
     {
         QMessageBox msg_box;
 
-        msg_box.setWindowTitle("Missing information error");
+        msg_box.setWindowTitle("Missing information");
         msg_box.setText("Input or output file box are empty");
         msg_box.setStandardButtons(QMessageBox::Ok);
         msg_box.exec();
