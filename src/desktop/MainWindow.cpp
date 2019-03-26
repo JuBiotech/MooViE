@@ -47,8 +47,11 @@ void MainWindow::on_input_file_btn_clicked()
     {
         ui->input_file_txt->setText(fpath);
 
-        QStringList split_list = fpath.split(QRegExp("csv$"));
-        ui->output_file_txt->setText(split_list[0] + "svg");
+        if (ui->output_file_txt->text().isEmpty())
+        {
+        	QStringList split_list = fpath.split(QRegExp("csv$"));
+        	ui->output_file_txt->setText(split_list[0] + "svg");
+        }
     }
 }
 
