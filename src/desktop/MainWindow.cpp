@@ -39,13 +39,16 @@ void MainWindow::on_input_file_btn_clicked()
     static const QString filter = tr("CSV (*.csv");
     QString fpath = QFileDialog::getOpenFileName(
                 this,
-                tr("Choose input file"),
-                tr(""),
-                tr("CSV (*.csv)")
+                "Choose input file",
+                ui->input_file_txt->text(),
+                "CSV (*.csv)"
                 );
     if (not fpath.isEmpty())
     {
         ui->input_file_txt->setText(fpath);
+
+        QStringList split_list = fpath.split(QRegExp("csv$"));
+        ui->output_file_txt->setText(split_list[0] + "svg");
     }
 }
 
@@ -55,8 +58,8 @@ void MainWindow::on_output_file_btn_clicked()
     QString fpath = QFileDialog::getSaveFileName(
                 this,
                 "Choose output file",
-                "",
-                tr("SVG (*.svg)")
+                ui->output_file_txt->text(),
+				"SVG (*.svg)"
                 );
     if (!fpath.isEmpty())
     {
