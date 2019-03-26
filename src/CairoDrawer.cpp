@@ -13,14 +13,15 @@ const double CairoDrawer::END_RADIUS_MAJOR_FACTOR = 0.25,
 const double CairoDrawer::DATA_LINK_LINE_WIDTH = 0.1,
     CairoDrawer::CONNECTOR_ARROW_HEIGHT = 3;
 
-const double CairoDrawer::RADIUS_LABEL_DELTA = 5,
-    CairoDrawer::RADIUS_HISTOGRAM_DELTA = 10, CairoDrawer::CONNECTOR_DELTA = 10,
+const double CairoDrawer::RADIUS_HISTOGRAM_DELTA = 5, CairoDrawer::CONNECTOR_DELTA = 10,
     CairoDrawer::TEXT_DELTA = 0.01, CairoDrawer::ANGLE_DELTA_SMALL = 0.001,
     CairoDrawer::ANGLE_DELTA_MEDIUM = 0.01,
     CairoDrawer::ANGLE_DELTA_LARGE = 0.1, CairoDrawer::RADIUS_DELTA = 10,
     CairoDrawer::OUTPUT_EXTREME_RADIUS_DELTA = 2,
     CairoDrawer::OUTPUT_LABEL_LINE_END_DELTA = 3,
-    CairoDrawer::OUTPUT_LABEL_RADIUS_DELTA = 7;
+    CairoDrawer::OUTPUT_LABEL_FONT_FACTOR = 0.1,
+	CairoDrawer::INPUT_AXIS_FONT_FACTOR = 0.025,
+	CairoDrawer::INPUT_TICK_FONT_FACTOR = 0.3;
 
 const CairoDrawer::TextAlignment CairoDrawer::TextAlignment::LEFT (1),
     CairoDrawer::TextAlignment::HALF_LEFT (0.75),
@@ -59,7 +60,7 @@ CairoDrawer::draw_output_grid (const OutputGrid& grid)
   // Draw ring with colored segments which are used to color and distinguish the connectors
   draw_segment_axis (
       grid.get_radius (),
-      conf.get_input_thickness (),
+      conf.get_output_thickness (),
       grid.get_start (),
       grid.get_end (),
       DrawerProperties<std::array<Color, 10>> (1, Color::BLACK,
@@ -67,8 +68,8 @@ CairoDrawer::draw_output_grid (const OutputGrid& grid)
       grid.get_direction ());
 
   // Calculate the inner and outer radius of the OutputGrid
-  double min_radius = grid.get_radius () + conf.get_input_thickness ();
-  double max_radius = grid.get_radius () + conf.get_input_thickness ()
+  double min_radius = grid.get_radius () + conf.get_output_thickness ();
+  double max_radius = grid.get_radius () + conf.get_output_thickness ()
       + grid.get_height ();
 
   // Radian distance (absolute!) between start and end angle
@@ -97,16 +98,18 @@ CairoDrawer::draw_output_grid (const OutputGrid& grid)
   double y_dist = grid.get_height ()
       / (grid.get_num_outputs () - COORDGRID_ADJUSTMENT);
 
-  const MultiScale& scale = grid.get_scale ();
-
   // Draw the description of the first output
-  static TextProperties name_prop ("Liberation Serif", 6, Color::BLACK, true,
-				   false);
-
-  draw_output_label (Label (grid.get_var (0).name, name_prop), max_radius,
-		     grid.get_radius () + conf.get_input_thickness () / 2,
+  const TextProperties& name_prop = conf.get_prop_axis_label();
+  Label first_label (grid.get_var (0).name, name_prop);
+  Cairo::TextExtents extends = get_text_extents(first_label);
+  draw_output_label (first_label, max_radius,
+		     grid.get_radius () + conf.get_output_thickness () / 2,
 		     grid.get_end (),
 		     M_PI_2);
+
+  const MultiScale& scale = grid.get_scale ();
+
+  // Draw the scale of the OutputGrid
   double first_bound, second_bound;
   if (grid.get_direction () == Direction::COUNTER_CLOCKWISE)
     {
@@ -124,12 +127,13 @@ CairoDrawer::draw_output_grid (const OutputGrid& grid)
   draw_text_orthogonal (
       Label (std::to_string (second_bound), conf.get_prop_scale_label ()),
       Polar (min_radius, grid.get_end () + TEXT_DELTA), TextAlignment::LEFT);
+
   // Draw the output lines of the OutputGrid
   for (size_t i = 1; i < grid.get_num_outputs (); ++i)
     {
       // Draw the description of the i-th output
       draw_output_label (Label (grid.get_var (i).name, name_prop),
-			 max_radius + i * OUTPUT_LABEL_RADIUS_DELTA,
+			 max_radius + i * extends.height * name_prop.font_size * OUTPUT_LABEL_FONT_FACTOR,
 			 min_radius + i * y_dist, grid.get_end (),
 			 M_PI_2 - i * 2 * ANGLE_DELTA_MEDIUM);
       if (grid.get_direction () == Direction::COUNTER_CLOCKWISE)
@@ -143,15 +147,15 @@ CairoDrawer::draw_output_grid (const OutputGrid& grid)
 	  second_bound = scale.get_extremes (i).first;
 	}
       draw_text_orthogonal (
-	  Label (std::to_string (first_bound), conf.get_prop_scale_label ()),
-	  Polar (min_radius + i * y_dist + OUTPUT_EXTREME_RADIUS_DELTA,
+    	 Label (std::to_string (first_bound), conf.get_prop_scale_label ()),
+		 Polar (min_radius + i * y_dist + OUTPUT_EXTREME_RADIUS_DELTA,
 		 grid.get_start () - TEXT_DELTA),
-	  TextAlignment::RIGHT);
+		 TextAlignment::RIGHT);
       draw_text_orthogonal (
-	  Label (std::to_string (second_bound), conf.get_prop_scale_label ()),
-	  Polar (min_radius + i * y_dist + OUTPUT_EXTREME_RADIUS_DELTA,
+         Label (std::to_string (second_bound), conf.get_prop_scale_label ()),
+		 Polar (min_radius + i * y_dist + OUTPUT_EXTREME_RADIUS_DELTA,
 		 grid.get_end () + TEXT_DELTA),
-	  TextAlignment::LEFT);
+		 TextAlignment::LEFT);
 
       cairo_context->begin_new_path ();
       draw_arc (min_radius + i * y_dist, grid.get_start (), grid.get_end (),
@@ -203,17 +207,20 @@ CairoDrawer::draw_input_axis (const InputAxis& axis)
 	}
     }
   set_font_face (tick_labels[max_tick_label_pos]);
-  const Cairo::TextExtents & tick_ext = get_text_extents (
+  Cairo::TextExtents tick_ext = get_text_extents (
       tick_labels[max_tick_label_pos]);
   set_font_face (axis.make_label (conf.get_prop_axis_label ()));
-  const Cairo::TextExtents & label_ext = get_text_extents (
+  Cairo::TextExtents label_ext = get_text_extents (
       axis.make_label (conf.get_prop_axis_label ()));
 
   double radius_tick_label = end_radius_major
       + RADIUS_TICK_LABEL_FACTOR * axis.get_height ();
-  double radius_label = radius_tick_label + tick_ext.width + RADIUS_LABEL_DELTA;
-  double radius_histogram = radius_label + label_ext.height
-      + RADIUS_HISTOGRAM_DELTA;
+  double radius_label = radius_tick_label
+	  + tick_ext.width * conf.get_prop_scale_label().font_size * INPUT_TICK_FONT_FACTOR
+	  + label_ext.height * conf.get_prop_axis_label().font_size * INPUT_AXIS_FONT_FACTOR;
+  double radius_histogram = radius_label
+      + label_ext.height * conf.get_prop_axis_label().font_size * INPUT_AXIS_FONT_FACTOR
+	  + RADIUS_HISTOGRAM_DELTA;
 
   // Calculate how the InputAxis' ticks is separated into thin and thick lines (ticks)
   const std::size_t NUM_SEGMENTS = axis.get_scale ().get_major_intersections ()
@@ -312,11 +319,12 @@ CairoDrawer::draw_io_vector (const IOVector& iov)
 
 void
 CairoDrawer::change_surface (const std::string& fpath, int width, int height,
-			     std::size_t _num_inputs)
+			     std::size_t num_inputs_)
 {
   finish ();
   set_surface (fpath, width, height);
-  m_num_inputs = _num_inputs;
+  m_coord_converter = CoordinateConverter(width, height);
+  m_num_inputs = num_inputs_;
 }
 
 void
@@ -883,7 +891,7 @@ CairoDrawer::get_text_extents (const Label& label) const
 void
 CairoDrawer::set_surface (const std::string& fpath, int width, int height)
 {
-  const Cairo::RefPtr<Cairo::Surface> ptr = Cairo::SvgSurface::create (fpath,
+  Cairo::RefPtr<Cairo::Surface> ptr = Cairo::SvgSurface::create (fpath,
 								       width,
 								       height);
   cairo_context = Cairo::Context::create (ptr);

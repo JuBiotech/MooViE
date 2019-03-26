@@ -18,7 +18,7 @@ class Drawer
 {
 protected:
   /** Polar-Cartesian converting */
-  const CoordinateConverter m_coord_converter;
+  CoordinateConverter m_coord_converter;
   /** Number of input variables of the multi-objective data to draw */
   std::size_t m_num_inputs;
 public:
