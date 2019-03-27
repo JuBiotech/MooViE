@@ -23,6 +23,11 @@ public:
     return value->value();
   }
 
+  inline void set_value(int val)
+  {
+	value->setValue(val);
+  }
+
 private:
   Ui::ConfIntWidget *ui;
   QSpinBox* value;

@@ -19,6 +19,20 @@ namespace Util
       }
   }
 
+  void
+  write_file (const std::string & fpath, const std::string & content)
+  {
+    std::ofstream out (fpath);
+    if (out)
+      {
+	out << content;
+      }
+    else
+      {
+	throw std::invalid_argument ("invalid file path: " + fpath);
+      }
+  }
+
   std::vector<std::string>
   split (const std::string & str, const std::string & delims, bool remove_empty)
   {

@@ -24,6 +24,11 @@ public:
     return value->value();
   }
 
+  inline void set_value(double val)
+  {
+	value->setValue(val);
+  }
+
 private:
   Ui::ConfDoubleWidget* ui;
   QDoubleSpinBox* value;

@@ -2,6 +2,10 @@
 #define CONFIGURATIONDIALOG_H
 
 #include <QDialog>
+#include <QDialogButtonBox>
+#include <QFileDialog>
+#include <QPushButton>
+#include <QMessageBox>
 #include <Configuration.h>
 #include <ConfDoubleWidget.h>
 #include <ConfIntWidget.h>
@@ -19,8 +23,16 @@ public:
   explicit ConfigurationDialog(QWidget *parent = nullptr);
   ~ConfigurationDialog();
 
+private:
+  void init_dialog ();
+  void fill_configuration_values ();
+  void update_configuration ();
+  void load_configuration ();
+  void save_configuration ();
+
+
 private slots:
-  void on_buttonBox_accepted();
+  void on_options_box_clicked(QAbstractButton* button);
 
 private:
   Ui::ConfigurationDialog *ui;

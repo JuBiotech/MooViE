@@ -10,6 +10,8 @@
 #include <TextProperties.h>
 #include <Triangle.h>
 
+#define MOOVIE_CONF_LINE(key, value) (("moovie." TO_STRING(key) "=") + (value))
+
 /** A class wrapping the settings and information that is
  * necessary for a MooViE run. Configuration is implemented
  * as a singelton. Before calling Configuration#get_instance
@@ -126,6 +128,14 @@ public:
    */
   static void
   initialize (const std::string & fname);
+
+  /** Writes the current configuration instance to the specified
+   * file path.
+   *
+   * @param cpath the path to save the configuration file to
+   */
+  static void
+  save_to_file (const std::string & cpath);
 
   // General
 

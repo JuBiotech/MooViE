@@ -122,6 +122,91 @@ Configuration::initialize (const std::string & fpath)
 }
 
 void
+Configuration::save_to_file (const std::string & cpath)
+{
+  std::stringstream sstream;
+
+  Color& bg_hist = instance->m_histogram_background;
+  Color& fill_hist = instance->m_histogram_fill;
+
+  sstream << MOOVIE_CONF_LINE(width, std::to_string (instance->m_width))
+      << std::endl
+      << MOOVIE_CONF_LINE(height, std::to_string (instance->m_height))
+      << std::endl
+      << MOOVIE_CONF_LINE(output_angle_span,
+			  std::to_string (instance->m_output_angle_span))
+      << std::endl
+      << MOOVIE_CONF_LINE(output_inner_radius,
+			  std::to_string (instance->m_output_inner_radius))
+      << std::endl
+      << MOOVIE_CONF_LINE(output_thickness,
+			  std::to_string (instance->m_output_thickness))
+      << std::endl
+      << MOOVIE_CONF_LINE(grid_size, std::to_string (instance->m_grid_size))
+      << std::endl
+      << MOOVIE_CONF_LINE(num_major_sections_grid,
+			  std::to_string (instance->m_num_major_sections_grid))
+      << std::endl
+      << MOOVIE_CONF_LINE(num_minor_sections_grid,
+			  std::to_string (instance->m_num_minor_sections_grid))
+      << std::endl
+      << MOOVIE_CONF_LINE(input_inner_radius,
+			  std::to_string (instance->m_input_inner_radius))
+      << std::endl
+      << MOOVIE_CONF_LINE(input_thickness,
+			  std::to_string (instance->m_input_thickness))
+      << std::endl
+      << MOOVIE_CONF_LINE(input_separation_angle,
+			  std::to_string (instance->m_input_separation_angle))
+      << std::endl
+      << MOOVIE_CONF_LINE(num_major_sections_axis,
+			  std::to_string (instance->m_num_major_sections_axis))
+      << std::endl
+      << MOOVIE_CONF_LINE(histograms_enabled,
+			  std::to_string (instance->m_histograms_enabled))
+      << std::endl
+      << MOOVIE_CONF_LINE(num_histogram_classes,
+			  std::to_string (instance->m_num_histogram_classes))
+      << std::endl
+      << MOOVIE_CONF_LINE(histogram_height,
+			  std::to_string (instance->m_histogram_height))
+      << std::endl
+      << MOOVIE_CONF_LINE(
+	  histogram_background,
+	  std::to_string (bg_hist.r ()) + "," + std::to_string (bg_hist.g ())
+	      + "," + std::to_string (bg_hist.b ())) << std::endl
+      << MOOVIE_CONF_LINE(
+	  histogram_fill,
+	  std::to_string (fill_hist.r ()) + ","
+	      + std::to_string (fill_hist.g ()) + ","
+	      + std::to_string (fill_hist.b ())) << std::endl
+      << MOOVIE_CONF_LINE(connector_arc_ratio,
+			  std::to_string (instance->m_connector_arc_ratio))
+      << std::endl
+      << MOOVIE_CONF_LINE(epsilon_places,
+			  std::to_string (instance->m_epsilon_places))
+      << std::endl
+      << MOOVIE_CONF_LINE(thick_line_width,
+			  std::to_string (instance->m_prop_thick.line_width))
+      << std::endl
+      << MOOVIE_CONF_LINE(thin_line_width,
+			  std::to_string (instance->m_prop_thin.line_width))
+      << std::endl
+      << MOOVIE_CONF_LINE(scale_label_font,
+			  instance->m_prop_scale_label.font_name) << std::endl
+      << MOOVIE_CONF_LINE(
+	  scale_label_font_size,
+	  std::to_string (instance->m_prop_scale_label.font_size)) << std::endl
+      << MOOVIE_CONF_LINE(axis_label_font,
+			  instance->m_prop_axis_label.font_name) << std::endl
+      << MOOVIE_CONF_LINE(
+	  axis_label_font_size,
+	  std::to_string (instance->m_prop_axis_label.font_size)) << std::endl;
+
+  Util::write_file (cpath, sstream.str ());
+}
+
+void
 Configuration::adjust_height ()
 {
   if (m_width == 0 && m_height == 0)
@@ -297,8 +382,7 @@ Configuration::Configuration (const std::string & fpath,
 		}
 	      else
 		{
-		  throw std::invalid_argument (
-		      "\"histograms_enabled\" expects \"true\" or \"false\"");
+		  m_histograms_enabled = (std::stoi (value) != 0);
 		}
 	    }
 	  else if (key.compare ("moovie.num_histogram_classes") == 0)
@@ -382,7 +466,7 @@ Configuration::Configuration (const std::string & fpath,
 		      "\"thick_line_width\" cannot be <= 0");
 		}
 	    }
-	  else if (key.compare ("moovie.thick_line_width") == 0)
+	  else if (key.compare ("moovie.thin_line_width") == 0)
 	    {
 	      m_prop_thin.line_width = std::stod (value);
 

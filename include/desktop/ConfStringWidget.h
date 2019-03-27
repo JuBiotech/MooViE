@@ -21,6 +21,11 @@ public:
     return text->text();
   }
 
+  inline void set_text(const QString& txt)
+  {
+	text->setText(txt);
+  }
+
 private:
   Ui::ConfStringWidget *ui;
   QLineEdit* text;

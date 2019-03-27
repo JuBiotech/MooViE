@@ -13,6 +13,9 @@
 #include <cmath>
 #include <unistd.h>
 
+#define TO_STRING_HELPER(a) #a
+#define TO_STRING(a) TO_STRING_HELPER(a)
+
 namespace Util
 {
 
@@ -26,6 +29,16 @@ namespace Util
    */
   std::string
   read_file (const std::string & fpath);
+
+  /** Writes a given string to a given file path.
+   *
+   * @param fpath the path of the file to write to
+   * @param content the content to write
+   *
+   * @throw invalid_argument if file is not writable
+   */
+  void
+  write_file (const std::string & fpath, const std::string & content);
 
   /** Splits a given string expression using the given delimiter string.
    *
