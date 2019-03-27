@@ -45,12 +45,13 @@ namespace Util
    * @param str the string to divide
    * @param delims the delimiter string
    * @param remove_empty option to remove empty tokens
+   * @param qouted_names option to allow qouted names
    *
    * @return the tokens or an empty vector
    */
   std::vector<std::string>
   split (const std::string & str, const std::string & delims,
-	 bool remove_empty = true);
+	 bool remove_empty = true, bool quoted_names = true);
 
   /** Removes leading and trailing blanks of this string.
    *

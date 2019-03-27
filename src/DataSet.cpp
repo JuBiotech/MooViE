@@ -27,12 +27,26 @@ template<>
       {
 	std::size_t open_bracket = header[i].find_first_of ('['),
 	    close_bracket = header[i].find_first_of (']');
+	std::size_t open_quote = header[i].find_first_of('"'),
+	    close_quote = header[i].find_first_of('"', open_quote + 1);
+
 	if (open_bracket != std::string::npos
 	    && close_bracket != std::string::npos)
 	  {
-	    std::string name = header[i].substr (2, open_bracket - 2), unit =
-		header[i].substr (open_bracket + 1,
-				  close_bracket - open_bracket - 1);
+	    std::string name, unit = header[i].substr (
+		open_bracket + 1, close_bracket - open_bracket - 1);
+
+	    if (open_quote != std::string::npos
+		&& close_quote != std::string::npos)
+	      {
+		name = header[i].substr (open_quote + 1,
+					 close_quote - open_quote - 1);
+	      }
+	    else
+	      {
+		name = header[i].substr (2, open_bracket - 2);
+	      }
+
 	    columns.push_back (
 		new DataColumn (
 		    ColumnType::INPUT,
@@ -41,7 +55,19 @@ template<>
 	  }
 	else
 	  {
-	    std::string name = header[i].substr (2, header[i].length () - 2);
+	    std::string name;
+
+	    if (open_quote != std::string::npos
+		&& close_quote != std::string::npos)
+	      {
+		name = header[i].substr (open_quote + 1,
+					 close_quote - open_quote - 1);
+	      }
+	    else
+	      {
+		name = header[i].substr (2, header[i].length () - 2);
+	      }
+
 	    columns.push_back (
 		new DataColumn (
 		    ColumnType::INPUT,
@@ -56,12 +82,26 @@ template<>
       {
 	std::size_t open_bracket = header[i].find_first_of ('['),
 	    close_bracket = header[i].find_first_of (']');
+	std::size_t open_quote = header[i].find_first_of('"'),
+	    close_quote = header[i].find_first_of('"', open_quote + 1);
+
 	if (open_bracket != std::string::npos
 	    && close_bracket != std::string::npos)
 	  {
-	    std::string name = header[i].substr (2, open_bracket - 2), unit =
-		header[i].substr (open_bracket + 1,
-				  close_bracket - open_bracket - 2);
+	    std::string name, unit = header[i].substr (
+		open_bracket + 1, close_bracket - open_bracket - 1);
+
+	    if (open_quote != std::string::npos
+		&& close_quote != std::string::npos)
+	      {
+		name = header[i].substr (open_quote + 1,
+					 close_quote - open_quote - 1);
+	      }
+	    else
+	      {
+		name = header[i].substr (2, open_bracket - 2);
+	      }
+
 	    columns.push_back (
 		new DataColumn (
 		    ColumnType::OUTPUT,
@@ -70,7 +110,19 @@ template<>
 	  }
 	else
 	  {
-	    std::string name = header[i].substr (2, header[i].length () - 2);
+	    std::string name;
+
+	    if (open_quote != std::string::npos
+		&& close_quote != std::string::npos)
+	      {
+		name = header[i].substr (open_quote + 1,
+					 close_quote - open_quote - 1);
+	      }
+	    else
+	      {
+		name = header[i].substr (2, header[i].length () - 2);
+	      }
+
 	    columns.push_back (
 		new DataColumn (
 		    ColumnType::OUTPUT,

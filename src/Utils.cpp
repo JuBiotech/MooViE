@@ -34,18 +34,30 @@ namespace Util
   }
 
   std::vector<std::string>
-  split (const std::string & str, const std::string & delims, bool remove_empty)
+  split (const std::string & str, const std::string & delims, bool remove_empty,
+	 bool quoted_names)
   {
     std::vector<std::string> res;
     std::size_t prev = 0;
+    bool qouted = false;
 
     for (std::size_t i = 0; i < str.length (); ++i)
       {
+	if (quoted_names and str[i] == '"')
+	  {
+	    qouted = not qouted;
+	  }
+
+	if (quoted_names and qouted)
+	  {
+	    continue;
+	  }
+
 	if (i + delims.length () <= str.length ()
 	    && str.compare (i, delims.length (), delims) == 0)
 	  {
 	    const std::string & part = str.substr (prev, i - prev);
-	    if (not (remove_empty && part.empty ()))
+	    if (not (remove_empty and part.empty ()))
 	      {
 		res.push_back (part);
 	      }
@@ -55,7 +67,13 @@ namespace Util
     if (prev < str.length ())
       {
 	const std::string & part = str.substr (prev, str.length () - prev);
-	if (not (remove_empty && part.empty ()))
+
+	if (quoted_names and qouted and part.find ('"') != std::string::npos)
+	  {
+	    throw std::invalid_argument ("missing qouted name bracket");
+	  }
+
+	if (not (remove_empty and part.empty ()))
 	  {
 	    res.push_back (part);
 	  }
