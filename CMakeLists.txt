@@ -65,6 +65,7 @@ set (DESKTOP_SRC
 	${DESKTOP_SRC_DIR}/ConfIntWidget.cpp
 	${DESKTOP_SRC_DIR}/ConfDoubleWidget.cpp
 	${DESKTOP_SRC_DIR}/ConfStringWidget.cpp
+	${DESKTOP_SRC_DIR}/MooViEView.cpp
 )
 
 set (DESKTOP_INCLUDES
@@ -75,6 +76,7 @@ set (DESKTOP_INCLUDES
 	${DESKTOP_INCLUDE_DIR}/ConfIntWidget.h
 	${DESKTOP_INCLUDE_DIR}/ConfDoubleWidget.h
 	${DESKTOP_INCLUDE_DIR}/ConfStringWidget.h
+	${DESKTOP_INCLUDE_DIR}/MooViEView.h
 )
 
 set (UIS

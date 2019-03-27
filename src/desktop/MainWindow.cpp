@@ -4,13 +4,13 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    pic(new QWebView(this)),
+    view(new MooViEView(this)),
     scene(nullptr)
 {
     ui->setupUi(this);
 
-    pic->setMinimumSize(800,800);
-    ui->top_lay->insertWidget(0, pic);
+    view->setMinimumSize(800,800);
+    ui->top_lay->insertWidget(0, view);
 
     ui->interactive_lay->setMaximumWidth(500);
 
@@ -176,8 +176,9 @@ void MainWindow::on_execute_btn_clicked()
                 scene->update();
             }
 
-            pic->load(QUrl(output_loc));
-            pic->show();
+            view->load(QUrl(output_loc));
+            view->show();
+            view->adjust_zoom(conf.get_width(), conf.get_height());
         }
         catch (const std::exception& e)
         {

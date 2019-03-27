@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QWebView>
 #include <QListWidget>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -11,6 +10,7 @@
 #include <Configuration.h>
 #include <stdexcept>
 #include <memory>
+#include <MooViEView.h>
 #include <IOList.h>
 #include <IOListWidget.h>
 #include <ConfigurationDialog.h>
@@ -39,7 +39,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QWebView* pic;
+    MooViEView* view;
     IOList* input_list, * output_list;
 
     std::unique_ptr<Scene> scene;
