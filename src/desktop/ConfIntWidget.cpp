@@ -1,21 +1,21 @@
 #include <ConfIntWidget.h>
 #include <ui_ConfIntWidget.h>
 
-ConfIntWidget::ConfIntWidget(const QString& tag, int init_val, int lower_restr, int upper_restr, QWidget *parent) :
-  QWidget(parent),
-  ui(new Ui::ConfIntWidget)
+ConfIntWidget::ConfIntWidget (const QString& tag, int init_val, int lower_restr,
+			      int upper_restr, QWidget *parent) :
+    QWidget (parent), m_ui (new Ui::ConfIntWidget)
 {
-  ui->setupUi(this);
+  m_ui->setupUi (this);
 
-  ui->conf_tag->setText(tag);
+  m_ui->conf_tag->setText (tag);
 
-  value = ui->conf_value;
-  value->setMinimum(lower_restr);
-  value->setMaximum(upper_restr);
-  value->setValue(init_val);
+  m_value = m_ui->conf_value;
+  m_value->setMinimum (lower_restr);
+  m_value->setMaximum (upper_restr);
+  m_value->setValue (init_val);
 }
 
-ConfIntWidget::~ConfIntWidget()
+ConfIntWidget::~ConfIntWidget ()
 {
-  delete ui;
+  delete m_ui;
 }

@@ -1,104 +1,95 @@
 #include <IOListWidget.h>
 #include <ui_IOListWidget.h>
 
-IOListWidget::IOListWidget(const DefVariable& var, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::IOListWidget)
+IOListWidget::IOListWidget (const DefVariable& var, QWidget *parent) :
+    QWidget (parent), m_ui (new Ui::IOListWidget)
 {
-    ui->setupUi(this);
+  m_ui->setupUi (this);
 
-    ui->io_name_lbl->setText(QString::fromStdString(var.name));
+  m_ui->io_name_lbl->setText (QString::fromStdString (var.name));
 
-    ui->toggle_rbtn->setChecked(true);
+  m_ui->toggle_rbtn->setChecked (true);
 
-    double max = std::numeric_limits<double>::max();
-    ui->lower_dbox->setRange(-max, max);
-    ui->lower_dbox->setDecimals(5);
-    ui->lower_dbox->setValue(var.min);
-    ui->upper_dbox->setRange(-max, max);
-    ui->upper_dbox->setDecimals(5);
-    ui->upper_dbox->setValue(var.max);
+  // Set spin box range to (-Inf,Inf)
+  double max = std::numeric_limits<double>::max ();
+  m_ui->lower_dbox->setRange (-max, max);
+  m_ui->lower_dbox->setDecimals (5);
+  m_ui->lower_dbox->setValue (var.min);
+  m_ui->upper_dbox->setRange (-max, max);
+  m_ui->upper_dbox->setDecimals (5);
+  m_ui->upper_dbox->setValue (var.max);
 
-    toggle_dirty = false;
-    bounds_dirty = false;
+  m_toggle_dirty = false;
+  m_bounds_dirty = false;
 }
 
-IOListWidget::~IOListWidget()
+IOListWidget::~IOListWidget ()
 {
-    delete ui;
+  delete m_ui;
 }
 
-QString IOListWidget::get_name() const
+QString
+IOListWidget::get_name () const
 {
-    return ui->io_name_lbl->text();
+  return m_ui->io_name_lbl->text ();
 }
 
-void IOListWidget::set_name(const std::string& name)
+bool
+IOListWidget::get_toggle () const
 {
-    ui->io_name_lbl->setText(QString::fromStdString(name));
+  return m_ui->toggle_rbtn->isChecked ();
 }
 
-bool IOListWidget::get_toggle() const
+double
+IOListWidget::get_min () const
 {
-    return ui->toggle_rbtn->isChecked();
+  return m_ui->lower_dbox->value ();
 }
 
-void IOListWidget::set_toggle(bool toggle)
+double
+IOListWidget::get_max () const
 {
-    ui->toggle_rbtn->setChecked(toggle);
+  return m_ui->upper_dbox->value ();
 }
 
-double IOListWidget::get_min() const
+bool
+IOListWidget::is_toggle_dirty () const
 {
-    return ui->lower_dbox->value();
+  return m_toggle_dirty;
 }
 
-void IOListWidget::set_min(double min)
+bool
+IOListWidget::are_bounds_dirty () const
 {
-    ui->lower_dbox->setValue(min);
+  return m_bounds_dirty;
 }
 
-double IOListWidget::get_max() const
+void
+IOListWidget::set_toggle_not_dirty ()
 {
-    return ui->upper_dbox->value();
+  m_toggle_dirty = false;
 }
 
-void IOListWidget::set_max(double max)
+void
+IOListWidget::set_bounds_not_dirty ()
 {
-    ui->upper_dbox->setValue(max);
+  m_bounds_dirty = false;
 }
 
-bool IOListWidget::is_toggle_dirty() const
+void
+IOListWidget::on_toggle_rbtn_clicked ()
 {
-    return toggle_dirty;
+  m_toggle_dirty = true;
 }
 
-bool IOListWidget::are_bounds_dirty() const
+void
+IOListWidget::on_lower_dbox_valueChanged (double arg1)
 {
-    return bounds_dirty;
+  m_bounds_dirty = true;
 }
 
-void IOListWidget::set_toggle_not_dirty()
+void
+IOListWidget::on_upper_dbox_valueChanged (double arg1)
 {
-    toggle_dirty = false;
-}
-
-void IOListWidget::set_bounds_not_dirty()
-{
-    bounds_dirty = false;
-}
-
-void IOListWidget::on_toggle_rbtn_clicked()
-{
-    toggle_dirty = true;
-}
-
-void IOListWidget::on_lower_dbox_valueChanged(double arg1)
-{
-    bounds_dirty = true;
-}
-
-void IOListWidget::on_upper_dbox_valueChanged(double arg1)
-{
-    bounds_dirty = true;
+  m_bounds_dirty = true;
 }

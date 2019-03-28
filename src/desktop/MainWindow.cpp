@@ -1,209 +1,239 @@
 #include <MainWindow.h>
 #include <ui_MainWindow.h>
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    view(new MooViEView(this)),
-    scene(nullptr)
+MainWindow::MainWindow (QWidget *parent) :
+    QMainWindow (parent), m_ui (new Ui::MainWindow), m_view (
+	new MooViEView (this)), m_scene (nullptr)
 {
-    ui->setupUi(this);
+  m_ui->setupUi (this);
 
-    view->setMinimumSize(800,800);
-    ui->top_lay->insertWidget(0, view);
+  // Set up view and add to the UI layer
+  m_view->setMinimumSize (800, 800);
+  m_ui->top_lay->insertWidget (0, m_view);
 
-    ui->interactive_lay->setMaximumWidth(500);
+  m_ui->interactive_lay->setMaximumWidth (500);
 
-    input_list = new IOList;
-    input_list->setDragDropMode(QAbstractItemView::DragDrop);
-    input_list->setDefaultDropAction(Qt::MoveAction);
+  // Set up input/output variable lists
+  m_input_list = new IOList;
+  m_input_list->setDragDropMode (QAbstractItemView::DragDrop);
+  m_input_list->setDefaultDropAction (Qt::MoveAction);
+  m_output_list = new IOList;
+  m_output_list->setDragDropMode (QAbstractItemView::DragDrop);
+  m_output_list->setDefaultDropAction (Qt::MoveAction);
 
-    output_list = new IOList;
-    output_list->setDragDropMode(QAbstractItemView::DragDrop);
-    output_list->setDefaultDropAction(Qt::MoveAction);
+  // Add input/output variable lists into a scroll area
+  m_ui->inputs_scr->setWidget (m_input_list);
+  m_ui->outputs_scr->setWidget (m_output_list);
 
-    ui->inputs_scr->setWidget(input_list);
-    ui->outputs_scr->setWidget(output_list);
-
-    Configuration::initialize("");
+  // Dummy setup of the global MooViE configuration
+  Configuration::initialize ("");
 }
 
-
-MainWindow::~MainWindow()
+MainWindow::~MainWindow ()
 {
-    delete ui;
+  delete m_ui;
 }
 
-void MainWindow::on_input_file_btn_clicked()
+void
+MainWindow::on_input_file_btn_clicked ()
 {
-    static const QString filter = tr("CSV (*.csv");
-    QString fpath = QFileDialog::getOpenFileName(
-                this,
-                "Choose input file",
-                ui->input_file_txt->text(),
-                "CSV (*.csv)"
-                );
-    if (not fpath.isEmpty())
+  // Let the user choose the path to the input file
+  QString fpath = QFileDialog::getOpenFileName (this, "Choose input file",
+						m_ui->input_file_txt->text (),
+						"CSV (*.csv)");
+
+  /* Set the chosen file path if valid and
+   generate a default output path if empty */
+  if (not fpath.isEmpty ())
     {
-        ui->input_file_txt->setText(fpath);
+      m_ui->input_file_txt->setText (fpath);
 
-        if (ui->output_file_txt->text().isEmpty())
-        {
-        	QStringList split_list = fpath.split(QRegExp("csv$"));
-        	ui->output_file_txt->setText(split_list[0] + "svg");
-        }
+      if (m_ui->output_file_txt->text ().isEmpty ())
+	{
+	  QStringList split_list = fpath.split (QRegExp ("csv$"));
+	  m_ui->output_file_txt->setText (split_list[0] + "svg");
+	}
     }
 }
 
-void MainWindow::on_output_file_btn_clicked()
+void
+MainWindow::on_output_file_btn_clicked ()
 {
-    static const QString filter = tr("SVG (*.svg");
-    QString fpath = QFileDialog::getSaveFileName(
-                this,
-                "Choose output file",
-                ui->output_file_txt->text(),
-				"SVG (*.svg)"
-                );
-    if (!fpath.isEmpty())
+  // Let the user choose the path to the output file
+  QString fpath = QFileDialog::getSaveFileName (this, "Choose output file",
+						m_ui->output_file_txt->text (),
+						"SVG (*.svg)");
+
+  // Set chosen path if valid
+  if (!fpath.isEmpty ())
     {
-        ui->output_file_txt->setText(fpath);
+      m_ui->output_file_txt->setText (fpath);
     }
 }
 
-void MainWindow::on_execute_btn_clicked()
+void
+MainWindow::on_execute_btn_clicked ()
 {
-    QString input_loc = ui->input_file_txt->text(),
-            output_loc = ui->output_file_txt->text();
-    if (!input_loc.isEmpty() && !output_loc.isEmpty())
+  // Get values from input/output file edit
+  QString input_loc = m_ui->input_file_txt->text (), output_loc =
+      m_ui->output_file_txt->text ();
+
+  if (!input_loc.isEmpty () && !output_loc.isEmpty ())
     {
-        Configuration& conf = Configuration::get_instance();
-        if (conf.get_input_file() != input_loc.toStdString())
-        {
-        	scene.reset();
+      // Set changes to global configuration object
+      Configuration& conf = Configuration::get_instance ();
+      if (conf.get_input_file () != input_loc.toStdString ())
+	{
+	  m_scene.reset ();
 
-        	input_list->clear();
-        	output_list->clear();
+	  m_input_list->clear ();
+	  m_output_list->clear ();
 
-        	conf.set_input_file(input_loc.toStdString());
-        }
-        conf.set_output_file(output_loc.toStdString());
+	  conf.set_input_file (input_loc.toStdString ());
+	}
+      conf.set_output_file (output_loc.toStdString ());
 
-        try
-        {
-            if (scene == nullptr)
-            {
-                scene.reset(new Scene);
+      // Try to paint the MooViE scene with the given parameters
+      try
+	{
+	  // Initialize the scene if necessary
+	  if (m_scene)
+	    {
+	      // Automatically paints the scene
+	      m_scene.reset (new Scene);
 
-                std::vector<DefVariable> ivars = scene->get_input_variables(),
-                        ovars = scene->get_output_variables();
+	      // Set up and display input and output variables of this Scene
+	      std::vector<DefVariable> ivars = m_scene->get_input_variables (),
+		  ovars = m_scene->get_output_variables ();
+	      for (const DefVariable& var : ivars)
+		{
+		  QListWidgetItem* listWidgetItem = new QListWidgetItem (
+		      m_input_list);
+		  m_input_list->addItem (listWidgetItem);
+		  IOListWidget* ioListWidget = new IOListWidget (var);
+		  listWidgetItem->setSizeHint (ioListWidget->sizeHint ());
+		  m_input_list->setItemWidget (listWidgetItem, ioListWidget);
+		}
+	      for (const DefVariable& var : ovars)
+		{
+		  QListWidgetItem* listWidgetItem = new QListWidgetItem;
+		  m_output_list->addItem (listWidgetItem);
+		  IOListWidget* ioListWidget = new IOListWidget (var);
+		  listWidgetItem->setSizeHint (ioListWidget->sizeHint ());
+		  m_output_list->setItemWidget (listWidgetItem, ioListWidget);
+		}
+	    }
+	  else
+	    {
+	      // Check if the input variable values have been edited
+	      if (m_input_list->is_dirty ())
+		{
+		  const std::vector<IOList::Swap>& swaps =
+		      m_input_list->get_swaps ();
 
-                for (const DefVariable& var: ivars)
-                {
-                    QListWidgetItem* listWidgetItem = new QListWidgetItem(input_list);
-                    input_list->addItem(listWidgetItem);
-                    IOListWidget* ioListWidget = new IOListWidget(var);
-                    listWidgetItem->setSizeHint(ioListWidget->sizeHint());
-                    input_list->setItemWidget(listWidgetItem, ioListWidget);
-                }
+		  for (int i = 0; i < swaps.size (); ++i)
+		    {
+		      m_scene->swap_inputs (
+			  static_cast<std::size_t> (swaps[i].before_pos),
+			  static_cast<std::size_t> (swaps[i].after_pos));
+		    }
 
-                for (const DefVariable& var: ovars)
-                {
-                    QListWidgetItem* listWidgetItem = new QListWidgetItem;
-                    output_list->addItem(listWidgetItem);
-                    IOListWidget* ioListWidget = new IOListWidget(var);
-                    listWidgetItem->setSizeHint(ioListWidget->sizeHint());
-                    output_list->setItemWidget(listWidgetItem, ioListWidget);
-                }
-            }
-            else
-            {
-                if (input_list->is_dirty())
-                {
-                    const std::vector<IOList::Swap>& swaps = input_list->get_swaps();
+		  m_input_list->set_not_dirty ();
+		}
 
-                    for (int i = 0; i < swaps.size(); ++i)
-                    {
-                        scene->swap_inputs(static_cast<std::size_t>(swaps[i].before_pos),
-                                           static_cast<std::size_t>(swaps[i].after_pos));
-                    }
+	      // Execute input variable changes on scene instance
+	      for (int i = 0; i < m_input_list->count (); ++i)
+		{
+		  IOListWidget* item =
+		      dynamic_cast<IOListWidget*> (m_input_list->itemWidget (
+			  m_input_list->item (i)));
+		  if (item->is_toggle_dirty ())
+		    {
+		      m_scene->toggle_input (static_cast<std::size_t> (i),
+					     item->get_toggle ());
+		      item->set_toggle_not_dirty ();
+		    }
+		  if (item->are_bounds_dirty () && item->get_toggle ())
+		    {
+		      m_scene->restrict_input (static_cast<std::size_t> (i),
+					       item->get_min (),
+					       item->get_max ());
+		      item->set_bounds_not_dirty ();
+		    }
+		}
 
-                    input_list->not_dirty();
-                }
+	      // Check if the output variable values have been edited
+	      if (m_output_list->is_dirty ())
+		{
+		  const std::vector<IOList::Swap>& swaps =
+		      m_output_list->get_swaps ();
 
-                for (int i = 0; i < input_list->count(); ++i)
-                {
-                    IOListWidget* item = dynamic_cast<IOListWidget*>(input_list->itemWidget(input_list->item(i)));
-                    if (item->is_toggle_dirty())
-                    {
-                          scene->toggle_input(static_cast<std::size_t>(i), item->get_toggle());
-                          item->set_toggle_not_dirty();
-                    }
-                    if (item->are_bounds_dirty() && item->get_toggle())
-                    {
-                        scene->restrict_input(static_cast<std::size_t>(i), item->get_min(), item->get_max());
-                        item->set_bounds_not_dirty();
-                    }
-                }
+		  for (int i = 0; i < swaps.size (); ++i)
+		    {
+		      m_scene->swap_outputs (
+			  static_cast<std::size_t> (swaps[i].before_pos),
+			  static_cast<std::size_t> (swaps[i].after_pos));
+		    }
 
-                if (output_list->is_dirty())
-                {
-                    const std::vector<IOList::Swap>& swaps = output_list->get_swaps();
+		  m_output_list->set_not_dirty ();
+		}
 
-                    for (int i = 0; i < swaps.size(); ++i)
-                    {
-                        scene->swap_outputs(static_cast<std::size_t>(swaps[i].before_pos),
-                                           static_cast<std::size_t>(swaps[i].after_pos));
-                    }
+	      // Execute output variable changes on scene instance
+	      for (int i = 0; i < m_output_list->count (); ++i)
+		{
+		  IOListWidget* item =
+		      dynamic_cast<IOListWidget*> (m_output_list->itemWidget (
+			  m_output_list->item (i)));
+		  if (item->is_toggle_dirty ())
+		    {
+		      m_scene->toggle_output (static_cast<std::size_t> (i),
+					      item->get_toggle ());
+		      item->set_toggle_not_dirty ();
+		    }
+		  if (item->are_bounds_dirty () && item->get_toggle ())
+		    {
+		      m_scene->restrict_output (static_cast<std::size_t> (i),
+						item->get_min (),
+						item->get_max ());
+		      item->set_bounds_not_dirty ();
+		    }
+		}
 
-                    output_list->not_dirty();
-                }
+	      // Repaint scene
+	      m_scene->update ();
+	    }
 
-                for (int i = 0; i < output_list->count(); ++i)
-                {
-                    IOListWidget* item = dynamic_cast<IOListWidget*>(output_list->itemWidget(output_list->item(i)));
-                    if (item->is_toggle_dirty())
-                    {
-                          scene->toggle_output(static_cast<std::size_t>(i), item->get_toggle());
-                          item->set_toggle_not_dirty();
-                    }
-                    if (item->are_bounds_dirty() && item->get_toggle())
-                    {
-                        scene->restrict_output(static_cast<std::size_t>(i), item->get_min(), item->get_max());
-                        item->set_bounds_not_dirty();
-                    }
-                }
-
-                scene->update();
-            }
-
-            view->load(QUrl(output_loc));
-            view->show();
-            view->adjust_zoom(conf.get_width(), conf.get_height());
-        }
-        catch (const std::exception& e)
-        {
-            QMessageBox msg_box;
-
-            msg_box.setWindowTitle("MooViE execution failed");
-            msg_box.setText(e.what());
-            msg_box.setStandardButtons(QMessageBox::Ok);
-            msg_box.exec();
-        }
+	  // Load SVG image and set the zoom using the image size
+	  m_view->load (QUrl (output_loc));
+	  m_view->show ();
+	  m_view->adjust_zoom (conf.get_width (), conf.get_height ());
+	}
+      catch (const std::exception& e)
+	{
+	  // Message user that an error accurred during MooViE execution
+	  QMessageBox msg_box;
+	  msg_box.setWindowTitle ("MooViE execution failed");
+	  msg_box.setText (e.what ());
+	  msg_box.setStandardButtons (QMessageBox::Ok);
+	  msg_box.exec ();
+	}
     }
-    else
+  else
     {
-        QMessageBox msg_box;
-
-        msg_box.setWindowTitle("Missing information");
-        msg_box.setText("Input or output file box are empty");
-        msg_box.setStandardButtons(QMessageBox::Ok);
-        msg_box.exec();
+      // Message user that input/output file edit is empty
+      QMessageBox msg_box;
+      msg_box.setWindowTitle ("Missing information");
+      msg_box.setText ("Input or output file box are empty");
+      msg_box.setStandardButtons (QMessageBox::Ok);
+      msg_box.exec ();
     }
 }
 
-void MainWindow::on_config_btn_clicked()
+void
+MainWindow::on_config_btn_clicked ()
 {
+  // Dialog to edit MooViE configuration
   ConfigurationDialog dialog;
-  dialog.setWindowTitle("Edit Configuration");
-  dialog.exec();
+  dialog.setWindowTitle ("Edit Configuration");
+  dialog.exec ();
 }

@@ -1,47 +1,52 @@
 #include <MooViEView.h>
 #include <iostream>
 
-MooViEView::MooViEView(QWidget *parent) :
-    QWebView(parent),
-    zoom_active(false)
+MooViEView::MooViEView (QWidget *parent) :
+    QWebView (parent), m_zoom_active (false)
 {
 }
 
-void MooViEView::adjust_zoom(int width, int height)
+void
+MooViEView::adjust_zoom (int width, int height)
 {
-    int min = std::min(width, height);
+  // Using smaller dim sizes (the smaller, the more zoom)
+  int min = std::min (width, height);
 
-    setZoomFactor(START_ZOOM_DIV / min);
+  setZoomFactor (START_ZOOM_DIV / min);
 }
 
-void MooViEView::keyPressEvent (QKeyEvent* event)
+void
+MooViEView::keyPressEvent (QKeyEvent* event)
 {
-    switch (event->key())
+  switch (event->key ())
     {
-	case Qt::Key_Control:
-	    zoom_active = true;
-	    break;
-	case Qt::Key_Plus:
-	    if (zoom_active)
-	    {
-		setZoomFactor(zoomFactor() + ZOOM_FACTOR);
-	    }
-	    break;
-	case Qt::Key_Minus:
-	  if (zoom_active)
-	  {
-		setZoomFactor(zoomFactor() - ZOOM_FACTOR);
-	  }
-	  break;
-	default:
-	    break;
+    case Qt::Key_Control:
+      m_zoom_active = true;
+      break;
+    case Qt::Key_Plus:
+      // Only increase if CTRL is pressed
+      if (m_zoom_active)
+	{
+	  setZoomFactor (zoomFactor () + ZOOM_DELTA);
+	}
+      break;
+    case Qt::Key_Minus:
+      // Only decrease if CTRL is pressed
+      if (m_zoom_active)
+	{
+	  setZoomFactor (zoomFactor () - ZOOM_DELTA);
+	}
+      break;
+    default:
+      break;
     }
 }
 
-void MooViEView::keyReleaseEvent (QKeyEvent* event)
+void
+MooViEView::keyReleaseEvent (QKeyEvent* event)
 {
-    if (event->key() == Qt::Key_Control)
+  if (event->key () == Qt::Key_Control)
     {
-	zoom_active = false;
+      m_zoom_active = false;
     }
 }

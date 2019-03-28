@@ -15,34 +15,70 @@
 #include <IOListWidget.h>
 #include <ConfigurationDialog.h>
 
-namespace Ui {
-class MainWindow;
+namespace Ui
+{
+  class MainWindow;
 }
 
+/** Main window of Qt application. The heart of the MooViE desktop application.
+ *
+ * @brief main window of moovie desktop
+ *
+ * @date
+ * @author stratmann
+ */
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
-
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-
-private slots:
-
-    void on_input_file_btn_clicked();
-
-    void on_output_file_btn_clicked();
-
-    void on_execute_btn_clicked();
-
-    void on_config_btn_clicked();
+Q_OBJECT
 
 private:
-    Ui::MainWindow *ui;
-    MooViEView* view;
-    IOList* input_list, * output_list;
+  /** Qt generated user interface */
+  Ui::MainWindow* m_ui;
 
-    std::unique_ptr<Scene> scene;
+  /** A view for displaying the rendered MooViE scene */
+  MooViEView* m_view;
+
+  /** List widgets for input/output variables */
+  IOList* m_input_list, *m_output_list;
+
+  /** The MooViE scene of the application */
+  std::unique_ptr<Scene> m_scene;
+
+public:
+  /** Creates the main window.
+   *
+   * @param parent parent widget
+   */
+  explicit
+  MainWindow (QWidget *parent = 0);
+
+  /** Destruktor
+   */
+  ~MainWindow ();
+
+private slots:
+  /** Calls a file chooser dialog for
+   * the input file.
+   */
+  void
+  on_input_file_btn_clicked ();
+
+  /** Calls a file chooser dialog for
+   * the output file.
+   */
+  void
+  on_output_file_btn_clicked ();
+
+  /**
+   */
+  void
+  on_execute_btn_clicked ();
+
+  /** Calls a dialog to edit the MooViE
+   * configuration.
+   */
+  void
+  on_config_btn_clicked ();
 };
 
 #endif // MAINWINDOW_H

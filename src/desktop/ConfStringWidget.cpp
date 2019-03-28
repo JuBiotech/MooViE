@@ -1,19 +1,19 @@
 #include <ConfStringWidget.h>
 #include <ui_ConfStringWidget.h>
 
-ConfStringWidget::ConfStringWidget(const QString& tag, const QString& init_text, QWidget *parent) :
-  QWidget(parent),
-  ui(new Ui::ConfStringWidget)
+ConfStringWidget::ConfStringWidget (const QString& tag,
+				    const QString& init_text, QWidget *parent) :
+    QWidget (parent), m_ui (new Ui::ConfStringWidget)
 {
-  ui->setupUi(this);
+  m_ui->setupUi (this);
 
-  ui->conf_tag->setText(tag);
+  m_ui->conf_tag->setText (tag);
 
-  text = ui->conf_text;
-  text->setText(init_text);
+  m_text = m_ui->conf_text;
+  m_text->setText (init_text);
 }
 
-ConfStringWidget::~ConfStringWidget()
+ConfStringWidget::~ConfStringWidget ()
 {
-  delete ui;
+  delete m_ui;
 }
