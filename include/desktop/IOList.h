@@ -20,6 +20,7 @@
  */
 class IOList : public QListWidget
 {
+  Q_OBJECT
 public:
   /** Stores a position exchange of the variable
    * property widgets. This information is used to
