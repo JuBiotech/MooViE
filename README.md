@@ -6,7 +6,7 @@
 The Multi-objective optimization Visualization Engine (MooViE) is developed at 
 the Institute of Bio- and Geosciences 1 (IBG-1) of the Forschungszentrum Jülich. MooViE 
 is an easy-to-use tool to display multidimensional data. It is designed for 
-pareto optima with up to eight optimization criteria
+pareto optima with up to eight optimization criteria.
  
 MooViE comes with a simple graphical user interface that allows the user to interactively 
 change which data is displayed and configure the style.
@@ -22,7 +22,7 @@ Required Libraries:
 * _freetype2_
 * _sigc++-2.0_
 * _cairo_ and _cairomm-1.0_
-* _Qt4_ with _QtWebKit_
+* _Qt4_ (>= 4.7) with _QtGui_ and _QtWebKit_
 
 ### How to install MooViE
 Clone or download this repository. Generate Makefile using _CMake_:
@@ -75,22 +75,28 @@ moovie -x 750 -y 750 -o ./output.svg -c ./moovie.conf input.csv
 With MooViE's graphical user interface you can easily configure MooViE and display 
 the results.
 
-For running a MooViE scene, an input file (1) and an output (2) need to be specified. 
-You can now render the scene with a simple click (3). If the output does not satisfy 
-your wishes, you can edit the configuration for the MooViE scene (4). By using the 
-column control section (5), you can now alter how and what data is displayed.
+![Example MooViE scene in GUI](doc/images/example_gui_main.png)
+
+For running a MooViE scene, an input file and an output (1) need to be specified. 
+You can now render the scene with a simple click (2). If the output does not satisfy 
+your wishes, you can edit the configuration for the MooViE scene (3). By using the 
+column control section (4), you can now alter how and what data is displayed.
 
 You can enable and disable inputs and outputs by a toggle button and enter new boundaries 
 for the values in the selected column. The order of columns can also be changed by 
 drag-and-drop.
+
+![Example MooViE configuration dialog](doc/images/example_gui_conf.png)
 
 The configuration dialog simplifies editing the configuration for the MooViE scene. 
 Configurations also be saved to a file for later and loaded from a file directly 
 into the current Scene.
 
 ### How to configure MooViE
-MooViE has a large amount of configuration values. Their meaning is outlined graphically
+MooViE has a large amount of configuration values. Some of them are outlined graphically
 in the following picture.
+
+![Configuration values of a MooViE scene](doc/images/scene_conf_values.png)
 
 If you use MooViE on the command line, you might want to create a custom configuration 
 file. A default that you can use as base can be found at `test/files/moovie.conf`. 
@@ -103,5 +109,60 @@ Blank lines and lines that start with **\#** are
 ignored.
 
 ### Detailed configuration value description
+Setting image dimensions:
+* **width**: the image width [positive integer], _default_ = 750
+* **height**: the image height [positive integer], _default_ = 750
 
+Setting the line widths:
+* **thick_line_width**: line width that is used for thick lines [float], _default_ 
+  = 0.5
+* **thin_line_width**: line width that is used for thin lines [float], _default_ = 
+  0.1
+
+Setting font properties:
+* **scale_label_font**: font name of scale values [string], _default_ = "Liberation Serif"
+* **scale_label_font_size**: font name of the input label [positive integer], _default_ = 
+  5
+* **axis_label_font**: font name of input labels [string], _default_ = "Liberation Serif"
+* **axis_label_font_size**: font name of the input label [positive integer], _default_ = 
+  10
+
+Configuring the output grid:
+* **output_angle_span**: angle of the output grid in degree [float], _default_ = 160.0
+* **output_inner_radius**: distance from the center of the scene to the begin of the 
+  output grid [float], _default_ = 160
+* **output_thickness**: thickness of the colored axis of the output grid [float], _default_ 
+  = 5
+* **grid_size**: distance from the colored axis to the end the output grid [float], 
+  _default_ = 150
+* **num_major_sections_grid**: number of big ticks on the output scale [positive integer], 
+  _default_ = 10
+* **num_minor_sections_grid**: number of big ticks on the output scale [positive integer], 
+  _default_ = 10
+
+Configuring the input axis:
+* **input_inner_radius**: distance from the center of the scene to the begin of an 
+  input axis [float], _default_ = 160
+* **input_thickness**=5
+* **input_separation_angle**: angle between two input axis [float], _default_ = 5.0
+* **num_major_sections_axis**: number of big ticks on the input scale [positive integer], 
+  _default_ = 10
+* **num_minor_sections_axis**: number of big ticks on the input scale [positive integer], 
+  _default_ = 10
+
+Configuring the input histograms:
+* **histograms_enabled**: enables displaying statistical information about the inputs [boolean], 
+  _default_ = true
+* **num_histogram_classes**: number of classes in the histogram [positive integer], 
+  default_ = 10
+* **histogram_height**: height of the histogram [float], _default_ = 20.0
+* **histogram_background**: RGB value of the histogram background color [float, float, 
+  float], _default_ = 0.0, 0.0, 0.0
+* **histogram_fill**: RGB value of the histogram class fill color [float, float, float], 
+  _default_ = 0.5, 0.5, 0.5
+
+Configuring data rows:
+* **relevant_places**: number of decimal places that MooViE will round a table cell 
+  to [integer], 
+  _default_ = 3
 
