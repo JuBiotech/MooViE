@@ -18,7 +18,7 @@ ConfigurationDialog::ConfigurationDialog (QWidget *parent) :
 
   // Set desktop properties
   setWindowTitle ("Edit Configuration");
-  setWindowIcon(QIcon("./moovie.png"));
+  setWindowIcon (QIcon ("./moovie.png"));
 }
 
 ConfigurationDialog::~ConfigurationDialog ()
@@ -30,6 +30,13 @@ void
 ConfigurationDialog::init_dialog ()
 {
   Configuration& conf = Configuration::get_instance ();
+
+  // Dimensions
+  m_width = new ConfIntWidget ("Image width", conf.get_width (), 1);
+  m_height = new ConfIntWidget ("Image height", conf.get_height (), 1);
+  QLayout* dim = m_ui->dim_grp->layout ();
+  dim->addWidget (m_width);
+  dim->addWidget (m_height);
 
   // Line and fill
   m_prop_thick_strength = new ConfDoubleWidget (
@@ -57,13 +64,6 @@ ConfigurationDialog::init_dialog ()
   font->addWidget (m_axis_fsize);
   font->addWidget (m_axis_font);
   font->addWidget (m_scale_fsize);
-
-  // Dimensions
-  m_width = new ConfIntWidget ("Image width", conf.get_width (), 1);
-  m_height = new ConfIntWidget ("Image height", conf.get_height (), 1);
-  QLayout* dim = m_ui->dim_grp->layout ();
-  dim->addWidget (m_width);
-  dim->addWidget (m_height);
 
   // Output
   m_output_angle_span = new ConfDoubleWidget (
@@ -121,7 +121,7 @@ ConfigurationDialog::init_dialog ()
 
   // Input/output vectors
   m_relevant_places = new ConfIntWidget ("Number of places to round",
-					conf.get_relevant_places (), 0, 15);
+					 conf.get_relevant_places (), 0, 15);
   QLayout* data = m_ui->data_grp->layout ();
   data->addWidget (m_relevant_places);
 }
@@ -130,6 +130,10 @@ void
 ConfigurationDialog::fill_configuration_values ()
 {
   Configuration& conf = Configuration::get_instance ();
+
+  // Dimensions
+  m_width->set_value (conf.get_width ());
+  m_height->set_value (conf.get_height ());
 
   // Line and fill
   m_prop_thick_strength->set_value (conf.get_prop_thick ().line_width);
@@ -142,10 +146,6 @@ ConfigurationDialog::fill_configuration_values ()
       QString::fromStdString (conf.get_prop_axis_label ().font_name));
   m_scale_fsize->set_value (conf.get_prop_scale_label ().font_size);
   m_axis_fsize->set_value (conf.get_prop_axis_label ().font_size);
-
-  // Dimensions
-  m_width->set_value (conf.get_width ());
-  m_height->set_value (conf.get_height ());
 
   // Output
   m_output_angle_span->set_value (conf.get_output_angle_span ());
@@ -175,6 +175,10 @@ ConfigurationDialog::update_configuration ()
 {
   Configuration& conf = Configuration::get_instance ();
 
+  // Dimension
+  conf.set_width (m_width->get_value ());
+  conf.set_height (m_height->get_value ());
+
   // Font and font size
   conf.set_prop_thick (
       DrawerProperties<> (m_prop_thick_strength->get_value (), Color::BLACK,
@@ -190,10 +194,6 @@ ConfigurationDialog::update_configuration ()
   conf.set_prop_axis_label (
       TextProperties (m_axis_font->get_text ().toStdString (),
 		      m_axis_fsize->get_value ()));
-
-  // Dimension
-  conf.set_width (m_width->get_value ());
-  conf.set_height (m_height->get_value ());
 
   // Output
   conf.set_output_angle_span (m_output_angle_span->get_value ());

@@ -31,15 +31,15 @@ private:
   /** Qt generated user interface */
   Ui::ConfigurationDialog* m_ui;
 
+  /** Width and height of the output image */
+  ConfIntWidget* m_width, *m_height;
+
   /** General line and fill styles */
   ConfDoubleWidget* m_prop_thick_strength, *m_prop_thin_strength;
 
   /** General font and font size */
   ConfStringWidget* m_scale_font, *m_axis_font;
   ConfDoubleWidget* m_scale_fsize, *m_axis_fsize;
-
-  /** Width and height of the output image */
-  ConfIntWidget* m_width, *m_height;
 
   /** OutputGrid modification values */
   ConfDoubleWidget* m_output_angle_span, *m_output_inner_radius,

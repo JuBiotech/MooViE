@@ -30,6 +30,14 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
+        <widget class="QGroupBox" name="dim_grp">
+         <property name="title">
+          <string>Dimensions</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3"/>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="linefill_grp">
          <property name="title">
           <string>Lines and Fill style</string>
@@ -43,14 +51,6 @@
           <string>Font and Font Size</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4"/>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="dim_grp">
-         <property name="title">
-          <string>Dimensions</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_3"/>
         </widget>
        </item>
        <item>
