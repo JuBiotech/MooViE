@@ -5,11 +5,20 @@ set (CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 set (CMAKE_CXX_STANDARD 11)
 
 # Set code location variables
-set (MOOVIE_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 set (MOOVIE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
-set (DESKTOP_SRC_DIR ${PROJECT_SOURCE_DIR}/src/desktop)
+set (MOOVIE_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
+set (MOOVIE_DOC_DIR ${PROJECT_SOURCE_DIR}/doc)
 set (DESKTOP_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include/desktop)
+set (DESKTOP_SRC_DIR ${PROJECT_SOURCE_DIR}/src/desktop)
 set (DESKTOP_UI_DIR ${PROJECT_SOURCE_DIR}/ui)
+
+# Set install destination variables
+set (DEST_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin)
+set (DEST_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib)
+set (DEST_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include/moovie)
+set (DEST_DOC_DIR ${CMAKE_INSTALL_PREFIX}/share/doc/moovie)
+set (DEST_DESKTOP_DIR /usr/share/applications)
+set (DEST_PIXMAP_DIR /usr/share/pixmaps)
 
 # Find important libraries
 # Moovie uses Cairomm-1.0, which depends on
@@ -23,19 +32,6 @@ find_package (cairomm-1.0 REQUIRED)
 find_package (Qt4 REQUIRED QtGui QtWebKit)
 
 # Structure files
-set (MOOVIE_SRC
-	${MOOVIE_SRC_DIR}/DataSet.cpp
-	${MOOVIE_SRC_DIR}/Scale.cpp
-	${MOOVIE_SRC_DIR}/Color.cpp
-	${MOOVIE_SRC_DIR}/Configuration.cpp
-	${MOOVIE_SRC_DIR}/OutputGrid.cpp
-	${MOOVIE_SRC_DIR}/IOVector.cpp
-	${MOOVIE_SRC_DIR}/CairoDrawer.cpp
-	${MOOVIE_SRC_DIR}/Scene.cpp
-	${MOOVIE_SRC_DIR}/Utils.cpp
-	${MOOVIE_SRC_DIR}/InputAxis.cpp
-)
-
 set (MOOVIE_INCLUDES
 	${MOOVIE_INCLUDE_DIR}/DataSet.h
 	${MOOVIE_INCLUDE_DIR}/Scale.h
@@ -56,16 +52,17 @@ set (MOOVIE_INCLUDES
 	${MOOVIE_INCLUDE_DIR}/Drawer.h
 )
 
-set (DESKTOP_SRC
-	${DESKTOP_SRC_DIR}/moovie-desktop.cpp
-	${DESKTOP_SRC_DIR}/MainWindow.cpp
-	${DESKTOP_SRC_DIR}/IOList.cpp
-	${DESKTOP_SRC_DIR}/IOListWidget.cpp
-	${DESKTOP_SRC_DIR}/ConfigurationDialog.cpp
-	${DESKTOP_SRC_DIR}/ConfIntWidget.cpp
-	${DESKTOP_SRC_DIR}/ConfDoubleWidget.cpp
-	${DESKTOP_SRC_DIR}/ConfStringWidget.cpp
-	${DESKTOP_SRC_DIR}/MooViEView.cpp
+set (MOOVIE_SRC
+	${MOOVIE_SRC_DIR}/DataSet.cpp
+	${MOOVIE_SRC_DIR}/Scale.cpp
+	${MOOVIE_SRC_DIR}/Color.cpp
+	${MOOVIE_SRC_DIR}/Configuration.cpp
+	${MOOVIE_SRC_DIR}/OutputGrid.cpp
+	${MOOVIE_SRC_DIR}/IOVector.cpp
+	${MOOVIE_SRC_DIR}/CairoDrawer.cpp
+	${MOOVIE_SRC_DIR}/Scene.cpp
+	${MOOVIE_SRC_DIR}/Utils.cpp
+	${MOOVIE_SRC_DIR}/InputAxis.cpp
 )
 
 set (DESKTOP_INCLUDES
@@ -77,6 +74,18 @@ set (DESKTOP_INCLUDES
 	${DESKTOP_INCLUDE_DIR}/ConfDoubleWidget.h
 	${DESKTOP_INCLUDE_DIR}/ConfStringWidget.h
 	${DESKTOP_INCLUDE_DIR}/MooViEView.h
+)
+
+set (DESKTOP_SRC
+	${DESKTOP_SRC_DIR}/moovie-desktop.cpp
+	${DESKTOP_SRC_DIR}/MainWindow.cpp
+	${DESKTOP_SRC_DIR}/IOList.cpp
+	${DESKTOP_SRC_DIR}/IOListWidget.cpp
+	${DESKTOP_SRC_DIR}/ConfigurationDialog.cpp
+	${DESKTOP_SRC_DIR}/ConfIntWidget.cpp
+	${DESKTOP_SRC_DIR}/ConfDoubleWidget.cpp
+	${DESKTOP_SRC_DIR}/ConfStringWidget.cpp
+	${DESKTOP_SRC_DIR}/MooViEView.cpp
 )
 
 set (UIS
@@ -118,8 +127,11 @@ target_link_libraries (moovie-desktop ${QT_LIBRARIES} Qt4::QtGui Qt4::QtWebKit l
 
 
 # Installation
-install (FILES ${MOOVIE_INCLUDES} DESTINATION /usr/include/moovie)
-install (TARGETS libmoovie DESTINATION /usr/lib)
-install (TARGETS moovie-desktop DESTINATION /usr/bin)
-install (FILES moovie.png DESTINATION /usr/share/pixmaps)
-install (FILES moovie.desktop DESTINATION /usr/share/applications)
+install (FILES ${MOOVIE_INCLUDES} DESTINATION ${DEST_INCLUDE_DIR})
+install (TARGETS libmoovie DESTINATION ${DEST_LIB_DIR})
+install (TARGETS moovie DESTINATION ${DEST_BIN_DIR})
+install (TARGETS moovie-desktop DESTINATION ${DEST_BIN_DIR})
+install (DIRECTORY ${MOOVIE_DOC_DIR} DESTINATION ${DEST_DOC_DIR})
+install (FILES README.md DESTINATION ${DEST_DOC_DIR})
+install (FILES moovie.desktop DESTINATION ${DEST_DESKTOP_DIR})
+install (FILES moovie.png DESTINATION ${DEST_PIXMAP_DIR})
