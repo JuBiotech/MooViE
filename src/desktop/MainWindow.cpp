@@ -97,7 +97,7 @@ MainWindow::on_execute_btn_clicked ()
       try
 	{
 	  // Initialize the scene if necessary
-	  if (m_scene)
+	  if (not m_scene)
 	    {
 	      // Automatically paints the scene
 	      m_scene.reset (new Scene);
