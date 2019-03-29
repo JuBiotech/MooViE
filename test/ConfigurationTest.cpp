@@ -46,8 +46,6 @@ BOOST_AUTO_TEST_SUITE(configuration_test)
     BOOST_CHECK_EQUAL(c.get_histogram_background (), Color (0, 0, 0, .1));
     BOOST_CHECK_EQUAL(c.get_histogram_fill (), Color (0.5, 0.5, 0.5));
 
-    BOOST_CHECK_EQUAL(c.get_connector_arc_ratio (), 0.6);
-
     BOOST_CHECK_EQUAL(c.get_prop_thick ().line_width, 0.5);
     BOOST_CHECK_EQUAL(c.get_prop_thin ().line_width, 0.1);
 
@@ -88,8 +86,6 @@ BOOST_AUTO_TEST_SUITE(configuration_test)
     BOOST_CHECK_EQUAL(c.get_histogram_height (), 20);
     BOOST_CHECK_EQUAL(c.get_histogram_background (), Color (0, 0, 0, .1));
     BOOST_CHECK_EQUAL(c.get_histogram_fill (), Color (0.5, 0.5, 0.5));
-
-    BOOST_CHECK_EQUAL(c.get_connector_arc_ratio (), 0.6);
 
     BOOST_CHECK_EQUAL(c.get_prop_thick ().line_width, 0.5);
     BOOST_CHECK_EQUAL(c.get_prop_thin ().line_width, 0.1);

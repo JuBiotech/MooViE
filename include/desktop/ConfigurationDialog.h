@@ -56,7 +56,6 @@ private:
   ConfDoubleWidget* m_histogram_height;
 
   /** IOVector modification values */
-  ConfDoubleWidget* m_connect_arc_ratio;
   ConfIntWidget* m_relevant_places;
 
 public:

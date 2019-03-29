@@ -76,7 +76,6 @@ private:
     { .5, .5, .5, 1 };
 
   /** IOVector modification values */
-  double m_connector_arc_ratio = 0.6;
   int m_relevant_places = 3;
 
   /** General line and fill styles */
@@ -564,28 +563,6 @@ public:
   }
 
   // IOVector
-
-  /** Returns the ratio of the radial distance between two data
-   * points that will be drawn as connector.
-   *
-   * @return the connector arc ratio
-   */
-  double
-  get_connector_arc_ratio () const
-  {
-    return m_connector_arc_ratio;
-  }
-
-  /** Sets the ratio of the radial distance between two data
-   * points that will be drawn as connector.
-   *
-   * @param ratio_connector_arc the connector arc ratio to set
-   */
-  void
-  set_connector_arc_ratio (double connector_arc_ratio)
-  {
-    m_connector_arc_ratio = connector_arc_ratio;
-  }
 
   /** Returns the number of decimal places that a number from
    * [0,1] or [-1,0] can have zero before it is left out. This

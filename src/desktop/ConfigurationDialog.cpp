@@ -120,13 +120,9 @@ ConfigurationDialog::init_dialog ()
   histogram->addWidget (m_histogram_height);
 
   // Input/output vectors
-  m_connect_arc_ratio = new ConfDoubleWidget (
-      "Ratio of connectors that is curved", conf.get_connector_arc_ratio (), 0,
-      1);
   m_relevant_places = new ConfIntWidget ("Number of places to round",
 					conf.get_relevant_places (), 0, 15);
   QLayout* data = m_ui->data_grp->layout ();
-  data->addWidget (m_connect_arc_ratio);
   data->addWidget (m_relevant_places);
 }
 
@@ -171,7 +167,6 @@ ConfigurationDialog::fill_configuration_values ()
   m_histogram_height->set_value (conf.get_histogram_height ());
 
   // Input/output vectors
-  m_connect_arc_ratio->set_value (conf.get_connector_arc_ratio ());
   m_relevant_places->set_value (conf.get_relevant_places ());
 }
 
@@ -220,7 +215,6 @@ ConfigurationDialog::update_configuration ()
   conf.set_histogram_height (m_histogram_height->get_value ());
 
   // Data rows
-  conf.set_connector_arc_ratio (m_connect_arc_ratio->get_value ());
   conf.set_relevant_places (m_relevant_places->get_value ());
 }
 

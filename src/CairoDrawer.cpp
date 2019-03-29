@@ -10,7 +10,8 @@ const double CairoDrawer::END_RADIUS_MAJOR_FACTOR = 0.25,
     CairoDrawer::END_RADIUS_MINOR_FACTOR = 0.125,
     CairoDrawer::RADIUS_TICK_LABEL_FACTOR = 0.75;
 
-const double CairoDrawer::DATA_LINK_LINE_WIDTH = 0.1,
+const double CairoDrawer::IO_LINE_WIDTH = 0.1,
+    CairoDrawer::CONNECTOR_ARC_RATIO = 0.6,
     CairoDrawer::CONNECTOR_ARROW_HEIGHT = 3;
 
 const double CairoDrawer::RADIUS_HISTOGRAM_DELTA = 5, CairoDrawer::CONNECTOR_DELTA = 10,
@@ -456,8 +457,7 @@ CairoDrawer::draw_connector (const Polar& from, const Polar& to,
   cairo_context->begin_new_path ();
 
   // Calculate distance factor
-  static const double dist_factor = (1
-      - Configuration::get_instance ().get_connector_arc_ratio ()) / 2;
+  static const double dist_factor = (1 - CONNECTOR_ARC_RATIO) / 2;
 
   // Calculate intermediate coordinates to draw the arc from
   double radial_dist = to.radius () - from.radius ();
@@ -614,7 +614,7 @@ CairoDrawer::draw_arrow (const Polar& start, const DrawerProperties<>& prop)
   cairo_context->line_to (left.x (), left.y ());
   cairo_context->set_source_rgba (prop.line_color.r (), prop.line_color.g (),
 				  prop.line_color.b (), 1);
-  cairo_context->set_line_width (DATA_LINK_LINE_WIDTH);
+  cairo_context->set_line_width (IO_LINE_WIDTH);
   cairo_context->fill_preserve ();
   cairo_context->stroke ();
 }

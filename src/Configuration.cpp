@@ -180,8 +180,6 @@ Configuration::save_to_file (const std::string & cpath)
 	  std::to_string (fill_hist.r ()) + ","
 	      + std::to_string (fill_hist.g ()) + ","
 	      + std::to_string (fill_hist.b ())) << std::endl
-      << MOOVIE_CONF_LINE(connector_arc_ratio,
-			  std::to_string (instance->m_connector_arc_ratio))
       << std::endl
       << MOOVIE_CONF_LINE(relevant_places,
 			  std::to_string (instance->m_relevant_places))
@@ -436,16 +434,6 @@ Configuration::Configuration (const std::string & fpath,
 	      m_histogram_fill = Color (std::stod (values[0]),
 					std::stod (values[1]),
 					std::stod (values[2]), 1);
-	    }
-	  else if (key.compare ("moovie.connector_arc_ratio") == 0)
-	    {
-	      m_connector_arc_ratio = std::stod (value);
-
-	      if (m_connector_arc_ratio < 0 || m_connector_arc_ratio > 1)
-		{
-		  throw std::out_of_range (
-		      "\"connector_arc_ratio\" exceeds range [0,1]");
-		}
 	    }
 	  else if (key.compare ("moovie.relevant_places") == 0)
 	    {
