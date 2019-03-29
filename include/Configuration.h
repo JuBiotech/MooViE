@@ -564,11 +564,10 @@ public:
 
   // IOVector
 
-  /** Returns the number of decimal places that a number from
-   * [0,1] or [-1,0] can have zero before it is left out. This
-   * results in not drawing the corresponded link.
+  /** Returns the decimal place that is every column cell
+   * is rounded to.
    *
-   * @return the epsilon places
+   * @return the decimal place
    */
   int
   get_relevant_places () const
@@ -576,11 +575,10 @@ public:
     return m_relevant_places;
   }
 
-  /** Sets the number of decimal places that a number from
-   * [0,1] or [-1,0] can have zero before it is left out. This
-   * results in not drawing the corresponded link.
+  /** Sets the decimal place that is every column cell
+   * is rounded to.
    *
-   * @param epsilon_places the epsilon places to set
+   * @param relevant_places the epsilon places to set
    */
   void
   set_relevant_places (int relevant_places)
