@@ -15,6 +15,10 @@ ConfigurationDialog::ConfigurationDialog (QWidget *parent) :
   connect (m_ui->options_box, SIGNAL(clicked(QAbstractButton*)), this,
 	   SLOT(on_options_box_clicked(QAbstractButton*)),
 	   Qt::UniqueConnection);
+
+  // Set desktop properties
+  setWindowTitle ("Edit Configuration");
+  setWindowIcon(QIcon("./moovie.png"));
 }
 
 ConfigurationDialog::~ConfigurationDialog ()
@@ -55,7 +59,7 @@ ConfigurationDialog::init_dialog ()
   font->addWidget (m_scale_fsize);
 
   // Dimensions
-  m_width = new ConfIntWidget ("Image m_width", conf.get_width (), 1);
+  m_width = new ConfIntWidget ("Image width", conf.get_width (), 1);
   m_height = new ConfIntWidget ("Image height", conf.get_height (), 1);
   QLayout* dim = m_ui->dim_grp->layout ();
   dim->addWidget (m_width);

@@ -27,6 +27,10 @@ MainWindow::MainWindow (QWidget *parent) :
 
   // Dummy setup of the global MooViE configuration
   Configuration::initialize ("");
+
+  // Set desktop properties
+  setWindowIcon (QIcon ("./moovie.png"));
+  setWindowTitle ("MooViE - Desktop");
 }
 
 MainWindow::~MainWindow ()
@@ -233,7 +237,5 @@ void
 MainWindow::on_config_btn_clicked ()
 {
   // Dialog to edit MooViE configuration
-  ConfigurationDialog dialog;
-  dialog.setWindowTitle ("Edit Configuration");
-  dialog.exec ();
+  ConfigurationDialog ().exec ();
 }

@@ -8,8 +8,6 @@ main (int argc, char *argv[])
   QApplication moovie (argc, argv);
 
   MainWindow window;
-  window.setWindowIcon (QIcon ("/usr/share/pixmaps/moovie.png"));
-  window.setWindowTitle ("MooViE - Desktop");
   window.show ();
 
   return moovie.exec ();
