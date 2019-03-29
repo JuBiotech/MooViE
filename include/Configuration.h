@@ -77,7 +77,7 @@ private:
 
   /** IOVector modification values */
   double m_connector_arc_ratio = 0.6;
-  int m_epsilon_places = 3;
+  int m_relevant_places = 3;
 
   /** General line and fill styles */
   DrawerProperties<> m_prop_thick =
@@ -594,9 +594,9 @@ public:
    * @return the epsilon places
    */
   int
-  get_epsilon_places () const
+  get_relevant_places () const
   {
-    return m_epsilon_places;
+    return m_relevant_places;
   }
 
   /** Sets the number of decimal places that a number from
@@ -606,9 +606,9 @@ public:
    * @param epsilon_places the epsilon places to set
    */
   void
-  set_epsilon_places (int epsilon_places)
+  set_relevant_places (int relevant_places)
   {
-    m_epsilon_places = epsilon_places;
+    m_relevant_places = relevant_places;
   }
 
   // Standard properties and labels

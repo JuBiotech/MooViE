@@ -123,11 +123,11 @@ ConfigurationDialog::init_dialog ()
   m_connect_arc_ratio = new ConfDoubleWidget (
       "Ratio of connectors that is curved", conf.get_connector_arc_ratio (), 0,
       1);
-  m_epsilon_places = new ConfIntWidget ("Decimal places before zero",
-					conf.get_epsilon_places (), 0, 15);
+  m_relevant_places = new ConfIntWidget ("Number of places to round",
+					conf.get_relevant_places (), 0, 15);
   QLayout* data = m_ui->data_grp->layout ();
   data->addWidget (m_connect_arc_ratio);
-  data->addWidget (m_epsilon_places);
+  data->addWidget (m_relevant_places);
 }
 
 void
@@ -172,7 +172,7 @@ ConfigurationDialog::fill_configuration_values ()
 
   // Input/output vectors
   m_connect_arc_ratio->set_value (conf.get_connector_arc_ratio ());
-  m_epsilon_places->set_value (conf.get_epsilon_places ());
+  m_relevant_places->set_value (conf.get_relevant_places ());
 }
 
 void
@@ -221,7 +221,7 @@ ConfigurationDialog::update_configuration ()
 
   // Data rows
   conf.set_connector_arc_ratio (m_connect_arc_ratio->get_value ());
-  conf.set_epsilon_places (m_epsilon_places->get_value ());
+  conf.set_relevant_places (m_relevant_places->get_value ());
 }
 
 void

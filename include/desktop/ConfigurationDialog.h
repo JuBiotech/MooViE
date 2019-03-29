@@ -57,7 +57,7 @@ private:
 
   /** IOVector modification values */
   ConfDoubleWidget* m_connect_arc_ratio;
-  ConfIntWidget* m_epsilon_places;
+  ConfIntWidget* m_relevant_places;
 
 public:
   /** Creates a ConfigurationDialog.

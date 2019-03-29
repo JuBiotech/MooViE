@@ -9,8 +9,8 @@ IOVectorFactory::IOVectorFactory (std::size_t num_data_rows,
   m_line_width = 0.1 * (1 + std::exp (-(num_data_rows * 0.0006)));
   m_line_alpha = 0.3 * (1 + 3 * std::exp (-(num_data_rows * 0.04)));
   m_fill_alpha = 0.25 * (1 + 3 * std::exp (-(num_data_rows * 0.04)));
-  m_ct_zero = std::pow (10,
-			-Configuration::get_instance ().get_epsilon_places ());
+  m_round_factor = std::pow (
+      10, Configuration::get_instance ().get_relevant_places ());
 
   std::pair<double, double> out = std::make_pair (
       m_grid.get_start ().value (),
@@ -37,7 +37,6 @@ IOVectorFactory::IOVectorFactory (std::size_t num_data_rows,
 
     }
 
-
   for (const InputAxis& elem : m_axis)
     {
       m_input_mapper.emplace_back (
@@ -55,29 +54,24 @@ IOVectorFactory::create (const DefDataRow & row) const
 
   for (std::size_t i = 0; i < num_inputs; ++i)
     {
-      if (std::abs (row[i].value) < m_ct_zero)
-	{
-	  elem.emplace_back (Polar (std::nan ("1"), std::nan ("1")),
-			     DrawerProperties<> (0, Color (), Color ()));
-	}
-      else
-	{
-	  elem.emplace_back (
-	      Polar (m_axis[i].get_radius (),
-		     m_input_mapper[i].map (row[i].value)),
-	      DrawerProperties<> (
-		  m_line_width,
-		  Color (m_axis[i].get_prop ().fill_color, m_line_alpha),
-		  Color (m_axis[i].get_prop ().fill_color, m_fill_alpha)));
-	}
+      elem.emplace_back (
+	  Polar (m_axis[i].get_radius (),
+		 m_input_mapper[i].map (this->round (false, i, row[i].value))),
+	  DrawerProperties<> (
+	      m_line_width,
+	      Color (m_axis[i].get_prop ().fill_color, m_line_alpha),
+	      Color (m_axis[i].get_prop ().fill_color, m_fill_alpha)));
     }
 
-  Color line (get_color (row[num_inputs].value), m_line_alpha);
+  Color line (get_color (this->round (true, 0, row[num_inputs].value)),
+	      m_line_alpha);
   Color fill (line.r (), line.g (), line.b (), m_fill_alpha);
   DrawerProperties<> prop (m_line_width, line, fill);
   elem.emplace_back (
-      Polar (m_grid.get_radius () - CairoDrawer::CONNECTOR_DELTA,
-	     m_output_mapper[0].map (row[num_inputs].value)),
+      Polar (
+	  m_grid.get_radius () - CairoDrawer::CONNECTOR_DELTA,
+	  m_output_mapper[0].map (
+	      this->round (true, 0, row[num_inputs].value))),
       prop);
 
   double height_factor = m_grid.get_height ()
@@ -89,11 +83,46 @@ IOVectorFactory::create (const DefDataRow & row) const
 	      m_grid.get_radius ()
 		  + Configuration::get_instance ().get_output_thickness ()
 		  + i * height_factor,
-	      m_output_mapper[i].map (row[i + num_inputs].value)),
+	      m_output_mapper[i].map (this->round (true, i, row[i + num_inputs].value))),
 	  prop);
     }
 
   return elem;
+}
+
+double
+IOVectorFactory::round (bool grid, std::size_t i, double val) const
+{
+  val = std::round (val * m_round_factor) / m_round_factor;
+
+  if (grid)
+    {
+      double min = m_grid.get_var (i).min, max = m_grid.get_var (i).max;
+
+      if (min > val)
+	{
+	  val = min;
+	}
+      if (max < val)
+	{
+	  val = max;
+	}
+    }
+  else
+    {
+      double min = m_axis[i].get_var ().min, max = m_axis[i].get_var ().max;
+
+      if (min > val)
+	{
+	  val = min;
+	}
+      if (max < val)
+	{
+	  val = max;
+	}
+    }
+
+  return val;
 }
 
 const Color&

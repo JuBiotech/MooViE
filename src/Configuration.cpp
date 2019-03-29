@@ -183,8 +183,8 @@ Configuration::save_to_file (const std::string & cpath)
       << MOOVIE_CONF_LINE(connector_arc_ratio,
 			  std::to_string (instance->m_connector_arc_ratio))
       << std::endl
-      << MOOVIE_CONF_LINE(epsilon_places,
-			  std::to_string (instance->m_epsilon_places))
+      << MOOVIE_CONF_LINE(relevant_places,
+			  std::to_string (instance->m_relevant_places))
       << std::endl
       << MOOVIE_CONF_LINE(thick_line_width,
 			  std::to_string (instance->m_prop_thick.line_width))
@@ -447,13 +447,13 @@ Configuration::Configuration (const std::string & fpath,
 		      "\"connector_arc_ratio\" exceeds range [0,1]");
 		}
 	    }
-	  else if (key.compare ("moovie.epsilon_places") == 0)
+	  else if (key.compare ("moovie.relevant_places") == 0)
 	    {
-	      m_epsilon_places = std::stoi (value);
-	      if (m_epsilon_places < -15 || m_epsilon_places > 15)
+	      m_relevant_places = std::stoi (value);
+	      if (m_relevant_places < -15 || m_relevant_places > 15)
 		{
 		  throw std::out_of_range (
-		      "\"epsilon_places\" exceeds range [-15,15]");
+		      "\"relevant_places\" exceeds range [-15,15]");
 		}
 	    }
 	  else if (key.compare ("moovie.thick_line_width") == 0)

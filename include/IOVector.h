@@ -1,5 +1,5 @@
-#ifndef RELATIONELEMENT_H_
-#define RELATIONELEMENT_H_
+#ifndef IOVECTOR_H_
+#define IOVECTOR_H_
 
 #include <vector>
 #include <Coordinates.h>
@@ -103,7 +103,7 @@ class IOVectorFactory
 {
 private:
   /** Precalculated values that will be applied to the style of each point */
-  double m_line_width, m_line_alpha, m_fill_alpha, m_ct_zero;
+  double m_line_width, m_line_alpha, m_fill_alpha, m_round_factor;
 
   /** The OutputGrid that fits the IOVector */
   const OutputGrid& m_grid;
@@ -112,6 +112,7 @@ private:
 
   /** Mapper that convert value from data set to angle */
   std::vector<Mapper> m_input_mapper, m_output_mapper;
+
 public:
   /** Creates a new IOVector factory which needs
    * the number of rows in the data set and the OutputGrid
@@ -135,7 +136,19 @@ public:
    */
   IOVector
   create (const DefDataRow& row) const;
+
 private:
+  /** Rounds the given value based on the configured
+   * decimal places.
+   *
+   * @param grid if value is output grid
+   * @param i index of the column variables
+   * @param val value to round
+   *
+   * @return rounded value
+   */
+  double
+  round (bool grid, std::size_t i, double val) const;
 
   /** Returns the color of the interval that the given value
    * lies in.
@@ -148,4 +161,4 @@ private:
   get_color (double val) const;
 };
 
-#endif /* RELATIONELEMENT_H_ */
+#endif /* IOVECTOR_H_ */
