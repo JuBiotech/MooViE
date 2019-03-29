@@ -80,7 +80,8 @@ the results.
 For running a MooViE scene, an input file and an output (1) need to be specified. 
 You can now render the scene with a simple click (2). If the output does not satisfy 
 your wishes, you can edit the configuration for the MooViE scene (3). By using the 
-column control section (4), you can now alter how and what data is displayed.
+column control section (4), you can now alter how and what data is displayed. You can 
+navigate in the display area using scroll bars and `ctrl` + `+`/`-`.
 
 You can enable and disable inputs and outputs by a toggle button and enter new boundaries 
 for the values in the selected column. The order of columns can also be changed by 
@@ -110,8 +111,8 @@ ignored.
 
 ### Detailed configuration value description
 Setting image dimensions:
-* **width**: the image width [positive integer], _default_ = 750
-* **height**: the image height [positive integer], _default_ = 750
+* **width**: the image width [positive integer]
+* **height**: the image height [positive integer]
 
 Setting the line widths:
 * **thick_line_width**: line width that is used for thick lines [float], _default_ 
