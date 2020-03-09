@@ -2,7 +2,7 @@
 #include <iostream>
 
 MooViEView::MooViEView (QWidget *parent) :
-    QWebView (parent), m_zoom_active (false)
+    QWebEngineView (parent), m_zoom_active (false)
 {
 }
 

@@ -29,7 +29,7 @@ find_package (freetype2 REQUIRED)
 find_package (sigc++-2.0 REQUIRED)
 find_package (cairo REQUIRED)
 find_package (cairomm-1.0 REQUIRED)
-find_package (Qt4 REQUIRED QtGui QtWebKit)
+find_package (Qt5 COMPONENTS Core Gui Widgets WebEngine WebEngineWidgets REQUIRED)
 
 # Structure files
 set (MOOVIE_INCLUDES
@@ -114,16 +114,14 @@ add_dependencies (moovie libmoovie)
 target_link_libraries (moovie PUBLIC libmoovie ${CAIRO_LIBRARY_LOC} ${CAIROMM_LIBRARY_LOC})
 
 
-# Build Qt4 application
-include (${QT_USE_FILE})
-add_definitions (${QT_DEFINITIONS})
+# Build Qt5 application
 include_directories (${CMAKE_BINARY_DIR} ${DESKTOP_INCLUDE_DIR})
 
-QT4_WRAP_UI (UI_HEADERS ${UIS})
-QT4_WRAP_CPP (MOC_SRCS ${DESKTOP_INCLUDES})
+QT5_WRAP_UI (UI_HEADERS ${UIS})
+QT5_WRAP_CPP (MOC_SRCS ${DESKTOP_INCLUDES})
 
 add_executable (moovie-desktop ${DESKTOP_SRC} ${MOC_SRCS} ${UI_HEADERS})
-target_link_libraries (moovie-desktop ${QT_LIBRARIES} Qt4::QtGui Qt4::QtWebKit libmoovie ${CAIRO_LIBRARY_LOC} ${CAIROMM_LIBRARY_LOC})
+target_link_libraries (moovie-desktop Qt5::Core Qt5::Gui Qt5::Widgets Qt5::WebEngine Qt5::WebEngineWidgets libmoovie ${CAIRO_LIBRARY_LOC} ${CAIROMM_LIBRARY_LOC})
 
 
 # Installation

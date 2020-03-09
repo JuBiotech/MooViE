@@ -1,9 +1,9 @@
 #ifndef MOOVIEVIEW_H
 #define MOOVIEVIEW_H
 
-#include <QWebView>
+#include <QWebEngineView>
 #include <QKeyEvent>
-#include <QWebFrame>
+#include <QWebEnginePage>
 
 /** A Viewer that is able to display the SVG
  * output files of MooViE. Unfortunately, QtSvg does
@@ -19,7 +19,7 @@
  * @date
  * @author stratmann
  */
-class MooViEView : public QWebView
+class MooViEView : public QWebEngineView
 {
 Q_OBJECT
 
