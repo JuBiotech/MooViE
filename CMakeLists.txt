@@ -4,6 +4,8 @@ project (MooViE)
 set (CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 set (CMAKE_CXX_STANDARD 11)
 
+option(BUILD_GUI "Build a QT Gui" ON)
+
 # Set code location variables
 set (MOOVIE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set (MOOVIE_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
@@ -17,8 +19,9 @@ set (DEST_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin)
 set (DEST_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib)
 set (DEST_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include/moovie)
 set (DEST_DOC_DIR ${CMAKE_INSTALL_PREFIX}/share/doc/moovie)
-set (DEST_DESKTOP_DIR /usr/share/applications)
-set (DEST_PIXMAP_DIR /usr/share/pixmaps)
+set (DEST_DESKTOP_DIR ${CMAKE_INSTALL_PREFIX}/share/applications)
+set (DEST_PIXMAP_DIR ${CMAKE_INSTALL_PREFIX}/share/pixmaps)
+set(CMAKE_INSTALL_RPATH ${DEST_LIB_DIR})
 
 # Find important libraries
 # Moovie uses Cairomm-1.0, which depends on
@@ -29,7 +32,9 @@ find_package (freetype2 REQUIRED)
 find_package (sigc++-2.0 REQUIRED)
 find_package (cairo REQUIRED)
 find_package (cairomm-1.0 REQUIRED)
-find_package (Qt5 COMPONENTS Core Gui Widgets WebEngine WebEngineWidgets REQUIRED)
+if (BUILD_GUI)
+    find_package (Qt5 COMPONENTS Core Gui Widgets WebEngine WebEngineWidgets REQUIRED)
+endif()
 
 # Structure files
 set (MOOVIE_INCLUDES
@@ -103,33 +108,44 @@ include_directories (${MOOVIE_INCLUDE_DIR} ${MOOVIE_INCLUDE_DIR}/thirdparty/tcla
 
 
 # Build MooViE library
-add_library (libmoovie STATIC "")
-target_sources (libmoovie PUBLIC ${MOOVIE_SRC})
+add_library (libmoovie SHARED ${MOOVIE_SRC})
 set_target_properties (libmoovie PROPERTIES OUTPUT_NAME moovie)
+target_link_libraries (libmoovie PUBLIC ${CAIRO_LIBRARY_LOC} ${CAIROMM_LIBRARY_LOC})
 
 
 # Build MooViE executable
 add_executable (moovie ${MOOVIE_SRC_DIR}/moovie.cpp)
 add_dependencies (moovie libmoovie)
-target_link_libraries (moovie PUBLIC libmoovie ${CAIRO_LIBRARY_LOC} ${CAIROMM_LIBRARY_LOC})
+target_link_libraries (moovie PUBLIC libmoovie)
 
+if (BUILD_GUI)
+    # Build Qt5 application
+    include_directories (${CMAKE_BINARY_DIR} ${DESKTOP_INCLUDE_DIR})
 
-# Build Qt5 application
-include_directories (${CMAKE_BINARY_DIR} ${DESKTOP_INCLUDE_DIR})
+    QT5_WRAP_UI (UI_HEADERS ${UIS})
+    QT5_WRAP_CPP (MOC_SRCS ${DESKTOP_INCLUDES})
 
-QT5_WRAP_UI (UI_HEADERS ${UIS})
-QT5_WRAP_CPP (MOC_SRCS ${DESKTOP_INCLUDES})
-
-add_executable (moovie-desktop ${DESKTOP_SRC} ${MOC_SRCS} ${UI_HEADERS})
-target_link_libraries (moovie-desktop Qt5::Core Qt5::Gui Qt5::Widgets Qt5::WebEngine Qt5::WebEngineWidgets libmoovie ${CAIRO_LIBRARY_LOC} ${CAIROMM_LIBRARY_LOC})
+    add_executable (moovie-desktop ${DESKTOP_SRC} ${MOC_SRCS} ${UI_HEADERS})
+    target_link_libraries (moovie-desktop Qt5::Core Qt5::Gui Qt5::Widgets Qt5::WebEngine Qt5::WebEngineWidgets libmoovie)
+endif()
 
 
 # Installation
 install (FILES ${MOOVIE_INCLUDES} DESTINATION ${DEST_INCLUDE_DIR})
 install (TARGETS libmoovie DESTINATION ${DEST_LIB_DIR})
 install (TARGETS moovie DESTINATION ${DEST_BIN_DIR})
-install (TARGETS moovie-desktop DESTINATION ${DEST_BIN_DIR})
+if (BUILD_GUI)
+    file(WRITE ${PROJECT_BINARY_DIR}/moovie.desktop "[Desktop Entry]
+Name=MooViE
+Exec=${DEST_BIN_DIR}/moovie-desktop
+Icon=${DEST_PIXMAP_DIR}/moovie.png
+Categories=Science;DataVisualization;
+Terminal=false
+Type=Application\n")
+    install (TARGETS moovie-desktop DESTINATION ${DEST_BIN_DIR})
+    install (FILES ${PROJECT_BINARY_DIR}/moovie.desktop DESTINATION ${DEST_DESKTOP_DIR})
+    install (FILES moovie.png DESTINATION ${DEST_PIXMAP_DIR})
+endif()
 install (DIRECTORY ${MOOVIE_DOC_DIR} DESTINATION ${DEST_DOC_DIR})
 install (FILES README.md DESTINATION ${DEST_DOC_DIR})
-install (FILES moovie.desktop DESTINATION ${DEST_DESKTOP_DIR})
-install (FILES moovie.png DESTINATION ${DEST_PIXMAP_DIR})
+

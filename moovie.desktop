@@ -1,7 +1,0 @@
-[Desktop Entry]
-Name=MooViE
-Exec=/usr/bin/moovie-desktop
-Icon=/usr/share/pixmaps/moovie.png
-Categories=Science;DataVisualization;
-Terminal=false
-Type=Application
