@@ -15,7 +15,7 @@ BOOST_AUTO_TEST_SUITE(graphical_elements_test)
 
     // Construction
 
-    Configuration::initialize (cwd + "/test/files/input.csv");
+    Configuration::initialize (cwd + "/input.csv");
     const Configuration& conf = Configuration::get_instance ();
 
     std::string var_name = "var", unit = "mT", font_name = "Liberation Sans";
@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_SUITE(graphical_elements_test)
 
     // Construction
 
-    Configuration::initialize (cwd + "/test/files/input.csv");
+    Configuration::initialize (cwd + "/input.csv");
     const Configuration& conf = Configuration::get_instance ();
 
     std::vector<DefVariable> output_vars;
@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_SUITE(graphical_elements_test)
     BOOST_CHECK_CLOSE(grid.get_var (1).max, max1, eps);
     BOOST_CHECK_EQUAL(grid.get_var (0).unit, unit0);
     BOOST_CHECK_EQUAL(grid.get_var (1).unit, unit1);
-    BOOST_CHECK_THROW(grid.get_var (2), std::out_of_range)
+    BOOST_CHECK_THROW(grid.get_var (2), std::out_of_range);
     BOOST_CHECK_EQUAL(grid.get_num_outputs (), output_vars.size ());
     BOOST_CHECK_CLOSE(grid.get_start ().value (), start.value (), eps);
     BOOST_CHECK_CLOSE(grid.get_end ().value (), end.value (), eps);
@@ -198,7 +198,7 @@ BOOST_AUTO_TEST_SUITE(graphical_elements_test)
   {
     std::string cwd = Util::get_cwd ();
 
-    Configuration::initialize (cwd + "/test/files/input.csv");
+    Configuration::initialize (cwd + "/input.csv");
 
     std::string var_name = "var", unit = "mT", font_name = "Liberation Sans";
     double min = 0, max = 10;
@@ -224,7 +224,7 @@ BOOST_AUTO_TEST_SUITE(graphical_elements_test)
 
     OutputGrid grid (output_vars, start, end, radius, height, dir);
 
-    DefDataSet set (cwd + "/test/files/input.csv");
+    DefDataSet set (cwd + "/input.csv");
     const DefDataRow& row = set[0];
 
     IOVectorFactory factory (1, grid, axis);

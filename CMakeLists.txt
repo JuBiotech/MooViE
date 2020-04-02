@@ -135,3 +135,8 @@ install (DIRECTORY ${MOOVIE_DOC_DIR} DESTINATION ${DEST_DOC_DIR})
 install (FILES README.md DESTINATION ${DEST_DOC_DIR})
 install (FILES moovie.desktop DESTINATION ${DEST_DESKTOP_DIR})
 install (FILES moovie.png DESTINATION ${DEST_PIXMAP_DIR})
+
+
+# Add test subdirectory
+include(CTest)
+add_subdirectory(test)
