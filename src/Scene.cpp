@@ -207,7 +207,7 @@ Scene::initialize (void)
   const Configuration & config = Configuration::get_instance ();
 
   // IOVectors of the later histogram
-  std::vector<std::vector<double>> histogram_values (m_set.get_num_inputs ());
+  std::vector<std::vector<double>> histogram_values (m_set.get_num_active_inputs());
 
   // Create DomainAxis' from DataSet's input variables
   double angle = 180 / m_set.get_num_active_inputs ()
@@ -226,7 +226,7 @@ Scene::initialize (void)
 	  DrawerProperties<> (
 	      config.get_prop_thick ().line_width,
 	      Color::BLACK,
-	      Configuration::SET3.at (m_set.get_num_inputs () - 1,
+	      Configuration::SET3.at (m_set.get_num_active_inputs() - 1,
 				      axis_color_pos++)));
       start += angle + config.get_input_separation_angle ();
       end += angle + config.get_input_separation_angle ();
