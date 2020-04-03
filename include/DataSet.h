@@ -547,16 +547,16 @@ template<typename T>
     void
     swap_columns (std::size_t c0, std::size_t c1)
     {
-      if (c0 >= m_num_cols)
+      if (c0 >= m_cols.size())
 	{
 	  throw std::out_of_range (
-	      "index exceeds range [0, " + std::to_string (m_num_cols)
+	      "index exceeds range [0, " + std::to_string (m_cols.size())
 		  + "), given: " + std::to_string (c0));
 	}
-      if (c1 >= m_num_cols)
+      if (c1 >= m_cols.size())
 	{
 	  throw std::out_of_range (
-	      "index exceeds range [0, " + std::to_string (m_num_cols)
+	      "index exceeds range [0, " + std::to_string (m_cols.size())
 		  + "), given: " + std::to_string (c1));
 	}
 

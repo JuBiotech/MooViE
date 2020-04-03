@@ -78,19 +78,19 @@ Scene::toggle_output (std::size_t index, bool mode)
 void
 Scene::swap_inputs (std::size_t from_index, std::size_t to_index)
 {
-  if (from_index >= m_set.get_num_active_inputs ())
+  if (from_index >= m_set.get_num_inputs ())
     {
       throw std::out_of_range (
 	  "from_index " + std::to_string (from_index)
 	      + " exceeds input index range [0, "
-	      + std::to_string (m_set.get_num_active_inputs ()) + ")");
+	      + std::to_string (m_set.get_num_inputs ()) + ")");
     }
-  if (to_index >= m_set.get_num_active_inputs ())
+  if (to_index >= m_set.get_num_inputs ())
     {
       throw std::out_of_range (
 	  "to_index " + std::to_string (to_index)
 	      + " exceeds input index range [0, "
-	      + std::to_string (m_set.get_num_active_inputs ()) + ")");
+	      + std::to_string (m_set.get_num_inputs ()) + ")");
     }
 
   m_set.swap_columns (from_index, to_index);
@@ -99,23 +99,23 @@ Scene::swap_inputs (std::size_t from_index, std::size_t to_index)
 void
 Scene::swap_outputs (std::size_t from_index, std::size_t to_index)
 {
-  if (from_index >= m_set.get_num_active_outputs ())
+  if (from_index >= m_set.get_num_outputs ())
     {
       throw std::out_of_range (
 	  "from_index " + std::to_string (from_index)
 	      + " exceeds output index range [0, "
-	      + std::to_string (m_set.get_num_active_outputs ()) + ")");
+	      + std::to_string (m_set.get_num_outputs ()) + ")");
     }
-  if (to_index >= m_set.get_num_active_outputs ())
+  if (to_index >= m_set.get_num_outputs ())
     {
       throw std::out_of_range (
 	  "to_index " + std::to_string (to_index)
 	      + " exceeds input index range [0, "
-	      + std::to_string (m_set.get_num_active_outputs ()) + ")");
+	      + std::to_string (m_set.get_num_outputs ()) + ")");
     }
 
-  m_set.swap_columns (from_index + m_set.get_num_active_inputs (),
-		      to_index + m_set.get_num_active_inputs ());
+  m_set.swap_columns (from_index + m_set.get_num_inputs (),
+		      to_index + m_set.get_num_inputs ());
 }
 
 void
@@ -207,7 +207,7 @@ Scene::initialize (void)
   const Configuration & config = Configuration::get_instance ();
 
   // IOVectors of the later histogram
-  std::vector<std::vector<double>> histogram_values (m_set.get_num_inputs ());
+  std::vector<std::vector<double>> histogram_values (m_set.get_num_active_inputs());
 
   // Create DomainAxis' from DataSet's input variables
   double angle = 180 / m_set.get_num_active_inputs ()
@@ -226,7 +226,7 @@ Scene::initialize (void)
 	  DrawerProperties<> (
 	      config.get_prop_thick ().line_width,
 	      Color::BLACK,
-	      Configuration::SET3.at (m_set.get_num_inputs () - 1,
+	      Configuration::SET3.at (m_set.get_num_active_inputs() - 1,
 				      axis_color_pos++)));
       start += angle + config.get_input_separation_angle ();
       end += angle + config.get_input_separation_angle ();
