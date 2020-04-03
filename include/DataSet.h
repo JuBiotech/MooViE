@@ -213,6 +213,7 @@ template<typename T>
       swap (MockColumn& m0, MockColumn& m1)
       {
 	std::swap (m0.m_column, m1.m_column);
+	std::swap (m0.m_var, m1.m_var);
       }
     private:
       /** A shared pointer which points to the actual m_column */
