@@ -210,7 +210,7 @@ MainWindow::on_execute_btn_clicked ()
 	  // Load SVG image and set the zoom using the image size
 	  m_view->load (QUrl (output_loc));
 	  m_view->show ();
-	  m_view->adjust_zoom (conf.get_width (), conf.get_height ());
+      m_view->adjust_zoom_by_svg_size(conf.get_width(), conf.get_height());
 	}
       catch (const std::exception& e)
 	{
