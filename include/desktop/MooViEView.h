@@ -4,15 +4,19 @@
 #include <QWebEngineView>
 #include <QKeyEvent>
 #include <QWebEnginePage>
+#include <QEvent>
+#include <QChildEvent>
+#include <QPointer>
+#include <QOpenGLWidget>
 
 /** A Viewer that is able to display the SVG
  * output files of MooViE. Unfortunately, QtSvg does
  * not support the full SVG standard and is therefore
  * not able to display MooViE scenes correctly.
- * QWebView is used instead.
+ * QWebEngineView is used instead.
  * MooViEView implements a zoom function using Qt events.
  * The user can set the zoom factor by pressing
- * "CTRL" + "+".
+ * "CTRL" - "+"/"-" or  "CTRL" + mouse wheel.
  *
  * @brief viewer widget for MooViE scenes
  *
@@ -31,6 +35,9 @@ private:
 
   /** Enabled if CTRL is pressed */
   bool m_zoom_active;
+  
+  /** child of the QWebEngineView (needed to steel events */
+  QPointer<QObject> m_child;
 
 public:
   /** Creates a MooViE viewer.
@@ -49,23 +56,19 @@ public:
    */
   void
   adjust_zoom (int width, int height);
-
-private slots:
-  /** Is called when a key is pressed while
-   * this widget is selected.
-   *
-   * @param event holds the pressed key's ID
+  
+  bool
+  event(QEvent * ev) override;
+  
+  
+protected:
+  /**
+   * handles all kind of events. needed for zooming 
    */
-  void
-  keyPressEvent (QKeyEvent* event);
+  bool 
+  eventFilter(QObject* obj, QEvent* event) override;
 
-  /** Is called when a key is released while
-   * this widget is selected.
-   *
-   * @param event holds the released key's ID
-   */
-  void
-  keyReleaseEvent (QKeyEvent* event);
+
 };
 
 #endif // MOOVIEVIEW_H
