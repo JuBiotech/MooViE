@@ -29,9 +29,12 @@ Q_OBJECT
 
 private:
   /** Parameter to calculate the adjusted zoom */
-  static constexpr double START_ZOOM_DIV = 600.;
+  static constexpr double ZOOM_ADJUST_FACTOR = 0.75;
   /** Increase/Decrease summand of the zoom */
   static constexpr double ZOOM_DELTA = 0.1;
+
+  /** The maximum of width/height of the last rendered svg */
+  double m_max_svg_size;
 
   /** Enabled if CTRL is pressed */
   bool m_zoom_active;
@@ -55,10 +58,25 @@ public:
    * @param height height of the MooViE scene
    */
   void
-  adjust_zoom (int width, int height);
+  adjust_zoom_by_svg_size (int width, int height);
+
+  /** Sets the zoom factor so that the size
+   * of the displayed MooViE scene is adjusted
+   * to the current size of the display.
+   */
+  void
+  adjust_zoom ();
   
   bool
   event(QEvent * ev) override;
+
+private slots:
+  /** Is called when the widget is resized.
+   *
+   * @param event
+   */
+  void
+  resizeEvent (QResizeEvent* event);
   
   
 protected:
