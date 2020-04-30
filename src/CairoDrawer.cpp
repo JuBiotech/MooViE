@@ -3,8 +3,7 @@
 const double CairoDrawer::RADIAL_TEXT_FACTOR = 0.3;
 
 const double CairoDrawer::COORDGRID_ADJUSTMENT = 0.5,
-    CairoDrawer::COORDPOINT_ANGLE = 0.005,
-    CairoDrawer::COORDGRID_DESCRIPTION_ANGLE = 0.1;
+    CairoDrawer::COORDPOINT_ANGLE = 0.005;
 
 const double CairoDrawer::END_RADIUS_MAJOR_FACTOR = 0.25,
     CairoDrawer::END_RADIUS_MINOR_FACTOR = 0.125,
@@ -14,20 +13,16 @@ const double CairoDrawer::IO_LINE_WIDTH = 0.1,
     CairoDrawer::CONNECTOR_ARC_RATIO = 0.6,
     CairoDrawer::CONNECTOR_ARROW_HEIGHT = 3;
 
-const double CairoDrawer::RADIUS_HISTOGRAM_DELTA = 5, CairoDrawer::CONNECTOR_DELTA = 10,
+const double CairoDrawer::INPUT_RADIUS_DELTA = 2.5, CairoDrawer::CONNECTOR_DELTA = 10,
     CairoDrawer::TEXT_DELTA = 0.01, CairoDrawer::ANGLE_DELTA_SMALL = 0.001,
     CairoDrawer::ANGLE_DELTA_MEDIUM = 0.01,
-    CairoDrawer::ANGLE_DELTA_LARGE = 0.1, CairoDrawer::RADIUS_DELTA = 10,
+    CairoDrawer::RADIUS_DELTA = 10,
     CairoDrawer::OUTPUT_EXTREME_RADIUS_DELTA = 2,
     CairoDrawer::OUTPUT_LABEL_LINE_END_DELTA = 3,
-    CairoDrawer::OUTPUT_LABEL_FONT_FACTOR = 0.1,
-	CairoDrawer::INPUT_AXIS_FONT_FACTOR = 0.025,
-	CairoDrawer::INPUT_TICK_FONT_FACTOR = 0.3;
+    CairoDrawer::OUTPUT_LABEL_FONT_FACTOR = 0.1;
 
 const CairoDrawer::TextAlignment CairoDrawer::TextAlignment::LEFT (1),
-    CairoDrawer::TextAlignment::HALF_LEFT (0.75),
     CairoDrawer::TextAlignment::CENTERED (0.5),
-    CairoDrawer::TextAlignment::HALF_RIGHT (0.25),
     CairoDrawer::TextAlignment::RIGHT (0);
 
 CairoDrawer::TextAlignment::TextAlignment (double ratio)
@@ -197,31 +192,24 @@ CairoDrawer::draw_input_axis (const InputAxis& axis)
   double end_radius_minor = start_radius
       + END_RADIUS_MINOR_FACTOR * axis.get_height ();
 
-  // Calculate radii for labels
+  // Get width of longest tick description
   std::size_t max_tick_label_pos = 0;
-  for (std::size_t i = 1; i < tick_labels.size (); ++i)
-    {
-      if (tick_labels[i].get_text ().length ()
-	  > tick_labels[max_tick_label_pos].get_text ().length ())
-	{
-	  max_tick_label_pos = i;
-	}
-    }
-  set_font_face (tick_labels[max_tick_label_pos]);
-  Cairo::TextExtents tick_ext = get_text_extents (
-      tick_labels[max_tick_label_pos]);
+  const Label& longestTickDiscr = *std::max_element(tick_labels.begin(), tick_labels.end(),
+      [](const Label& l0, const Label& l1) {
+              return l0.get_text().length() < l1.get_text().length();
+  });
+  set_font_face (longestTickDiscr);
+  Cairo::TextExtents tick_ext = get_text_extents (longestTickDiscr);
   set_font_face (axis.make_label (conf.get_prop_axis_label ()));
   Cairo::TextExtents label_ext = get_text_extents (
       axis.make_label (conf.get_prop_axis_label ()));
 
-  double radius_tick_label = end_radius_major
+  // Calculate radii at that tick labels, axis label and histogram can start
+  double radius_tick_label = end_radius_major + tick_ext.width
       + RADIUS_TICK_LABEL_FACTOR * axis.get_height ();
-  double radius_label = radius_tick_label
-	  + tick_ext.width * conf.get_prop_scale_label().font_size * INPUT_TICK_FONT_FACTOR
-	  + label_ext.height * conf.get_prop_axis_label().font_size * INPUT_AXIS_FONT_FACTOR;
-  double radius_histogram = radius_label
-      + label_ext.height * conf.get_prop_axis_label().font_size * INPUT_AXIS_FONT_FACTOR
-	  + RADIUS_HISTOGRAM_DELTA;
+  double radius_label = radius_tick_label + label_ext.height + INPUT_RADIUS_DELTA;
+  double radius_histogram = radius_label + label_ext.height
+      + INPUT_RADIUS_DELTA;
 
   // Calculate how the InputAxis' ticks is separated into thin and thick lines (ticks)
   const std::size_t NUM_SEGMENTS = axis.get_scale ().get_major_intersections ()
@@ -229,11 +217,10 @@ CairoDrawer::draw_input_axis (const InputAxis& axis)
   const std::size_t NUM_THICK_LINES =
       axis.get_scale ().get_major_intersections ();
 
-  // Draw the ticks and the associated values
+  // Draw the ticks and the associated values labels
   for (size_t i = 0; i <= NUM_SEGMENTS; ++i)
     {
-      Angle a (
-	  (axis.get_start () + span * (double (i) / double (NUM_SEGMENTS))));
+      Angle a (axis.get_start () + span * (double (i) / double (NUM_SEGMENTS)));
       if (i % NUM_THICK_LINES)
 	{
 	  draw_line (
@@ -250,7 +237,7 @@ CairoDrawer::draw_input_axis (const InputAxis& axis)
 		     axis.get_prop ());
 
 	  draw_text_parallel (tick_label, Polar (radius_tick_label, a),
-			      TextAlignment::LEFT);
+			      TextAlignment::RIGHT);
 	}
     }
 
@@ -823,7 +810,7 @@ CairoDrawer::draw_text_parallel (const Label& label, const Polar& start,
   else
     cairo_context->rotate_degrees (270);
   cairo_context->translate (-alignment.ratio * t_exts.width,
-			    (1 - alignment.ratio) * t_exts.height);
+			    0.5 * t_exts.height);
 
   cairo_context->close_path ();
   cairo_context->show_text (label.get_text ());
