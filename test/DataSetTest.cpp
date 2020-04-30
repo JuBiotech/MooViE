@@ -13,7 +13,7 @@ BOOST_AUTO_TEST_SUITE(dataset_test)
   {
     std::string cwd = Util::get_cwd ();
 
-    DefDataSet set (cwd + "/test/files/input.csv");
+    DefDataSet set (cwd + "/input.csv");
 
     double eps = std::numeric_limits<double>::epsilon ();
 
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_SUITE(dataset_test)
   {
     std::string cwd = Util::get_cwd ();
 
-    DefDataSet set (cwd + "/test/files/input4_nouse.csv");
+    DefDataSet set (cwd + "/input4_nouse.csv");
 
     double eps = std::numeric_limits<double>::epsilon ();
 
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_SUITE(dataset_test)
   {
     std::string cwd = Util::get_cwd ();
 
-    BOOST_CHECK_THROW(DefDataSet (cwd + "/test/files/input5_nouse.csv"),
+    BOOST_CHECK_THROW(DefDataSet (cwd + "/input5_nouse.csv"),
 		      std::length_error);
   }
 
@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_SUITE(dataset_test)
   {
     std::string cwd = Util::get_cwd ();
 
-    BOOST_CHECK_THROW(DefDataSet (cwd + "/test/files/input6_nouse.csv"),
+    BOOST_CHECK_THROW(DefDataSet (cwd + "/input6_nouse.csv"),
 		      std::length_error);
   }
 

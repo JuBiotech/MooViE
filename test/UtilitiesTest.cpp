@@ -13,7 +13,7 @@ BOOST_AUTO_TEST_SUITE(util)
     std::string cwd = Util::get_cwd ();
 
     std::string content = Util::read_file (
-	cwd + "/test/files/input6_nouse.csv");
+	cwd + "/input6_nouse.csv");
     BOOST_CHECK_EQUAL(content, "Invalid comment csv\n\n"
 		      "i#Input1 o#Output1\n"
 		      "1,2\n");
