@@ -17,6 +17,22 @@ SimpleScale::make_labels (void) const
   return label;
 }
 
+std::vector<Label>
+MultiScale::make_labels (size_t i) const {
+  std::vector<Label> label;
+  label.reserve (get_major_intersections () + 1);
+  double step = (get_extremes (i).second - get_extremes (i).first)
+      / double (get_major_intersections ());
+  for (size_t j = 0; j <= m_major_intersections; ++j)
+  {
+    double val = get_extremes (i).first + j * step;
+    std::stringstream ss;
+    ss << val << m_label_suffix;
+    label.emplace_back (ss.str (), m_label_prop);
+  }
+  return label;
+}
+
 std::pair<double, double>
 create_rounded_interval (double min, double max)
 {

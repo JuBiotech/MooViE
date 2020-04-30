@@ -106,22 +106,16 @@ CairoDrawer::draw_output_grid (const OutputGrid& grid)
   const MultiScale& scale = grid.get_scale ();
 
   // Draw the scale of the OutputGrid
-  double first_bound, second_bound;
-  if (grid.get_direction () == Direction::COUNTER_CLOCKWISE)
+  std::vector<Label> labels = scale.make_labels(0);
+  if (grid.get_direction () == Direction::CLOCKWISE)
     {
-      first_bound = scale.get_extremes (0).first;
-      second_bound = scale.get_extremes (0).second;
-    }
-  else
-    {
-      first_bound = scale.get_extremes (0).second;
-      second_bound = scale.get_extremes (0).first;
+      std::reverse(labels.begin(), labels.end());
     }
   draw_text_orthogonal (
-      Label (std::to_string (first_bound), conf.get_prop_scale_label ()),
+      labels.front(),
       Polar (min_radius, grid.get_start () - TEXT_DELTA), TextAlignment::RIGHT);
   draw_text_orthogonal (
-      Label (std::to_string (second_bound), conf.get_prop_scale_label ()),
+      labels.back(),
       Polar (min_radius, grid.get_end () + TEXT_DELTA), TextAlignment::LEFT);
 
   // Draw the output lines of the OutputGrid
@@ -132,23 +126,19 @@ CairoDrawer::draw_output_grid (const OutputGrid& grid)
 			 max_radius + i * extends.height * name_prop.font_size * OUTPUT_LABEL_FONT_FACTOR,
 			 min_radius + i * y_dist, grid.get_end (),
 			 M_PI_2 - i * 2 * ANGLE_DELTA_MEDIUM);
-      if (grid.get_direction () == Direction::COUNTER_CLOCKWISE)
-	{
-	  first_bound = scale.get_extremes (i).first;
-	  second_bound = scale.get_extremes (i).second;
-	}
-      else
-	{
-	  first_bound = scale.get_extremes (i).second;
-	  second_bound = scale.get_extremes (i).first;
-	}
+
+      labels = scale.make_labels(0);
+      if (grid.get_direction () == Direction::CLOCKWISE)
+      {
+        std::reverse(labels.begin(), labels.end());
+      }
       draw_text_orthogonal (
-    	 Label (std::to_string (first_bound), conf.get_prop_scale_label ()),
+    	 labels.front(),
 		 Polar (min_radius + i * y_dist + OUTPUT_EXTREME_RADIUS_DELTA,
 		 grid.get_start () - TEXT_DELTA),
 		 TextAlignment::RIGHT);
       draw_text_orthogonal (
-         Label (std::to_string (second_bound), conf.get_prop_scale_label ()),
+         labels.back(),
 		 Polar (min_radius + i * y_dist + OUTPUT_EXTREME_RADIUS_DELTA,
 		 grid.get_end () + TEXT_DELTA),
 		 TextAlignment::LEFT);
