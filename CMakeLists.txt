@@ -5,6 +5,7 @@ set (CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 set (CMAKE_CXX_STANDARD 11)
 
 option(BUILD_DOCUMENTATION "Build API documentation" ON)
+option(BUILD_TESTS "Build tests for the library" ON)
 
 # Set code location variables
 set (MOOVIE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
@@ -164,5 +165,7 @@ endif(BUILD_DOCUMENTATION)
 
 
 # Add test subdirectory
-include(CTest)
-add_subdirectory(test)
+if (BUILD_TESTS)
+	include(CTest)
+	add_subdirectory(test)
+endif(BUILD_TESTS)
