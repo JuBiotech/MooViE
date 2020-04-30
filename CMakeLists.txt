@@ -4,10 +4,11 @@ project (MooViE)
 set (CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 set (CMAKE_CXX_STANDARD 11)
 
+option(BUILD_DOCUMENTATION "Build API documentation" ON)
+
 # Set code location variables
 set (MOOVIE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set (MOOVIE_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
-set (MOOVIE_DOC_DIR ${PROJECT_SOURCE_DIR}/doc)
 set (DESKTOP_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include/desktop)
 set (DESKTOP_SRC_DIR ${PROJECT_SOURCE_DIR}/src/desktop)
 set (DESKTOP_UI_DIR ${PROJECT_SOURCE_DIR}/ui)
@@ -25,11 +26,13 @@ set (DEST_PIXMAP_DIR /usr/share/pixmaps)
 # - Cairo, which depends on
 #   - freetype2
 #   - sigc++-2.0
+# - Doxygen (not required)
 find_package (freetype2 REQUIRED)
 find_package (sigc++-2.0 REQUIRED)
 find_package (cairo REQUIRED)
 find_package (cairomm-1.0 REQUIRED)
 find_package (Qt4 REQUIRED QtGui QtWebKit)
+find_package (Doxygen)
 
 # Structure files
 set (MOOVIE_INCLUDES
@@ -135,6 +138,29 @@ install (DIRECTORY ${MOOVIE_DOC_DIR} DESTINATION ${DEST_DOC_DIR})
 install (FILES README.md DESTINATION ${DEST_DOC_DIR})
 install (FILES moovie.desktop DESTINATION ${DEST_DESKTOP_DIR})
 install (FILES moovie.png DESTINATION ${DEST_PIXMAP_DIR})
+
+
+# Build and install documentation
+if (BUILD_DOCUMENTATION)
+    if (DOXYGEN_FOUND)
+        configure_file (${PROJECT_SOURCE_DIR}/Doxyfile.in ${PROJECT_BINARY_DIR}/Doxyfile)
+        add_custom_target(doc
+				ALL
+				COMMENT "Generating API documentation with Doxygen" VERBATIM)
+		add_custom_command (
+				TARGET doc
+				COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile
+				OUTPUTS ${PROJECT_BINARY_DIR}/doc/man/man3/moovie.3)
+		# Build reference manual using pdflatex
+		add_custom_command(
+				TARGET doc
+				COMMAND make pdf
+				WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc/latex)
+        # Install html pages and reference manual
+		install (DIRECTORY ${PROJECT_BINARY_DIR}/doc/html DESTINATION ${DEST_DOC_DIR})
+        install (FILES ${PROJECT_BINARY_DIR}/doc/latex/refman.pdf DESTINATION ${DEST_DOC_DIR})
+    endif(DOXYGEN_FOUND)
+endif(BUILD_DOCUMENTATION)
 
 
 # Add test subdirectory
