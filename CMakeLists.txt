@@ -22,16 +22,11 @@ set (DEST_DOC_DIR ${CMAKE_INSTALL_PREFIX}/share/doc/moovie)
 set (DEST_DESKTOP_DIR /usr/share/applications)
 set (DEST_PIXMAP_DIR /usr/share/pixmaps)
 
-# Find important libraries
-# Moovie uses Cairomm-1.0, which depends on
-# - Cairo, which depends on
-#   - freetype2
-#   - sigc++-2.0
-# - Doxygen (not required)
-find_package (freetype2 REQUIRED)
-find_package (sigc++-2.0 REQUIRED)
-find_package (cairo REQUIRED)
-find_package (cairomm-1.0 REQUIRED)
+# Find external libraries
+# - Cairomm (C++ SVG painting using Cairo)
+# - Qt4 (gui)
+# - Doxygen (documentation generation)
+find_package (Cairomm REQUIRED)
 find_package (Qt4 REQUIRED QtGui QtWebKit)
 find_package (Doxygen)
 
@@ -102,20 +97,19 @@ set (UIS
 )
 
 
-# Add includes and linking
-include_directories (${MOOVIE_INCLUDE_DIR} ${MOOVIE_INCLUDE_DIR}/thirdparty/tclap ${FREETYPE2_INCLUDE_DIR} ${SIGCPP_CONFIG_DIR} ${SIGCPP_INCLUDE_DIR} ${CAIRO_INCLUDE_DIR} ${CAIROMM_CONFIG_DIR} ${CAIROMM_INCLUDE_DIR})
+include_directories (
+		${MOOVIE_INCLUDE_DIR} # Project includes
+		${MOOVIE_INCLUDE_DIR}/thirdparty/tclap # Headers of TCLAP for command line parsing
+		${CAIROMM_INCLUDE_DIRS}) # Cairomm, Cairo, SigC++ and Freetype includes
 
 
-# Build MooViE library
-add_library (libmoovie STATIC "")
-target_sources (libmoovie PUBLIC ${MOOVIE_SRC})
+# Build MooViE library and executable
+add_library (libmoovie SHARED ${MOOVIE_SRC})
 set_target_properties (libmoovie PROPERTIES OUTPUT_NAME moovie)
 
-
-# Build MooViE executable
 add_executable (moovie ${MOOVIE_SRC_DIR}/moovie.cpp)
 add_dependencies (moovie libmoovie)
-target_link_libraries (moovie PUBLIC libmoovie ${CAIRO_LIBRARY_LOC} ${CAIROMM_LIBRARY_LOC})
+target_link_libraries (moovie PUBLIC libmoovie ${CAIROMM_LIBRARIES})
 
 
 # Build Qt4 application
@@ -127,7 +121,8 @@ QT4_WRAP_UI (UI_HEADERS ${UIS})
 QT4_WRAP_CPP (MOC_SRCS ${DESKTOP_INCLUDES})
 
 add_executable (moovie-desktop ${DESKTOP_SRC} ${MOC_SRCS} ${UI_HEADERS})
-target_link_libraries (moovie-desktop ${QT_LIBRARIES} Qt4::QtGui Qt4::QtWebKit libmoovie ${CAIRO_LIBRARY_LOC} ${CAIROMM_LIBRARY_LOC})
+add_dependencies(moovie-desktop libmoovie)
+target_link_libraries (moovie-desktop ${QT_LIBRARIES} Qt4::QtGui Qt4::QtWebKit libmoovie ${CAIROMM_LIBRARIES})
 
 
 # Installation
