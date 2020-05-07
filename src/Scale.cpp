@@ -10,26 +10,25 @@ create_rounded_interval (double min, double max)
   }
   else
   {
-    double diff = std::floor (std::log10 (std::abs (max - min))) + 1;
+    double diff = std::floor (std::log10 (std::abs (max - min)));
     double power_of_ten = std::pow (10, diff);
-    bool shift = false;
+
     if (std::abs (std::abs (max - min) - power_of_ten) < 1.5 * power_of_ten)
     {
       diff -= 1;
       power_of_ten = std::pow (10, diff);
-      shift = true;
     }
 
     double upper_val = std::round (max / power_of_ten) * power_of_ten;
     if (upper_val < max)
       upper_val += power_of_ten;
-    if ((upper_val - 0.5 * power_of_ten >= max) && !shift)
+    if ((upper_val - 0.5 * power_of_ten >= max))
       upper_val -= 0.5 * power_of_ten;
 
     double lower_val = std::round (min / power_of_ten) * power_of_ten;
     if (lower_val > min)
       lower_val -= power_of_ten;
-    if ((lower_val + 0.5 * power_of_ten <= min) && !shift)
+    if ((lower_val + 0.5 * power_of_ten <= min))
       lower_val += 0.5 * power_of_ten;
     return std::make_pair (lower_val, upper_val);
   }
