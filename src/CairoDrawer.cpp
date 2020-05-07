@@ -183,7 +183,6 @@ CairoDrawer::draw_input_axis (const InputAxis& axis)
       + END_RADIUS_MINOR_FACTOR * axis.get_height ();
 
   // Get width of longest tick description
-  std::size_t max_tick_label_pos = 0;
   const Label& longestTickDiscr = *std::max_element(tick_labels.begin(), tick_labels.end(),
       [](const Label& l0, const Label& l1) {
               return l0.get_text().length() < l1.get_text().length();
@@ -204,14 +203,14 @@ CairoDrawer::draw_input_axis (const InputAxis& axis)
   // Calculate how the InputAxis' ticks is separated into thin and thick lines (ticks)
   const std::size_t NUM_SEGMENTS = axis.get_scale ().get_major_intersections ()
       * axis.get_scale ().get_minor_intersections ();
-  const std::size_t NUM_THICK_LINES =
-      axis.get_scale ().get_major_intersections ();
+  const std::size_t NUM_THIN_LINES =
+      axis.get_scale ().get_minor_intersections ();
 
   // Draw the ticks and the associated values labels
   for (size_t i = 0; i <= NUM_SEGMENTS; ++i)
     {
       Angle a (axis.get_start () + span * (double (i) / double (NUM_SEGMENTS)));
-      if (i % NUM_THICK_LINES)
+      if (i % NUM_THIN_LINES)
 	{
 	  draw_line (
 	      Polar (start_radius, a),

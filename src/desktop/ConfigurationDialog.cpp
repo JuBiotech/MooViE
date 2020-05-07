@@ -98,10 +98,10 @@ ConfigurationDialog::init_dialog ()
       "Angle between input axis (degrees)", conf.get_input_separation_angle (),
       0);
   m_num_major_sections_axis = new ConfIntWidget (
-      "Number of big input subdivisions", conf.get_num_major_sections_grid (),
+      "Number of big input subdivisions", conf.get_num_major_sections_axis (),
       1);
   m_num_minor_sections_axis = new ConfIntWidget (
-      "Number of small input subdivisions", conf.get_num_minor_sections_grid (),
+      "Number of small input subdivisions", conf.get_num_minor_sections_axis (),
       1);
   QLayout* input = m_ui->input_grp->layout ();
   input->addWidget (m_input_inner_radius);
