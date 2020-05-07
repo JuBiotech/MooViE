@@ -168,7 +168,7 @@ public:
    *
    * @return the extremes
    */
-  inline const std::pair<double, double>
+  inline const std::pair<double, double> &
   get_extremes (size_t i) const
   {
     return m_extremes[i];
