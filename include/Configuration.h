@@ -433,7 +433,7 @@ public:
   void
   set_num_major_sections_axis (int major_sections)
   {
-    m_num_major_sections_grid = major_sections;
+    m_num_major_sections_axis = major_sections;
   }
 
   /** Returns the number of narrow sections of

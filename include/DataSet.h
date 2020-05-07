@@ -399,7 +399,7 @@ template<typename T>
 		      const typename std::vector<DataRow>::const_iterator & end) :
 	  m_it (it), m_end (end)
       {
-	while (not m_it->is_enabled () and m_it != m_end)
+	while (m_it != m_end and not m_it->is_enabled ())
 	  {
 	    ++m_it;
 	  }
@@ -411,7 +411,7 @@ template<typename T>
 	  {
 	    ++m_it;
 	  }
-	while (not m_it->is_enabled () and m_it != m_end);
+	while (m_it != m_end and not m_it->is_enabled ());
 	return *this;
       }
       const_iterator
@@ -424,7 +424,7 @@ template<typename T>
       bool
       operator== (const const_iterator & other) const
       {
-	return m_it == other.__it;
+	return m_it == other.m_it;
       }
       bool
       operator!= (const const_iterator & other) const
