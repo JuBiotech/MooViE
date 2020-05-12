@@ -9,8 +9,8 @@ include(CheckIncludeFile)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 option(BUILD_GUI "Build a QT Gui" ON)
-option(BUILD_DOCUMENTATION "Build API documentation" ON)
-option(BUILD_TESTS "Build tests for the library" ON)
+option(BUILD_DOCUMENTATION "Build API documentation" OFF)
+option(BUILD_TESTS "Build tests for the library" OFF)
 
 # Set code location variables
 set (MOOVIE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
@@ -39,7 +39,10 @@ endif()
 check_include_file("unistd.h"  HAVE_UNISTD_H)
 configure_file(moovie_config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/moovie_config.h)
 if (BUILD_DOCUMENTATION)
-    find_package (Doxygen)
+    find_package (Doxygen REQUIRED dot)
+    if (NOT DOXYGEN_FOUND)
+        message(FATAL_ERROR "Doxygen and dot are needed to build the documentation. Either install Doxygen and dot or disable BUILD_DOCUMENTATION.")
+    endif()
 endif()
 
 # Structure files
@@ -125,13 +128,13 @@ add_library (libmoovie SHARED ${MOOVIE_SRC})
 include(GenerateExportHeader)
 generate_export_header(libmoovie)
 set_target_properties (libmoovie PROPERTIES OUTPUT_NAME moovie)
-target_link_libraries (libmoovie PUBLIC ${CAIRO_LIBRARY_LOC} ${CAIROMM_LIBRARY_LOC})
+target_link_libraries (libmoovie PUBLIC  ${CAIROMM_LIBRARIES})
 
 
 # Build MooViE executable
 add_executable (moovie ${MOOVIE_SRC_DIR}/moovie.cpp)
 add_dependencies (moovie libmoovie)
-target_link_libraries (moovie PUBLIC libmoovie ${CAIROMM_LIBRARIES})
+target_link_libraries (moovie PUBLIC libmoovie)
 
 include_directories(${PROJECT_BINARY_DIR})
 
@@ -144,7 +147,7 @@ if (BUILD_GUI)
 
     add_executable (moovie-desktop ${DESKTOP_SRC} ${MOC_SRCS} ${UI_HEADERS})
     add_dependencies(moovie-desktop libmoovie)
-    target_link_libraries (moovie-desktop Qt5::Core Qt5::Gui Qt5::Widgets Qt5::WebEngine Qt5::WebEngineWidgets libmoovie ${CAIROMM_LIBRARIES})
+    target_link_libraries (moovie-desktop Qt5::Core Qt5::Gui Qt5::Widgets Qt5::WebEngine Qt5::WebEngineWidgets libmoovie)
 endif()
 
 
