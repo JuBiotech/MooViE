@@ -76,7 +76,7 @@ private slots:
    * @param event
    */
   void
-  resizeEvent (QResizeEvent* event);
+  resizeEvent (QResizeEvent* event) override;
   
   
 protected:

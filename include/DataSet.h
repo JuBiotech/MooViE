@@ -8,6 +8,7 @@
 #include <cfloat>
 #include <stdexcept>
 #include <memory>
+#include <clocale>
 
 #include <Utils.h>
 

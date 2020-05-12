@@ -1,8 +1,12 @@
 # General settings
-cmake_minimum_required (VERSION 3.1)
+cmake_minimum_required (VERSION 3.4)
 project (MooViE)
 set (CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 set (CMAKE_CXX_STANDARD 11)
+
+include(CheckIncludeFile)
+
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 option(BUILD_GUI "Build a QT Gui" ON)
 
@@ -35,6 +39,9 @@ find_package (cairomm-1.0 REQUIRED)
 if (BUILD_GUI)
     find_package (Qt5 COMPONENTS Core Gui Widgets WebEngine WebEngineWidgets REQUIRED)
 endif()
+check_include_file("unistd.h"  HAVE_UNISTD_H)
+configure_file(moovie_config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/moovie_config.h)
+
 
 # Structure files
 set (MOOVIE_INCLUDES
@@ -106,9 +113,16 @@ set (UIS
 # Add includes and linking
 include_directories (${MOOVIE_INCLUDE_DIR} ${MOOVIE_INCLUDE_DIR}/thirdparty/tclap ${FREETYPE2_INCLUDE_DIR} ${SIGCPP_CONFIG_DIR} ${SIGCPP_INCLUDE_DIR} ${CAIRO_INCLUDE_DIR} ${CAIROMM_CONFIG_DIR} ${CAIROMM_INCLUDE_DIR})
 
+#MSVC stuff
+if (CMAKE_GENERATOR MATCHES "Visual Studio")
+    add_definitions(-D_USE_MATH_DEFINES)
+    add_compile_options("/Za")
+endif()
 
 # Build MooViE library
 add_library (libmoovie SHARED ${MOOVIE_SRC})
+include(GenerateExportHeader)
+generate_export_header(libmoovie)
 set_target_properties (libmoovie PROPERTIES OUTPUT_NAME moovie)
 target_link_libraries (libmoovie PUBLIC ${CAIRO_LIBRARY_LOC} ${CAIROMM_LIBRARY_LOC})
 
@@ -117,6 +131,8 @@ target_link_libraries (libmoovie PUBLIC ${CAIRO_LIBRARY_LOC} ${CAIROMM_LIBRARY_L
 add_executable (moovie ${MOOVIE_SRC_DIR}/moovie.cpp)
 add_dependencies (moovie libmoovie)
 target_link_libraries (moovie PUBLIC libmoovie)
+
+include_directories(${PROJECT_BINARY_DIR})
 
 if (BUILD_GUI)
     # Build Qt5 application
@@ -131,7 +147,7 @@ endif()
 
 
 # Installation
-install (FILES ${MOOVIE_INCLUDES} DESTINATION ${DEST_INCLUDE_DIR})
+install (FILES ${MOOVIE_INCLUDES} ${PROJECT_BINARY_DIR}/libmoovie_export.h ${CMAKE_CURRENT_BINARY_DIR}/moovie_config.h DESTINATION ${DEST_INCLUDE_DIR})
 install (TARGETS libmoovie DESTINATION ${DEST_LIB_DIR})
 install (TARGETS moovie DESTINATION ${DEST_BIN_DIR})
 if (BUILD_GUI)

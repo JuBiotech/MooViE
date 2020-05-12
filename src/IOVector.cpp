@@ -15,7 +15,7 @@ IOVectorFactory::IOVectorFactory (std::size_t num_data_rows,
   std::pair<double, double> out = std::make_pair (
       m_grid.get_start ().value (),
       m_grid.get_start () > m_grid.get_end () ?
-	  m_grid.get_end ().value () + 2 * M_PIl : m_grid.get_end ().value ());
+	  m_grid.get_end ().value () + 2 * M_PI : m_grid.get_end ().value ());
 
   const MultiScale& scale = m_grid.get_scale ();
   if (grid.get_direction () == Direction::COUNTER_CLOCKWISE)
