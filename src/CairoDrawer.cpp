@@ -871,7 +871,6 @@ CairoDrawer::set_font_face (const Label& label)
 #else
       prop.italic ? Cairo::FONT_SLANT_ITALIC : Cairo::FONT_SLANT_NORMAL,
       prop.bold ? Cairo::FONT_WEIGHT_BOLD : Cairo::FONT_WEIGHT_NORMAL);
-#pragma message "Using old cairomm in " __FILE__
 #endif
   cairo_context->set_font_face (font);
   cairo_context->set_font_size (label.get_properties ().font_size);
