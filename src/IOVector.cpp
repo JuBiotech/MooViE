@@ -50,7 +50,7 @@ IOVector
 IOVectorFactory::create (const DefDataRow & row) const
 {
   IOVector elem;
-  std::size_t num_inputs = m_axis.size (), num_cols = row.size ();
+  std::size_t num_inputs = m_axis.size (), num_outputs = m_grid.get_num_outputs();
 
   for (std::size_t i = 0; i < num_inputs; ++i)
     {
@@ -76,7 +76,7 @@ IOVectorFactory::create (const DefDataRow & row) const
 
   double height_factor = m_grid.get_height ()
       / (m_grid.get_num_outputs () - 0.5);
-  for (std::size_t i = 0; i < num_cols - num_inputs; ++i)
+  for (std::size_t i = 0; i < num_outputs; ++i)
     {
       elem.emplace_back (
 	  Polar (

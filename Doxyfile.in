@@ -1,0 +1,10 @@
+PROJECT_NAME = MooViE
+PROJECT_BRIEF = "Visualization tool for the results of multi-objective optimization"
+INPUT = ${MOOVIE_INCLUDE_DIR}
+OUTPUT_DIRECTORY = "doc"
+
+GENERATE_TREEVIEW = YES
+GENERATE_HTML = YES
+GENERATE_LATEX = YES
+
+BUILTIN_STL_SUPPORT = YES

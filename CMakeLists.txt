@@ -9,11 +9,12 @@ include(CheckIncludeFile)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 option(BUILD_GUI "Build a QT Gui" ON)
+option(BUILD_DOCUMENTATION "Build API documentation" ON)
+option(BUILD_TESTS "Build tests for the library" ON)
 
 # Set code location variables
 set (MOOVIE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set (MOOVIE_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
-set (MOOVIE_DOC_DIR ${PROJECT_SOURCE_DIR}/doc)
 set (DESKTOP_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include/desktop)
 set (DESKTOP_SRC_DIR ${PROJECT_SOURCE_DIR}/src/desktop)
 set (DESKTOP_UI_DIR ${PROJECT_SOURCE_DIR}/ui)
@@ -27,21 +28,19 @@ set (DEST_DESKTOP_DIR ${CMAKE_INSTALL_PREFIX}/share/applications)
 set (DEST_PIXMAP_DIR ${CMAKE_INSTALL_PREFIX}/share/pixmaps)
 set(CMAKE_INSTALL_RPATH ${DEST_LIB_DIR})
 
-# Find important libraries
-# Moovie uses Cairomm-1.0, which depends on
-# - Cairo, which depends on
-#   - freetype2
-#   - sigc++-2.0
-find_package (freetype2 REQUIRED)
-find_package (sigc++-2.0 REQUIRED)
-find_package (cairo REQUIRED)
-find_package (cairomm-1.0 REQUIRED)
+# Find external libraries
+# - Cairomm (C++ SVG painting using Cairo)
+# - Qt5 (gui)
+# - Doxygen (documentation generation)
+find_package (Cairomm REQUIRED)
 if (BUILD_GUI)
     find_package (Qt5 COMPONENTS Core Gui Widgets WebEngine WebEngineWidgets REQUIRED)
 endif()
 check_include_file("unistd.h"  HAVE_UNISTD_H)
 configure_file(moovie_config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/moovie_config.h)
-
+if (BUILD_DOCUMENTATION)
+    find_package (Doxygen)
+endif()
 
 # Structure files
 set (MOOVIE_INCLUDES
@@ -110,8 +109,10 @@ set (UIS
 )
 
 
-# Add includes and linking
-include_directories (${MOOVIE_INCLUDE_DIR} ${MOOVIE_INCLUDE_DIR}/thirdparty/tclap ${FREETYPE2_INCLUDE_DIR} ${SIGCPP_CONFIG_DIR} ${SIGCPP_INCLUDE_DIR} ${CAIRO_INCLUDE_DIR} ${CAIROMM_CONFIG_DIR} ${CAIROMM_INCLUDE_DIR})
+include_directories (
+		${MOOVIE_INCLUDE_DIR} # Project includes
+		${MOOVIE_INCLUDE_DIR}/thirdparty/tclap # Headers of TCLAP for command line parsing
+		${CAIROMM_INCLUDE_DIRS}) # Cairomm, Cairo, SigC++ and Freetype includes
 
 #MSVC stuff
 if (CMAKE_GENERATOR MATCHES "Visual Studio")
@@ -130,7 +131,7 @@ target_link_libraries (libmoovie PUBLIC ${CAIRO_LIBRARY_LOC} ${CAIROMM_LIBRARY_L
 # Build MooViE executable
 add_executable (moovie ${MOOVIE_SRC_DIR}/moovie.cpp)
 add_dependencies (moovie libmoovie)
-target_link_libraries (moovie PUBLIC libmoovie)
+target_link_libraries (moovie PUBLIC libmoovie ${CAIROMM_LIBRARIES})
 
 include_directories(${PROJECT_BINARY_DIR})
 
@@ -142,7 +143,8 @@ if (BUILD_GUI)
     QT5_WRAP_CPP (MOC_SRCS ${DESKTOP_INCLUDES})
 
     add_executable (moovie-desktop ${DESKTOP_SRC} ${MOC_SRCS} ${UI_HEADERS})
-    target_link_libraries (moovie-desktop Qt5::Core Qt5::Gui Qt5::Widgets Qt5::WebEngine Qt5::WebEngineWidgets libmoovie)
+    add_dependencies(moovie-desktop libmoovie)
+    target_link_libraries (moovie-desktop Qt5::Core Qt5::Gui Qt5::Widgets Qt5::WebEngine Qt5::WebEngineWidgets libmoovie ${CAIROMM_LIBRARIES})
 endif()
 
 
@@ -165,3 +167,32 @@ endif()
 install (DIRECTORY ${MOOVIE_DOC_DIR} DESTINATION ${DEST_DOC_DIR})
 install (FILES README.md DESTINATION ${DEST_DOC_DIR})
 
+
+# Build and install documentation
+if (BUILD_DOCUMENTATION)
+    if (DOXYGEN_FOUND)
+        configure_file (${PROJECT_SOURCE_DIR}/Doxyfile.in ${PROJECT_BINARY_DIR}/Doxyfile)
+        add_custom_target(doc
+				ALL
+				COMMENT "Generating API documentation with Doxygen" VERBATIM)
+		add_custom_command (
+				TARGET doc
+				COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile
+				OUTPUTS ${PROJECT_BINARY_DIR}/doc/man/man3/moovie.3)
+		# Build reference manual using pdflatex
+		add_custom_command(
+				TARGET doc
+				COMMAND make pdf
+				WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc/latex)
+        # Install html pages and reference manual
+		install (DIRECTORY ${PROJECT_BINARY_DIR}/doc/html DESTINATION ${DEST_DOC_DIR})
+        install (FILES ${PROJECT_BINARY_DIR}/doc/latex/refman.pdf DESTINATION ${DEST_DOC_DIR})
+    endif(DOXYGEN_FOUND)
+endif(BUILD_DOCUMENTATION)
+
+
+# Add test subdirectory
+if (BUILD_TESTS)
+	include(CTest)
+	add_subdirectory(test)
+endif(BUILD_TESTS)

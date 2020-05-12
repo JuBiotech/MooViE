@@ -7,6 +7,18 @@
 #include <sstream>
 #include <Label.h>
 
+/** Creates an interval with rounded values. For this
+ * pair (a,b) is a <= min, max <= b.
+ *
+ * @param min the lowest value
+ * @param max the largest value
+ *
+ * @return the rounded interval
+ */
+std::pair<double, double>
+create_rounded_interval (double min, double max);
+
+
 /** The Scale class represents a graphical scale of an axis
  * by its extreme values and intersections counts.
  *
@@ -93,7 +105,7 @@ public:
 	       const TextProperties& label_prop,
 	       const std::string& label_suffix = "") :
       Scale (major_intersections, minor_intersections, label_prop,
-	     label_suffix), m_extremes (extremes)
+	     label_suffix), m_extremes (create_rounded_interval(extremes.first, extremes.second))
   {
   }
 
@@ -151,7 +163,7 @@ public:
   inline void
   add_scale (const std::pair<double, double>& extremes)
   {
-    m_extremes.push_back (extremes);
+    m_extremes.push_back (create_rounded_interval(extremes.first, extremes.second));
   }
 
   /** Returns the number of scales of this MultiScale.
@@ -168,7 +180,7 @@ public:
    *
    * @return the extremes
    */
-  inline const std::pair<double, double>
+  inline const std::pair<double, double> &
   get_extremes (size_t i) const
   {
     return m_extremes[i];
@@ -181,16 +193,5 @@ public:
   std::vector<Label>
   make_labels (size_t i) const;
 };
-
-/** Creates an interval with rounded values. For this
- * pair (a,b) is a <= min, max <= b.
- *
- * @param min the lowest value
- * @param max the largest value
- *
- * @return the rounded interval
- */
-std::pair<double, double>
-create_rounded_interval (double min, double max);
 
 #endif /* TICKS_H_ */

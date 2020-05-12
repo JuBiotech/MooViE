@@ -46,7 +46,7 @@ InputAxis::InputAxis (DefVariable variable, const Angle& start,
     m_variable (variable), m_scale (
 	Configuration::get_instance ().get_num_major_sections_axis (),
 	Configuration::get_instance ().get_num_minor_sections_axis (),
-	create_rounded_interval (variable.min, variable.max),
+	std::make_pair(variable.min, variable.max),
 	Configuration::get_instance ().get_prop_scale_label (), variable.unit), m_start (
 	start), m_end (end), m_radius (radius), m_height (height), m_prop (
 	prop), m_histogram (variable)
