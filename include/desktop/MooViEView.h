@@ -35,6 +35,8 @@ private:
   /** Enabled if CTRL is pressed */
   bool m_zoom_active;
 
+  double m_cumulative_zoom;
+
 public:
   /** Creates a MooViE viewer.
    *

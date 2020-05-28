@@ -2,7 +2,7 @@
 #include <iostream>
 
 MooViEView::MooViEView (QWidget *parent) :
-    QWebView (parent), m_zoom_active (false)
+    QWebView (parent), m_zoom_active (false), m_cumulative_zoom(0.)
 {
 }
 
@@ -21,8 +21,9 @@ MooViEView::adjust_zoom ()
 {
   QSize size = this->size();
   double min_gui_size = std::min (size.width(), size.height());
+  double zoom_factor = ZOOM_ADJUST_FACTOR * min_gui_size / m_max_svg_size + m_cumulative_zoom;
 
-  setZoomFactor (ZOOM_ADJUST_FACTOR * min_gui_size / m_max_svg_size);
+  setZoomFactor (zoom_factor);
 }
 
 void
@@ -38,6 +39,7 @@ MooViEView::keyPressEvent (QKeyEvent* event)
       if (m_zoom_active)
 	{
 	  setZoomFactor (zoomFactor () + ZOOM_DELTA);
+	  m_cumulative_zoom += ZOOM_DELTA;
 	}
       break;
     case Qt::Key_Minus:
@@ -45,6 +47,7 @@ MooViEView::keyPressEvent (QKeyEvent* event)
       if (m_zoom_active)
 	{
 	  setZoomFactor (zoomFactor () - ZOOM_DELTA);
+      m_cumulative_zoom -= ZOOM_DELTA;
 	}
       break;
     default:
