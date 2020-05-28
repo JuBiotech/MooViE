@@ -45,6 +45,7 @@ private:
   ConfDoubleWidget* m_output_angle_span, *m_output_inner_radius,
       *m_output_thickness, *m_grid_size;
   ConfIntWidget* m_num_major_sections_grid, *m_num_minor_sections_grid;
+  ConfDoubleWidget* m_min_grid_fill_ratio;
 
   /** InputAxis modification values */
   ConfDoubleWidget* m_input_inner_radius, *m_input_thickness,
