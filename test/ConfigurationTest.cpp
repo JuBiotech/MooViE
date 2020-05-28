@@ -34,6 +34,7 @@ BOOST_AUTO_TEST_SUITE(configuration_test)
     BOOST_CHECK_EQUAL(c.get_grid_size (), 150);
     BOOST_CHECK_EQUAL(c.get_num_major_sections_grid (), 10);
     BOOST_CHECK_EQUAL(c.get_num_minor_sections_grid (), 10);
+    BOOST_CHECK_EQUAL(c.get_min_grid_fill_ratio(), 0.9);
 
     BOOST_CHECK_EQUAL(c.get_input_inner_radius (), 180);
     BOOST_CHECK_EQUAL(c.get_input_thickness (), 5);
