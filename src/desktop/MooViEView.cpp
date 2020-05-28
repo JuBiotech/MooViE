@@ -7,12 +7,22 @@ MooViEView::MooViEView (QWidget *parent) :
 }
 
 void
-MooViEView::adjust_zoom (int width, int height)
+MooViEView::adjust_zoom_by_svg_size (int width, int height)
 {
   // Using smaller dim sizes (the smaller, the more zoom)
-  int min = std::min (width, height);
+  m_max_svg_size = std::max (width, height);
 
-  setZoomFactor (START_ZOOM_DIV / min);
+  // Use svg dims to adjust zoom
+  adjust_zoom();
+}
+
+void
+MooViEView::adjust_zoom ()
+{
+  QSize size = this->size();
+  double min_gui_size = std::min (size.width(), size.height());
+
+  setZoomFactor (ZOOM_ADJUST_FACTOR * min_gui_size / m_max_svg_size);
 }
 
 void
@@ -49,4 +59,11 @@ MooViEView::keyReleaseEvent (QKeyEvent* event)
     {
       m_zoom_active = false;
     }
+}
+
+void MooViEView::resizeEvent(QResizeEvent *event)
+{
+  QWebView::resizeEvent(event);
+
+  adjust_zoom();
 }

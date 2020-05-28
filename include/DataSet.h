@@ -213,6 +213,7 @@ template<typename T>
       swap (MockColumn& m0, MockColumn& m1)
       {
 	std::swap (m0.m_column, m1.m_column);
+	std::swap (m0.m_var, m1.m_var);
       }
     private:
       /** A shared pointer which points to the actual m_column */
@@ -398,7 +399,7 @@ template<typename T>
 		      const typename std::vector<DataRow>::const_iterator & end) :
 	  m_it (it), m_end (end)
       {
-	while (not m_it->is_enabled () and m_it != m_end)
+	while (m_it != m_end and not m_it->is_enabled ())
 	  {
 	    ++m_it;
 	  }
@@ -410,7 +411,7 @@ template<typename T>
 	  {
 	    ++m_it;
 	  }
-	while (not m_it->is_enabled () and m_it != m_end);
+	while (m_it != m_end and not m_it->is_enabled ());
 	return *this;
       }
       const_iterator
@@ -423,7 +424,7 @@ template<typename T>
       bool
       operator== (const const_iterator & other) const
       {
-	return m_it == other.__it;
+	return m_it == other.m_it;
       }
       bool
       operator!= (const const_iterator & other) const
@@ -546,16 +547,16 @@ template<typename T>
     void
     swap_columns (std::size_t c0, std::size_t c1)
     {
-      if (c0 >= m_num_cols)
+      if (c0 >= m_cols.size())
 	{
 	  throw std::out_of_range (
-	      "index exceeds range [0, " + std::to_string (m_num_cols)
+	      "index exceeds range [0, " + std::to_string (m_cols.size())
 		  + "), given: " + std::to_string (c0));
 	}
-      if (c1 >= m_num_cols)
+      if (c1 >= m_cols.size())
 	{
 	  throw std::out_of_range (
-	      "index exceeds range [0, " + std::to_string (m_num_cols)
+	      "index exceeds range [0, " + std::to_string (m_cols.size())
 		  + "), given: " + std::to_string (c1));
 	}
 
