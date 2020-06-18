@@ -150,6 +150,9 @@ Configuration::save_to_file (const std::string & cpath)
       << MOOVIE_CONF_LINE(num_minor_sections_grid,
 			  std::to_string (instance->m_num_minor_sections_grid))
       << std::endl
+      << MOOVIE_CONF_LINE(min_grid_fill_value,
+              std::to_string(instance->m_min_grid_fill_ratio))
+      << std::endl
       << MOOVIE_CONF_LINE(input_inner_radius,
 			  std::to_string (instance->m_input_inner_radius))
       << std::endl
@@ -317,7 +320,17 @@ Configuration::Configuration (const std::string & fpath,
 		      "\"num_minor_sections_grid\" cannot be <= 0");
 		}
 	    }
-	  else if (key.compare ("moovie.input_inner_radius") == 0)
+      else if (key.compare ("moovie.min_grid_fill_ratio") == 0)
+        {
+          m_min_grid_fill_ratio = std::stod (value);
+
+          if (m_min_grid_fill_ratio <= 0 || m_min_grid_fill_ratio > 1)
+          {
+            throw std::out_of_range (
+              "\"min_grid_fill_ratio\" cannot be <= 0 or > 1");
+          }
+        }
+      else if (key.compare ("moovie.input_inner_radius") == 0)
 	    {
 	      m_input_inner_radius = std::stod (value);
 

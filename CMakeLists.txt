@@ -1,13 +1,20 @@
 # General settings
-cmake_minimum_required (VERSION 3.1)
+cmake_minimum_required (VERSION 3.4)
 project (MooViE)
 set (CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 set (CMAKE_CXX_STANDARD 11)
 
+include(CheckIncludeFile)
+
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
+option(BUILD_GUI "Build a QT Gui" ON)
+option(BUILD_DOCUMENTATION "Build API documentation" ON)
+option(BUILD_TESTS "Build tests for the library" ON)
+
 # Set code location variables
 set (MOOVIE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set (MOOVIE_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
-set (MOOVIE_DOC_DIR ${PROJECT_SOURCE_DIR}/doc)
 set (DESKTOP_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include/desktop)
 set (DESKTOP_SRC_DIR ${PROJECT_SOURCE_DIR}/src/desktop)
 set (DESKTOP_UI_DIR ${PROJECT_SOURCE_DIR}/ui)
@@ -17,19 +24,23 @@ set (DEST_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin)
 set (DEST_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib)
 set (DEST_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include/moovie)
 set (DEST_DOC_DIR ${CMAKE_INSTALL_PREFIX}/share/doc/moovie)
-set (DEST_DESKTOP_DIR /usr/share/applications)
-set (DEST_PIXMAP_DIR /usr/share/pixmaps)
+set (DEST_DESKTOP_DIR ${CMAKE_INSTALL_PREFIX}/share/applications)
+set (DEST_PIXMAP_DIR ${CMAKE_INSTALL_PREFIX}/share/pixmaps)
+set(CMAKE_INSTALL_RPATH ${DEST_LIB_DIR})
 
-# Find important libraries
-# Moovie uses Cairomm-1.0, which depends on
-# - Cairo, which depends on
-#   - freetype2
-#   - sigc++-2.0
-find_package (freetype2 REQUIRED)
-find_package (sigc++-2.0 REQUIRED)
-find_package (cairo REQUIRED)
-find_package (cairomm-1.0 REQUIRED)
-find_package (Qt4 REQUIRED QtGui QtWebKit)
+# Find external libraries
+# - Cairomm (C++ SVG painting using Cairo)
+# - Qt5 (gui)
+# - Doxygen (documentation generation)
+find_package (Cairomm REQUIRED)
+if (BUILD_GUI)
+    find_package (Qt5 COMPONENTS Core Gui Widgets WebEngine WebEngineWidgets REQUIRED)
+endif()
+check_include_file("unistd.h"  HAVE_UNISTD_H)
+configure_file(moovie_config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/moovie_config.h)
+if (BUILD_DOCUMENTATION)
+    find_package (Doxygen)
+endif()
 
 # Structure files
 set (MOOVIE_INCLUDES
@@ -98,40 +109,90 @@ set (UIS
 )
 
 
-# Add includes and linking
-include_directories (${MOOVIE_INCLUDE_DIR} ${MOOVIE_INCLUDE_DIR}/thirdparty/tclap ${FREETYPE2_INCLUDE_DIR} ${SIGCPP_CONFIG_DIR} ${SIGCPP_INCLUDE_DIR} ${CAIRO_INCLUDE_DIR} ${CAIROMM_CONFIG_DIR} ${CAIROMM_INCLUDE_DIR})
+include_directories (
+		${MOOVIE_INCLUDE_DIR} # Project includes
+		${MOOVIE_INCLUDE_DIR}/thirdparty/tclap # Headers of TCLAP for command line parsing
+		${CAIROMM_INCLUDE_DIRS}) # Cairomm, Cairo, SigC++ and Freetype includes
 
+#MSVC stuff
+if (CMAKE_GENERATOR MATCHES "Visual Studio")
+    add_definitions(-D_USE_MATH_DEFINES)
+    add_compile_options("/Za")
+endif()
 
 # Build MooViE library
-add_library (libmoovie STATIC "")
-target_sources (libmoovie PUBLIC ${MOOVIE_SRC})
+add_library (libmoovie SHARED ${MOOVIE_SRC})
+include(GenerateExportHeader)
+generate_export_header(libmoovie)
 set_target_properties (libmoovie PROPERTIES OUTPUT_NAME moovie)
+target_link_libraries (libmoovie PUBLIC ${CAIRO_LIBRARY_LOC} ${CAIROMM_LIBRARY_LOC})
 
 
 # Build MooViE executable
 add_executable (moovie ${MOOVIE_SRC_DIR}/moovie.cpp)
 add_dependencies (moovie libmoovie)
-target_link_libraries (moovie PUBLIC libmoovie ${CAIRO_LIBRARY_LOC} ${CAIROMM_LIBRARY_LOC})
+target_link_libraries (moovie PUBLIC libmoovie ${CAIROMM_LIBRARIES})
 
+include_directories(${PROJECT_BINARY_DIR})
 
-# Build Qt4 application
-include (${QT_USE_FILE})
-add_definitions (${QT_DEFINITIONS})
-include_directories (${CMAKE_BINARY_DIR} ${DESKTOP_INCLUDE_DIR})
+if (BUILD_GUI)
+    # Build Qt5 application
+    include_directories (${CMAKE_BINARY_DIR} ${DESKTOP_INCLUDE_DIR})
 
-QT4_WRAP_UI (UI_HEADERS ${UIS})
-QT4_WRAP_CPP (MOC_SRCS ${DESKTOP_INCLUDES})
+    QT5_WRAP_UI (UI_HEADERS ${UIS})
+    QT5_WRAP_CPP (MOC_SRCS ${DESKTOP_INCLUDES})
 
-add_executable (moovie-desktop ${DESKTOP_SRC} ${MOC_SRCS} ${UI_HEADERS})
-target_link_libraries (moovie-desktop ${QT_LIBRARIES} Qt4::QtGui Qt4::QtWebKit libmoovie ${CAIRO_LIBRARY_LOC} ${CAIROMM_LIBRARY_LOC})
+    add_executable (moovie-desktop ${DESKTOP_SRC} ${MOC_SRCS} ${UI_HEADERS})
+    add_dependencies(moovie-desktop libmoovie)
+    target_link_libraries (moovie-desktop Qt5::Core Qt5::Gui Qt5::Widgets Qt5::WebEngine Qt5::WebEngineWidgets libmoovie ${CAIROMM_LIBRARIES})
+endif()
 
 
 # Installation
-install (FILES ${MOOVIE_INCLUDES} DESTINATION ${DEST_INCLUDE_DIR})
+install (FILES ${MOOVIE_INCLUDES} ${PROJECT_BINARY_DIR}/libmoovie_export.h ${CMAKE_CURRENT_BINARY_DIR}/moovie_config.h DESTINATION ${DEST_INCLUDE_DIR})
 install (TARGETS libmoovie DESTINATION ${DEST_LIB_DIR})
 install (TARGETS moovie DESTINATION ${DEST_BIN_DIR})
-install (TARGETS moovie-desktop DESTINATION ${DEST_BIN_DIR})
+if (BUILD_GUI)
+    file(WRITE ${PROJECT_BINARY_DIR}/moovie.desktop "[Desktop Entry]
+Name=MooViE
+Exec=${DEST_BIN_DIR}/moovie-desktop
+Icon=${DEST_PIXMAP_DIR}/moovie.png
+Categories=Science;DataVisualization;
+Terminal=false
+Type=Application\n")
+    install (TARGETS moovie-desktop DESTINATION ${DEST_BIN_DIR})
+    install (FILES ${PROJECT_BINARY_DIR}/moovie.desktop DESTINATION ${DEST_DESKTOP_DIR})
+    install (FILES moovie.png DESTINATION ${DEST_PIXMAP_DIR})
+endif()
 install (DIRECTORY ${MOOVIE_DOC_DIR} DESTINATION ${DEST_DOC_DIR})
 install (FILES README.md DESTINATION ${DEST_DOC_DIR})
-install (FILES moovie.desktop DESTINATION ${DEST_DESKTOP_DIR})
-install (FILES moovie.png DESTINATION ${DEST_PIXMAP_DIR})
+
+
+# Build and install documentation
+if (BUILD_DOCUMENTATION)
+    if (DOXYGEN_FOUND)
+        configure_file (${PROJECT_SOURCE_DIR}/Doxyfile.in ${PROJECT_BINARY_DIR}/Doxyfile)
+        add_custom_target(doc
+				ALL
+				COMMENT "Generating API documentation with Doxygen" VERBATIM)
+		add_custom_command (
+				TARGET doc
+				COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile
+				OUTPUTS ${PROJECT_BINARY_DIR}/doc/man/man3/moovie.3)
+		# Build reference manual using pdflatex
+		add_custom_command(
+				TARGET doc
+				COMMAND make pdf
+				WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc/latex)
+        # Install html pages and reference manual
+		install (DIRECTORY ${PROJECT_BINARY_DIR}/doc/html DESTINATION ${DEST_DOC_DIR})
+        install (FILES ${PROJECT_BINARY_DIR}/doc/latex/refman.pdf DESTINATION ${DEST_DOC_DIR})
+    endif(DOXYGEN_FOUND)
+endif(BUILD_DOCUMENTATION)
+
+
+# Add test subdirectory
+if (BUILD_TESTS)
+	include(CTest)
+	add_subdirectory(test)
+endif(BUILD_TESTS)

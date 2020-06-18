@@ -12,7 +12,7 @@ OutputGrid::OutputGrid (const std::vector<DefVariable>& output_vars,
 {
   for (DefVariable var : output_vars)
     {
-      m_scale.add_scale (create_rounded_interval (var.min, var.max));
+      m_scale.add_scale (std::make_pair (var.min, var.max));
     }
 }
 

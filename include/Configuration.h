@@ -5,10 +5,14 @@
 #include <vector>
 #include <regex>
 #include <memory>
+#include <functional>
+#include <clocale>
 #include <Utils.h>
 #include <DrawerProperties.h>
 #include <TextProperties.h>
 #include <Triangle.h>
+
+#include "libmoovie_export.h"
 
 #define MOOVIE_CONF_LINE(key, value) (("moovie." TO_STRING(key) "=") + (value))
 
@@ -41,7 +45,7 @@ public:
 
 private:
   /** The singleton instance */
-  static std::shared_ptr<Configuration> instance;
+  static LIBMOOVIE_EXPORT std::shared_ptr<Configuration> instance;
 
   /** Absolute file paths for data (input) and image (output) */
   std::string m_input_file;
@@ -58,6 +62,7 @@ private:
   double m_grid_size = 150;
   int m_num_major_sections_grid = 10;
   int m_num_minor_sections_grid = 10;
+  double m_min_grid_fill_ratio = 0.9;
 
   /** InputAxis modification values */
   double m_input_inner_radius = 180;
@@ -348,6 +353,30 @@ public:
     m_num_minor_sections_grid = minor_sections;
   }
 
+  /** Returns the ratio of space of an output axis that must be covered by the
+   * span by the corresponding variable. The actual ratio will be equal or
+   * higher than this value.
+   *
+   * @return fill ratio of output grid
+   */
+  double
+  get_min_grid_fill_ratio () const
+  {
+    return m_min_grid_fill_ratio;
+  }
+
+  /** Sets the ratio of space of an output axis that must be covered by the
+   * span by the corresponding variable. The actual ratio will be equal or
+   * higher than this value.
+   *
+   * @param grid_fill_ratio the fill ratio of output grid to set
+   */
+  void
+  set_min_grid_fill_ratio (double min_grid_fill_ratio)
+  {
+    m_min_grid_fill_ratio = min_grid_fill_ratio;
+  }
+
   // InputAxis
 
   /** Returns the inner radius of an input, the radius
@@ -433,7 +462,7 @@ public:
   void
   set_num_major_sections_axis (int major_sections)
   {
-    m_num_major_sections_grid = major_sections;
+    m_num_major_sections_axis = major_sections;
   }
 
   /** Returns the number of narrow sections of

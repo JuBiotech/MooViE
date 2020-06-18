@@ -16,11 +16,11 @@ BOOST_AUTO_TEST_SUITE(configuration_test)
   {
     std::string cwd = Util::get_cwd ();
 
-    Configuration::initialize (cwd + "/test/files/input.csv");
+    Configuration::initialize (cwd + "/input.csv");
     Configuration& c = Configuration::get_instance ();
 
     BOOST_CHECK_EQUAL(c.get_input_file (),
-		      std::string (cwd + "/test/files/input.csv"));
+		      std::string (cwd + "/input.csv"));
     BOOST_CHECK_EQUAL(c.get_output_file (), std::string ("image.svg"));
     double width_height_adjustment = 2
 	* (c.get_output_inner_radius () + c.get_output_thickness ()
@@ -34,6 +34,7 @@ BOOST_AUTO_TEST_SUITE(configuration_test)
     BOOST_CHECK_EQUAL(c.get_grid_size (), 150);
     BOOST_CHECK_EQUAL(c.get_num_major_sections_grid (), 10);
     BOOST_CHECK_EQUAL(c.get_num_minor_sections_grid (), 10);
+    BOOST_CHECK_EQUAL(c.get_min_grid_fill_ratio(), 0.9);
 
     BOOST_CHECK_EQUAL(c.get_input_inner_radius (), 180);
     BOOST_CHECK_EQUAL(c.get_input_thickness (), 5);
@@ -59,12 +60,12 @@ BOOST_AUTO_TEST_SUITE(configuration_test)
   {
     std::string cwd = Util::get_cwd ();
 
-    Configuration::initialize (cwd + "/test/files/input.csv",
-			       cwd + "/test/files/moovie.conf");
+    Configuration::initialize (cwd + "/input.csv",
+			       cwd + "/moovie.conf");
     Configuration& c = Configuration::get_instance ();
 
     BOOST_CHECK_EQUAL(c.get_input_file (),
-		      std::string (cwd + "/test/files/input.csv"));
+		      std::string (cwd + "/input.csv"));
     BOOST_CHECK_EQUAL(c.get_output_file (), std::string ("image.svg"));
     BOOST_CHECK_EQUAL(c.get_width (), 750);
     BOOST_CHECK_EQUAL(c.get_height (), 750);

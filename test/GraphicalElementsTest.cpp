@@ -9,13 +9,13 @@
 
 BOOST_AUTO_TEST_SUITE(graphical_elements_test)
 
-  BOOST_AUTO_TEST_CASE(domainaxis)
+  BOOST_AUTO_TEST_CASE(inputaxis)
   {
     std::string cwd = Util::get_cwd ();
 
     // Construction
 
-    Configuration::initialize (cwd + "/test/files/input.csv");
+    Configuration::initialize (cwd + "/input.csv");
     const Configuration& conf = Configuration::get_instance ();
 
     std::string var_name = "var", unit = "mT", font_name = "Liberation Sans";
@@ -111,13 +111,13 @@ BOOST_AUTO_TEST_SUITE(graphical_elements_test)
     BOOST_CHECK_EQUAL(axis.get_prop ().fill_color, fill_color);
   }
 
-  BOOST_AUTO_TEST_CASE(codomaingrid)
+  BOOST_AUTO_TEST_CASE(outputgrid)
   {
     std::string cwd = Util::get_cwd ();
 
     // Construction
 
-    Configuration::initialize (cwd + "/test/files/input.csv");
+    Configuration::initialize (cwd + "/input.csv");
     const Configuration& conf = Configuration::get_instance ();
 
     std::vector<DefVariable> output_vars;
@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_SUITE(graphical_elements_test)
     BOOST_CHECK_CLOSE(grid.get_var (1).max, max1, eps);
     BOOST_CHECK_EQUAL(grid.get_var (0).unit, unit0);
     BOOST_CHECK_EQUAL(grid.get_var (1).unit, unit1);
-    BOOST_CHECK_THROW(grid.get_var (2), std::out_of_range)
+    BOOST_CHECK_THROW(grid.get_var (2), std::out_of_range);
     BOOST_CHECK_EQUAL(grid.get_num_outputs (), output_vars.size ());
     BOOST_CHECK_CLOSE(grid.get_start ().value (), start.value (), eps);
     BOOST_CHECK_CLOSE(grid.get_end ().value (), end.value (), eps);
@@ -194,38 +194,26 @@ BOOST_AUTO_TEST_SUITE(graphical_elements_test)
     BOOST_CHECK_EQUAL(grid.get_direction (), dir);
   }
 
-  BOOST_AUTO_TEST_CASE(relationelement)
+  BOOST_AUTO_TEST_CASE(iovectorfactory)
   {
     std::string cwd = Util::get_cwd ();
 
-    Configuration::initialize (cwd + "/test/files/input.csv");
+    Configuration::initialize (cwd + "/input.csv");
 
-    std::string var_name = "var", unit = "mT", font_name = "Liberation Sans";
-    double min = 0, max = 10;
-    DefVariable var (min, max, var_name, unit);
+    DefDataSet set (Configuration::get_instance().get_input_file());
+    const DefDataRow& row = set[0];
+
+    std::string font_name = "Liberation Sans";
     Angle start = M_PI, end = M_PI + M_PI_2;
     double radius = 10.0, height = 20.0, line_width = 1.0;
     Color line_color (.123, .8, .1, .071), fill_color (.94, .81, .7316, .5);
     DrawerProperties<> prop (line_width, line_color, fill_color);
-
-    std::vector<InputAxis> axis
-      {
-	{ var, start, end, radius, height, prop } };
-
-    std::vector<DefVariable> output_vars;
-
-    std::string var_name1 = "var1", unit1 = "V";
-    double min1 = -27, max1 = -9;
-    output_vars.emplace_back (min1, max1, var_name1, unit1);
+    std::vector<InputAxis> axis { { set.input_variables()[0], start, end, radius, height, prop } };
 
     start = M_PI_2, end = M_PI;
     radius = 30, height = 0.5;
     Direction dir = Direction::COUNTER_CLOCKWISE;
-
-    OutputGrid grid (output_vars, start, end, radius, height, dir);
-
-    DefDataSet set (cwd + "/test/files/input.csv");
-    const DefDataRow& row = set[0];
+    OutputGrid grid ({set.input_variables()[1]}, start, end, radius, height, dir);
 
     IOVectorFactory factory (1, grid, axis);
     IOVector elem = factory.create (row);

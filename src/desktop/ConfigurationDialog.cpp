@@ -81,6 +81,9 @@ ConfigurationDialog::init_dialog ()
   m_num_minor_sections_grid = new ConfIntWidget (
       "Number of small output subdivisions",
       conf.get_num_minor_sections_grid (), 1);
+  m_min_grid_fill_ratio = new ConfDoubleWidget (
+      "Fill ratio of an output axis",
+      conf.get_min_grid_fill_ratio (), 0, 1, 2);
   QLayout* output = m_ui->output_grp->layout ();
   output->addWidget (m_output_angle_span);
   output->addWidget (m_output_inner_radius);
@@ -88,6 +91,7 @@ ConfigurationDialog::init_dialog ()
   output->addWidget (m_grid_size);
   output->addWidget (m_num_major_sections_grid);
   output->addWidget (m_num_minor_sections_grid);
+  output->addWidget (m_min_grid_fill_ratio);
 
   // Input
   m_input_inner_radius = new ConfDoubleWidget (
@@ -98,10 +102,10 @@ ConfigurationDialog::init_dialog ()
       "Angle between input axis (degrees)", conf.get_input_separation_angle (),
       0);
   m_num_major_sections_axis = new ConfIntWidget (
-      "Number of big input subdivisions", conf.get_num_major_sections_grid (),
+      "Number of big input subdivisions", conf.get_num_major_sections_axis (),
       1);
   m_num_minor_sections_axis = new ConfIntWidget (
-      "Number of small input subdivisions", conf.get_num_minor_sections_grid (),
+      "Number of small input subdivisions", conf.get_num_minor_sections_axis (),
       1);
   QLayout* input = m_ui->input_grp->layout ();
   input->addWidget (m_input_inner_radius);
@@ -154,6 +158,7 @@ ConfigurationDialog::fill_configuration_values ()
   m_grid_size->set_value (conf.get_grid_size ());
   m_num_major_sections_grid->set_value (conf.get_num_major_sections_grid ());
   m_num_minor_sections_grid->set_value (conf.get_num_minor_sections_grid ());
+  m_min_grid_fill_ratio->set_value (conf.get_min_grid_fill_ratio ());
 
   // Input
   m_input_inner_radius->set_value (conf.get_input_inner_radius ());
@@ -202,6 +207,7 @@ ConfigurationDialog::update_configuration ()
   conf.set_grid_size (m_grid_size->get_value ());
   conf.set_num_major_sections_grid (m_num_major_sections_grid->get_value ());
   conf.set_num_minor_sections_grid (m_num_minor_sections_grid->get_value ());
+  conf.set_min_grid_fill_ratio(m_min_grid_fill_ratio->get_value ());
 
   // Input
   conf.set_input_inner_radius (m_input_inner_radius->get_value ());
