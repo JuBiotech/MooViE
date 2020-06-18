@@ -62,6 +62,7 @@ private:
   double m_grid_size = 150;
   int m_num_major_sections_grid = 10;
   int m_num_minor_sections_grid = 10;
+  double m_min_grid_fill_ratio = 0.9;
 
   /** InputAxis modification values */
   double m_input_inner_radius = 180;
@@ -350,6 +351,30 @@ public:
   set_num_minor_sections_grid (int minor_sections)
   {
     m_num_minor_sections_grid = minor_sections;
+  }
+
+  /** Returns the ratio of space of an output axis that must be covered by the
+   * span by the corresponding variable. The actual ratio will be equal or
+   * higher than this value.
+   *
+   * @return fill ratio of output grid
+   */
+  double
+  get_min_grid_fill_ratio () const
+  {
+    return m_min_grid_fill_ratio;
+  }
+
+  /** Sets the ratio of space of an output axis that must be covered by the
+   * span by the corresponding variable. The actual ratio will be equal or
+   * higher than this value.
+   *
+   * @param grid_fill_ratio the fill ratio of output grid to set
+   */
+  void
+  set_min_grid_fill_ratio (double min_grid_fill_ratio)
+  {
+    m_min_grid_fill_ratio = min_grid_fill_ratio;
   }
 
   // InputAxis
