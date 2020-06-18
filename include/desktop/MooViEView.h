@@ -39,6 +39,8 @@ private:
   /** Enabled if CTRL is pressed */
   bool m_zoom_active;
 
+  double m_cumulative_zoom;
+
   /** child of the QWebEngineView (needed to steel events */
   QPointer<QObject> m_child;
 

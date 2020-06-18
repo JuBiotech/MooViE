@@ -4,7 +4,8 @@
 #include <QDebug>
 
 MooViEView::MooViEView (QWidget *parent) :
-    QWebEngineView (parent), m_zoom_active (false), m_child(nullptr)
+    QWebEngineView (parent), m_zoom_active (false), m_cumulative_zoom(0.),
+    m_child(nullptr)
 {
 }
 
