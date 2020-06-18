@@ -78,7 +78,9 @@ bool MooViEView::eventFilter(QObject* obj, QEvent* event)
   {
     QWheelEvent* wheel = static_cast<QWheelEvent*>(event);
     qreal factor = qPow(1.2, wheel->delta() / 240.0);
-    setZoomFactor(zoomFactor () * factor);
+    qreal zoom = zoomFactor() * factor;
+    m_cumulative_zoom += (zoom - zoomFactor());
+    setZoomFactor(zoom);
     return true;
   }
   // we do not want the context menu, therefore we disable the right mouse button
