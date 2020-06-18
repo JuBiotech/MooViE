@@ -5,10 +5,14 @@
 #include <vector>
 #include <regex>
 #include <memory>
+#include <functional>
+#include <clocale>
 #include <Utils.h>
 #include <DrawerProperties.h>
 #include <TextProperties.h>
 #include <Triangle.h>
+
+#include "libmoovie_export.h"
 
 #define MOOVIE_CONF_LINE(key, value) (("moovie." TO_STRING(key) "=") + (value))
 
@@ -41,7 +45,7 @@ public:
 
 private:
   /** The singleton instance */
-  static std::shared_ptr<Configuration> instance;
+  static LIBMOOVIE_EXPORT std::shared_ptr<Configuration> instance;
 
   /** Absolute file paths for data (input) and image (output) */
   std::string m_input_file;

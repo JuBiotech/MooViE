@@ -22,7 +22,7 @@ Required Libraries:
 * _freetype2_
 * _sigc++-2.0_
 * _cairo_ and _cairomm-1.0_
-* _Qt4_ (>= 4.7) with _QtGui_ and _QtWebKit_
+* _Qt5_ (>= 5.4) with _QtGui_ and _QtWebEngine_
 
 ### How to install MooViE
 Clone or download this repository. Generate Makefile using _CMake_:

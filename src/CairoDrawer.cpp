@@ -841,8 +841,13 @@ CairoDrawer::set_font_face (const Label& label)
   // Set font styles
   Cairo::RefPtr<Cairo::ToyFontFace> font = Cairo::ToyFontFace::create (
       prop.font_name,
+#if (CAIROMM_MINOR_VERSION == 15 && CAIROMM_MICRO_VERSION >= 4) || CAIROMM_MINOR_VERSION > 15
+      prop.italic ? Cairo::ToyFontFace::Slant::ITALIC : Cairo::ToyFontFace::Slant::NORMAL,
+      prop.bold ? Cairo::ToyFontFace::Weight::BOLD : Cairo::ToyFontFace::Weight::NORMAL);
+#else
       prop.italic ? Cairo::FONT_SLANT_ITALIC : Cairo::FONT_SLANT_NORMAL,
       prop.bold ? Cairo::FONT_WEIGHT_BOLD : Cairo::FONT_WEIGHT_NORMAL);
+#endif
   cairo_context->set_font_face (font);
   cairo_context->set_font_size (label.get_properties ().font_size);
   cairo_context->set_source_rgba (prop.color.r (), prop.color.g (),
