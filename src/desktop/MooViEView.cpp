@@ -39,6 +39,7 @@ bool MooViEView::eventFilter(QObject* obj, QEvent* event)
     {
     case Qt::Key_Control:
       m_zoom_active = true;
+      handled = true;
       break;
     case Qt::Key_Plus:
       // Only increase if CTRL is pressed
@@ -55,6 +56,7 @@ bool MooViEView::eventFilter(QObject* obj, QEvent* event)
 	  setZoomFactor (zoomFactor () - ZOOM_DELTA);
       m_cumulative_zoom -= ZOOM_DELTA;
 	}
+      handled = true;
       break;
     default:
       break;
