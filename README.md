@@ -25,34 +25,16 @@ Required Libraries:
 * _Qt5_ (>= 5.4) with _QtGui_ and _QtWebEngine_
 
 ### How to install MooViE
-Before installing MooViE you need to install the prerequisites. First you need to install a C++ compiler and _CMake_. 
-For installing _CMake_ you can look up these [instructions](https://cmake.org/download/). On Debian-based system you can
-simply install it by opening a terminal and entering
+
+#### Manual
+On Debian-based systems you can simply follow the installation steps from the Dockerfile.
+
+#### Docker
+First you need to install Docker (for instance by following this [instruction](https://docs.docker.com/engine/install/ubuntu/#install-docker-engine)). On Debian-based systems you can now open a bash console and run
 ```shell script
-sudo apt-get install cmake
+./moovie-desktop-docker.sh
 ```
-If _freetype2_ is not already installed, look up these 
-[instructions](https://www.freetype.org/download.html) on how to install it. On Debian-based system it now suffices to 
-run
-```shell script
-sudo apt-get install libsigc++-2.0-dev libcairo2-dev libcairomm-1.0-dev qt5-default qtwebengine5-dev
-```
-Now clone or download this repository. Create a new subdirectory and enter it.
-```shell
-mkdir build && cd build
-```
-Run _CMake_. You can set the install directory using `-DCMAKE_INSTALL_PREFIX`.
-```shell
-cmake ..
-```
-Build the software by entering
-```shell
-cmake --build .
-```
-Finally, MooViE is installed by
-```shell
-make install
-```
+This will build the Docker image and run it afterwards. For later runs, the script will check if the image is already installed.
 
 ### Input Format
 The MooViE input file needs to be in CSV format using **commas** as column delimiters. 
