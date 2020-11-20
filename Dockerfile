@@ -29,6 +29,4 @@ RUN make test
 RUN make install
 
 WORKDIR /home
-RUN moovie -o out.svg test/files/input.csv
-#RUN QT_QPA_PLATFORM=offscreen go test -v -race
-#RUN moovie-desktop
+CMD moovie-desktop
