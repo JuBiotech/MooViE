@@ -17,26 +17,30 @@ find_package(Freetype REQUIRED)
 # warning! although very simmilar the ABI versions do not coincide with the software version
 find_package(PkgConfig)
 pkg_check_modules(PC_CAIROMM QUIET cairomm-1.0)
+if (PC_CAIROMM_FOUND)
     set(CAIROMM_ABI "1.0")
-if (NOT PC_CAIROMM_FOUND)
+else (NOT PC_CAIROMM_FOUND)
     pkg_check_modules(PC_CAIROMM QUIET cairomm-1.14)
     set(CAIROMM_ABI "1.14")
 endif()
+# still not found -> neither 1.0 nor 1.14
 if (NOT PC_CAIROMM_FOUND)
     pkg_check_modules(PC_CAIROMM QUIET cairomm-1.16)
     set(CAIROMM_ABI "1.16")
 endif()
 
+
 find_path(CAIROMM_INCLUDE_DIR
-        NAMES cairomm.h
+        NAMES cairomm/cairomm.h
         HINTS ${PC_CAIROMM_INCLUDEDIR}
               ${PC_CAIROMM_INCLUDE_DIRS}
-        PATH_SUFFIXES cairomm)
+        REQUIRED)
 
 find_path(CAIROMM_CONFIG_DIR 
         NAMES cairommconfig.h
         HINTS ${PC_CAIROMM_INCLUDEDIR}
-              ${PC_CAIROMM_INCLUDE_DIRS})
+              ${PC_CAIROMM_INCLUDE_DIRS}
+        REQUIRED)
         
 if (CAIROMM_CONFIG_DIR)
     if (EXISTS "${CAIROMM_CONFIG_DIR}/cairommconfig.h")
@@ -58,7 +62,8 @@ endif ()
 find_library(CAIROMM_LIBRARY
     NAMES cairomm-${CAIROMM_ABI}
     HINTS ${PC_CAIROMM_LIBDIR}
-          ${PC_CAIROMM_LIBRARY_DIRS})
+          ${PC_CAIROMM_LIBRARY_DIRS}
+    REQUIRED)
         
 # TODO Unsure if the version is correct
 # TODO this VERSION_GREATER_EQUAL is the reason we require cmake 3.7 instead of 3.4

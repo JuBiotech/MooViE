@@ -10,17 +10,18 @@ find_package(PkgConfig)
 pkg_check_modules(PC_SIGCPP QUIET "sigc++-${SigC++_FIND_VERSION}")
 
 find_path(SIGCPP_INCLUDE_DIR
-    NAMES sigc++.h
+    NAMES sigc++/sigc++.h
     HINTS ${PC_SIGCPP_INCLUDEDIR}
           ${PC_SIGCPP_INCLUDE_DIRS}
-    PATH_SUFFIXES sigc++
+    REQUIRED
 )
 
 
 find_path(SIGCPP_CONFIG_DIR 
     NAMES sigc++config.h
     HINTS ${PC_SIGCPP_INCLUDEDIR}
-          ${PC_SIGCPP_INCLUDE_DIRS})
+          ${PC_SIGCPP_INCLUDE_DIRS}
+    REQUIRED)
 
 set(SIGCPP_INCLUDE_DIRS ${SIGCPP_INCLUDE_DIR} ${SIGCPP_CONFIG_DIR})
 
