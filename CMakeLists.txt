@@ -47,75 +47,75 @@ endif()
 
 # Structure files
 set (MOOVIE_INCLUDES
-	${MOOVIE_INCLUDE_DIR}/DataSet.h
-	${MOOVIE_INCLUDE_DIR}/Scale.h
-	${MOOVIE_INCLUDE_DIR}/Color.h
-	${MOOVIE_INCLUDE_DIR}/Configuration.h
-	${MOOVIE_INCLUDE_DIR}/OutputGrid.h
-	${MOOVIE_INCLUDE_DIR}/IOVector.h
-	${MOOVIE_INCLUDE_DIR}/CairoDrawer.h
-	${MOOVIE_INCLUDE_DIR}/Scene.h
-	${MOOVIE_INCLUDE_DIR}/Utils.h
-	${MOOVIE_INCLUDE_DIR}/InputAxis.h
-	${MOOVIE_INCLUDE_DIR}/Coordinates.h
-	${MOOVIE_INCLUDE_DIR}/DrawerProperties.h
-	${MOOVIE_INCLUDE_DIR}/Label.h
-	${MOOVIE_INCLUDE_DIR}/Mapper.h
-	${MOOVIE_INCLUDE_DIR}/TextProperties.h
-	${MOOVIE_INCLUDE_DIR}/Triangle.h
-	${MOOVIE_INCLUDE_DIR}/Drawer.h
+    ${MOOVIE_INCLUDE_DIR}/DataSet.h
+    ${MOOVIE_INCLUDE_DIR}/Scale.h
+    ${MOOVIE_INCLUDE_DIR}/Color.h
+    ${MOOVIE_INCLUDE_DIR}/Configuration.h
+    ${MOOVIE_INCLUDE_DIR}/OutputGrid.h
+    ${MOOVIE_INCLUDE_DIR}/IOVector.h
+    ${MOOVIE_INCLUDE_DIR}/CairoDrawer.h
+    ${MOOVIE_INCLUDE_DIR}/Scene.h
+    ${MOOVIE_INCLUDE_DIR}/Utils.h
+    ${MOOVIE_INCLUDE_DIR}/InputAxis.h
+    ${MOOVIE_INCLUDE_DIR}/Coordinates.h
+    ${MOOVIE_INCLUDE_DIR}/DrawerProperties.h
+    ${MOOVIE_INCLUDE_DIR}/Label.h
+    ${MOOVIE_INCLUDE_DIR}/Mapper.h
+    ${MOOVIE_INCLUDE_DIR}/TextProperties.h
+    ${MOOVIE_INCLUDE_DIR}/Triangle.h
+    ${MOOVIE_INCLUDE_DIR}/Drawer.h
 )
 
 set (MOOVIE_SRC
-	${MOOVIE_SRC_DIR}/DataSet.cpp
-	${MOOVIE_SRC_DIR}/Scale.cpp
-	${MOOVIE_SRC_DIR}/Color.cpp
-	${MOOVIE_SRC_DIR}/Configuration.cpp
-	${MOOVIE_SRC_DIR}/OutputGrid.cpp
-	${MOOVIE_SRC_DIR}/IOVector.cpp
-	${MOOVIE_SRC_DIR}/CairoDrawer.cpp
-	${MOOVIE_SRC_DIR}/Scene.cpp
-	${MOOVIE_SRC_DIR}/Utils.cpp
-	${MOOVIE_SRC_DIR}/InputAxis.cpp
+    ${MOOVIE_SRC_DIR}/DataSet.cpp
+    ${MOOVIE_SRC_DIR}/Scale.cpp
+    ${MOOVIE_SRC_DIR}/Color.cpp
+    ${MOOVIE_SRC_DIR}/Configuration.cpp
+    ${MOOVIE_SRC_DIR}/OutputGrid.cpp
+    ${MOOVIE_SRC_DIR}/IOVector.cpp
+    ${MOOVIE_SRC_DIR}/CairoDrawer.cpp
+    ${MOOVIE_SRC_DIR}/Scene.cpp
+    ${MOOVIE_SRC_DIR}/Utils.cpp
+    ${MOOVIE_SRC_DIR}/InputAxis.cpp
 )
 
 set (DESKTOP_INCLUDES
-	${DESKTOP_INCLUDE_DIR}/MainWindow.h
-	${DESKTOP_INCLUDE_DIR}/IOList.h
-	${DESKTOP_INCLUDE_DIR}/IOListWidget.h
-	${DESKTOP_INCLUDE_DIR}/ConfigurationDialog.h
-	${DESKTOP_INCLUDE_DIR}/ConfIntWidget.h
-	${DESKTOP_INCLUDE_DIR}/ConfDoubleWidget.h
-	${DESKTOP_INCLUDE_DIR}/ConfStringWidget.h
-	${DESKTOP_INCLUDE_DIR}/MooViEView.h
+    ${DESKTOP_INCLUDE_DIR}/MainWindow.h
+    ${DESKTOP_INCLUDE_DIR}/IOList.h
+    ${DESKTOP_INCLUDE_DIR}/IOListWidget.h
+    ${DESKTOP_INCLUDE_DIR}/ConfigurationDialog.h
+    ${DESKTOP_INCLUDE_DIR}/ConfIntWidget.h
+    ${DESKTOP_INCLUDE_DIR}/ConfDoubleWidget.h
+    ${DESKTOP_INCLUDE_DIR}/ConfStringWidget.h
+    ${DESKTOP_INCLUDE_DIR}/MooViEView.h
 )
 
 set (DESKTOP_SRC
-	${DESKTOP_SRC_DIR}/moovie-desktop.cpp
-	${DESKTOP_SRC_DIR}/MainWindow.cpp
-	${DESKTOP_SRC_DIR}/IOList.cpp
-	${DESKTOP_SRC_DIR}/IOListWidget.cpp
-	${DESKTOP_SRC_DIR}/ConfigurationDialog.cpp
-	${DESKTOP_SRC_DIR}/ConfIntWidget.cpp
-	${DESKTOP_SRC_DIR}/ConfDoubleWidget.cpp
-	${DESKTOP_SRC_DIR}/ConfStringWidget.cpp
-	${DESKTOP_SRC_DIR}/MooViEView.cpp
+    ${DESKTOP_SRC_DIR}/moovie-desktop.cpp
+    ${DESKTOP_SRC_DIR}/MainWindow.cpp
+    ${DESKTOP_SRC_DIR}/IOList.cpp
+    ${DESKTOP_SRC_DIR}/IOListWidget.cpp
+    ${DESKTOP_SRC_DIR}/ConfigurationDialog.cpp
+    ${DESKTOP_SRC_DIR}/ConfIntWidget.cpp
+    ${DESKTOP_SRC_DIR}/ConfDoubleWidget.cpp
+    ${DESKTOP_SRC_DIR}/ConfStringWidget.cpp
+    ${DESKTOP_SRC_DIR}/MooViEView.cpp
 )
 
 set (UIS
-	${DESKTOP_UI_DIR}/MainWindow.ui
-	${DESKTOP_UI_DIR}/IOListWidget.ui
-	${DESKTOP_UI_DIR}/ConfigurationDialog.ui
-	${DESKTOP_UI_DIR}/ConfIntWidget.ui
-	${DESKTOP_UI_DIR}/ConfDoubleWidget.ui
-	${DESKTOP_UI_DIR}/ConfStringWidget.ui
+    ${DESKTOP_UI_DIR}/MainWindow.ui
+    ${DESKTOP_UI_DIR}/IOListWidget.ui
+    ${DESKTOP_UI_DIR}/ConfigurationDialog.ui
+    ${DESKTOP_UI_DIR}/ConfIntWidget.ui
+    ${DESKTOP_UI_DIR}/ConfDoubleWidget.ui
+    ${DESKTOP_UI_DIR}/ConfStringWidget.ui
 )
 
 
 include_directories (
-		${MOOVIE_INCLUDE_DIR} # Project includes
-		${MOOVIE_INCLUDE_DIR}/thirdparty/tclap # Headers of TCLAP for command line parsing
-		${CAIROMM_INCLUDE_DIRS}) # Cairomm, Cairo, SigC++ and Freetype includes
+        ${MOOVIE_INCLUDE_DIR} # Project includes
+        ${MOOVIE_INCLUDE_DIR}/thirdparty/tclap # Headers of TCLAP for command line parsing
+        ${CAIROMM_INCLUDE_DIRS}) # Cairomm, Cairo, SigC++ and Freetype includes
 
 #MSVC stuff
 if (CMAKE_GENERATOR MATCHES "Visual Studio")
