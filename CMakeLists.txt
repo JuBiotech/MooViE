@@ -176,19 +176,19 @@ if (BUILD_DOCUMENTATION)
     if (DOXYGEN_FOUND)
         configure_file (${PROJECT_SOURCE_DIR}/Doxyfile.in ${PROJECT_BINARY_DIR}/Doxyfile)
         add_custom_target(doc
-				ALL
-				COMMENT "Generating API documentation with Doxygen" VERBATIM)
-		add_custom_command (
-				TARGET doc
-				COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile
-				OUTPUTS ${PROJECT_BINARY_DIR}/doc/man/man3/moovie.3)
-		# Build reference manual using pdflatex
-		add_custom_command(
-				TARGET doc
-				COMMAND make pdf
-				WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc/latex)
+                          ALL
+                          COMMENT "Generating API documentation with Doxygen" VERBATIM)
+        add_custom_command (
+                            TARGET doc
+                            COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile
+                            OUTPUTS ${PROJECT_BINARY_DIR}/doc/man/man3/moovie.3)
+        # Build reference manual using pdflatex
+        add_custom_command(
+                           TARGET doc
+                           COMMAND make pdf
+                           WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc/latex)
         # Install html pages and reference manual
-		install (DIRECTORY ${PROJECT_BINARY_DIR}/doc/html DESTINATION ${DEST_DOC_DIR})
+        install (DIRECTORY ${PROJECT_BINARY_DIR}/doc/html DESTINATION ${DEST_DOC_DIR})
         install (FILES ${PROJECT_BINARY_DIR}/doc/latex/refman.pdf DESTINATION ${DEST_DOC_DIR})
     endif(DOXYGEN_FOUND)
 endif(BUILD_DOCUMENTATION)
@@ -196,6 +196,6 @@ endif(BUILD_DOCUMENTATION)
 
 # Add test subdirectory
 if (BUILD_TESTS)
-	include(CTest)
-	add_subdirectory(test)
+    include(CTest)
+    add_subdirectory(test)
 endif(BUILD_TESTS)

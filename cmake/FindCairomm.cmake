@@ -10,6 +10,7 @@
 include(FindPackageHandleStandardArgs)
 
 find_package(Cairo REQUIRED)
+find_package(Freetype REQUIRED)
 
 # As of now, there are 3 ABI versions of cairomm 1.0, 1.14 and 1.16
 # all of them have different .pc names, so we check them sequentially
@@ -69,7 +70,7 @@ else()
 endif()
 
 find_package(SigC++ ${REQ_SIGCPP_ABI} REQUIRED)
-set(CAIROMM_INCLUDE_DIRS ${CAIROMM_INCLUDE_DIR} ${CAIROMM_CONFIG_DIR} ${CAIRO_INCLUDE_DIRS} ${SIGCPP_INCLUDE_DIRS})
-set(CAIROMM_LIBRARIES ${CAIROMM_LIBRARY} ${CAIRO_LIBRARIES}})
+set(CAIROMM_INCLUDE_DIRS ${CAIROMM_INCLUDE_DIR} ${CAIROMM_CONFIG_DIR} ${CAIRO_INCLUDE_DIRS} ${SIGCPP_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS})
+set(CAIROMM_LIBRARIES ${CAIROMM_LIBRARY} ${CAIRO_LIBRARIES})
 
 find_package_handle_standard_args(Cairomm REQUIRED_VARS CAIROMM_LIBRARY CAIROMM_INCLUDE_DIR CAIROMM_CONFIG_DIR)
