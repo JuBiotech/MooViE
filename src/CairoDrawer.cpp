@@ -127,7 +127,7 @@ CairoDrawer::draw_output_grid (const OutputGrid& grid)
 			 min_radius + i * y_dist, grid.get_end (),
 			 M_PI_2 - i * 2 * ANGLE_DELTA_MEDIUM);
 
-      labels = scale.make_labels(0);
+      labels = scale.make_labels(i);
       if (grid.get_direction () == Direction::CLOCKWISE)
       {
         std::reverse(labels.begin(), labels.end());

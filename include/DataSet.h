@@ -215,6 +215,7 @@ template<typename T>
       {
 	std::swap (m0.m_column, m1.m_column);
 	std::swap (m0.m_var, m1.m_var);
+	std::swap (m0.m_enabled, m1.m_enabled);
       }
     private:
       /** A shared pointer which points to the actual m_column */

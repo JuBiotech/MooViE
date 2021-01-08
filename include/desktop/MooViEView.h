@@ -38,7 +38,9 @@ private:
 
   /** Enabled if CTRL is pressed */
   bool m_zoom_active;
-  
+
+  double m_cumulative_zoom;
+
   /** child of the QWebEngineView (needed to steel events */
   QPointer<QObject> m_child;
 
@@ -66,7 +68,7 @@ public:
    */
   void
   adjust_zoom ();
-  
+
   bool
   event(QEvent * ev) override;
 
@@ -77,13 +79,13 @@ private slots:
    */
   void
   resizeEvent (QResizeEvent* event) override;
-  
-  
+
+
 protected:
   /**
-   * handles all kind of events. needed for zooming 
+   * handles all kind of events. needed for zooming
    */
-  bool 
+  bool
   eventFilter(QObject* obj, QEvent* event) override;
 
 
