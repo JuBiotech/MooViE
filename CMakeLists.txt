@@ -29,9 +29,10 @@ include(CheckIncludeFile)
 check_include_file("unistd.h"  HAVE_UNISTD_H)
 configure_file(moovie_config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/moovie_config.h)
 
+# Enable tests and docs for debug build
 if (CMAKE_BUILD_TYPE MATCHES "Debug")
-    set(${BUILD_DOCUMENTATION} ON)
-    set(${BUILD_TESTS} ON)
+    set(BUILD_DOCUMENTATION ON)
+    set(BUILD_TESTS ON)
 endif()
 
 # MSVC support
