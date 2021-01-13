@@ -16,7 +16,7 @@ MooViE currently supports Linux.
 
 Required tools:
 * A C++11 capable compiler
-* [CMake](http://cmake.org) >= 3.1
+* [CMake](http://cmake.org) >= 3.7
 
 Required Libraries:
 * _freetype2_
