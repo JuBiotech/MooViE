@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.4)
 project(MooViE
         VERSION 1.0.0
         DESCRIPTION "Visualization tool for the results of multi-objective optimization"
-        LANGUAGES CXX)
+        LANGUAGES CXX C)
 
 # Set C++ language standard
 set(CMAKE_CXX_STANDARD 11)
