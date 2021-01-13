@@ -1,3 +1,6 @@
+find_package(Cairomm REQUIRED)
+include_directories(${CAIROMM_INCLUDE_DIRS})
+
 include_directories(cpp/lib resources/thirdparty)
 
 # MooViE library
@@ -34,7 +37,10 @@ install (TARGETS moovie DESTINATION ${DEST_BIN_DIR})
 
 # Qt5 application
 if (BUILD_GUI)
+    find_package(Qt5 COMPONENTS Core Gui Widgets WebEngine WebEngineWidgets REQUIRED)
+
     include_directories(${CMAKE_BINARY_DIR} cpp/desktop)
+
     QT5_WRAP_UI(UI_HEADERS
             resources/ui/MainWindow.ui resources/ui/IOListWidget.ui resources/ui/ConfigurationDialog.ui
             resources/ui/ConfIntWidget.ui resources/ui/ConfDoubleWidget.ui resources/ui/ConfStringWidget.ui)
