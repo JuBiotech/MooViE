@@ -11,10 +11,7 @@ RUN apt-get install -y qt5-default qtbase5-dev qttools5-dev qtwebengine5-dev
 
 WORKDIR /home
 ADD cmake /home/cmake
-ADD include /home/include
 ADD src /home/src
-ADD ui /home/ui
-ADD test /home/test
 ADD images/logo.png /home/moovie.png
 ADD CMakeLists.txt /home/CMakeLists.txt
 ADD moovie_config.h.cmake /home/moovie_config.h.cmake
