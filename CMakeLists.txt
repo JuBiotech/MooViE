@@ -9,8 +9,8 @@ include(CheckIncludeFile)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 option(BUILD_GUI "Build a QT Gui" ON)
-option(BUILD_DOCUMENTATION "Build API documentation" ON)
-option(BUILD_TESTS "Build tests for the library" ON)
+option(BUILD_DOCUMENTATION "Build API documentation" OFF)
+option(BUILD_TESTS "Build tests for the library" OFF)
 
 # Set code location variables
 set (MOOVIE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
@@ -39,80 +39,83 @@ endif()
 check_include_file("unistd.h"  HAVE_UNISTD_H)
 configure_file(moovie_config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/moovie_config.h)
 if (BUILD_DOCUMENTATION)
-    find_package (Doxygen)
+    find_package (Doxygen REQUIRED dot)
+    if (NOT DOXYGEN_FOUND)
+        message(FATAL_ERROR "Doxygen and dot are needed to build the documentation. Either install Doxygen and dot or disable BUILD_DOCUMENTATION.")
+    endif()
 endif()
 
 # Structure files
 set (MOOVIE_INCLUDES
-	${MOOVIE_INCLUDE_DIR}/DataSet.h
-	${MOOVIE_INCLUDE_DIR}/Scale.h
-	${MOOVIE_INCLUDE_DIR}/Color.h
-	${MOOVIE_INCLUDE_DIR}/Configuration.h
-	${MOOVIE_INCLUDE_DIR}/OutputGrid.h
-	${MOOVIE_INCLUDE_DIR}/IOVector.h
-	${MOOVIE_INCLUDE_DIR}/CairoDrawer.h
-	${MOOVIE_INCLUDE_DIR}/Scene.h
-	${MOOVIE_INCLUDE_DIR}/Utils.h
-	${MOOVIE_INCLUDE_DIR}/InputAxis.h
-	${MOOVIE_INCLUDE_DIR}/Coordinates.h
-	${MOOVIE_INCLUDE_DIR}/DrawerProperties.h
-	${MOOVIE_INCLUDE_DIR}/Label.h
-	${MOOVIE_INCLUDE_DIR}/Mapper.h
-	${MOOVIE_INCLUDE_DIR}/TextProperties.h
-	${MOOVIE_INCLUDE_DIR}/Triangle.h
-	${MOOVIE_INCLUDE_DIR}/Drawer.h
+    ${MOOVIE_INCLUDE_DIR}/DataSet.h
+    ${MOOVIE_INCLUDE_DIR}/Scale.h
+    ${MOOVIE_INCLUDE_DIR}/Color.h
+    ${MOOVIE_INCLUDE_DIR}/Configuration.h
+    ${MOOVIE_INCLUDE_DIR}/OutputGrid.h
+    ${MOOVIE_INCLUDE_DIR}/IOVector.h
+    ${MOOVIE_INCLUDE_DIR}/CairoDrawer.h
+    ${MOOVIE_INCLUDE_DIR}/Scene.h
+    ${MOOVIE_INCLUDE_DIR}/Utils.h
+    ${MOOVIE_INCLUDE_DIR}/InputAxis.h
+    ${MOOVIE_INCLUDE_DIR}/Coordinates.h
+    ${MOOVIE_INCLUDE_DIR}/DrawerProperties.h
+    ${MOOVIE_INCLUDE_DIR}/Label.h
+    ${MOOVIE_INCLUDE_DIR}/Mapper.h
+    ${MOOVIE_INCLUDE_DIR}/TextProperties.h
+    ${MOOVIE_INCLUDE_DIR}/Triangle.h
+    ${MOOVIE_INCLUDE_DIR}/Drawer.h
 )
 
 set (MOOVIE_SRC
-	${MOOVIE_SRC_DIR}/DataSet.cpp
-	${MOOVIE_SRC_DIR}/Scale.cpp
-	${MOOVIE_SRC_DIR}/Color.cpp
-	${MOOVIE_SRC_DIR}/Configuration.cpp
-	${MOOVIE_SRC_DIR}/OutputGrid.cpp
-	${MOOVIE_SRC_DIR}/IOVector.cpp
-	${MOOVIE_SRC_DIR}/CairoDrawer.cpp
-	${MOOVIE_SRC_DIR}/Scene.cpp
-	${MOOVIE_SRC_DIR}/Utils.cpp
-	${MOOVIE_SRC_DIR}/InputAxis.cpp
+    ${MOOVIE_SRC_DIR}/DataSet.cpp
+    ${MOOVIE_SRC_DIR}/Scale.cpp
+    ${MOOVIE_SRC_DIR}/Color.cpp
+    ${MOOVIE_SRC_DIR}/Configuration.cpp
+    ${MOOVIE_SRC_DIR}/OutputGrid.cpp
+    ${MOOVIE_SRC_DIR}/IOVector.cpp
+    ${MOOVIE_SRC_DIR}/CairoDrawer.cpp
+    ${MOOVIE_SRC_DIR}/Scene.cpp
+    ${MOOVIE_SRC_DIR}/Utils.cpp
+    ${MOOVIE_SRC_DIR}/InputAxis.cpp
 )
 
 set (DESKTOP_INCLUDES
-	${DESKTOP_INCLUDE_DIR}/MainWindow.h
-	${DESKTOP_INCLUDE_DIR}/IOList.h
-	${DESKTOP_INCLUDE_DIR}/IOListWidget.h
-	${DESKTOP_INCLUDE_DIR}/ConfigurationDialog.h
-	${DESKTOP_INCLUDE_DIR}/ConfIntWidget.h
-	${DESKTOP_INCLUDE_DIR}/ConfDoubleWidget.h
-	${DESKTOP_INCLUDE_DIR}/ConfStringWidget.h
-	${DESKTOP_INCLUDE_DIR}/MooViEView.h
+    ${DESKTOP_INCLUDE_DIR}/MainWindow.h
+    ${DESKTOP_INCLUDE_DIR}/IOList.h
+    ${DESKTOP_INCLUDE_DIR}/IOListWidget.h
+    ${DESKTOP_INCLUDE_DIR}/ConfigurationDialog.h
+    ${DESKTOP_INCLUDE_DIR}/ConfIntWidget.h
+    ${DESKTOP_INCLUDE_DIR}/ConfDoubleWidget.h
+    ${DESKTOP_INCLUDE_DIR}/ConfStringWidget.h
+    ${DESKTOP_INCLUDE_DIR}/MooViEView.h
 )
 
 set (DESKTOP_SRC
-	${DESKTOP_SRC_DIR}/moovie-desktop.cpp
-	${DESKTOP_SRC_DIR}/MainWindow.cpp
-	${DESKTOP_SRC_DIR}/IOList.cpp
-	${DESKTOP_SRC_DIR}/IOListWidget.cpp
-	${DESKTOP_SRC_DIR}/ConfigurationDialog.cpp
-	${DESKTOP_SRC_DIR}/ConfIntWidget.cpp
-	${DESKTOP_SRC_DIR}/ConfDoubleWidget.cpp
-	${DESKTOP_SRC_DIR}/ConfStringWidget.cpp
-	${DESKTOP_SRC_DIR}/MooViEView.cpp
+    ${DESKTOP_SRC_DIR}/moovie-desktop.cpp
+    ${DESKTOP_SRC_DIR}/MainWindow.cpp
+    ${DESKTOP_SRC_DIR}/IOList.cpp
+    ${DESKTOP_SRC_DIR}/IOListWidget.cpp
+    ${DESKTOP_SRC_DIR}/ConfigurationDialog.cpp
+    ${DESKTOP_SRC_DIR}/ConfIntWidget.cpp
+    ${DESKTOP_SRC_DIR}/ConfDoubleWidget.cpp
+    ${DESKTOP_SRC_DIR}/ConfStringWidget.cpp
+    ${DESKTOP_SRC_DIR}/MooViEView.cpp
 )
 
 set (UIS
-	${DESKTOP_UI_DIR}/MainWindow.ui
-	${DESKTOP_UI_DIR}/IOListWidget.ui
-	${DESKTOP_UI_DIR}/ConfigurationDialog.ui
-	${DESKTOP_UI_DIR}/ConfIntWidget.ui
-	${DESKTOP_UI_DIR}/ConfDoubleWidget.ui
-	${DESKTOP_UI_DIR}/ConfStringWidget.ui
+    ${DESKTOP_UI_DIR}/MainWindow.ui
+    ${DESKTOP_UI_DIR}/IOListWidget.ui
+    ${DESKTOP_UI_DIR}/ConfigurationDialog.ui
+    ${DESKTOP_UI_DIR}/ConfIntWidget.ui
+    ${DESKTOP_UI_DIR}/ConfDoubleWidget.ui
+    ${DESKTOP_UI_DIR}/ConfStringWidget.ui
 )
 
 
 include_directories (
-		${MOOVIE_INCLUDE_DIR} # Project includes
-		${MOOVIE_INCLUDE_DIR}/thirdparty/tclap # Headers of TCLAP for command line parsing
-		${CAIROMM_INCLUDE_DIRS}) # Cairomm, Cairo, SigC++ and Freetype includes
+        ${MOOVIE_INCLUDE_DIR} # Project includes
+        ${MOOVIE_INCLUDE_DIR}/thirdparty/tclap # Headers of TCLAP for command line parsing
+        ${CAIROMM_INCLUDE_DIRS}) # Cairomm, Cairo, SigC++ and Freetype includes
 
 #MSVC stuff
 if (CMAKE_GENERATOR MATCHES "Visual Studio")
@@ -125,13 +128,13 @@ add_library (libmoovie SHARED ${MOOVIE_SRC})
 include(GenerateExportHeader)
 generate_export_header(libmoovie)
 set_target_properties (libmoovie PROPERTIES OUTPUT_NAME moovie)
-target_link_libraries (libmoovie PUBLIC ${CAIRO_LIBRARY_LOC} ${CAIROMM_LIBRARY_LOC})
+target_link_libraries (libmoovie PUBLIC  ${CAIROMM_LIBRARIES})
 
 
 # Build MooViE executable
 add_executable (moovie ${MOOVIE_SRC_DIR}/moovie.cpp)
 add_dependencies (moovie libmoovie)
-target_link_libraries (moovie PUBLIC libmoovie ${CAIROMM_LIBRARIES})
+target_link_libraries (moovie PUBLIC libmoovie)
 
 include_directories(${PROJECT_BINARY_DIR})
 
@@ -144,7 +147,7 @@ if (BUILD_GUI)
 
     add_executable (moovie-desktop ${DESKTOP_SRC} ${MOC_SRCS} ${UI_HEADERS})
     add_dependencies(moovie-desktop libmoovie)
-    target_link_libraries (moovie-desktop Qt5::Core Qt5::Gui Qt5::Widgets Qt5::WebEngine Qt5::WebEngineWidgets libmoovie ${CAIROMM_LIBRARIES})
+    target_link_libraries (moovie-desktop Qt5::Core Qt5::Gui Qt5::Widgets Qt5::WebEngine Qt5::WebEngineWidgets libmoovie)
 endif()
 
 
@@ -173,19 +176,19 @@ if (BUILD_DOCUMENTATION)
     if (DOXYGEN_FOUND)
         configure_file (${PROJECT_SOURCE_DIR}/Doxyfile.in ${PROJECT_BINARY_DIR}/Doxyfile)
         add_custom_target(doc
-				ALL
-				COMMENT "Generating API documentation with Doxygen" VERBATIM)
-		add_custom_command (
-				TARGET doc
-				COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile
-				OUTPUTS ${PROJECT_BINARY_DIR}/doc/man/man3/moovie.3)
-		# Build reference manual using pdflatex
-		add_custom_command(
-				TARGET doc
-				COMMAND make pdf
-				WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc/latex)
+                          ALL
+                          COMMENT "Generating API documentation with Doxygen" VERBATIM)
+        add_custom_command (
+                            TARGET doc
+                            COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile
+                            OUTPUTS ${PROJECT_BINARY_DIR}/doc/man/man3/moovie.3)
+        # Build reference manual using pdflatex
+        add_custom_command(
+                           TARGET doc
+                           COMMAND make pdf
+                           WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc/latex)
         # Install html pages and reference manual
-		install (DIRECTORY ${PROJECT_BINARY_DIR}/doc/html DESTINATION ${DEST_DOC_DIR})
+        install (DIRECTORY ${PROJECT_BINARY_DIR}/doc/html DESTINATION ${DEST_DOC_DIR})
         install (FILES ${PROJECT_BINARY_DIR}/doc/latex/refman.pdf DESTINATION ${DEST_DOC_DIR})
     endif(DOXYGEN_FOUND)
 endif(BUILD_DOCUMENTATION)
@@ -193,6 +196,6 @@ endif(BUILD_DOCUMENTATION)
 
 # Add test subdirectory
 if (BUILD_TESTS)
-	include(CTest)
-	add_subdirectory(test)
+    include(CTest)
+    add_subdirectory(test)
 endif(BUILD_TESTS)
