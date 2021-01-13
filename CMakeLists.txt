@@ -5,13 +5,13 @@ project(MooViE
         LANGUAGES CXX)
 
 # Set C++ language standard
-set (CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
 
 # Set module path for finding external modules
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 # CMake build options
-option(BUILD_GUI "Build a QT Gui" ON)
+option(BUILD_GUI "Build QT Gui" ON)
 option(BUILD_DOCUMENTATION "Build API documentation" OFF)
 option(BUILD_TESTS "Build tests for the library" OFF)
 
