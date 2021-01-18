@@ -1,7 +1,7 @@
 find_package(Cairomm REQUIRED)
 include_directories(${CAIROMM_INCLUDE_DIRS})
 
-include_directories(cpp/lib resources/thirdparty)
+include_directories(cpp/lib resources/thirdparty ${CMAKE_CURRENT_BINARY_DIR})
 
 # MooViE library
 add_library(libmoovie SHARED

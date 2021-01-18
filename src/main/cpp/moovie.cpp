@@ -6,7 +6,7 @@
 #include <iostream>
 #include "lib/Scene.h"
 #include "lib/Configuration.h"
-#include <CmdLine.h>
+#include <tclap/CmdLine.h>
 
 using namespace TCLAP;
 
