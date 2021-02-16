@@ -1,7 +1,7 @@
 find_package(Cairomm REQUIRED)
 include_directories(${CAIROMM_INCLUDE_DIRS})
 
-include_directories(cpp/lib resources/thirdparty)
+include_directories(cpp/lib resources/thirdparty ${CMAKE_CURRENT_BINARY_DIR})
 
 # MooViE library
 add_library(libmoovie SHARED
@@ -21,8 +21,8 @@ install(FILES
         cpp/lib/IOVector.h cpp/lib/CairoDrawer.h cpp/lib/Scene.h cpp/lib/Utils.h cpp/lib/InputAxis.h
         cpp/lib/Coordinates.h cpp/lib/DrawerProperties.h cpp/lib/Label.h cpp/lib/Mapper.h cpp/lib/TextProperties.h
         cpp/lib/Triangle.h cpp/lib/Drawer.h
-        ${PROJECT_BINARY_DIR}/libmoovie_export.h
-        ${CMAKE_CURRENT_BINARY_DIR}/moovie_config.h
+        ${CMAKE_CURRENT_BINARY_DIR}/libmoovie_export.h
+        ${PROJECT_BINARY_DIR}/moovie_config.h
         DESTINATION ${DEST_INCLUDE_DIR})
 install(TARGETS libmoovie DESTINATION ${DEST_LIB_DIR})
 

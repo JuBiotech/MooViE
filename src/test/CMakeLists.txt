@@ -1,4 +1,4 @@
-include_directories(../main/cpp ${PROJECT_BINARY_DIR})
+include_directories(../main/cpp ${PROJECT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
 set(Boost_USE_STATIC_LIBS OFF)
 find_package (Boost REQUIRED COMPONENTS unit_test_framework)
