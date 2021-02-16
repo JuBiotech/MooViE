@@ -22,4 +22,4 @@ docker run \
   --volume /home/$USER/:/home/$USER \
   --volume /tmp/.X11-unix:/tmp/.X11-unix \
   --env DISPLAY=$DISPLAY \
-  moovie-desktop
+  moovie-desktop 2> /dev/null
