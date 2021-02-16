@@ -20,7 +20,7 @@ ADD README.md /home/README.md
 RUN mkdir build
 
 WORKDIR /home/build
-RUN cmake .. -DCMAKE_PREFIX_PATH=/usr/local -DBUILD_DOCUMENTATION=OFF
+RUN cmake .. -DCMAKE_PREFIX_PATH=/usr/local -DBUILD_TESTS=ON -DBUILD_DOCUMENTATION=OFF
 RUN cmake --build .
 RUN make test
 RUN make install
