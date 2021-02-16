@@ -2,7 +2,7 @@ include_directories(../main/cpp ${PROJECT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR
 
 set(Boost_USE_STATIC_LIBS OFF)
 find_package (Boost REQUIRED COMPONENTS unit_test_framework)
-include_directories (${Boost_INCLUDE_DIRS})
+include_directories (${Boost_INCLUDE_DIRS} ${PROJECT_BINARY_DIR}/src/main)
 
 file(GLOB TEST_FILES resources/*.csv)
 foreach(TEST_FILE ${TEST_FILES})
