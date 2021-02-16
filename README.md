@@ -25,15 +25,16 @@ Required Libraries:
 * _Qt5_ (>= 5.4) with _QtGui_ and _QtWebEngine_
 
 ### How to install MooViE
-Clone or download this repository. Generate Makefile using _CMake_:
-```shell
-cmake <MooViE directory>
+
+#### Manual
+On Debian-based systems you can simply follow the installation steps from the Dockerfile.
+
+#### Docker
+First you need to install Docker (for instance by following this [instruction](https://docs.docker.com/engine/install/ubuntu/#install-docker-engine)). On Debian-based systems you can now open a bash console and run
+```shell script
+./moovie-desktop-docker.sh
 ```
-You can set the install directory using `-DCMAKE_INSTALL_PREFIX`. Finally, MooViE is 
-installed using _Make_:
-```shell
-make install
-```
+This will build the Docker image and run it afterwards. For later runs, the script will check if the image is already installed.
 
 ### Input Format
 The MooViE input file needs to be in CSV format using **commas** as column delimiters. 
