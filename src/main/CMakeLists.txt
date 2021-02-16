@@ -68,23 +68,3 @@ Type=Application\n")
     install(FILES ${PROJECT_BINARY_DIR}/moovie.desktop DESTINATION ${DEST_DESKTOP_DIR})
     install(FILES resources/pixmaps/moovie.png DESTINATION ${DEST_PIXMAP_DIR})
 endif()
-
-
-# Installation
-install(FILES ${MOOVIE_INCLUDES} ${PROJECT_BINARY_DIR}/libmoovie_export.h ${CMAKE_CURRENT_BINARY_DIR}/moovie_config.h DESTINATION ${DEST_INCLUDE_DIR})
-install(TARGETS libmoovie DESTINATION ${DEST_LIB_DIR})
-install(TARGETS moovie DESTINATION ${DEST_BIN_DIR})
-if (BUILD_GUI)
-    file(WRITE ${PROJECT_BINARY_DIR}/moovie.desktop "[Desktop Entry]
-Name=MooViE
-Exec=${DEST_BIN_DIR}/moovie-desktop
-Icon=${DEST_PIXMAP_DIR}/moovie.png
-Categories=Science;DataVisualization;
-Terminal=false
-Type=Application\n")
-    install (TARGETS moovie-desktop DESTINATION ${DEST_BIN_DIR})
-    install (FILES ${PROJECT_BINARY_DIR}/moovie.desktop DESTINATION ${DEST_DESKTOP_DIR})
-    install (FILES moovie.png DESTINATION ${DEST_PIXMAP_DIR})
-endif()
-install (DIRECTORY ${MOOVIE_DOC_DIR} DESTINATION ${DEST_DOC_DIR})
-install (FILES README.md DESTINATION ${DEST_DOC_DIR})
