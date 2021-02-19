@@ -1,7 +1,4 @@
 find_package(Cairomm REQUIRED)
-include_directories(${CAIROMM_INCLUDE_DIRS})
-
-include_directories(cpp/lib resources/thirdparty ${CMAKE_CURRENT_BINARY_DIR})
 
 # MooViE library
 add_library(libmoovie SHARED
@@ -15,6 +12,7 @@ include(GenerateExportHeader)
 generate_export_header(libmoovie)
 set_target_properties (libmoovie PROPERTIES OUTPUT_NAME moovie)
 target_link_libraries (libmoovie PUBLIC  ${CAIROMM_LIBRARIES})
+target_include_directories(libmoovie PUBLIC ${CAIROMM_INCLUDE_DIRS} cpp/lib resources/thirdparty ${CMAKE_CURRENT_BINARY_DIR})
 
 install(FILES
         cpp/lib/DataSet.h cpp/lib/Scale.h cpp/lib/Color.h cpp/lib/Configuration.h cpp/lib/OutputGrid.h
