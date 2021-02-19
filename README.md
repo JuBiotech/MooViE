@@ -2,7 +2,9 @@
 
 # Multi-objective optimization Visualization Engine
 
- 
+[![pipeline status](https://jugit.fz-juelich.de/IBG-1/ModSim/MooViE/badges/develop/pipeline.svg)](https://jugit.fz-juelich.de/IBG-1/ModSim/MooViE/-/commits/develop)
+[![coverage report](https://jugit.fz-juelich.de/IBG-1/ModSim/MooViE/badges/develop/coverage.svg)](https://jugit.fz-juelich.de/IBG-1/ModSim/MooViE/-/commits/develop) 
+
 The Multi-objective optimization Visualization Engine (MooViE) is developed at 
 the Institute of Bio- and Geosciences 1 (IBG-1) of the Forschungszentrum Jülich. MooViE 
 is an easy-to-use tool to display multidimensional data. It is designed for 
