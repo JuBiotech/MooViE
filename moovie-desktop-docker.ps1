@@ -17,10 +17,10 @@ if ( !$? )
 
 # Resolve full volume path
 $VOLUME_LOC = $((Resolve-Path $VOLUME_LOC).ToString())
-Write-Output "Include volume $VOLUME_LOC"
+Write-Output "Including volume $VOLUME_LOC"
 
 # Run docker image with moovie-desktop
-Write-Output "Run docker image"
+Write-Output "Running docker image"
 docker run `
     --user 1000 `
     --workdir /home/workspace `

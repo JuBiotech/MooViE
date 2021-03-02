@@ -35,10 +35,10 @@ fi
 
 # Resolve full volume path
 VOLUME_LOC=$(readlink -e $VOLUME_LOC)
-echo "Include volume $VOLUME_LOC"
+echo "Including volume $VOLUME_LOC"
 
 # Run docker image with moovie-desktop
-echo "Run docker image"
+echo "Running docker image"
 docker run \
   --user "$(id -u)" \
   --workdir /home/workspace \
