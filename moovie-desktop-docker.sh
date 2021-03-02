@@ -41,8 +41,8 @@ echo "Include volume $VOLUME_LOC"
 echo "Run docker image"
 docker run \
   --user "$(id -u)" \
-  --workdir "$(pwd)" \
-  --volume /home/$USER/:/home/$USER \
+  --workdir /home/workspace \
+  --volume "$VOLUME_LOC":/home/workspace \
   --volume /tmp/.X11-unix:/tmp/.X11-unix \
   --env DISPLAY="$DISPLAY" \
   moovie-desktop 2> /dev/null
