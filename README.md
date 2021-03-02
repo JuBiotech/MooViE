@@ -12,11 +12,12 @@ MooViE comes with a simple graphical user interface that allows the user to inte
 change which data is displayed and configure the style.
 
 ### Prerequisites and Dependencies
-MooViE currently supports Linux.
+These prerequisites are only necessary if you want to install MooViE natively. This is currently only supported for 
+Linux systems. For Windows systems, see below section about how to install MooViE using Docker.
 
 Required tools:
 * A C++11 capable compiler
-* [CMake](http://cmake.org) >= 3.7
+* [CMake](http://cmake.org) (>= 3.7)
 
 Required Libraries:
 * _freetype2_
