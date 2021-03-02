@@ -1,5 +1,27 @@
 #!/bin/bash
 
+# Set default arguments
+DOCKERFILE_LOC=$(pwd)
+VOLUME_LOC=/home/$USER
+
+# Print usage
+usage()
+{
+  echo "Usage: moovie-desktop-docker.sh [ -d | --dockerfile-loc DOCKERFILE LOCATION ]
+                                [ -v | --volume-loc VOLUME LOCATION]"
+}
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]
+do
+  case "$1" in
+    -d | --dockerfile-loc) DOCKERFILE_LOC=$2; shift 2;;
+    -v | --volume-loc) VOLUME_LOC=$2; shift 2;;
+    -h | --help) usage; exit 0;;
+    *) echo "Unexpected option: $1"; usage; exit 1;;
+  esac
+done
+
 # Build docker image if not already build
 if [[ "$(docker images -q moovie-desktop 2>/dev/null)" == "" ]]
 then
