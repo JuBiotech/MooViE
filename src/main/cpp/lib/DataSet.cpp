@@ -23,7 +23,8 @@ template<>
     size_t i = 0;
 
     // Add input variables from table header
-    while (i < header.size () && header[i].find_first_of ("i#") == 0)
+    while (i < header.size () && 
+			(header[i].find_first_of ("i#") == 0 || header[i].find_first_of ("I#") == 0))
       {
 	std::size_t open_bracket = header[i].find_first_of ('['),
 	    close_bracket = header[i].find_first_of (']');
@@ -78,7 +79,8 @@ template<>
     std::size_t num_inputs = i;
 
     // Add output variables from table header
-    while (i < header.size () && header[i].find_first_of ("o#") == 0)
+    while (i < header.size () && 
+			(header[i].find_first_of ("o#") == 0 || header[i].find_first_of ("O#") == 0))
       {
 	std::size_t open_bracket = header[i].find_first_of ('['),
 	    close_bracket = header[i].find_first_of (']');
