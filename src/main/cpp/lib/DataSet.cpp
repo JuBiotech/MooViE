@@ -192,6 +192,16 @@ template<>
 	  }
       }
 
+      // Add spacing to min and max if the variance of a column is 0
+      for (std::size_t i = 0; i < columns.size(); ++i)
+        {
+      if (columns[i]->var.max - columns[i]->var.min <= std::numeric_limits<double>::epsilon())
+        {
+          columns[i]->var.min -= 1;
+          columns[i]->var.max += 1;
+        }
+      }
+
     m_num_cols = columns.size ();
     m_num_rows = columns[0]->cells.size ();
     m_cols.reserve (m_num_cols);
