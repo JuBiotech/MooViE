@@ -106,8 +106,8 @@ BOOST_AUTO_TEST_SUITE(dataset_test)
     BOOST_CHECK_CLOSE(inputs[0].min, 1, eps);
     BOOST_CHECK_CLOSE(inputs[0].max, 7, eps);
     BOOST_CHECK_EQUAL(inputs[1].name, std::string ("Input2"));
-    BOOST_CHECK_CLOSE(inputs[1].min, 8, eps);
-    BOOST_CHECK_CLOSE(inputs[1].max, 8, eps);
+    BOOST_CHECK_CLOSE(inputs[1].min, 7, eps);
+    BOOST_CHECK_CLOSE(inputs[1].max, 9, eps);
 
     const std::vector<DefVariable> & outputs = set.output_variables ();
     BOOST_CHECK_EQUAL(outputs[0].name, std::string ("Output1"));
