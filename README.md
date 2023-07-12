@@ -13,22 +13,24 @@ change which data is displayed and configure the style.
 
 ### Prerequisites and Dependencies
 These prerequisites are only necessary if you want to install MooViE natively. This is currently only supported for 
-Linux systems. For Windows systems, see below section about how to install MooViE using Docker.
+Ubuntu (>= 20.04). For other systems, see below section about how to install MooViE using Docker.
 
 Required tools:
-* A C++11 capable compiler
-* [CMake](http://cmake.org) (>= 3.7)
+* GNU C++ compiler
+* CMake (>= 3.7, recommended cmake-curses-gui or cmake-qt-gui)
 
 Required Libraries:
-* _freetype2_
-* _sigc++-2.0_
-* _cairo_ and _cairomm-1.0_
-* _Qt5_ (>= 5.4) with _QtGui_ and _QtWebEngine_
+- libfreetype-dev
+- libsigc++-2.0-dev
+- libcairo2-dev
+- libcairomm-1.0-dev
+- qtbase5-dev
+- qtwebengine5-dev
 
 ### How to install MooViE
 
-#### Manual
-On Debian-based systems you can simply follow the installation steps from the Dockerfile.
+#### Manual (only for Ubuntu >= 20.04)
+After installing the dependencies from above using `apt-get`, you can simply follow the installation steps for MooViE from the Dockerfile.
 
 #### Docker
 To simplify the installation procedure we supply two scripts that install and run Docker containers in which the 
