@@ -14,29 +14,48 @@ MooViE comes with a simple graphical user interface that allows the user to inte
 change which data is displayed and configure the style.
 
 ### Prerequisites and Dependencies
-MooViE currently supports Linux.
+These prerequisites are only necessary if you want to install MooViE natively. This is currently only supported for 
+Ubuntu (>= 20.04). For other systems, see below section about how to install MooViE using Docker.
 
 Required tools:
-* A C++11 capable compiler
-* [CMake](http://cmake.org) >= 3.7
+* GNU C++ compiler
+* CMake (>= 3.7, recommended cmake-curses-gui or cmake-qt-gui)
 
 Required Libraries:
-* _freetype2_
-* _sigc++-2.0_
-* _cairo_ and _cairomm-1.0_
-* _Qt5_ (>= 5.4) with _QtGui_ and _QtWebEngine_
+- libfreetype-dev
+- libsigc++-2.0-dev
+- libcairo2-dev
+- libcairomm-1.0-dev
+- qtbase5-dev
+- qtwebengine5-dev
 
 ### How to install MooViE
 
-#### Manual
-On Debian-based systems you can simply follow the installation steps from the Dockerfile.
+#### Manual (only for Ubuntu >= 20.04)
+After installing the dependencies from above using `apt-get`, you can simply follow the installation steps for MooViE from the Dockerfile.
 
 #### Docker
-First you need to install Docker (for instance by following this [instruction](https://docs.docker.com/engine/install/ubuntu/#install-docker-engine)). On Debian-based systems you can now open a bash console and run
+To simplify the installation procedure we supply two scripts that install and run Docker containers in which the 
+graphical user interface of MooViE runs. It can be displayed on the host machine via X11 connection. The scripts are 
+located in the project directory root. Prior to installing and running MooViE with the scripts, you need to install
+Docker (for instance by following this
+[instruction](https://docs.docker.com/engine/install/ubuntu/#install-docker-engine)).
+
+On Linux systems with X11 server installed and running you just need to open a bash console and run the 
+installation/runner script with
 ```shell script
-./moovie-desktop-docker.sh
+./moovie-desktop-docker.sh [-d Dockerfile location] [-v Volume location]
 ```
-This will build the Docker image and run it afterwards. For later runs, the script will check if the image is already installed.
+On Windows systems, you additionally need to install an Xserver 
+(check out [vcxsrv](https://sourceforge.net/projects/vcxsrv/)) and run it with disabled access control 
+([helpful tutorial](https://medium.com/@potatowagon/how-to-use-gui-apps-in-linux-docker-container-from-windows-host-485d3e1c64a3)).
+Being set up, you can now open a Powershell console and run the Windows installation/runner script with
+```powershell
+./moovie-desktop-docker.ps1 [-d Dockerfile location] [-v Volume to mount]
+```
+
+Both scripts will build the Docker image and run it afterwards. For later runs, the script will check if the image is 
+already installed and just run it directly. 
 
 ### Input Format
 The MooViE input file needs to be in CSV format using **commas** as column delimiters. 
@@ -75,7 +94,7 @@ moovie -x 750 -y 750 -o ./output.svg -c ./moovie.conf input.csv
 ```
 
 ### How to use the GUI
-With MooViE's graphical user interface you can easily configure MooViE and display 
+With the graphical user interface you can easily configure MooViE and display 
 the results.
 
 ![Example MooViE scene in GUI](images/example_gui_main.png)
