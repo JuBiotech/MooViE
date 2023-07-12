@@ -79,7 +79,7 @@ bool MooViEView::eventFilter(QObject* obj, QEvent* event)
   else if (m_zoom_active && event->type() == QEvent::Wheel)
   {
     QWheelEvent* wheel = static_cast<QWheelEvent*>(event);
-    qreal factor = qPow(1.2, wheel->delta() / 240.0);
+    qreal factor = qPow(1.2, wheel->angleDelta().y() / 240.0);
     qreal zoom = zoomFactor() * factor;
     m_cumulative_zoom += (zoom - zoomFactor());
     setZoomFactor(zoom);

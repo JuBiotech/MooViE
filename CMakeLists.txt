@@ -36,6 +36,11 @@ if (CMAKE_GENERATOR MATCHES "Visual Studio")
     add_compile_options("/Za")
 endif()
 
+# GNU debug flags
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -fno-inline -fprofile-arcs -ftest-coverage --coverage")
+endif()
+
 # MooViE sources
 add_subdirectory(src/main)
 

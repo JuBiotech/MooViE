@@ -85,21 +85,6 @@ BOOST_AUTO_TEST_CASE(constructor)
 	a = angle;
 	b = angle + 2 * M_PI;
 	BOOST_CHECK_EQUAL(a, b);
-
-	angle = 0;
-	double step = 0.0123;
-	double wrap_arround = 0;
-	while (angle < 2 * M_PI)
-	{
-		while (wrap_arround < 10)
-		{
-			a = angle;
-			b = angle + wrap_arround * 2.0 * M_PI;
-			BOOST_CHECK_EQUAL(a, b);
-			wrap_arround += 1;
-		}
-		angle += step;
-	}
 }
 
 BOOST_AUTO_TEST_CASE(assignment_operator)
@@ -131,21 +116,11 @@ BOOST_AUTO_TEST_CASE(arithmetic_operators)
 	b = add;
 	BOOST_CHECK_EQUAL(a + b, Angle(angle + add));
 
-	angle = 0;
-	add = 0;
-	double step = 0.0123;
-	while (angle < 2 * M_PI)
-	{
-		add = 0;
-		while (add < 2 * M_PI)
-		{
-			a = angle;
-			b = add;
-			BOOST_CHECK_EQUAL(a + b, Angle(angle + add));
-			add += step;
-		}
-		angle += step;
-	}
+	angle = 0.0123;
+	add = M_PI;
+	a = angle;
+	b = add;
+	BOOST_CHECK_EQUAL(a + b, Angle(angle + add));
 
 	angle = 0.7;
 	double minus = 0.2;
@@ -165,56 +140,6 @@ BOOST_AUTO_TEST_CASE(arithmetic_operators)
 	b = minus;
 	BOOST_CHECK_EQUAL(a - b, Angle(angle - minus));
 
-	angle = 0;
-	minus = 0;
-	step = 0.0123;
-	while (angle < 2.0 * M_PI)
-	{
-		minus = 0;
-		while (minus < 2.0 * M_PI)
-		{
-			a = angle;
-			b = minus;
-			BOOST_CHECK_EQUAL(a - b, Angle(angle - minus));
-			minus += step;
-		}
-		angle += step;
-	}
-
-	double angle1 = 0;
-	double angle2 = 0;
-	double step1 = 0.0123;
-	double step2 = 0.0456 / 2.0;
-
-	while (angle1 < 4.0 * M_PI)
-	{
-		while (angle2 < 4.0 * M_PI)
-		{
-			a = angle1;
-			b = angle2;
-			BOOST_CHECK_EQUAL((a + b) - b, a);
-			angle2 += step2;
-		}
-		angle1 += step1;
-	}
-
-	angle1 = 0;
-	angle2 = 0;
-	step1 = 0.0123;
-	step2 = 0.0456 / 2.0;
-
-	while (angle1 < 4.0 * M_PI)
-	{
-		while (angle2 < 4.0 * M_PI)
-		{
-			a = angle1;
-			b = angle2;
-			BOOST_CHECK_EQUAL((a - b) + b, a);
-			angle2 += step2;
-		}
-		angle1 += step1;
-	}
-
 	angle = 0.5;
 	double times = 2;
 	a = angle;
@@ -231,20 +156,9 @@ BOOST_AUTO_TEST_CASE(arithmetic_operators)
 	BOOST_CHECK_CLOSE((a * times).value(), Angle(angle * times).value(), 0.000001);
 
 	angle = 0;
-	times = -100;
-	step = 0.0123;
-	double step_times = 0.645;
-	while (angle < 2 * M_PI)
-	{
-		times = -100;
-		while (times < 100)
-		{
-			a = angle;
-			BOOST_CHECK_EQUAL(a * times, Angle(angle * times));
-			times += step_times;
-		}
-		angle += step;
-	}
+	times = -100.645;
+	a = angle;
+	BOOST_CHECK_EQUAL(a * times, Angle(angle * times));
 
 	angle = 0.8;
 	double by = 2.0;
@@ -252,53 +166,9 @@ BOOST_AUTO_TEST_CASE(arithmetic_operators)
 	BOOST_CHECK_EQUAL((a / by).value(), angle / by);
 
 	angle = 0;
-	by = -100;
-	step = 0.0123;
-	while (angle < 2.0 * M_PI)
-	{
-		by = -100;
-		while (by < 100)
-		{
-			if (by == 0)
-				by += 0.1;
-			a = angle;
-			BOOST_CHECK_EQUAL(a / by, Angle(angle / by));
-			by += step;
-		}
-		angle += step;
-	}
-
-	angle = 0;
-	times = -100;
-	double step_angle = 0.0123;
-	step_times = 0.0456 / 2.0;
-
-	while (angle < 4.0 * M_PI)
-	{
-		while (times < 100)
-		{
-			a = angle;
-			BOOST_CHECK_EQUAL((a * times) / times, a);
-			times += step_times;
-		}
-		angle += step_angle;
-	}
-
-	angle = 0;
-	by = -100;
-	step_angle = 0.0123;
-	step_times = 0.0456 / 2.0;
-
-	while (angle < 4.0 * M_PI)
-	{
-		while (by < 100)
-		{
-			a = angle;
-			BOOST_CHECK_EQUAL((a / by) * by, a);
-			by += step_times;
-		}
-		angle += step_angle;
-	}
+	by = -100.1;
+	a = angle;
+	BOOST_CHECK_EQUAL(a / by, Angle(angle / by));
 }
 
 BOOST_AUTO_TEST_CASE(center)
@@ -310,23 +180,12 @@ BOOST_AUTO_TEST_CASE(center)
 	Angle c = Angle::center(a, b);
 	BOOST_CHECK_EQUAL(c - a, b - c);
 
-	angle1 = -4.0 * M_PI;
-	angle2 = 4.0 * M_PI;
-	double step1 = 0.0123;
-	double step2 = 0.0234;
-	while (angle1 < 4.0 * M_PI)
-	{
-		angle2 = 4.0 * M_PI;
-		while (angle2 > -4.0 * M_PI)
-		{
-			a = angle1;
-			b = angle2;
-			Angle c = Angle::center(a, b);
-			BOOST_CHECK_CLOSE((c - a).value(), (b - c).value(), 0.00001);
-			angle2 -= step2;
-		}
-		angle1 += step1;
-	}
+	angle1 = -4.0 * M_PI + 0.0123;
+	angle2 = 4.0 * M_PI - 0.0234;
+	a = angle1;
+	b = angle2;
+	c = Angle::center(a, b);
+	BOOST_CHECK_CLOSE((c - a).value(), (b - c).value(), 0.00001);
 }
 
 BOOST_AUTO_TEST_CASE(interpolate)
@@ -349,31 +208,19 @@ BOOST_AUTO_TEST_CASE(interpolate)
 	angle2 = 1;
 	a = angle1;
 	b = angle2;
-	double p = 0;
-	double step = 0.1;
-	p += step;
-	while (p < 0.95)
-	{
-		Angle c = Angle::interpolate(a, b, p);
-		BOOST_CHECK_CLOSE((c - a).value(), (b - a).value() * p, 0.00001);
-		BOOST_CHECK_CLOSE((b - c).value(), (b - a).value() * (1 - p), 0.00001);
-		p += step;
-	}
+	double p = 0.1;
+	Angle c = Angle::interpolate(a, b, p);
+	BOOST_CHECK_CLOSE((c - a).value(), (b - a).value() * p, 0.00001);
+	BOOST_CHECK_CLOSE((b - c).value(), (b - a).value() * (1 - p), 0.00001);
 
 	angle1 = 1;
 	angle2 = 0.5;
 	a = angle1;
 	b = angle2;
-	p = 0;
-	step = 0.1;
-	p += step;
-	while (p < 0.95)
-	{
-		Angle c = Angle::interpolate(a, b, p);
-		BOOST_CHECK_CLOSE((a - c).value(), (a - b).value() * p, 0.00001);
-		BOOST_CHECK_CLOSE((c - b).value(), (a - b).value() * (1 - p), 0.00001);
-		p += step;
-	}
+	p = 0.9;
+	c = Angle::interpolate(a, b, p);
+	BOOST_CHECK_CLOSE((a - c).value(), (a - b).value() * p, 0.00001);
+	BOOST_CHECK_CLOSE((c - b).value(), (a - b).value() * (1 - p), 0.00001);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

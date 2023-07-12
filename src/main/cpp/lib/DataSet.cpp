@@ -23,7 +23,8 @@ template<>
     size_t i = 0;
 
     // Add input variables from table header
-    while (i < header.size () && header[i].find_first_of ("i#") == 0)
+    while (i < header.size () && 
+			(header[i].find_first_of ("i#") == 0 || header[i].find_first_of ("I#") == 0))
       {
 	std::size_t open_bracket = header[i].find_first_of ('['),
 	    close_bracket = header[i].find_first_of (']');
@@ -78,7 +79,8 @@ template<>
     std::size_t num_inputs = i;
 
     // Add output variables from table header
-    while (i < header.size () && header[i].find_first_of ("o#") == 0)
+    while (i < header.size () && 
+			(header[i].find_first_of ("o#") == 0 || header[i].find_first_of ("O#") == 0))
       {
 	std::size_t open_bracket = header[i].find_first_of ('['),
 	    close_bracket = header[i].find_first_of (']');
@@ -188,6 +190,16 @@ template<>
 		  }
 	      }
 	  }
+      }
+
+      // Add spacing to min and max if the variance of a column is 0
+      for (std::size_t i = 0; i < columns.size(); ++i)
+        {
+      if (columns[i]->var.max - columns[i]->var.min <= std::numeric_limits<double>::epsilon())
+        {
+          columns[i]->var.min -= 1;
+          columns[i]->var.max += 1;
+        }
       }
 
     m_num_cols = columns.size ();
