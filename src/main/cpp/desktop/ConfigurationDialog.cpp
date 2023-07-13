@@ -61,9 +61,9 @@ ConfigurationDialog::init_dialog ()
 				       conf.get_prop_axis_label ().font_size);
   QLayout* font = m_ui->font_grp->layout ();
   font->addWidget (m_scale_font);
-  font->addWidget (m_axis_fsize);
-  font->addWidget (m_axis_font);
   font->addWidget (m_scale_fsize);
+  font->addWidget (m_axis_font);
+  font->addWidget (m_axis_fsize);
 
   // Output
   m_output_angle_span = new ConfDoubleWidget (
