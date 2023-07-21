@@ -12,7 +12,7 @@ include(GenerateExportHeader)
 generate_export_header(libmoovie)
 set_target_properties (libmoovie PROPERTIES OUTPUT_NAME moovie)
 target_link_libraries (libmoovie PUBLIC  ${CAIROMM_LIBRARIES})
-target_include_directories(libmoovie PUBLIC ${CAIROMM_INCLUDE_DIRS} cpp/lib resources/thirdparty ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(libmoovie PUBLIC ${CAIROMM_INCLUDE_DIRS} cpp/lib resources/thirdparty ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR})
 
 install(FILES
         cpp/lib/DataSet.h cpp/lib/Scale.h cpp/lib/Color.h cpp/lib/Configuration.h cpp/lib/OutputGrid.h
