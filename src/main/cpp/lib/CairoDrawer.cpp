@@ -265,9 +265,10 @@ CairoDrawer::draw_io_vector (const IOVector& iov)
     }
 
   // Draw line from connector to first output
+  /*
   double connector_distance = (iov[connector_pos + 1].coord.radius ()
       - from.coord.radius ()) * 0.1
-      + Configuration::get_instance ().get_output_thickness ();
+      + Configuration::get_instance ().get_output_thickness ();*/
 	if (iov.size() > connector_pos + 2)
 	{
 		draw_line(from.coord,
