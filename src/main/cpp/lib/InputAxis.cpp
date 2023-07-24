@@ -13,8 +13,11 @@ InputAxis::Histogram::calculate (const std::vector<double> & data)
 
   for (double value : data)
     {
-      std::size_t pos = std::floor ((value - m_variable.min) / section_width);
-      ++m_frequencies.at (pos < m_num_intervals ? pos : m_num_intervals - 1);
+      if (not std::isnan(value))
+      {
+        std::size_t pos = std::floor ((value - m_variable.min) / section_width);
+        ++m_frequencies.at (pos < m_num_intervals ? pos : m_num_intervals - 1);
+      }
     }
 
   if (data.size () > 0)

@@ -99,6 +99,8 @@ namespace Util
 	|| std::abs (a - b) < min;
   }
 
+  const std::string BLANKS = " \t";
+
 }
 
 #endif /* UTILS_H_ */

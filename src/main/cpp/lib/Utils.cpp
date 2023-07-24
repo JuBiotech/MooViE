@@ -90,8 +90,10 @@ namespace Util
 	return str;
       }
 
-    std::size_t leading = str.find_first_not_of (' '), trailing =
-	str.find_last_not_of (' ');
+    std::size_t leading = str.find_first_not_of (BLANKS), trailing =
+	str.find_last_not_of (BLANKS);
+    if (leading == std::string::npos)
+    	return "";
     return str.substr (leading, trailing - leading + 1);
   }
 

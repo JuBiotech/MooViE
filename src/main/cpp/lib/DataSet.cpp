@@ -12,8 +12,8 @@ template<>
     const std::vector<std::string> & lines = Util::split (cont, newline);
 
     std::size_t header_pos = 0;
-    while (lines[header_pos].find_first_not_of (' ') == std::string::npos
-	|| lines[header_pos][lines[header_pos].find_first_not_of (' ')] == '#')
+    while (lines[header_pos].find_first_not_of (Util::BLANKS) == std::string::npos
+	|| lines[header_pos][lines[header_pos].find_first_not_of (Util::BLANKS)] == '#')
       {
 	++header_pos;
       }
@@ -138,9 +138,9 @@ template<>
     for (std::size_t rowc = header_pos + 1; rowc < lines.size (); ++rowc)
       {
 	// Remove empty/comment lines
-	if (lines[rowc].find_first_not_of (' ') != std::string::npos
-	    || lines[rowc].find_first_of (comment)
-		!= lines[rowc].find_first_not_of (' ') + 1)
+	if (lines[rowc].find_first_not_of (Util::BLANKS) != std::string::npos
+	    && lines[rowc].find_first_of (comment)
+		!= lines[rowc].find_first_not_of (Util::BLANKS) + 1)
 	  {
 	    const std::vector<std::string> & cells = Util::split (lines[rowc], ",",
 								  false);
@@ -159,7 +159,12 @@ template<>
 	      {
 		try
 		  {
-		    DefCell cell (std::stod (Util::strip (cells[i])));
+		    double val = 0;
+		    if (Util::strip (cells[i]).empty() || std::isnan(val))
+		      val = std::numeric_limits<double>::quiet_NaN();
+		    else
+		      val = std::stod (Util::strip (cells[i]));
+		    DefCell cell (val);
 		    if (cell.value < columns[i]->var.min)
 		      columns[i]->var.min = cell.value;
 		    if (cell.value > columns[i]->var.max)

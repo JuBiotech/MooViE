@@ -235,8 +235,8 @@ Configuration::Configuration (const std::string & fpath,
 
   for (std::string line : Util::split (content, "\n"))
     {
-      if (line.find_first_not_of (' ') != line.npos
-	  && line[line.find_first_not_of (' ')] != '#')
+      if (line.find_first_not_of (Util::BLANKS) != line.npos
+	  && line[line.find_first_not_of (Util::BLANKS)] != '#')
 	{
 	  std::size_t split_pos = line.find_first_of ("=");
 	  const std::string & key = Util::strip (line.substr (0, split_pos));
