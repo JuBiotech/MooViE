@@ -36,6 +36,8 @@ install (TARGETS moovie DESTINATION ${DEST_BIN_DIR})
 # Qt5 application
 if (BUILD_GUI)
 
+  include_directories(${CMAKE_BINARY_DIR} cpp/desktop)
+
   set(UI_FILES resources/ui/MainWindow.ui resources/ui/IOListWidget.ui resources/ui/ConfigurationDialog.ui
                resources/ui/ConfIntWidget.ui resources/ui/ConfDoubleWidget.ui resources/ui/ConfStringWidget.ui)
   set(H_GUI_FILES cpp/desktop/MainWindow.h cpp/desktop/IOList.h
@@ -45,7 +47,6 @@ if (BUILD_GUI)
                     cpp/desktop/ConfigurationDialog.cpp cpp/desktop/ConfIntWidget.cpp cpp/desktop/ConfDoubleWidget.cpp
                     cpp/desktop/ConfStringWidget.cpp cpp/desktop/MooViEView.cpp cpp/desktop/moovie-desktop.cpp)
 
-  include_directories(${CMAKE_BINARY_DIR} cpp/desktop)
 
   if(QT_VERSION STREQUAL "QT6")
     find_package(Qt6 COMPONENTS Core Gui Widgets OpenGLWidgets WebEngineCore WebEngineWidgets REQUIRED)
