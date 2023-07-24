@@ -1,39 +1,54 @@
 image: jugit-registry.fz-juelich.de/ibg-1/modsim/moovie
 
 stages:
-  - build
+  - build-cli
+  - build-qt5
+#  - build-qt6
   - test
 
-build:
-  stage: build
+build-cli:
+  stage: build-cli
   script:
-    - mkdir build
-    - cd build
-    - cmake .. -DCMAKE_PREFIX_PATH=/usr/local -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON -DBUILD_DOCUMENTATION=OFF
+    - mkdir build-cli
+    - cd build-cli
+    - cmake .. -DCMAKE_PREFIX_PATH=/usr/local -DCMAKE_BUILD_TYPE=Debug -DBUILD_GUI=OFF -DBUILD_TESTS=ON -DBUILD_DOCUMENTATION=OFF
     - cmake --build .
   artifacts:
     when: always
     expire_in: 14 days
     paths:
-      - build
+      - build-cli
+
+
+build-qt5:
+  stage: build-qt5
+  script:
+    - mkdir build-qt5
+    - cd build-qt5
+    - cmake .. -DCMAKE_PREFIX_PATH=/usr/local -DCMAKE_BUILD_TYPE=Release -DBUILD_GUI=ON -DQT_VERSION=QT5 -DBUILD_TESTS=OFF -DBUILD_DOCUMENTATION=OFF
+    - cmake --build .
+  artifacts:
+    when: always
+    expire_in: 14 days
+
 
 unit_test:
   before_script:
     - apt-get -y install gcovr
   script:
-    - cd build
+    - cd build-cli
     - ctest --extra-verbose
     - cd -
-    - gcovr -e build -r .
+    - gcovr -e build-cli -r .
   artifacts:
     when: always
     expire_in: 14 days
     reports:
       junit:
-        - build/src/test/report_configuration_test.xml  
+        - build/src/test/report_configuration_test.xml
         - build/src/test/report_dataset_test.xml
         - build/src/test/report_storageelements_test.xml
-        - build/src/test/report_coordinates_test.xml    
-        - build/src/test/report_graphicalelements_test.xml  
+        - build/src/test/report_coordinates_test.xml
+        - build/src/test/report_graphicalelements_test.xml
         - build/src/test/report_utilities_test.xml
 
