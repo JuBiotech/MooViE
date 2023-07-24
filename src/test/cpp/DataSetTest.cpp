@@ -142,4 +142,53 @@ BOOST_AUTO_TEST_SUITE(dataset_test)
 		      std::length_error);
   }
 
+  BOOST_AUTO_TEST_CASE(blanks)
+  {
+	  std::string cwd = Util::get_cwd ();
+
+	  DefDataSet set (cwd + "/input2.csv");
+	  DefDataSet set_blank (cwd + "/input2_blank.csv");
+
+	  double eps = std::numeric_limits<double>::epsilon ();
+
+	  BOOST_CHECK_EQUAL(set.get_num_rows (), set_blank.get_num_rows ());
+	  BOOST_CHECK_EQUAL(set.get_num_cols (), set_blank.get_num_cols ());
+
+	    for (size_t row_idx = 0; row_idx < set.get_num_rows (); ++row_idx)
+	      {
+		for (size_t col_idx = 0; col_idx < set.get_num_cols (); ++col_idx)
+		  {
+		    BOOST_CHECK_CLOSE(set[row_idx][col_idx].value, set_blank[row_idx][col_idx].value, eps);
+		  }
+	      }
+  }
+
+  BOOST_AUTO_TEST_CASE(nans)
+  {
+	  std::string cwd = Util::get_cwd ();
+
+	  DefDataSet set (cwd + "/input8.csv");
+
+	  double eps = std::numeric_limits<double>::epsilon ();
+
+	  BOOST_CHECK(std::isnan(set[0][0].value));
+	  BOOST_CHECK(std::isnan(set[0][1].value));
+	  BOOST_CHECK(std::isnan(set[0][2].value));
+	  BOOST_CHECK_CLOSE(set[0][3].value, 0, eps);
+	  BOOST_CHECK_CLOSE(set[0][4].value, 1, eps);
+
+	  BOOST_CHECK(std::isnan(set[1][0].value));
+	  BOOST_CHECK(std::isnan(set[1][1].value));
+	  BOOST_CHECK(std::isnan(set[1][2].value));
+	  BOOST_CHECK_CLOSE(set[1][3].value, 2, eps);
+	  BOOST_CHECK_CLOSE(set[1][4].value, 3, eps);
+
+	  BOOST_CHECK(std::isnan(set[2][0].value));
+	  BOOST_CHECK(std::isnan(set[2][1].value));
+	  BOOST_CHECK(std::isnan(set[2][2].value));
+	  BOOST_CHECK_CLOSE(set[2][3].value, 4, eps);
+	  BOOST_CHECK_CLOSE(set[2][4].value, 5, eps);
+
+  }
+
   BOOST_AUTO_TEST_SUITE_END()
