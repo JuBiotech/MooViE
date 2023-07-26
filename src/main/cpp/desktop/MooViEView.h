@@ -1,13 +1,18 @@
 #ifndef MOOVIEVIEW_H
 #define MOOVIEVIEW_H
 
-#include <QWebEngineView>
+#include <QGraphicsView>
+#include <QSvgRenderer>
+#include <QGraphicsSvgItem>
 #include <QKeyEvent>
-#include <QWebEnginePage>
 #include <QEvent>
 #include <QChildEvent>
 #include <QPointer>
-#include <QOpenGLWidget>
+
+QT_BEGIN_NAMESPACE
+class QPaintEvent;
+QT_END_NAMESPACE
+
 
 /** A Viewer that is able to display the SVG
  * output files of MooViE. Unfortunately, QtSvg does
@@ -23,9 +28,12 @@
  * @date
  * @author stratmann
  */
-class MooViEView : public QWebEngineView
+class MooViEView : public QGraphicsView
 {
 Q_OBJECT
+
+public:
+  enum RendererType { Native, OpenGL, Image };
 
 private:
   /** Parameter to calculate the adjusted zoom */
@@ -40,6 +48,13 @@ private:
   bool m_zoom_active;
 
   double m_cumulative_zoom;
+
+  RendererType m_renderer;
+
+  QGraphicsSvgItem *m_svgItem;
+
+  QImage m_image;
+
 
   /** child of the QWebEngineView (needed to steel events */
   QPointer<QObject> m_child;
@@ -72,6 +87,8 @@ public:
   bool
   event(QEvent * ev) override;
 
+  void openFile(const QString &fileName);
+
 private slots:
   /** Is called when the widget is resized.
    *
@@ -87,6 +104,18 @@ protected:
    */
   bool
   eventFilter(QObject* obj, QEvent* event) override;
+
+  void paintEvent(QPaintEvent *event) override;
+
+  void setZoomFactor(double)
+  {};
+
+  double zoomFactor() const
+  {return 0;};
+
+  void zoomBy(qreal factor);
+
+
 
 
 };

@@ -32,6 +32,18 @@ build-qt5:
     expire_in: 14 days
 
 
+build-qt6:
+  stage: build-qt6
+  script:
+    - mkdir build-qt6
+    - cd build-qt6
+    - cmake .. -DCMAKE_PREFIX_PATH=/usr/local -DCMAKE_BUILD_TYPE=Release -DBUILD_GUI=ON -DQT_VERSION=QT6 -DBUILD_TESTS=OFF -DBUILD_DOCUMENTATION=OFF
+    - cmake --build .
+  artifacts:
+    when: always
+    expire_in: 14 days
+
+
 unit_test:
   before_script:
     - apt-get -y install gcovr

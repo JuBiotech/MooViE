@@ -8,7 +8,7 @@ MainWindow::MainWindow (QWidget *parent) :
   m_ui->setupUi (this);
 
   // Set up view and add to the UI layer
-  m_view->setMinimumSize (800, 800);
+  //m_view->setMinimumSize (800, 800);
   m_ui->top_lay->insertWidget (0, m_view);
 
   m_ui->interactive_lay->setMaximumWidth (500);
@@ -208,8 +208,7 @@ MainWindow::on_execute_btn_clicked ()
 	    }
 
 	  // Load SVG image and set the zoom using the image size
-	  m_view->load (QUrl (QString("file://") + output_loc));
-	  m_view->show ();
+	  m_view->openFile (output_loc);
 	  m_view->adjust_zoom_by_svg_size(conf.get_width(), conf.get_height());
 	  setWindowTitle (QString("MooViE - Desktop: ") + input_loc);
 	}
