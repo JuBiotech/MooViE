@@ -32,31 +32,25 @@ class MooViEView : public QGraphicsView
 {
 Q_OBJECT
 
-public:
-  enum RendererType { Native, OpenGL, Image };
-
 private:
-  /** Parameter to calculate the adjusted zoom */
-  static constexpr double ZOOM_ADJUST_FACTOR = 0.75;
-  /** Increase/Decrease summand of the zoom */
+  /** Initial Zoom value (ratio of image to vie area) */
+  static constexpr double ZOOM_INIT = 0.9;
+  /** Increase/Decrease factor of the zoom */
   static constexpr double ZOOM_DELTA = 0.1;
+  /** Minimum Zoom factor */
+  static constexpr double ZOOM_MIN = 0.1;
+  /** Maximum Zoom factor */
+  static constexpr double ZOOM_MAX = 20;
+
 
   /** The maximum of width/height of the last rendered svg */
-  double m_max_svg_size;
-
-  /** Enabled if CTRL is pressed */
-  bool m_zoom_active;
-
-  double m_cumulative_zoom;
-
-  RendererType m_renderer;
+  double m_min_gui_size;
 
   QGraphicsSvgItem *m_svgItem;
 
   QImage m_image;
 
-
-  /** child of the QWebEngineView (needed to steel events */
+  /** child of the QGraphicsView (needed to steel events */
   QPointer<QObject> m_child;
 
 public:
@@ -105,13 +99,6 @@ protected:
   bool
   eventFilter(QObject* obj, QEvent* event) override;
 
-  void paintEvent(QPaintEvent *event) override;
-
-  void setZoomFactor(double)
-  {};
-
-  double zoomFactor() const
-  {return 0;};
 
   void zoomBy(qreal factor);
 

@@ -3,7 +3,7 @@ image: jugit-registry.fz-juelich.de/ibg-1/modsim/moovie
 stages:
   - build-cli
   - build-qt5
-#  - build-qt6
+  - build-qt6
   - test
 
 build-cli:

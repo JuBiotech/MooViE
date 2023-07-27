@@ -6,8 +6,7 @@
 #include <memory>
 
 MooViEView::MooViEView (QWidget *parent) :
-    QGraphicsView (parent), m_zoom_active (false),
-	m_cumulative_zoom(0.), m_renderer(Native), m_svgItem(nullptr),
+    QGraphicsView (parent), m_min_gui_size(0), m_svgItem(nullptr),
     m_child(nullptr)
 {
     setScene(new QGraphicsScene(this));
@@ -15,26 +14,40 @@ MooViEView::MooViEView (QWidget *parent) :
     setDragMode(ScrollHandDrag);
     setViewportUpdateMode(FullViewportUpdate);
 
+    QSize size = this->size();
+    m_min_gui_size = std::min (size.width(), size.height());
+
 }
 
 void
 MooViEView::adjust_zoom_by_svg_size (int width, int height)
 {
   // Using smaller dim sizes (the smaller, the more zoom)
-  m_max_svg_size = std::max (width, height);
+  double max_svg_size = std::max (width, height);
 
-  // Use svg dims to adjust zoom
-  adjust_zoom();
+  // calculate zoom_factor so that the longest axis of the images takes u
+  // ZOOM_INIT portion of the shortest axis of the image field
+  double zoom_factor = ZOOM_INIT * m_min_gui_size / max_svg_size;
+
+  scale (zoom_factor, zoom_factor);
 }
 
 void
 MooViEView::adjust_zoom ()
 {
   QSize size = this->size();
-  double min_gui_size = std::min (size.width(), size.height());
-  double zoom_factor = ZOOM_ADJUST_FACTOR * min_gui_size / m_max_svg_size + m_cumulative_zoom;
 
-  setZoomFactor (zoom_factor);
+  // new size of the gui
+  double min_gui_size = std::min (size.width(), size.height());
+
+  double current_zoom = transform().m11();
+
+  // relative size change of the gui
+  double zoom_factor = min_gui_size/m_min_gui_size;
+
+  scale (zoom_factor, zoom_factor);
+
+  m_min_gui_size = min_gui_size;
 }
 
 bool MooViEView::eventFilter(QObject* obj, QEvent* event)
@@ -98,28 +111,9 @@ void MooViEView::openFile(const QString &fileName)
 void MooViEView::zoomBy(qreal factor)
 {
     const qreal currentZoom = transform().m11();
-    if ((factor < 1 && currentZoom < 0.1) || (factor > 1 && currentZoom > 10))
+    if ((factor < 1 && currentZoom < ZOOM_MIN) || (factor > 1 && currentZoom > ZOOM_MAX))
         return;
     scale(factor, factor);
-    std::cout << "Zooming by" << factor << std::endl;
 }
 
-void MooViEView::paintEvent(QPaintEvent *event)
-{
-    if (m_renderer == Image) {
-        if (m_image.size() != viewport()->size()) {
-            m_image = QImage(viewport()->size(), QImage::Format_ARGB32_Premultiplied);
-        }
-
-        QPainter imagePainter(&m_image);
-        QGraphicsView::render(&imagePainter);
-        imagePainter.end();
-
-        QPainter p(viewport());
-        p.drawImage(0, 0, m_image);
-
-    } else {
-        QGraphicsView::paintEvent(event);
-    }
-}
 
