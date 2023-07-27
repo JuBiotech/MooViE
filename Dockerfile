@@ -13,6 +13,9 @@ RUN apt-get install -y --no-install-recommends qtbase5-dev qttools5-dev libqt5sv
 # dependencies for Qt 6
 RUN apt-get install -y --no-install-recommends qt6-base-dev qt6-tools-dev libqt6svg6-dev
 RUN apt-get install -y --no-install-recommends libgl1-mesa-dev
+# for running unittests
+RUN apt-get install -y --no-install-recommends gcovr
+# clean up to reduce size
 RUN apt-get -y clean
 RUN apt-get -y autoremove
 RUN apt-get -y autoclean
