@@ -8,7 +8,7 @@ MainWindow::MainWindow (QWidget *parent) :
   m_ui->setupUi (this);
 
   // Set up view and add to the UI layer
-  //m_view->setMinimumSize (800, 800);
+  m_view->setMinimumSize (800, 800);
   m_ui->top_lay->insertWidget (0, m_view);
 
   m_ui->interactive_lay->setMaximumWidth (500);
