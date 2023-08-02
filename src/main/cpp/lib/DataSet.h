@@ -751,6 +751,48 @@ template<typename T>
     {
       return const_iterator (m_rows.end (), m_rows.end ());
     }
+
+    /** Extracts the variable name and unit from a header entry
+     *
+     * @return a pair of strings, the first one is the name, the second one the unit
+     */
+    std::pair<std::string, std::string>
+    extract_header_entry(const std::string & header) const
+    {
+    	// the unit is encapsulated by brackets. we use the last pair of brackets
+    	std::size_t open_bracket = header.find_last_of ("["),
+    			close_bracket = header.find_first_of ("]", open_bracket + 1);
+    	// the name can be enclosed in quotes
+    	std::size_t open_quote = header.find_first_of("\""),
+    			close_quote = header.find_last_of("\"");
+
+    	//the unit should not be part of the name
+    	//if no unit is present, open_bracket is npos, aka -1 i.e. very large
+    	close_quote = std::min(close_quote, open_bracket);
+
+    	std::string name = "", unit = "";
+
+    	// get unit only if it was specified
+    	if (open_bracket != std::string::npos
+    			&& close_bracket != std::string::npos)
+    	{
+    		unit = header.substr (
+    				open_bracket + 1, close_bracket - open_bracket - 1);
+    	}
+
+    	// if there are no quotes, we start after i# or o#
+    	if (open_quote == std::string::npos)
+    	{
+    		open_quote = 1;
+    	}
+
+    	//get the name
+    	name = header.substr (open_quote + 1,
+    			close_quote - open_quote - 1);
+
+    	return std::make_pair(name, unit);
+
+    }
   };
 
 template<typename T>

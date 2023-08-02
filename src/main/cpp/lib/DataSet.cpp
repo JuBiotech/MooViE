@@ -24,112 +24,32 @@ template<>
 
     // Add input variables from table header
     while (i < header.size () && 
-			(header[i].find_first_of ("i#") == 0 || header[i].find_first_of ("I#") == 0))
+			(header[i].find ("i#") == 0 || header[i].find ("I#") == 0))
       {
-	std::size_t open_bracket = header[i].find_first_of ('['),
-	    close_bracket = header[i].find_first_of (']');
-	std::size_t open_quote = header[i].find_first_of('"'),
-	    close_quote = header[i].find_first_of('"', open_quote + 1);
-
-	if (open_bracket != std::string::npos
-	    && close_bracket != std::string::npos)
-	  {
-	    std::string name, unit = header[i].substr (
-		open_bracket + 1, close_bracket - open_bracket - 1);
-
-	    if (open_quote != std::string::npos
-		&& close_quote != std::string::npos)
-	      {
-		name = header[i].substr (open_quote + 1,
-					 close_quote - open_quote - 1);
-	      }
-	    else
-	      {
-		name = header[i].substr (2, open_bracket - 2);
-	      }
+	  auto entry = extract_header_entry(header[i]);
+	  std::string name = entry.first, unit = entry.second;
 
 	    columns.push_back (
 		new DataColumn (
 		    ColumnType::INPUT,
 		    DefVariable (DBL_MAX, DBL_MIN, Util::strip (name),
 				 Util::strip (unit))));
-	  }
-	else
-	  {
-	    std::string name;
-
-	    if (open_quote != std::string::npos
-		&& close_quote != std::string::npos)
-	      {
-		name = header[i].substr (open_quote + 1,
-					 close_quote - open_quote - 1);
-	      }
-	    else
-	      {
-		name = header[i].substr (2, header[i].length () - 2);
-	      }
-
-	    columns.push_back (
-		new DataColumn (
-		    ColumnType::INPUT,
-		    DefVariable (DBL_MAX, DBL_MIN, Util::strip (name))));
-	  }
 	++i;
       }
     std::size_t num_inputs = i;
 
     // Add output variables from table header
     while (i < header.size () && 
-			(header[i].find_first_of ("o#") == 0 || header[i].find_first_of ("O#") == 0))
+			(header[i].find ("o#") == 0 || header[i].find ("O#") == 0))
       {
-	std::size_t open_bracket = header[i].find_first_of ('['),
-	    close_bracket = header[i].find_first_of (']');
-	std::size_t open_quote = header[i].find_first_of('"'),
-	    close_quote = header[i].find_first_of('"', open_quote + 1);
-
-	if (open_bracket != std::string::npos
-	    && close_bracket != std::string::npos)
-	  {
-	    std::string name, unit = header[i].substr (
-		open_bracket + 1, close_bracket - open_bracket - 1);
-
-	    if (open_quote != std::string::npos
-		&& close_quote != std::string::npos)
-	      {
-		name = header[i].substr (open_quote + 1,
-					 close_quote - open_quote - 1);
-	      }
-	    else
-	      {
-		name = header[i].substr (2, open_bracket - 2);
-	      }
+  	  auto entry = extract_header_entry(header[i]);
+	  std::string name = entry.first, unit = entry.second;
 
 	    columns.push_back (
 		new DataColumn (
 		    ColumnType::OUTPUT,
 		    DefVariable (DBL_MAX, DBL_MIN, Util::strip (name),
 				 Util::strip (unit))));
-	  }
-	else
-	  {
-	    std::string name;
-
-	    if (open_quote != std::string::npos
-		&& close_quote != std::string::npos)
-	      {
-		name = header[i].substr (open_quote + 1,
-					 close_quote - open_quote - 1);
-	      }
-	    else
-	      {
-		name = header[i].substr (2, header[i].length () - 2);
-	      }
-
-	    columns.push_back (
-		new DataColumn (
-		    ColumnType::OUTPUT,
-		    DefVariable (DBL_MAX, DBL_MIN, Util::strip (name))));
-	  }
 	++i;
       }
     std::size_t num_outputs = i - num_inputs;
