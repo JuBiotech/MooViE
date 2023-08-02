@@ -35,18 +35,15 @@ MooViEView::adjust_zoom_by_svg_size (int width, int height)
 void
 MooViEView::adjust_zoom ()
 {
-  QSize size = this->size();
-
   // new size of the gui
+  QSize size = this->size();
   double min_gui_size = std::min (size.width(), size.height());
 
-  double current_zoom = transform().m11();
-
-  // relative size change of the gui
+  // calculate relative size change of the gui and rescale
   double zoom_factor = min_gui_size/m_min_gui_size;
-
   scale (zoom_factor, zoom_factor);
 
+  // update the new gui size
   m_min_gui_size = min_gui_size;
 }
 
