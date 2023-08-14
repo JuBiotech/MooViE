@@ -26,8 +26,16 @@ Required Libraries:
 - libsigc++-2.0-dev
 - libcairo2-dev
 - libcairomm-1.0-dev
-- qtbase5-dev
-- qtwebengine5-dev
+- Either Qt5 libraries:
+  - qtbase5-dev
+  - qttools5-dev
+  - libqt5svg5-dev
+  - libgl1-mesa-dev
+- Or Qt6 libraries:
+  - qt6-base-dev 
+  - qt6-tools-dev 
+  - libqt6svg6-dev 
+  - libgl1-mesa-dev
 
 ### How to install MooViE
 
