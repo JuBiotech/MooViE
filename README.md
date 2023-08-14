@@ -143,15 +143,15 @@ Setting the line widths:
   0.1
 
 Setting font properties:
-* **scale_label_font**: font name of scale values [string], _default_ = "Liberation Serif"
-* **scale_label_font_size**: font name of the input label [positive integer], _default_ = 
+* **scale_label_font**: font name of input/output scale descriptions [string], _default_ = "Liberation Serif"
+* **scale_label_font_size**: font size of input/output scale descriptions [positive integer], _default_ = 
   5
 * **axis_label_font**: font name of input labels [string], _default_ = "Liberation Serif"
-* **axis_label_font_size**: font name of the input label [positive integer], _default_ = 
+* **axis_label_font_size**: font size of the input label [positive integer], _default_ = 
   10
 
 Configuring the output grid:
-* **output_angle_span**: angle of the output grid in degree [float], _default_ = 160.0
+* **output_angle_span**: angle of the output grid in degrees [float], _default_ = 160.0
 * **output_inner_radius**: distance from the center of the scene to the begin of the 
   output grid [float], _default_ = 160
 * **output_thickness**: thickness of the colored axis of the output grid [float], _default_ 
@@ -160,17 +160,18 @@ Configuring the output grid:
   _default_ = 150
 * **num_major_sections_grid**: number of big ticks on the output scale [positive integer], 
   _default_ = 10
-* **num_minor_sections_grid**: number of big ticks on the output scale [positive integer], 
+* **num_minor_sections_grid**: number of small ticks between big ticks on the output scale [positive integer], 
   _default_ = 10
+* **min_grid_fill_ratio**: minimal ratio of variable to axis span [float, between 0 and 1], _default_ = 0.9 
 
 Configuring the input axis:
 * **input_inner_radius**: distance from the center of the scene to the begin of an 
-  input axis [float], _default_ = 160
-* **input_thickness**=5
-* **input_separation_angle**: angle between two input axis [float], _default_ = 5.0
+  input axis [float], _default_ = 180
+* **input_thickness**: thickness of colored input axes [float] _default_ = 5
+* **input_separation_angle**: angle between two input axis [float], _default_ = 5
 * **num_major_sections_axis**: number of big ticks on the input scale [positive integer], 
   _default_ = 10
-* **num_minor_sections_axis**: number of big ticks on the input scale [positive integer], 
+* **num_minor_sections_axis**: number of small ticks between big ticks on the input scale [positive integer], 
   _default_ = 10
 
 Configuring the input histograms:

@@ -40,8 +40,8 @@ ConfigurationDialog::init_dialog ()
 
   // Line and fill
   m_prop_thick_strength = new ConfDoubleWidget (
-      "Thick line strength", conf.get_prop_thick ().line_width, 0);
-  m_prop_thin_strength = new ConfDoubleWidget ("Thin line strength",
+      "Thick line width", conf.get_prop_thick ().line_width, 0);
+  m_prop_thin_strength = new ConfDoubleWidget ("Thin line width",
 					       conf.get_prop_thin ().line_width,
 					       0);
   QLayout* linefill = m_ui->linefill_grp->layout ();
@@ -61,9 +61,9 @@ ConfigurationDialog::init_dialog ()
 				       conf.get_prop_axis_label ().font_size);
   QLayout* font = m_ui->font_grp->layout ();
   font->addWidget (m_scale_font);
-  font->addWidget (m_axis_fsize);
-  font->addWidget (m_axis_font);
   font->addWidget (m_scale_fsize);
+  font->addWidget (m_axis_font);
+  font->addWidget (m_axis_fsize);
 
   // Output
   m_output_angle_span = new ConfDoubleWidget (
@@ -71,7 +71,7 @@ ConfigurationDialog::init_dialog ()
       360);
   m_output_inner_radius = new ConfDoubleWidget (
       "Start radius of the output grid", conf.get_output_inner_radius (), 0);
-  m_output_thickness = new ConfDoubleWidget ("Thickness of the coloring axis",
+  m_output_thickness = new ConfDoubleWidget ("Thickness of the colored axis",
 					     conf.get_output_thickness (), 0);
   m_grid_size = new ConfDoubleWidget ("Height of the output grid",
 				      conf.get_grid_size (), 0);
@@ -116,8 +116,8 @@ ConfigurationDialog::init_dialog ()
 
   // Histogram
   m_num_histogram_classes = new ConfIntWidget (
-      "Classes of the histograms", conf.get_num_histogram_classes (), 1);
-  m_histogram_height = new ConfDoubleWidget ("Height of a histogram",
+      "Number of histograms classes", conf.get_num_histogram_classes (), 1);
+  m_histogram_height = new ConfDoubleWidget ("Height of histograms",
 					     conf.get_histogram_height (), 0);
   QLayout* histogram = m_ui->histogram_grp->layout ();
   histogram->addWidget (m_num_histogram_classes);
