@@ -5,7 +5,7 @@ project(MooViE
         LANGUAGES CXX C)
 
 # Set C++ language standard
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 # Set module path for finding external modules
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)

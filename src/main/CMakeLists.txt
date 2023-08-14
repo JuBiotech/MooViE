@@ -49,7 +49,7 @@ if (BUILD_GUI)
 
 
   if(QT_VERSION STREQUAL "QT6")
-    find_package(Qt6 COMPONENTS Core Gui Widgets OpenGLWidgets WebEngineCore WebEngineWidgets REQUIRED)
+    find_package(Qt6 COMPONENTS Core Gui Widgets Svg SvgWidgets REQUIRED)
 
     QT6_WRAP_UI(UI_HEADERS ${UI_FILES})
     QT6_WRAP_CPP(MOC_SRCS ${H_GUI_FILES})
@@ -58,9 +58,9 @@ if (BUILD_GUI)
             ${MOC_SRCS}
             ${UI_HEADERS})
     add_dependencies(moovie-desktop libmoovie)
-    target_link_libraries(moovie-desktop Qt6::Core Qt6::Gui Qt6::Widgets Qt6::OpenGLWidgets Qt6::WebEngineCore Qt6::WebEngineWidgets libmoovie)
+    target_link_libraries(moovie-desktop Qt::Core Qt::Gui Qt::Widgets Qt::Svg Qt::SvgWidgets libmoovie)
   elseif(QT_VERSION STREQUAL QT5)
-    find_package(Qt5 COMPONENTS Core Gui Widgets WebEngine WebEngineWidgets REQUIRED)
+    find_package(Qt5 COMPONENTS Core Gui Widgets Svg REQUIRED)
 
     QT5_WRAP_UI(UI_HEADERS ${UI_FILES})
     QT5_WRAP_CPP(MOC_SRCS ${H_GUI_FILES})
@@ -69,7 +69,7 @@ if (BUILD_GUI)
             ${MOC_SRCS}
             ${UI_HEADERS})
     add_dependencies(moovie-desktop libmoovie)
-    target_link_libraries(moovie-desktop Qt5::Core Qt5::Gui Qt5::Widgets Qt5::WebEngine Qt5::WebEngineWidgets libmoovie)
+    target_link_libraries(moovie-desktop Qt::Core Qt::Gui Qt::Widgets Qt::Svg libmoovie)
   else()
     message(FATAL_ERROR "unsupported value for QT_VERSION")
   endif()
