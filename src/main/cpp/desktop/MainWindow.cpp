@@ -135,7 +135,7 @@ MainWindow::on_execute_btn_clicked ()
 		  const std::vector<IOList::Swap>& swaps =
 		      m_input_list->get_swaps ();
 
-		  for (int i = 0; i < swaps.size (); ++i)
+		  for (size_t i = 0; i < swaps.size (); ++i)
 		    {
 		      m_scene->swap_inputs (
 			  static_cast<std::size_t> (swaps[i].before_pos),
@@ -172,7 +172,7 @@ MainWindow::on_execute_btn_clicked ()
 		  const std::vector<IOList::Swap>& swaps =
 		      m_output_list->get_swaps ();
 
-		  for (int i = 0; i < swaps.size (); ++i)
+		  for (size_t i = 0; i < swaps.size (); ++i)
 		    {
 		      m_scene->swap_outputs (
 			  static_cast<std::size_t> (swaps[i].before_pos),
