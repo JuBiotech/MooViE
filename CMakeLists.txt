@@ -5,7 +5,7 @@ project(MooViE
         LANGUAGES CXX C)
 
 # Set C++ language standard
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 # Set module path for finding external modules
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
@@ -14,6 +14,13 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 option(BUILD_GUI "Build QT Gui" ON)
 option(BUILD_DOCUMENTATION "Build API documentation" OFF)
 option(BUILD_TESTS "Build tests for the library" OFF)
+
+if (BUILD_GUI)
+  set(QT_VERSION QT6 CACHE STRING "Choose QT version")
+  set_property(CACHE QT_VERSION PROPERTY STRINGS QT6 QT5)
+else()
+  unset(QT_VERSION CACHE)
+endif()
 
 # Set install destination variables
 set(DEST_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin)

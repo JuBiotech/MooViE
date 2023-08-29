@@ -54,7 +54,7 @@ MainWindow::on_input_file_btn_clicked ()
 
       if (m_ui->output_file_txt->text ().isEmpty ())
 	{
-	  QStringList split_list = fpath.split (QRegExp ("csv$"));
+	  QStringList split_list = fpath.split (QRegularExpression ("csv$"));
 	  m_ui->output_file_txt->setText (split_list[0] + "svg");
 	}
     }
@@ -208,8 +208,7 @@ MainWindow::on_execute_btn_clicked ()
 	    }
 
 	  // Load SVG image and set the zoom using the image size
-	  m_view->load (QUrl (QString("file://") + output_loc));
-	  m_view->show ();
+	  m_view->openFile (output_loc);
 	  m_view->adjust_zoom_by_svg_size(conf.get_width(), conf.get_height());
 	  setWindowTitle (QString("MooViE - Desktop: ") + input_loc);
 	}

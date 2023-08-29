@@ -806,7 +806,8 @@ CairoDrawer::draw_text_parallel (const Label& label, const Polar& start,
 			    0.5 * t_exts.height);
 
   cairo_context->close_path ();
-  cairo_context->show_text (label.get_text ());
+  cairo_context->text_path (label.get_text ());
+  cairo_context->fill ();
 }
 
 void
@@ -834,7 +835,8 @@ CairoDrawer::draw_text_orthogonal (const Label& label, const Polar& start,
 			    (1 - alignment.ratio) * t_exts.height);
 
   cairo_context->close_path ();
-  cairo_context->show_text (label.get_text ());
+  cairo_context->text_path (label.get_text ());
+  cairo_context->fill ();
 }
 
 void

@@ -26,8 +26,16 @@ Required Libraries:
 - libsigc++-2.0-dev
 - libcairo2-dev
 - libcairomm-1.0-dev
-- qtbase5-dev
-- qtwebengine5-dev
+- Either Qt5 libraries:
+  - qtbase5-dev
+  - qttools5-dev
+  - libqt5svg5-dev
+  - libgl1-mesa-dev
+- Or Qt6 libraries:
+  - qt6-base-dev 
+  - qt6-tools-dev 
+  - libqt6svg6-dev 
+  - libgl1-mesa-dev
 
 ### How to install MooViE
 
@@ -103,7 +111,7 @@ For running a MooViE scene, an input file and an output (1) need to be specified
 You can now render the scene with a simple click (2). If the output does not satisfy 
 your wishes, you can edit the configuration for the MooViE scene (3). By using the 
 column control section (4), you can now alter how and what data is displayed. You can 
-navigate in the display area using scroll bars and `ctrl` + `+`/`-`.
+navigate in the display area using your mouse.
 
 You can enable and disable inputs and outputs by a toggle button and enter new boundaries 
 for the values in the selected column. The order of columns can also be changed by 

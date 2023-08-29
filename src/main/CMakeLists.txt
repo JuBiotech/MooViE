@@ -35,25 +35,44 @@ install (TARGETS moovie DESTINATION ${DEST_BIN_DIR})
 
 # Qt5 application
 if (BUILD_GUI)
-    find_package(Qt5 COMPONENTS Core Gui Widgets WebEngine WebEngineWidgets REQUIRED)
 
-    include_directories(${CMAKE_BINARY_DIR} cpp/desktop)
+  include_directories(${CMAKE_BINARY_DIR} cpp/desktop)
 
-    QT5_WRAP_UI(UI_HEADERS
-            resources/ui/MainWindow.ui resources/ui/IOListWidget.ui resources/ui/ConfigurationDialog.ui
-            resources/ui/ConfIntWidget.ui resources/ui/ConfDoubleWidget.ui resources/ui/ConfStringWidget.ui)
-    QT5_WRAP_CPP(MOC_SRCS
-            cpp/desktop/MainWindow.h cpp/desktop/IOList.h
-            cpp/desktop/IOListWidget.h cpp/desktop/ConfigurationDialog.h cpp/desktop/ConfIntWidget.h
-            cpp/desktop/ConfDoubleWidget.h cpp/desktop/ConfStringWidget.h cpp/desktop/MooViEView.h)
+  set(UI_FILES resources/ui/MainWindow.ui resources/ui/IOListWidget.ui resources/ui/ConfigurationDialog.ui
+               resources/ui/ConfIntWidget.ui resources/ui/ConfDoubleWidget.ui resources/ui/ConfStringWidget.ui)
+  set(H_GUI_FILES cpp/desktop/MainWindow.h cpp/desktop/IOList.h
+                  cpp/desktop/IOListWidget.h cpp/desktop/ConfigurationDialog.h cpp/desktop/ConfIntWidget.h
+                  cpp/desktop/ConfDoubleWidget.h cpp/desktop/ConfStringWidget.h cpp/desktop/MooViEView.h)
+  set(CPP_GUI_FILES cpp/desktop/MainWindow.cpp cpp/desktop/IOList.cpp cpp/desktop/IOListWidget.cpp
+                    cpp/desktop/ConfigurationDialog.cpp cpp/desktop/ConfIntWidget.cpp cpp/desktop/ConfDoubleWidget.cpp
+                    cpp/desktop/ConfStringWidget.cpp cpp/desktop/MooViEView.cpp cpp/desktop/moovie-desktop.cpp)
+
+
+  if(QT_VERSION STREQUAL "QT6")
+    find_package(Qt6 COMPONENTS Core Gui Widgets Svg SvgWidgets REQUIRED)
+
+    QT6_WRAP_UI(UI_HEADERS ${UI_FILES})
+    QT6_WRAP_CPP(MOC_SRCS ${H_GUI_FILES})
     add_executable (moovie-desktop
-            cpp/desktop/MainWindow.cpp cpp/desktop/IOList.cpp cpp/desktop/IOListWidget.cpp
-            cpp/desktop/ConfigurationDialog.cpp cpp/desktop/ConfIntWidget.cpp cpp/desktop/ConfDoubleWidget.cpp
-            cpp/desktop/ConfStringWidget.cpp cpp/desktop/MooViEView.cpp cpp/desktop/moovie-desktop.cpp
+            ${CPP_GUI_FILES}
             ${MOC_SRCS}
             ${UI_HEADERS})
     add_dependencies(moovie-desktop libmoovie)
-    target_link_libraries(moovie-desktop Qt5::Core Qt5::Gui Qt5::Widgets Qt5::WebEngine Qt5::WebEngineWidgets libmoovie)
+    target_link_libraries(moovie-desktop Qt::Core Qt::Gui Qt::Widgets Qt::Svg Qt::SvgWidgets libmoovie)
+  elseif(QT_VERSION STREQUAL QT5)
+    find_package(Qt5 COMPONENTS Core Gui Widgets Svg REQUIRED)
+
+    QT5_WRAP_UI(UI_HEADERS ${UI_FILES})
+    QT5_WRAP_CPP(MOC_SRCS ${H_GUI_FILES})
+    add_executable (moovie-desktop
+            ${CPP_GUI_FILES}
+            ${MOC_SRCS}
+            ${UI_HEADERS})
+    add_dependencies(moovie-desktop libmoovie)
+    target_link_libraries(moovie-desktop Qt::Core Qt::Gui Qt::Widgets Qt::Svg libmoovie)
+  else()
+    message(FATAL_ERROR "unsupported value for QT_VERSION")
+  endif()
 
     file(WRITE ${PROJECT_BINARY_DIR}/moovie.desktop "[Desktop Entry]
 Name=MooViE
