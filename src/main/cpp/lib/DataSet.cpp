@@ -24,7 +24,7 @@ template<>
 
     // Add input variables from table header
     while (i < header.size () && 
-			(header[i].find ("i#") == 0 || header[i].find ("I#") == 0))
+			(header[i].find ("i#") != std::string::npos || header[i].find ("I#") != std::string::npos))
       {
 	  auto entry = extract_header_entry(header[i]);
 	  std::string name = entry.first, unit = entry.second;
@@ -40,7 +40,7 @@ template<>
 
     // Add output variables from table header
     while (i < header.size () && 
-			(header[i].find ("o#") == 0 || header[i].find ("O#") == 0))
+			(header[i].find ("o#") != std::string::npos || header[i].find ("O#") != std::string::npos))
       {
   	  auto entry = extract_header_entry(header[i]);
 	  std::string name = entry.first, unit = entry.second;
