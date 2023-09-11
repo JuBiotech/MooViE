@@ -69,10 +69,15 @@ private slots:
   void
   on_output_file_btn_clicked ();
 
-  /**
+  /** Runs MooViE scene and loads generated picture.
    */
   void
   on_execute_btn_clicked ();
+
+  /** Reloads data and reruns previous MooViE scene.
+   */
+  void
+  on_refresh_btn_clicked ();
 
   /** Calls a dialog to edit the MooViE
    * configuration.
