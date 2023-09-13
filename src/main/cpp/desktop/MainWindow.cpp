@@ -84,143 +84,143 @@ MainWindow::on_execute_btn_clicked ()
 
     if (!input_loc.isEmpty () && !output_loc.isEmpty ())
     {
-        // Set changes to global configuration object
-        Configuration& conf = Configuration::get_instance ();
-        if (conf.get_input_file () != input_loc.toStdString ())
-        {
-            m_scene.reset ();
+      // Set changes to global configuration object
+      Configuration& conf = Configuration::get_instance ();
+      if (conf.get_input_file () != input_loc.toStdString ())
+	{
+	  m_scene.reset ();
 
-            m_input_list->clear ();
-            m_output_list->clear ();
+	  m_input_list->clear ();
+	  m_output_list->clear ();
 
-            conf.set_input_file (input_loc.toStdString ());
-        }
-        conf.set_output_file (output_loc.toStdString ());
+	  conf.set_input_file (input_loc.toStdString ());
+	}
+      conf.set_output_file (output_loc.toStdString ());
 
-        // Try to paint the MooViE scene with the given parameters
-        try
-        {
-            // Initialize the scene if necessary
-            if (not m_scene)
-            {
-                // Automatically paints the scene
-                m_scene.reset (new Scene);
+      // Try to paint the MooViE scene with the given parameters
+      try
+	{
+	  // Initialize the scene if necessary
+	  if (not m_scene)
+	    {
+	      // Automatically paints the scene
+	      m_scene.reset (new Scene);
 
-                // Set up and display input and output variables of this Scene
-                std::vector<DefVariable> ivars = m_scene->get_input_variables (),
-                        ovars = m_scene->get_output_variables ();
-                for (const DefVariable& var : ivars)
-                {
-                    QListWidgetItem* listWidgetItem = new QListWidgetItem (
-                                m_input_list);
-                    m_input_list->addItem (listWidgetItem);
-                    IOListWidget* ioListWidget = new IOListWidget (var);
-                    listWidgetItem->setSizeHint (ioListWidget->sizeHint ());
-                    m_input_list->setItemWidget (listWidgetItem, ioListWidget);
-                }
-                for (const DefVariable& var : ovars)
-                {
-                    QListWidgetItem* listWidgetItem = new QListWidgetItem;
-                    m_output_list->addItem (listWidgetItem);
-                    IOListWidget* ioListWidget = new IOListWidget (var);
-                    listWidgetItem->setSizeHint (ioListWidget->sizeHint ());
-                    m_output_list->setItemWidget (listWidgetItem, ioListWidget);
-                }
-            }
-            else
-            {
-                // Check if the input variable values have been edited
-                if (m_input_list->is_dirty ())
-                {
-                    const std::vector<IOList::Swap>& swaps =
-                            m_input_list->get_swaps ();
+	      // Set up and display input and output variables of this Scene
+	      std::vector<DefVariable> ivars = m_scene->get_input_variables (),
+		  ovars = m_scene->get_output_variables ();
+	      for (const DefVariable& var : ivars)
+		{
+		  QListWidgetItem* listWidgetItem = new QListWidgetItem (
+		      m_input_list);
+		  m_input_list->addItem (listWidgetItem);
+		  IOListWidget* ioListWidget = new IOListWidget (var);
+		  listWidgetItem->setSizeHint (ioListWidget->sizeHint ());
+		  m_input_list->setItemWidget (listWidgetItem, ioListWidget);
+		}
+	      for (const DefVariable& var : ovars)
+		{
+		  QListWidgetItem* listWidgetItem = new QListWidgetItem;
+		  m_output_list->addItem (listWidgetItem);
+		  IOListWidget* ioListWidget = new IOListWidget (var);
+		  listWidgetItem->setSizeHint (ioListWidget->sizeHint ());
+		  m_output_list->setItemWidget (listWidgetItem, ioListWidget);
+		}
+	    }
+	  else
+	    {
+	      // Check if the input variable values have been edited
+	      if (m_input_list->is_dirty ())
+		{
+		  const std::vector<IOList::Swap>& swaps =
+		      m_input_list->get_swaps ();
 
-                    for (size_t i = 0; i < swaps.size (); ++i)
-                    {
-                        m_scene->swap_inputs (
-                                    static_cast<std::size_t> (swaps[i].before_pos),
-                                    static_cast<std::size_t> (swaps[i].after_pos));
-                    }
+		  for (size_t i = 0; i < swaps.size (); ++i)
+		    {
+		      m_scene->swap_inputs (
+			  static_cast<std::size_t> (swaps[i].before_pos),
+			  static_cast<std::size_t> (swaps[i].after_pos));
+		    }
 
-                    m_input_list->set_not_dirty ();
-                }
+		  m_input_list->set_not_dirty ();
+		}
 
-                // Execute input variable changes on scene instance
-                for (int i = 0; i < m_input_list->count (); ++i)
-                {
-                    IOListWidget* item =
-                            dynamic_cast<IOListWidget*> (m_input_list->itemWidget (
-                                                             m_input_list->item (i)));
-                    if (item->is_toggle_dirty ())
-                    {
-                        m_scene->toggle_input (static_cast<std::size_t> (i),
-                                               item->get_toggle ());
-                        item->set_toggle_not_dirty ();
-                    }
-                    if (item->are_bounds_dirty () && item->get_toggle ())
-                    {
-                        m_scene->restrict_input (static_cast<std::size_t> (i),
-                                                 item->get_min (),
-                                                 item->get_max ());
-                        item->set_bounds_not_dirty ();
-                    }
-                }
+	      // Execute input variable changes on scene instance
+	      for (int i = 0; i < m_input_list->count (); ++i)
+		{
+		  IOListWidget* item =
+		      dynamic_cast<IOListWidget*> (m_input_list->itemWidget (
+			  m_input_list->item (i)));
+		  if (item->is_toggle_dirty ())
+		    {
+		      m_scene->toggle_input (static_cast<std::size_t> (i),
+					     item->get_toggle ());
+		      item->set_toggle_not_dirty ();
+		    }
+		  if (item->are_bounds_dirty ())
+		    {
+		      m_scene->restrict_input (static_cast<std::size_t> (i),
+					       item->get_min (),
+					       item->get_max ());
+		      item->set_bounds_not_dirty ();
+		    }
+		}
 
-                // Check if the output variable values have been edited
-                if (m_output_list->is_dirty ())
-                {
-                    const std::vector<IOList::Swap>& swaps =
-                            m_output_list->get_swaps ();
+	      // Check if the output variable values have been edited
+	      if (m_output_list->is_dirty ())
+		{
+		  const std::vector<IOList::Swap>& swaps =
+		      m_output_list->get_swaps ();
 
-                    for (size_t i = 0; i < swaps.size (); ++i)
-                    {
-                        m_scene->swap_outputs (
-                                    static_cast<std::size_t> (swaps[i].before_pos),
-                                    static_cast<std::size_t> (swaps[i].after_pos));
-                    }
+		  for (size_t i = 0; i < swaps.size (); ++i)
+		    {
+		      m_scene->swap_outputs (
+			  static_cast<std::size_t> (swaps[i].before_pos),
+			  static_cast<std::size_t> (swaps[i].after_pos));
+		    }
 
-                    m_output_list->set_not_dirty ();
-                }
+		  m_output_list->set_not_dirty ();
+		}
 
-                // Execute output variable changes on scene instance
-                for (int i = 0; i < m_output_list->count (); ++i)
-                {
-                    IOListWidget* item =
-                            dynamic_cast<IOListWidget*> (m_output_list->itemWidget (
-                                                             m_output_list->item (i)));
-                    if (item->is_toggle_dirty ())
-                    {
-                        m_scene->toggle_output (static_cast<std::size_t> (i),
-                                                item->get_toggle ());
-                        item->set_toggle_not_dirty ();
-                    }
-                    if (item->are_bounds_dirty () && item->get_toggle ())
-                    {
-                        m_scene->restrict_output (static_cast<std::size_t> (i),
-                                                  item->get_min (),
-                                                  item->get_max ());
-                        item->set_bounds_not_dirty ();
-                    }
-                }
+	      // Execute output variable changes on scene instance
+	      for (int i = 0; i < m_output_list->count (); ++i)
+		{
+		  IOListWidget* item =
+		      dynamic_cast<IOListWidget*> (m_output_list->itemWidget (
+			  m_output_list->item (i)));
+		  if (item->is_toggle_dirty ())
+		    {
+		      m_scene->toggle_output (static_cast<std::size_t> (i),
+					      item->get_toggle ());
+		      item->set_toggle_not_dirty ();
+		    }
+		  if (item->are_bounds_dirty ())
+		    {
+		      m_scene->restrict_output (static_cast<std::size_t> (i),
+						item->get_min (),
+						item->get_max ());
+		      item->set_bounds_not_dirty ();
+		    }
+		}
 
-                // Repaint scene
-                m_scene->update ();
-            }
+	      // Repaint scene
+	      m_scene->update ();
+	    }
 
-            // Load SVG image and set the zoom using the image size
-            m_view->openFile (output_loc);
-            m_view->adjust_zoom_by_svg_size(conf.get_width(), conf.get_height());
-            setWindowTitle (QString("MooViE - Desktop: ") + input_loc);
-        }
-        catch (const std::exception& e)
-        {
-            // Message user that an error accurred during MooViE execution
-            QMessageBox msg_box;
-            msg_box.setWindowTitle ("MooViE execution failed");
-            msg_box.setText (e.what ());
-            msg_box.setStandardButtons (QMessageBox::Ok);
-            msg_box.exec ();
-        }
+	  // Load SVG image and set the zoom using the image size
+	  m_view->openFile (output_loc);
+	  m_view->adjust_zoom_by_svg_size(conf.get_width(), conf.get_height());
+	  setWindowTitle (QString("MooViE - Desktop: ") + input_loc);
+	}
+      catch (const std::exception& e)
+	{
+	  // Message user that an error accurred during MooViE execution
+	  QMessageBox msg_box;
+	  msg_box.setWindowTitle ("MooViE execution failed");
+	  msg_box.setText (e.what ());
+	  msg_box.setStandardButtons (QMessageBox::Ok);
+	  msg_box.exec ();
+	}
     }
     else
     {

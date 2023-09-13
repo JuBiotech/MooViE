@@ -322,9 +322,9 @@ template<typename T>
 	if (i >= m_enabled_columns)
 	  {
 	    throw std::out_of_range (
-		"index exceeds range 0-"
-		    + std::to_string (m_enabled_columns - 1) + ", ("
-		    + std::to_string (i) + " given)");
+		"index exceeds range [0,"
+		    + std::to_string (m_enabled_columns) + "), given: "
+		    + std::to_string (i));
 	  }
 
 	for (std::size_t j = 0; j <= i; ++j)
@@ -577,25 +577,43 @@ template<typename T>
     void
     restrict_column (std::size_t c, T l_restr, T u_restr)
     {
-      if (c >= m_num_cols)
+      if (c >= m_cols.size())
 	{
 	  throw std::out_of_range (
-	      "index exceeds range [0, " + std::to_string (m_num_cols)
+	      "index exceeds range [0, " + std::to_string (m_cols.size())
 		  + "), given: " + std::to_string (c));
 	}
 
       m_cols[c].set_range (l_restr, u_restr);
+      std::size_t num_disabled = std::count_if(m_cols.begin(), m_cols.begin() + c,
+                                               [](const MockColumn& c) -> std::size_t { return not c.is_enabled(); });
       for (DataRow& r : m_rows)
 	{
-	  if (r[c].value < l_restr || r[c].value > u_restr)
+	  if (r[c - num_disabled].value < l_restr || r[c - num_disabled].value > u_restr)
 	    {
 	      r.set_enabled (false);
 	      --m_num_rows;
 	    }
 	  else if (not r.is_enabled ())
 	    {
-	      r.set_enabled (true);
-	      ++m_num_rows;
+          bool is_active = true;
+          std::size_t data_row_index = 0;
+          for (std::size_t i = 0; i < m_cols.size(); ++i)
+            {
+              if (m_cols[i].is_enabled()) {
+                  Variable variable = m_cols[i].get_var();
+                  if (r[data_row_index].value < variable.min || r[data_row_index].value > variable.max) {
+                      is_active = false;
+                      break;
+                  }
+                  ++data_row_index;
+              }
+            }
+          if (is_active)
+            {
+              r.set_enabled (true);
+              ++m_num_rows;
+            }
 	    }
 	}
     }
