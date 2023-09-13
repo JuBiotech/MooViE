@@ -122,11 +122,11 @@ void
 Scene::restrict_input (std::size_t index, double lower_restr,
 		       double upper_restr)
 {
-  if (index >= m_set.get_num_active_inputs ())
+  if (index >= m_set.get_num_inputs ())
     {
       throw std::out_of_range (
 	  "index " + std::to_string (index) + " exceeds input index range [0, "
-	      + std::to_string (m_set.get_num_active_outputs ()) + ")");
+	      + std::to_string (m_set.get_num_outputs ()) + ")");
     }
   if (upper_restr < lower_restr)
     {
@@ -140,19 +140,18 @@ void
 Scene::restrict_output (std::size_t index, double lower_restr,
 			double upper_restr)
 {
-  if (index >= m_set.get_num_active_outputs ())
+  if (index >= m_set.get_num_outputs ())
     {
       throw std::out_of_range (
 	  "index " + std::to_string (index) + " exceeds output index range [0, "
-	      + std::to_string (m_set.get_num_active_outputs ()) + ")");
+	      + std::to_string (m_set.get_num_outputs ()) + ")");
     }
   if (upper_restr < lower_restr)
     {
       throw std::invalid_argument ("lower bound is bigger than upper bound");
     }
 
-  m_set.restrict_column (index + m_set.get_num_active_inputs (), lower_restr,
-			 upper_restr);
+  m_set.restrict_column (index + m_set.get_num_inputs (), lower_restr, upper_restr);
 }
 
 void
