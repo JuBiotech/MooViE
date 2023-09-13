@@ -75,4 +75,3 @@ build-container:
     - docker push $CI_REGISTRY/ibg-1/modsim/moovie/moovie:test
   only:
     - develop
-    - svg_opt
