@@ -589,12 +589,15 @@ template<typename T>
                                                [](const MockColumn& c) -> std::size_t { return not c.is_enabled(); });
       for (DataRow& r : m_rows)
 	{
-	  if (r[c - num_disabled].value < l_restr || r[c - num_disabled].value > u_restr)
+	  if (r.is_enabled())
 	    {
-	      r.set_enabled (false);
-	      --m_num_rows;
+	      if (r[c - num_disabled].value < l_restr || r[c - num_disabled].value > u_restr)
+	        {
+	          r.set_enabled (false);
+	          --m_num_rows;
+	        }
 	    }
-	  else if (not r.is_enabled ())
+	  else
 	    {
           bool is_active = true;
           std::size_t data_row_index = 0;
@@ -616,6 +619,7 @@ template<typename T>
             }
 	    }
 	}
+      std::cout << "Number of datapoints " << m_num_rows << std::endl;
     }
 
     /** Returns the number of active columns in this table. For every
