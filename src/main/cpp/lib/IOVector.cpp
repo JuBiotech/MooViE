@@ -6,9 +6,9 @@ IOVectorFactory::IOVectorFactory (std::size_t num_data_rows,
 				  const std::vector<InputAxis>& axis) :
     m_grid (grid), m_axis (axis)
 {
-  m_line_width = 0.1 * (1 + 2 * std::exp (-(num_data_rows * 0.0006)));
-  m_line_alpha = 0.3 * (1 + 5 * std::exp (-(num_data_rows * 0.04)));
-  m_fill_alpha = 0.25 * (1 + 3 * std::exp (-(num_data_rows * 0.04)));
+  m_line_width = 0.1 * (1 + 4 * std::exp (-(num_data_rows * 0.006)));
+  m_line_alpha = 3 * m_line_width;
+  m_fill_alpha = 2.5 * m_line_width;
   m_round_factor = std::pow (
       10, Configuration::get_instance ().get_relevant_places ());
 
