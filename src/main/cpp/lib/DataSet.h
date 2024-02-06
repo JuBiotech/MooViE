@@ -804,12 +804,20 @@ template<typename T>
     	// if there are no quotes, we start after i# or o#
     	if (open_quote == std::string::npos)
     	{
-    		open_quote = 1;
+    		open_quote = -1;
     	}
 
     	//get the name
     	name = header.substr (open_quote + 1,
     			close_quote - open_quote - 1);
+
+    	// this should always be the case
+    	if (name.length() > 2 && name.substr(1, 1) == "#" &&
+    			(name.substr(0, 1) == "i" || name.substr(0, 1) == "I" ||
+    					name.substr(0, 1) == "o" || name.substr(0, 1) == "O"))
+    			{
+    		name = name.substr(2, name.length()-2);
+    			}
 
     	return std::make_pair(name, unit);
 

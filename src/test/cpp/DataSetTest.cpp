@@ -191,4 +191,18 @@ BOOST_AUTO_TEST_SUITE(dataset_test)
 
   }
 
+  BOOST_AUTO_TEST_CASE(column_names)
+  {
+	  DefDataSet set;
+	  BOOST_CHECK(set.extract_header_entry("i#bla").first == "bla");
+	  BOOST_CHECK(set.extract_header_entry("I#bla").first == "bla");
+	  BOOST_CHECK(set.extract_header_entry("o#bla").first == "bla");
+	  BOOST_CHECK(set.extract_header_entry("O#bla").first == "bla");
+
+	  BOOST_CHECK(set.extract_header_entry("\"i#bla\"").first == "bla");
+	  BOOST_CHECK(set.extract_header_entry("\"I#bla\"").first == "bla");
+	  BOOST_CHECK(set.extract_header_entry("\"o#bla\"").first == "bla");
+	  BOOST_CHECK(set.extract_header_entry("\"O#bla\"").first == "bla");
+  }
+
   BOOST_AUTO_TEST_SUITE_END()
