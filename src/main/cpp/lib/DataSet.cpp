@@ -26,7 +26,7 @@ template<>
     while (i < header.size () && 
 			(header[i].find ("i#") != std::string::npos || header[i].find ("I#") != std::string::npos))
       {
-	  auto entry = extract_header_entry(header[i]);
+	  auto entry = extract_header_entry(Util::strip(header[i]));
 	  std::string name = entry.first, unit = entry.second;
 
 	    columns.push_back (
@@ -42,7 +42,7 @@ template<>
     while (i < header.size () && 
 			(header[i].find ("o#") != std::string::npos || header[i].find ("O#") != std::string::npos))
       {
-  	  auto entry = extract_header_entry(header[i]);
+  	  auto entry = extract_header_entry(Util::strip(header[i]));
 	  std::string name = entry.first, unit = entry.second;
 
 	    columns.push_back (

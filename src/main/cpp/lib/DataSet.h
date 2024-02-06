@@ -619,7 +619,6 @@ template<typename T>
             }
 	    }
 	}
-      std::cout << "Number of datapoints " << m_num_rows << std::endl;
     }
 
     /** Returns the number of active columns in this table. For every
