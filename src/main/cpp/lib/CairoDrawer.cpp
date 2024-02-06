@@ -11,7 +11,8 @@ const double CairoDrawer::END_RADIUS_MAJOR_FACTOR = 0.25,
 
 const double CairoDrawer::IO_LINE_WIDTH = 0.1,
     CairoDrawer::CONNECTOR_ARC_RATIO = 0.6,
-    CairoDrawer::CONNECTOR_ARROW_HEIGHT = 3;
+    CairoDrawer::CONNECTOR_ARROW_HEIGHT = 3,
+    CairoDrawer::CONNECTOR_ARROW_ANGLE = 0.012;
 
 const double CairoDrawer::INPUT_RADIUS_DELTA = 2.5, CairoDrawer::CONNECTOR_DELTA = 10,
     CairoDrawer::TEXT_DELTA = 0.01, CairoDrawer::ANGLE_DELTA_SMALL = 0.001,
@@ -415,6 +416,8 @@ CairoDrawer::draw_link (const Polar& origin1, const Polar& origin2,
   // Draw first Bezier curve from origin to target
   cairo_context->curve_to (CTRL_ORIG1.x (), CTRL_ORIG1.y (), CTRL_TARG1.x (),
 			   CTRL_TARG1.y (), target1_c.x (), target1_c.y ());
+  // draw line to second target point
+  cairo_context->line_to(target2_c.x (), target2_c.y ());
   // Draw second Bezier curve from target to origin
   cairo_context->curve_to (CTRL_TARG2.x (), CTRL_TARG2.y (), CTRL_ORIG2.x (),
 			   CTRL_ORIG2.y (), origin2_c.x (), origin2_c.y ());
@@ -570,8 +573,8 @@ CairoDrawer::draw_arrow (const Polar& start, const DrawerProperties<>& prop)
   // Calculate arrow coordinates
   Polar start_help (start.radius () - height, start.angle ()), direction_help (
       start.radius () - height / 2, start.angle ()), left_help (
-      start.radius () - height, start.angle () - height / 500), right_help (
-      start.radius () - height, start.angle () + height / 500);
+      start.radius () - height, start.angle () - CONNECTOR_ARROW_ANGLE/2), right_help (
+      start.radius () - height, start.angle () + CONNECTOR_ARROW_ANGLE/2);
 
   // Convert arrow coordinates into Cartesian coordinates
   Cartesian start_c, direction_c, left, right;
