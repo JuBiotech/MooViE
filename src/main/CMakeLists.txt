@@ -39,13 +39,16 @@ if (BUILD_GUI)
   include_directories(${CMAKE_BINARY_DIR} cpp/desktop)
 
   set(UI_FILES resources/ui/MainWindow.ui resources/ui/IOListWidget.ui resources/ui/ConfigurationDialog.ui
-               resources/ui/ConfIntWidget.ui resources/ui/ConfDoubleWidget.ui resources/ui/ConfStringWidget.ui)
+               resources/ui/ConfIntWidget.ui resources/ui/ConfDoubleWidget.ui resources/ui/ConfStringWidget.ui
+               resources/ui/ConfBoolWidget.ui)
   set(H_GUI_FILES cpp/desktop/MainWindow.h cpp/desktop/IOList.h
                   cpp/desktop/IOListWidget.h cpp/desktop/ConfigurationDialog.h cpp/desktop/ConfIntWidget.h
-                  cpp/desktop/ConfDoubleWidget.h cpp/desktop/ConfStringWidget.h cpp/desktop/MooViEView.h)
+                  cpp/desktop/ConfDoubleWidget.h cpp/desktop/ConfStringWidget.h cpp/desktop/ConfBoolWidget.h
+                  cpp/desktop/MooViEView.h)
   set(CPP_GUI_FILES cpp/desktop/MainWindow.cpp cpp/desktop/IOList.cpp cpp/desktop/IOListWidget.cpp
                     cpp/desktop/ConfigurationDialog.cpp cpp/desktop/ConfIntWidget.cpp cpp/desktop/ConfDoubleWidget.cpp
-                    cpp/desktop/ConfStringWidget.cpp cpp/desktop/MooViEView.cpp cpp/desktop/moovie-desktop.cpp)
+                    cpp/desktop/ConfStringWidget.cpp cpp/desktop/ConfBoolWidget.cpp cpp/desktop/MooViEView.cpp
+                    cpp/desktop/moovie-desktop.cpp)
 
 
   if(QT_VERSION STREQUAL "QT6")
