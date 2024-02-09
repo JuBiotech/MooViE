@@ -119,9 +119,11 @@ ConfigurationDialog::init_dialog ()
       "Number of histograms classes", conf.get_num_histogram_classes (), 1);
   m_histogram_height = new ConfDoubleWidget ("Height of histograms",
 					     conf.get_histogram_height (), 0);
+  m_histogram_enabled = new ConfBoolWidget ("Histogram switch", conf.is_histograms_enabled());
   QLayout* histogram = m_ui->histogram_grp->layout ();
   histogram->addWidget (m_num_histogram_classes);
   histogram->addWidget (m_histogram_height);
+  histogram->addWidget (m_histogram_enabled);
 
   // Input/output vectors
   m_relevant_places = new ConfIntWidget ("Number of places to round",
@@ -170,6 +172,7 @@ ConfigurationDialog::fill_configuration_values ()
   // Histogram
   m_num_histogram_classes->set_value (conf.get_num_histogram_classes ());
   m_histogram_height->set_value (conf.get_histogram_height ());
+  m_histogram_enabled->set_value (conf.is_histograms_enabled ());
 
   // Input/output vectors
   m_relevant_places->set_value (conf.get_relevant_places ());
@@ -219,6 +222,7 @@ ConfigurationDialog::update_configuration ()
   // Histogram
   conf.set_num_histogram_classes (m_num_histogram_classes->get_value ());
   conf.set_histogram_height (m_histogram_height->get_value ());
+  conf.set_histograms_enabled (m_histogram_enabled->get_value ());
 
   // Data rows
   conf.set_relevant_places (m_relevant_places->get_value ());
