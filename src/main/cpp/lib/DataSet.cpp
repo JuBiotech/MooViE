@@ -145,3 +145,50 @@ template<>
       }
   }
 
+template<>
+  std::string
+  DataSet<double>::write_to_csv (std::string separator, std::string newline)
+  {
+    std::string content;
+
+      std::setlocale(LC_NUMERIC, "en_US.UTF-8");
+      for (DefVariable var : this->input_variables ())
+      {
+          content += "i#" + var.name;
+          if (var.unit != "")
+          {
+              content += "[" + var.unit + "]";
+          }
+          content += separator + " ";
+      }
+
+      for (DefVariable var : this->output_variables ())
+      {
+          content += "o#" + var.name;
+          if (var.unit != "")
+          {
+              content += "[" + var.unit + "]";
+          }
+          content += separator + " ";
+      }
+
+      content += newline;
+
+      for (const DefDataRow & row : *this)
+      {
+          for (std::size_t i = 0; i < row.size(); ++i)
+          {
+              if (row[i].null) {
+                  content += separator;
+              }
+              else
+              {
+                  content += std::to_string(row[i].value) + separator;
+              }
+          }
+
+          content += newline;
+      }
+
+      return content;
+  }

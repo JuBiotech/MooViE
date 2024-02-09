@@ -155,6 +155,12 @@ Scene::restrict_output (std::size_t index, double lower_restr,
 }
 
 void
+Scene::save_data (std::string file_path)
+{
+    Util::write_file(file_path, m_set.write_to_csv());
+}
+
+void
 Scene::update (void)
 {
   // Update CoinputGrid

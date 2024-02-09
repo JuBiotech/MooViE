@@ -124,6 +124,13 @@ public:
   void
   restrict_output (std::size_t index, double lower_restr, double upper_restr);
 
+  /** Save possibly altered data at given location in the file system.
+   *
+   * @param file_path valid file system location
+   */
+  void
+  save_data (std::string file_path);
+
 private:
   /** Draws the Scene components OutputGrid, InputAxis' and IOVectors.
    */
