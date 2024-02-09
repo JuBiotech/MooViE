@@ -349,3 +349,18 @@ MainWindow::on_config_btn_clicked ()
     // Dialog to edit MooViE configuration
     ConfigurationDialog ().exec ();
 }
+
+void
+MainWindow::on_save_btn_clicked ()
+{
+    // Let the user choose the path to the output file
+    QString fpath = QFileDialog::getSaveFileName (this, "Choose location for data file",
+                                                  m_ui->input_file_txt->text (),
+                                                  "CSV (*.csv)");
+
+    // Set chosen path if valid
+    if (!fpath.isEmpty ())
+    {
+        m_scene->save_data (fpath.toStdString ());
+    }
+}
