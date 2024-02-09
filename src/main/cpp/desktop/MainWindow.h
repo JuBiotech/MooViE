@@ -84,6 +84,11 @@ private slots:
    */
   void
   on_config_btn_clicked ();
+
+  /** Calls a file dialog to save current data table.
+   */
+  void
+  on_save_btn_clicked ();
 };
 
 #endif // MAINWINDOW_H

@@ -492,6 +492,9 @@ template<typename T>
     parse_from_csv (const std::string & cont, std::string separator = ",",
 		    std::string comment = "#", std::string newline = "\n");
 
+    std::string
+    write_to_csv (std::string separator = ",", std::string newline = "\n");
+
     /** Enables/disables a column. The DataRows now do not contain the affected Cell anymore.
      *
      * @param c the column index
@@ -824,11 +827,23 @@ template<typename T>
     static_assert(std::is_same<T, double>::value, "Should not be compiled.");
   }
 
+template<typename T>
+  std::string
+  DataSet<T>::write_to_csv (std::string separator, std::string newline)
+  {
+      static_assert(std::is_same<T, double>::value, "Should not be compiled.");
+      return "";
+  }
+
 template<>
   void
   DataSet<double>::parse_from_csv (const std::string & cont,
 				   std::string separator, std::string comment,
 				   std::string newline);
+
+template<>
+  std::string
+  DataSet<double>::write_to_csv (std::string separator, std::string newline);
 
 typedef DataSet<double> DefDataSet;
 typedef DefDataSet::Variable DefVariable;
