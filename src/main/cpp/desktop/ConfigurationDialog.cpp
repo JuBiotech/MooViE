@@ -115,15 +115,15 @@ ConfigurationDialog::init_dialog ()
   input->addWidget (m_num_minor_sections_axis);
 
   // Histogram
+  m_histogram_enabled = new ConfBoolWidget ("Enable histograms", conf.is_histograms_enabled());
   m_num_histogram_classes = new ConfIntWidget (
       "Number of histograms classes", conf.get_num_histogram_classes (), 1);
   m_histogram_height = new ConfDoubleWidget ("Height of histograms",
 					     conf.get_histogram_height (), 0);
-  m_histogram_enabled = new ConfBoolWidget ("Histogram switch", conf.is_histograms_enabled());
   QLayout* histogram = m_ui->histogram_grp->layout ();
+  histogram->addWidget (m_histogram_enabled);
   histogram->addWidget (m_num_histogram_classes);
   histogram->addWidget (m_histogram_height);
-  histogram->addWidget (m_histogram_enabled);
 
   // Input/output vectors
   m_relevant_places = new ConfIntWidget ("Number of places to round",
