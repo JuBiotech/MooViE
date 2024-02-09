@@ -115,11 +115,13 @@ ConfigurationDialog::init_dialog ()
   input->addWidget (m_num_minor_sections_axis);
 
   // Histogram
+  m_histogram_enabled = new ConfBoolWidget ("Enable histograms", conf.is_histograms_enabled());
   m_num_histogram_classes = new ConfIntWidget (
       "Number of histograms classes", conf.get_num_histogram_classes (), 1);
   m_histogram_height = new ConfDoubleWidget ("Height of histograms",
 					     conf.get_histogram_height (), 0);
   QLayout* histogram = m_ui->histogram_grp->layout ();
+  histogram->addWidget (m_histogram_enabled);
   histogram->addWidget (m_num_histogram_classes);
   histogram->addWidget (m_histogram_height);
 
@@ -170,6 +172,7 @@ ConfigurationDialog::fill_configuration_values ()
   // Histogram
   m_num_histogram_classes->set_value (conf.get_num_histogram_classes ());
   m_histogram_height->set_value (conf.get_histogram_height ());
+  m_histogram_enabled->set_value (conf.is_histograms_enabled ());
 
   // Input/output vectors
   m_relevant_places->set_value (conf.get_relevant_places ());
@@ -219,6 +222,7 @@ ConfigurationDialog::update_configuration ()
   // Histogram
   conf.set_num_histogram_classes (m_num_histogram_classes->get_value ());
   conf.set_histogram_height (m_histogram_height->get_value ());
+  conf.set_histograms_enabled (m_histogram_enabled->get_value ());
 
   // Data rows
   conf.set_relevant_places (m_relevant_places->get_value ());
