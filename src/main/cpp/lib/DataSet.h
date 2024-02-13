@@ -780,29 +780,48 @@ template<typename T>
      *
      * @return a pair of strings, the first one is the name, the second one the unit
      */
-    std::pair<std::string, std::string>
+    std::tuple<std::string, std::string, std::string, std::string>
     extract_header_entry(const std::string & header) const
     {
+        // remove leading and trailing quotations
+        auto stripped_header = Util::strip(header);
+        if (stripped_header[0] == '\"' and stripped_header.back() =='\"') {
+            stripped_header = stripped_header.substr(1, stripped_header.size() - 2);
+        }
+
     	// the unit is encapsulated by brackets. we use the last pair of brackets
-    	std::size_t open_bracket = header.find_last_of ("["),
-    			close_bracket = header.find_first_of ("]", open_bracket + 1);
+    	std::size_t open_bracket = stripped_header.find_last_of ("["),
+    			close_bracket = stripped_header.find_first_of ("]", open_bracket + 1);
+        // the range is encapsulated by braces.
+        std::size_t open_brace = stripped_header.find_last_of ("("),
+                comma_separator = stripped_header.find_first_of (",", open_brace + 1),
+                close_brace = stripped_header.find_first_of (")", comma_separator + 1);
     	// the name can be enclosed in quotes
-    	std::size_t open_quote = header.find_first_of("\""),
-    			close_quote = header.find_last_of("\"");
+    	std::size_t open_quote = stripped_header.find_first_of("\""),
+    			close_quote = stripped_header.find_last_of("\"");
 
     	//the unit should not be part of the name
     	//if no unit is present, open_bracket is npos, aka -1 i.e. very large
-    	close_quote = std::min(close_quote, open_bracket);
+    	close_quote = std::min(std::min(close_quote, open_bracket), open_brace);
 
-    	std::string name = "", unit = "";
+    	std::string name, unit, range_min, range_max;
 
     	// get unit only if it was specified
     	if (open_bracket != std::string::npos
     			&& close_bracket != std::string::npos)
     	{
-    		unit = header.substr (
+    		unit = stripped_header.substr (
     				open_bracket + 1, close_bracket - open_bracket - 1);
     	}
+
+        // get range only if it was specified
+        if (open_brace != std::string::npos
+            && comma_separator != std::string::npos
+            && close_brace != std::string::npos)
+        {
+            range_min = stripped_header.substr (open_brace + 1, comma_separator - open_brace - 1);
+            range_max = stripped_header.substr (comma_separator + 1, close_brace - comma_separator - 1);
+        }
 
     	// if there are no quotes, we start after i# or o#
     	if (open_quote == std::string::npos)
@@ -811,10 +830,10 @@ template<typename T>
     	}
 
     	//get the name
-    	name = header.substr (open_quote + 1,
+    	name = stripped_header.substr (open_quote + 1,
     			close_quote - open_quote - 1);
 
-    	return std::make_pair(name, unit);
+    	return std::make_tuple(name, unit, range_min, range_max);
 
     }
   };

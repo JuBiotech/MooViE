@@ -23,11 +23,24 @@ template<>
     size_t i = 0;
 
     // Add input variables from table header
+    std::vector<std::pair<double, double>> input_ranges;
     while (i < header.size () && 
 			(header[i].find ("i#") != std::string::npos || header[i].find ("I#") != std::string::npos))
       {
-	  auto entry = extract_header_entry(Util::strip(header[i]));
-	  std::string name = entry.first, unit = entry.second;
+          auto entry = extract_header_entry(Util::strip(header[i]));
+          std::string name = std::get<0>(entry), unit = std::get<1>(entry),
+                  range_min_str = std::get<2>(entry), range_max_str = std::get<3>(entry);
+
+          double range_min = std::numeric_limits<double>::min(), range_max = std::numeric_limits<double>::max();
+          if (not range_min_str.empty())
+          {
+              range_min = std::stod(range_min_str);
+          }
+          if (not range_max_str.empty())
+          {
+              range_max = std::stod(range_max_str);
+          }
+          input_ranges.emplace_back(range_min, range_max);
 
 	    columns.push_back (
 		new DataColumn (
@@ -39,11 +52,24 @@ template<>
     std::size_t num_inputs = i;
 
     // Add output variables from table header
+      std::vector<std::pair<double, double>> output_ranges;
     while (i < header.size () && 
 			(header[i].find ("o#") != std::string::npos || header[i].find ("O#") != std::string::npos))
       {
   	  auto entry = extract_header_entry(Util::strip(header[i]));
-	  std::string name = entry.first, unit = entry.second;
+          std::string name = std::get<0>(entry), unit = std::get<1>(entry),
+                  range_min_str = std::get<2>(entry), range_max_str = std::get<3>(entry);
+
+          double range_min = std::numeric_limits<double>::min(), range_max = std::numeric_limits<double>::max();
+          if (not range_min_str.empty())
+          {
+              range_min = std::stod(range_min_str);
+          }
+          if (not range_max_str.empty())
+          {
+              range_max = std::stod(range_max_str);
+          }
+          output_ranges.emplace_back(range_min, range_max);
 
 	    columns.push_back (
 		new DataColumn (
@@ -142,6 +168,35 @@ template<>
     for (std::size_t i = 0; i < m_cols[0].size (); ++i)
       {
 	m_rows.push_back (DataRow (m_cols, m_num_cols, i));
+      }
+
+    for (std::size_t i = 0; i < m_num_inputs; ++i)
+    {
+        double range_min = m_cols[i].get_var().min, range_max = m_cols[i].get_var().max;
+        if (input_ranges[i].first != std::numeric_limits<double>::min())
+        {
+            range_min = input_ranges[i].first;
+        }
+        if (input_ranges[i].second != std::numeric_limits<double>::max())
+        {
+            range_max = input_ranges[i].second;
+        }
+        this->restrict_column(i, range_min, range_max);
+    }
+
+      for (std::size_t i = 0; i < m_num_outputs; ++i)
+      {
+          double range_min = m_cols[i + m_num_inputs].get_var().min,
+          range_max = m_cols[i + m_num_inputs].get_var().max;
+          if (output_ranges[i].first  != std::numeric_limits<double>::min())
+          {
+              range_min = output_ranges[i].first;
+          }
+          if (output_ranges[i].second != std::numeric_limits<double>::max())
+          {
+              range_max = output_ranges[i].second;
+          }
+          this->restrict_column(i + m_num_inputs, range_min, range_max);
       }
   }
 
