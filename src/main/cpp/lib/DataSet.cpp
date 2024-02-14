@@ -209,22 +209,22 @@ template<>
       std::setlocale(LC_NUMERIC, "en_US.UTF-8");
       for (DefVariable var : this->input_variables ())
       {
-          content += "i#" + var.name;
+          content += "\"i#" + var.name;
           if (!var.unit.empty())
           {
               content += "[" + var.unit + "]";
           }
-          content += "(" + std::to_string(var.min) + "," + std::to_string(var.max) + ")" + separator + " ";
+          content += "(" + std::to_string(var.min) + "," + std::to_string(var.max) + ")\"" + separator + " ";
       }
 
       for (DefVariable var : this->output_variables ())
       {
-          content += "o#" + var.name;
+          content += "\"o#" + var.name;
           if (!var.unit.empty())
           {
               content += "[" + var.unit + "]";
           }
-          content += "(" + std::to_string(var.min) + "," + std::to_string(var.max) + ")" + separator + " ";
+          content += "(" + std::to_string(var.min) + "," + std::to_string(var.max) + ")\"" + separator + " ";
       }
 
       content += newline;
