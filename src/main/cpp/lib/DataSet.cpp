@@ -210,7 +210,7 @@ template<>
       for (DefVariable var : this->input_variables ())
       {
           content += "i#" + var.name;
-          if (var.unit != "")
+          if (!var.unit.empty())
           {
               content += "[" + var.unit + "]";
           }
@@ -220,7 +220,7 @@ template<>
       for (DefVariable var : this->output_variables ())
       {
           content += "o#" + var.name;
-          if (var.unit != "")
+          if (!var.unit.empty())
           {
               content += "[" + var.unit + "]";
           }
