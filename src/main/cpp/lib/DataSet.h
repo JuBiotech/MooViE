@@ -594,7 +594,8 @@ template<typename T>
 	{
 	  if (r.is_enabled())
 	    {
-	      if (r[c - num_disabled].value < l_restr || r[c - num_disabled].value > u_restr)
+	      if (!r[c - num_disabled].null &&
+              (r[c - num_disabled].value < l_restr || r[c - num_disabled].value > u_restr))
 	        {
 	          r.set_enabled (false);
 	          --m_num_rows;
@@ -608,7 +609,8 @@ template<typename T>
             {
               if (m_cols[i].is_enabled()) {
                   Variable variable = m_cols[i].get_var();
-                  if (r[data_row_index].value < variable.min || r[data_row_index].value > variable.max) {
+                  if (!r[data_row_index].null
+                      && (r[data_row_index].value < variable.min || r[data_row_index].value > variable.max)) {
                       is_active = false;
                       break;
                   }
