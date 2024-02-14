@@ -214,7 +214,7 @@ template<>
           {
               content += "[" + var.unit + "]";
           }
-          content += separator + " ";
+          content += "(" + std::to_string(var.min) + "," + std::to_string(var.max) + ")" + separator + " ";
       }
 
       for (DefVariable var : this->output_variables ())
@@ -224,7 +224,7 @@ template<>
           {
               content += "[" + var.unit + "]";
           }
-          content += separator + " ";
+          content += "(" + std::to_string(var.min) + "," + std::to_string(var.max) + ")" + separator + " ";
       }
 
       content += newline;
