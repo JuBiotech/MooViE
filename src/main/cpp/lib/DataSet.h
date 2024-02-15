@@ -812,8 +812,8 @@ template<typename T>
     	if (open_bracket != std::string::npos
     			&& close_bracket != std::string::npos)
     	{
-    		unit = stripped_header.substr (
-    				open_bracket + 1, close_bracket - open_bracket - 1);
+    		unit = Util::strip(stripped_header.substr (
+    				open_bracket + 1, close_bracket - open_bracket - 1));
     	}
 
         // get range only if it was specified
@@ -821,8 +821,8 @@ template<typename T>
             && comma_separator != std::string::npos
             && close_brace != std::string::npos)
         {
-            range_min = stripped_header.substr (open_brace + 1, comma_separator - open_brace - 1);
-            range_max = stripped_header.substr (comma_separator + 1, close_brace - comma_separator - 1);
+            range_min = Util::strip(stripped_header.substr (open_brace + 1, comma_separator - open_brace - 1));
+            range_max = Util::strip(stripped_header.substr (comma_separator + 1, close_brace - comma_separator - 1));
         }
 
     	// if there are no quotes, we start after i# or o#
@@ -832,8 +832,8 @@ template<typename T>
     	}
 
     	//get the name
-    	name = stripped_header.substr (open_quote + 1,
-    			close_quote - open_quote - 1);
+    	name = Util::strip(stripped_header.substr (open_quote + 1,
+    			close_quote - open_quote - 1));
 
     	return std::make_tuple(name, unit, range_min, range_max);
 
