@@ -191,4 +191,46 @@ BOOST_AUTO_TEST_SUITE(dataset_test)
 
   }
 
+  BOOST_AUTO_TEST_CASE(extract_header)
+  {
+	  DefDataSet set;
+
+	  auto out = set.extract_header_entry("i#varname");
+	  BOOST_CHECK(std::get<0>(out) == "varname");
+	  BOOST_CHECK(std::get<1>(out).empty());
+	  BOOST_CHECK(std::get<2>(out).empty());
+	  BOOST_CHECK(std::get<3>(out).empty());
+
+	  out = set.extract_header_entry("i#varname [unit]");
+	  BOOST_CHECK(std::get<0>(out) == "varname");
+	  BOOST_CHECK(std::get<1>(out) == "unit");
+	  BOOST_CHECK(std::get<2>(out).empty());
+	  BOOST_CHECK(std::get<3>(out).empty());
+
+	  out = set.extract_header_entry("i#varname (-0.1, 13)");
+	  BOOST_CHECK(std::get<0>(out) == "varname");
+	  BOOST_CHECK(std::get<1>(out).empty());
+	  BOOST_CHECK(std::get<2>(out) == "-0.1");
+	  BOOST_CHECK(std::get<3>(out) == "13");
+
+
+	  out = set.extract_header_entry("i#varname [ unit] (0,7)");
+	  BOOST_CHECK(std::get<0>(out) == "varname");
+	  BOOST_CHECK(std::get<1>(out) == "unit");
+	  BOOST_CHECK(std::get<2>(out) == "0");
+	  BOOST_CHECK(std::get<3>(out) == "7");
+
+	  out = set.extract_header_entry("\"i#varname [ unit] (0,7)\"");
+	  BOOST_CHECK(std::get<0>(out) == "varname");
+	  BOOST_CHECK(std::get<1>(out) == "unit");
+	  BOOST_CHECK(std::get<2>(out) == "0");
+	  BOOST_CHECK(std::get<3>(out) == "7");
+
+	  out = set.extract_header_entry("i#var,name [ unit/other unit] (-0.45,3e9)");
+	  BOOST_CHECK(std::get<0>(out) == "var,name");
+	  BOOST_CHECK(std::get<1>(out) == "unit/other unit");
+	  BOOST_CHECK(std::get<2>(out) == "-0.45");
+	  BOOST_CHECK(std::get<3>(out) == "3e9");
+  }
+
   BOOST_AUTO_TEST_SUITE_END()
