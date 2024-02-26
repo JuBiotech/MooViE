@@ -148,9 +148,9 @@ ConfigurationDialog::fill_configuration_values ()
   // Font and font size
   m_scale_font->set_text (
       QString::fromStdString (conf.get_prop_scale_label ().font_name));
+  m_scale_fsize->set_value (conf.get_prop_scale_label ().font_size);
   m_axis_font->set_text (
       QString::fromStdString (conf.get_prop_axis_label ().font_name));
-  m_scale_fsize->set_value (conf.get_prop_scale_label ().font_size);
   m_axis_fsize->set_value (conf.get_prop_axis_label ().font_size);
 
   // Output
@@ -166,13 +166,13 @@ ConfigurationDialog::fill_configuration_values ()
   m_input_inner_radius->set_value (conf.get_input_inner_radius ());
   m_input_thickness->set_value (conf.get_input_thickness ());
   m_input_separation_angle->set_value (conf.get_input_separation_angle ());
-  m_num_major_sections_axis->set_value (conf.get_num_major_sections_grid ());
-  m_num_minor_sections_axis->set_value (conf.get_num_minor_sections_grid ());
+  m_num_major_sections_axis->set_value (conf.get_num_major_sections_axis ());
+  m_num_minor_sections_axis->set_value (conf.get_num_minor_sections_axis ());
 
   // Histogram
+  m_histogram_enabled->set_value (conf.is_histograms_enabled ());
   m_num_histogram_classes->set_value (conf.get_num_histogram_classes ());
   m_histogram_height->set_value (conf.get_histogram_height ());
-  m_histogram_enabled->set_value (conf.is_histograms_enabled ());
 
   // Input/output vectors
   m_relevant_places->set_value (conf.get_relevant_places ());
@@ -220,9 +220,9 @@ ConfigurationDialog::update_configuration ()
   conf.set_num_minor_sections_axis (m_num_minor_sections_axis->get_value ());
 
   // Histogram
+  conf.set_histograms_enabled (m_histogram_enabled->get_value ());
   conf.set_num_histogram_classes (m_num_histogram_classes->get_value ());
   conf.set_histogram_height (m_histogram_height->get_value ());
-  conf.set_histograms_enabled (m_histogram_enabled->get_value ());
 
   // Data rows
   conf.set_relevant_places (m_relevant_places->get_value ());
