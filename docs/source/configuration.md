@@ -1,9 +1,10 @@
 Configuration
 ==========
 
-.. toctree::
-   :caption: Configuration
-   :maxdepth: 1
+MooViE has a large amount of configuration values. Some of them are outlined graphically
+in the following picture.
+
+![Configuration values of a MooViE scene](images/scene_conf_values.png)
 
 If you use MooViE on the command line, you might want to create a custom configuration
 file. A default that you can use as base can be found at `test/files/moovie.conf`.

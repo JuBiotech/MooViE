@@ -46,9 +46,9 @@ moovie -x 750 -y 750 -o ./output.svg -c ./moovie.conf input.csv
    :maxdepth: 2
    :caption: Contents:
 
-   visual_language.rst
-   setup.rst
-   gui.rst
-   gallery.rst
-   configuration.rst
+   visual_language.md
+   setup.md
+   gui.md
+   gallery.md
+   configuration.md
    api/reference.rst

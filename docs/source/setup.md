@@ -1,10 +1,6 @@
 Installation and Setup
 ==========
 
-.. toctree::
-   :caption: Installation and Setup
-   :maxdepth: 1
-
 ### Prerequisites and Dependencies
 These prerequisites are only necessary if you want to install MooViE natively. This is currently only supported for
 Ubuntu (>= 20.04). For other systems, see below section about how to install MooViE using Docker.
