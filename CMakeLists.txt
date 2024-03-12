@@ -31,18 +31,6 @@ set(DEST_DESKTOP_DIR ${CMAKE_INSTALL_PREFIX}/share/applications)
 set(DEST_PIXMAP_DIR ${CMAKE_INSTALL_PREFIX}/share/pixmaps)
 set(CMAKE_INSTALL_RPATH ${DEST_LIB_DIR})
 
-# Availability of unistd.h
-include(CheckIncludeFile)
-check_include_file("unistd.h"  HAVE_UNISTD_H)
-configure_file(moovie_config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/moovie_config.h)
-
-# MSVC support
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-if (CMAKE_GENERATOR MATCHES "Visual Studio")
-    add_definitions(-D_USE_MATH_DEFINES)
-    add_compile_options("/Za")
-endif()
-
 # GNU debug flags
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -fno-inline -fprofile-arcs -ftest-coverage --coverage")

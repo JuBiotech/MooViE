@@ -28,7 +28,6 @@ ADD cmake /home/cmake
 ADD src /home/src
 ADD images/logo.png /home/moovie.png
 ADD CMakeLists.txt /home/CMakeLists.txt
-ADD moovie_config.h.cmake /home/moovie_config.h.cmake
 ADD README.md /home/README.md
 
 # Install MooViE and run tests
