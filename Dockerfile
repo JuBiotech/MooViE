@@ -26,7 +26,6 @@ RUN rm -rf /var/lib/apt/lists/*
 WORKDIR /home
 ADD cmake /home/cmake
 ADD src /home/src
-ADD images/logo.png /home/moovie.png
 ADD CMakeLists.txt /home/CMakeLists.txt
 ADD README.md /home/README.md
 
