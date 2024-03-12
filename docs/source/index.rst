@@ -3,44 +3,20 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-MooViE - Visualization of multivariate data
-==================================
+Visualization of multivariate data with
+=======================================
 
 .. image:: images/logo.png
    :align: center
    :width: 400
    :alt: MooViE logo
 
-The Multi-objective optimization Visualization Engine (MooViE) is developed at
-the Institute of Bio- and Geosciences 1 (IBG-1) of the Forschungszentrum Jülich. MooViE
-is an easy-to-use tool to display multidimensional data. It is designed for
-pareto optima with up to eight optimization criteria.
+.. raw:: html
 
-MooViE comes with a simple graphical user interface that allows the user to interactively
-change which data is displayed and configure the style.
+   <br>
 
-### Quick start with the Command Line Tool
-If installed, the `moovie` should be available from the command line. The syntax for
-the command line tool is
-```shell
-moovie [[OPTION <arg>]...] <input file>
-```
-When calling MooViE from the command line, an input file _must_ be specified. MooViE
-generates an SVG file that is by default `image.svg` in your current path. The command
-line tool has the following options:
-
-**-o/\-\-output-file** path of the result file [string]
-
-**-x/\-\-width** width of the result image [positive integer]
-
-**-y/\-\-height** height of the result image [positive integer]
-
-**-c/\-\-configuration-file** path of the configuration file [string]
-
-A valid call would be for instance
-```shell
-moovie -x 750 -y 750 -o ./output.svg -c ./moovie.conf input.csv
-```
+.. include:: intro.md
+   :parser: myst_parser.sphinx_
 
 .. toctree::
    :maxdepth: 2
