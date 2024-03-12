@@ -11,15 +11,7 @@
 #include <cstdlib>
 #include <limits>
 #include <cmath>
-#include "moovie_config.h"
-#if HAVE_UNISTD_H
-	#include <unistd.h>
-#else
-	#ifdef _WIN32
-		#include <direct.h>
-		#define getcwd _getcwd // stupid MSFT "deprecation" warning
-	#endif
-#endif
+#include <unistd.h>
 
 #define TO_STRING_HELPER(a) #a
 #define TO_STRING(a) TO_STRING_HELPER(a)
