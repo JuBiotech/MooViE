@@ -14,12 +14,4 @@ Welcome to MooViE's documentation!
    setup.rst
    gallery.rst
    configuration.rst
-   reference.rst
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   api/reference.rst
