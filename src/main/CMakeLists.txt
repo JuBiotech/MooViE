@@ -20,7 +20,6 @@ install(FILES
         cpp/lib/Coordinates.h cpp/lib/DrawerProperties.h cpp/lib/Label.h cpp/lib/Mapper.h cpp/lib/TextProperties.h
         cpp/lib/Triangle.h cpp/lib/Drawer.h
         ${CMAKE_CURRENT_BINARY_DIR}/libmoovie_export.h
-        ${PROJECT_BINARY_DIR}/moovie_config.h
         DESTINATION ${DEST_INCLUDE_DIR})
 install(TARGETS libmoovie DESTINATION ${DEST_LIB_DIR})
 
