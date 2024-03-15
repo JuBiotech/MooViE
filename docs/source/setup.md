@@ -47,16 +47,3 @@ already installed and just run it directly.
 #### Manual
 After installing the dependencies from above using `apt-get`, you can simply follow the installation steps for MooViE 
 from the Dockerfile.
-
-### Input Format
-The MooViE input file needs to be in CSV format using **commas** as column delimiters.
-Comments begin with **\#**. The first line that is neither a blank line and nor a comment
-is the column header line. Column headers specify the name of the component, its unit
-and if it contains input or criteria (output) values.
-
-The syntax is `i#<input name>[<unit>]` for input headers and `o#<output name>[<unit>]`
-for outputs. If a column name should contain commas or square brackets, it can be masked by
-quotes. Square brackets and units can be omitted.
-
-It is required that all input columns are followed by all output columns. The table
-cells must not be empty.
