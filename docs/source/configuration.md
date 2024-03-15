@@ -4,10 +4,12 @@ Configuration
 MooViE has a large amount of configuration values. Some of them are outlined graphically
 in the following picture.
 
-![Configuration values of a MooViE scene](images/scene_conf_values.png)
+<p align="center">
+  <img width="500" src="_images/scene_conf_values.png" />
+</p>
 
 If you use MooViE on the command line, you might want to create a custom configuration
-file. A default that you can use as base can be found at `test/files/moovie.conf`.
+file. A default that you can use as base can be found at `src/test/resources/moovie.conf`.
 A configuration file consists of lines that encode key value pairs. The syntax of such
 a line is `moovie.<key> = <value>`. An example for a valid line is
 
