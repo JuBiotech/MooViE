@@ -25,6 +25,7 @@ Visualization of multivariate data with
    visual_language.md
    setup.md
    gui.md
+   cli.md
    gallery.md
    configuration.md
    api/reference.rst
