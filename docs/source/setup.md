@@ -16,10 +16,10 @@ Required Libraries:
 - libcairomm-1.0-dev
 - Either Qt5 libraries (qtbase5-dev, qttools5-dev, libqt5svg5-dev, libgl1-mesa-dev) or Qt6 libraries (qt6-base-dev, qt6-tools-dev, libqt6svg6-dev, libgl1-mesa-dev)
 
-### How to install MooViE
+### Installation
 
-#### Manual (only for Ubuntu >= 20.04)
-After installing the dependencies from above using `apt-get`, you can simply follow the installation steps for MooViE from the Dockerfile.
+There are two ways to install MooViE for your operating system. The recommended and more generic way is to use _Docker_
+in combination with X11. For Ubuntu operating systems (>= 20.04), MooViE can also be installed manually.
 
 #### Docker
 To simplify the installation procedure we supply two scripts that install and run Docker containers in which the
@@ -41,8 +41,12 @@ Being set up, you can now open a Powershell console and run the Windows installa
 ./moovie-desktop-docker.ps1 [-d Dockerfile location] [-v Volume to mount]
 ```
 
-Both scripts will build the Docker image and run it afterwards. For later runs, the script will check if the image is
+Both scripts will build the Docker image and run it afterward. For later runs, the script will check if the image is
 already installed and just run it directly.
+
+#### Manual
+After installing the dependencies from above using `apt-get`, you can simply follow the installation steps for MooViE 
+from the Dockerfile.
 
 ### Input Format
 The MooViE input file needs to be in CSV format using **commas** as column delimiters.
