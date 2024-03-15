@@ -1,19 +1,17 @@
 Graphical User Interface
 ==========
 
-With the graphical user interface, you can easily configure MooViE, display the results and save the current status.
+With the graphical user interface, MooViE can be easily configured, results displayed and intermediate states saved. Its
+functionality is roughly explained in the following:
 
 ![Example MooViE scene in GUI](images/example_gui_main.png)
 
-In order to render a MooViE scene, an input file and an output file (1) need to be specified. The rendering process can 
-then be started by clicking on "execute" (2). If want to change the visual appearance of the scene, you can edit the 
-configuration (3). By using the column control section (4), you can now alter how and what data is displayed. You can
-navigate in the display area using your mouse.
+(**1**) In order to render a MooViE scene, an input file and an output file need to be specified. (**2**) The rendering process can
+then be executed. Also, the data table can be reloaded later. (**3**) To change the visual appearance of the scene, the
+configuration can be edited. Modified data sheets can be saved. (**4**) By using the column control section, the way how and
+what data is displayed can be controlled. Inputs and outputs can be enabled/disabled by a toggle button and new
+variable boundaries can be entered. The order of columns can also be changed by drag-and-drop. 
 
-You can enable and disable inputs and outputs by a toggle button and enter new boundaries for the values in the selected
-column. The order of columns can also be changed by drag-and-drop.
-
-![Example MooViE configuration dialog](images/example_gui_conf.png)
-
-The configuration dialog simplifies editing the configuration for the MooViE scene. Configurations also be saved to a 
+The configuration dialog simplifies editing the configuration for the MooViE scene. Configurations also be saved to a
 file for later and loaded from a file directly into the current scene.
+![Example MooViE configuration dialog](images/example_gui_conf.png)
