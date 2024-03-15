@@ -15,7 +15,7 @@ release = 'v0.1'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = ["exhale", "breathe", "myst_parser"]
-breathe_projects = {"moovie": "../../cmake-build-debug/doc/xml/"}
+breathe_projects = {"moovie": "../../docs/build/xml/"}
 breathe_default_project = "moovie"
 exhale_args = {
     "containmentFolder": "./api",

@@ -55,15 +55,20 @@ if (BUILD_DOCUMENTATION)
                 ALL
                 COMMENT "Generating API documentation with Doxygen" VERBATIM)
         add_custom_command(TARGET doc
-                COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile
-                OUTPUTS ${PROJECT_BINARY_DIR}/doc/man/man3/moovie.3)
+                COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile)
         # Build reference manual using pdflatex
         add_custom_command(TARGET doc
                            COMMAND make pdf
-                           WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc/latex)
+                           WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/docs/build/latex)
+        # Build html pages using sphinx
+        add_custom_command(TARGET doc
+                COMMAND make html
+                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/docs)
+        add_custom_command(TARGET doc
+                COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/docs/source/images
+                ${PROJECT_SOURCE_DIR}/docs/build/html/_images)
         # Install html pages and reference manual
-        install (DIRECTORY ${PROJECT_BINARY_DIR}/doc/html DESTINATION ${DEST_DOC_DIR})
-        install (FILES ${PROJECT_BINARY_DIR}/doc/latex/refman.pdf DESTINATION ${DEST_DOC_DIR})
+        install (FILES ${PROJECT_SOURCE_DIR}/docs/latex/refman.pdf DESTINATION ${DEST_DOC_DIR})
 
         # Install README file
         install (FILES README.md DESTINATION ${DEST_DOC_DIR})
