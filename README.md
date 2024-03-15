@@ -2,9 +2,6 @@
 
 # Multi-objective optimization Visualization Engine
 
-[![pipeline status](https://jugit.fz-juelich.de/IBG-1/ModSim/MooViE/badges/develop/pipeline.svg)](https://jugit.fz-juelich.de/IBG-1/ModSim/MooViE/-/commits/develop)
-[![coverage report](https://jugit.fz-juelich.de/IBG-1/ModSim/MooViE/badges/develop/coverage.svg)](https://jugit.fz-juelich.de/IBG-1/ModSim/MooViE/-/commits/develop) 
-
 The Multi-objective optimization Visualization Engine (MooViE) is developed at 
 the Institute of Bio- and Geosciences 1 (IBG-1) of the Forschungszentrum Jülich. MooViE 
 is an easy-to-use tool to display multidimensional data. It is designed for 
@@ -26,21 +23,11 @@ Required Libraries:
 - libsigc++-2.0-dev
 - libcairo2-dev
 - libcairomm-1.0-dev
-- Either Qt5 libraries:
-  - qtbase5-dev
-  - qttools5-dev
-  - libqt5svg5-dev
-  - libgl1-mesa-dev
-- Or Qt6 libraries:
-  - qt6-base-dev 
-  - qt6-tools-dev 
-  - libqt6svg6-dev 
-  - libgl1-mesa-dev
+- Either Qt5 libraries (qtbase5-dev, qttools5-dev, libqt5svg5-dev, libgl1-mesa-dev) or Qt6 libraries (qt6-base-dev, qt6-tools-dev, libqt6svg6-dev, libgl1-mesa-dev)
 
 ### How to install MooViE
-
-#### Manual (only for Ubuntu >= 20.04)
-After installing the dependencies from above using `apt-get`, you can simply follow the installation steps for MooViE from the Dockerfile.
+There are two ways to install MooViE for your operating system. The recommended and more generic way is to use _Docker_
+in combination with X11. For Ubuntu operating systems (>= 20.04), MooViE can also be installed manually.
 
 #### Docker
 To simplify the installation procedure we supply two scripts that install and run Docker containers in which the 
@@ -62,8 +49,11 @@ Being set up, you can now open a Powershell console and run the Windows installa
 ./moovie-desktop-docker.ps1 [-d Dockerfile location] [-v Volume to mount]
 ```
 
-Both scripts will build the Docker image and run it afterwards. For later runs, the script will check if the image is 
+Both scripts will build the Docker image and run it afterward. For later runs, the script will check if the image is 
 already installed and just run it directly. 
+
+#### Manual
+After installing the dependencies from above using `apt-get`, you can simply follow the installation steps for MooViE from the Dockerfile.
 
 ### Input Format
 The MooViE input file needs to be in CSV format using **commas** as column delimiters. 
@@ -88,13 +78,13 @@ When calling MooViE from the command line, an input file _must_ be specified. Mo
 generates an SVG file that is by default `image.svg` in your current path. The command 
 line tool has the following options:
 
-**-o/\-\-output-file** path of the result file [string]
+- **-o/\-\-output-file** path of the result file [string]
 
-**-x/\-\-width** width of the result image [positive integer]
+- **-x/\-\-width** width of the result image [positive integer]
 
-**-y/\-\-height** height of the result image [positive integer]
+- **-y/\-\-height** height of the result image [positive integer]
 
-**-c/\-\-configuration-file** path of the configuration file [string]
+- **-c/\-\-configuration-file** path of the configuration file [string]
 
 A valid call would be for instance
 ```shell
