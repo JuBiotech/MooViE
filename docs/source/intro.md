@@ -1,7 +1,6 @@
 The Multi-objective optimization Visualization Engine (MooViE) is developed at
 the Institute of Bio- and Geosciences 1 (IBG-1) of the Forschungszentrum Jülich. MooViE
-is an easy-to-use tool to display multidimensional data. It is designed for
-pareto optima with up to eight optimization criteria.
+is an easy-to-use tool to display multidimensional data from all research domains.
 
 ![Example MooViE scene for robust experimental design](images/red.png)
 
