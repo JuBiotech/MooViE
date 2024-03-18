@@ -3,7 +3,7 @@ Installation and Setup
 
 ### Prerequisites and Dependencies
 These prerequisites are only necessary if you want to install MooViE natively. This is currently only supported for
-Ubuntu (>= 20.04). For other systems, see below section about how to install MooViE using Docker.
+Linux. The listed pacakges refer to Debian/Ubuntu. For other systems, see below section about how to install MooViE using Docker.
 
 Required tools:
 * GNU C++ compiler
