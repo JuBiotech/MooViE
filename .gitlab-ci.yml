@@ -72,7 +72,7 @@ build-documentation:
   stage: build
   before_script:
     - apt-get update -y
-    - apt-get install -y doxygen
+    - apt-get install -y doxygen cmake
   script:
     - mkdir build-docs
     - cd build-docs
