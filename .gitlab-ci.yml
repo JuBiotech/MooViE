@@ -87,14 +87,21 @@ build-documentation:
     - build_documentation
 
 build-container:
-  image: ubuntu:22.04
+  image: docker:stable
+  services:
+  - docker:dind
+  tags:
+  - docker
   stage: publish
   before_script:
-    - apt-get update
-    - apt-get install -y docker.io
-  script:
+    - docker version
+    - docker info
+    - echo "logging in to $CI_REGISTRY"
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
     - docker build -t $CI_REGISTRY/ibg-1/modsim/moovie/moovie:test .
     - docker push $CI_REGISTRY/ibg-1/modsim/moovie/moovie:test
+  after_script:
+    - docker logout $CI_REGISTRY
   only:
     - develop
