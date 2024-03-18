@@ -84,7 +84,7 @@ build-documentation:
     - docs/build/html/*
     expire_in: 1 week
   only:
-    - build-documentation
+    - build_documentation
 
 publish-documentation:
   image: ubuntu:22.04
@@ -94,7 +94,7 @@ publish-documentation:
   dependencies:
     - build-documentation
   only:
-    - build-documentation
+    - build_documentation
 
 
 build-container:
