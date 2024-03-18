@@ -71,7 +71,7 @@ unit_test:
 build-documentation:
   image: sphinxdoc/sphinx:latest
   stage: documentation
-  before-script:
+  before_script:
     - apt-get update -y
     - apt-get install doxygen
   script:
