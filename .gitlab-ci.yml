@@ -93,8 +93,8 @@ publish-documentation:
     - echo "TODO"
   dependencies:
     - build-documentation
-only:
-  - build-documentation
+  only:
+    - build-documentation
 
 
 build-container:
