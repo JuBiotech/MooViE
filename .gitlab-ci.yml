@@ -86,17 +86,6 @@ build-documentation:
   only:
     - build_documentation
 
-publish-documentation:
-  image: ubuntu:22.04
-  stage: publish
-  script:
-    - echo "TODO"
-  dependencies:
-    - build-documentation
-  only:
-    - build_documentation
-
-
 build-container:
   image: ubuntu:22.04
   stage: publish
