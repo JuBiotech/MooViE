@@ -14,4 +14,6 @@ variable boundaries can be entered. The order of columns can also be changed by 
 
 The configuration dialog simplifies editing the configuration for the MooViE scene. Configurations also be saved to a
 file for later and loaded from a file directly into the current scene.
+
+An explanation of the options is available in the section [Configuration](configuration.md).
 ![Example MooViE configuration dialog](images/example_gui_conf.png)
