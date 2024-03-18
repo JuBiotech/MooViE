@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.4)
 project(MooViE
         VERSION 1.0.0
         DESCRIPTION "Visualization tool for the results of multi-objective optimization"
-        LANGUAGES CXX C)
+        LANGUAGES NONE)
 
 # Set C++ language standard
 set(CMAKE_CXX_STANDARD 14)
@@ -15,6 +15,7 @@ option(BUILD_LIB "Build the basic library" ON)
 option(BUILD_DOCUMENTATION "Build API documentation" OFF)
 
 if (BUILD_LIB)
+  enable_language(CXX C)
   set(BUILD_GUI "Build QT Gui" ON)
   set(BUILD_TESTS "Build tests for the library" OFF)
 else()
