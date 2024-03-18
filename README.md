@@ -87,6 +87,7 @@ line tool has the following options:
 - **-c/\-\-configuration-file** path of the configuration file [string]
 
 A valid call would be for instance
+
 ```shell
 moovie -x 750 -y 750 -o ./output.svg -c ./moovie.conf input.csv
 ```
