@@ -73,6 +73,7 @@ build-documentation:
   before_script:
     - apt-get update -y
     - apt-get install -y doxygen cmake
+    - pip install exhale
   script:
     - mkdir build-docs
     - cd build-docs
