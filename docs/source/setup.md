@@ -58,3 +58,12 @@ already installed and just run it directly.
 #### Manual
 After installing the dependencies from above using `apt-get`, you can simply follow the installation steps for MooViE 
 from the Dockerfile.
+
+To build MooViE for a single user with Qt6, the following is sufficient
+
+```bash
+mkdir build-local
+cd build-local
+cmake .. -DCMAKE_PREFIX_PATH=~/.local -DBUILD_GUI=ON -DQT_VERSION=QT6 -DBUILD_TESTS=OFF -DBUILD_DOCUMENTATION=OFF
+cmake --build . -j
+make install
