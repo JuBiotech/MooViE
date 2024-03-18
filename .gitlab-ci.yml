@@ -73,7 +73,7 @@ build-documentation:
   before_script:
     - apt-get update -y
     - apt-get install -y doxygen cmake
-    - pip install exhale myst-parser
+    - pip install exhale myst-parser sphinx-book-theme
   script:
     - mkdir build-docs
     - cd build-docs
