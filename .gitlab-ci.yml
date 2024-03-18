@@ -77,7 +77,7 @@ build-documentation:
     - mkdir build-docs
     - cd build-docs
     - cmake .. -DCMAKE_PREFIX_PATH=/usr/local -DBUILD_LIB=OFF -DBUILD_DOCUMENTATION=ON
-    - make html
+    - make
   artifacts:
     paths:
     - docs/build/html/*
