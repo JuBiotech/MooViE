@@ -1,6 +1,8 @@
 #include "Scale.h"
 #include "Configuration.h"
 
+
+#if !defined(DOXYGEN_SHOULD_SKIP_THIS)
 std::pair<double, double>
 create_rounded_interval (double min, double max)
 {
@@ -35,6 +37,8 @@ create_rounded_interval (double min, double max)
     return std::make_pair (lower_val, upper_val);
   }
 }
+#endif // DOXYGEN_SHOULD_SKIP_THIS
+
 
 
 std::vector<Label>
