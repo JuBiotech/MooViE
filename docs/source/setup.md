@@ -7,14 +7,25 @@ Linux. The listed pacakges refer to Debian/Ubuntu. For other systems, see below 
 
 Required tools:
 * GNU C++ compiler
-* CMake (>= 3.7, recommended cmake-curses-gui or cmake-qt-gui)
+* CMake (>= 3.7, recommended `cmake-curses-gui` or `cmake-qt-gui`)
 
 Required Libraries:
-- libfreetype-dev
-- libsigc++-2.0-dev
-- libcairo2-dev
-- libcairomm-1.0-dev
-- Either Qt5 libraries (qtbase5-dev, qttools5-dev, libqt5svg5-dev, libgl1-mesa-dev) or Qt6 libraries (qt6-base-dev, qt6-tools-dev, libqt6svg6-dev, libgl1-mesa-dev)
+- `libfreetype-dev`
+- `libsigc++-2.0-dev`
+- `libcairo2-dev`
+- `libcairomm-1.0-dev`
+- Either Qt5 libraries (`qtbase5-dev`, `qttools5-dev`, `libqt5svg5-dev`, `libgl1-mesa-dev`) or Qt6 libraries (`qt6-base-dev`, `qt6-tools-dev`, `libqt6svg6-dev`, `libgl1-mesa-dev`)
+
+For running the tests:
+- `libboost-test-dev`
+- `gcovr`
+
+For building the documentation:
+- `doxygen`
+- `graphviz`
+- `python3-sphinx`
+- `python3-sphinx-book-theme`
+- `python3-exhale`
 
 ### Installation
 
