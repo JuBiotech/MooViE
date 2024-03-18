@@ -36,8 +36,8 @@ in combination with X11. For Ubuntu operating systems (>= 20.04), MooViE can als
 To simplify the installation procedure we supply two scripts that install and run Docker containers in which the
 graphical user interface of MooViE runs. It can be displayed on the host machine via X11 connection. The scripts are
 located in the project directory root. Prior to installing and running MooViE with the scripts, you need to install
-Docker (for instance by following this
-[instruction](https://docs.docker.com/engine/install/ubuntu/#install-docker-engine)).
+Docker (for instance by following the official
+[instructions](https://docs.docker.com/engine/install/ubuntu/#install-docker-engine)).
 
 On Linux systems with X11 server installed and running you just need to open a bash console and run the
 installation/runner script with
