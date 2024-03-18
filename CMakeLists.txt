@@ -11,9 +11,16 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 # CMake build options
-option(BUILD_GUI "Build QT Gui" ON)
+option(BUILD_LIB "Build the basic library" ON)
 option(BUILD_DOCUMENTATION "Build API documentation" OFF)
-option(BUILD_TESTS "Build tests for the library" OFF)
+
+if (BUILD_LIB)
+  set(BUILD_GUI "Build QT Gui" ON)
+  set(BUILD_TESTS "Build tests for the library" OFF)
+else()
+  unset(BUILD_GUI CACHE)
+  unset(BUILD_TESTS CACHE)
+endif()
 
 if (BUILD_GUI)
   set(QT_VERSION QT6 CACHE STRING "Choose QT version")
@@ -37,7 +44,9 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 endif()
 
 # MooViE sources
-add_subdirectory(src/main)
+if (BUILD_LIB)
+    add_subdirectory(src/main)
+endif()
 
 # Test sources
 if (BUILD_TESTS)
@@ -56,10 +65,6 @@ if (BUILD_DOCUMENTATION)
                 COMMENT "Generating API documentation with Doxygen" VERBATIM)
         add_custom_command(TARGET doc
                 COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile)
-        # Build reference manual using pdflatex
-        add_custom_command(TARGET doc
-                           COMMAND make pdf
-                           WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/docs/build/latex)
         # Build html pages using sphinx
         add_custom_command(TARGET doc
                 COMMAND make html
@@ -68,8 +73,6 @@ if (BUILD_DOCUMENTATION)
                 COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/docs/source/images
                 ${PROJECT_SOURCE_DIR}/docs/build/html/_images)
         # Install html pages and reference manual
-        install (FILES ${PROJECT_SOURCE_DIR}/docs/latex/refman.pdf DESTINATION ${DEST_DOC_DIR})
-
         # Install README file
         install (FILES README.md DESTINATION ${DEST_DOC_DIR})
     else(DOXYGEN_FOUND)

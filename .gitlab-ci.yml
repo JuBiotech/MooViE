@@ -3,6 +3,7 @@ image: jugit-registry.fz-juelich.de/ibg-1/modsim/moovie/moovie:test
 stages:
   - build
   - test
+  - documentation
   - container
 
 build-cli:
@@ -10,7 +11,7 @@ build-cli:
   script:
     - mkdir build-cli
     - cd build-cli
-    - cmake .. -DCMAKE_PREFIX_PATH=/usr/local -DCMAKE_BUILD_TYPE=Debug -DBUILD_GUI=OFF -DBUILD_TESTS=ON -DBUILD_DOCUMENTATION=OFF
+    - cmake .. -DCMAKE_PREFIX_PATH=/usr/local -DCMAKE_BUILD_TYPE=Debug -DBUILD_LIB=ON -DBUILD_GUI=OFF -DBUILD_TESTS=ON -DBUILD_DOCUMENTATION=OFF
     - cmake --build . -j4
   artifacts:
     when: always
@@ -24,7 +25,7 @@ build-qt5:
   script:
     - mkdir build-qt5
     - cd build-qt5
-    - cmake .. -DCMAKE_PREFIX_PATH=/usr/local -DCMAKE_BUILD_TYPE=Release -DBUILD_GUI=ON -DQT_VERSION=QT5 -DBUILD_TESTS=OFF -DBUILD_DOCUMENTATION=OFF
+    - cmake .. -DCMAKE_PREFIX_PATH=/usr/local -DCMAKE_BUILD_TYPE=Release -DBUILD_LIB=ON -DBUILD_GUI=ON -DQT_VERSION=QT5 -DBUILD_TESTS=OFF -DBUILD_DOCUMENTATION=OFF
     - cmake --build . -j4
   artifacts:
     when: always
@@ -36,7 +37,7 @@ build-qt6:
   script:
     - mkdir build-qt6
     - cd build-qt6
-    - cmake .. -DCMAKE_PREFIX_PATH=/usr/local -DCMAKE_BUILD_TYPE=Release -DBUILD_GUI=ON -DQT_VERSION=QT6 -DBUILD_TESTS=OFF -DBUILD_DOCUMENTATION=OFF
+    - cmake .. -DCMAKE_PREFIX_PATH=/usr/local -DCMAKE_BUILD_TYPE=Release -DBUILD_LIB=ON -DBUILD_GUI=ON -DQT_VERSION=QT6 -DBUILD_TESTS=OFF -DBUILD_DOCUMENTATION=OFF
     - cmake --build . -j4
   artifacts:
     when: always
@@ -65,6 +66,35 @@ unit_test:
       coverage_report:
         coverage_format: cobertura
         path: build-cli/coverage.xml
+
+
+build-documentation:
+  image: sphinxdoc/sphinx:latest
+  stage: documentation
+  before-script:
+    - apt-get update -y
+    - apt-get install doxygen
+  script:
+    - mkdir build-docs
+    - cd build-docs
+    - cmake .. -DCMAKE_PREFIX_PATH=/usr/local -DBUILD_LIB=OFF -DBUILD_DOCUMENTATION=ON
+    - make html
+  artifacts:
+    paths:
+    - docs/build/html/*
+    expire_in: 1 week
+  only:
+    - build-documentation
+
+publish-documentation:
+  image: ubuntu:22.04
+  stage: documentation
+  script:
+    - echo "TODO"
+  dependencies:
+    - build-documentation
+only:
+  - build-documentation
 
 
 build-container:
