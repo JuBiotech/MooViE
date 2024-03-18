@@ -10,12 +10,3 @@ API are available.
 </p>
 
 For inspiration explore our [Gallery](gallery.md)
-
-MooViE accepts the data as single CSV file using **commas** as column delimiters. It expects input variables in the 
-first columns and output variables after that. The first non-blank non-comment line determines the column header, in
-which the input/output variables are further described. The syntax for column headers is 
-- `i#<input name>[<unit>](<range begin>, <range end>)` for input headers and 
-- `o#<output name>[<unit>](<range begin>, <range end>)` for outputs. 
-
-If a column name should contain commas or square brackets, it can be masked by quotes. Units and ranges must not be
-specified and can be omitted. The table cells must not be empty.

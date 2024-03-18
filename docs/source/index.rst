@@ -22,6 +22,7 @@ Visualization of multivariate data with
    :maxdepth: 2
    :caption: Contents:
 
+   input.md
    visual_language.md
    setup.md
    gui.md
