@@ -3,8 +3,7 @@ image: jugit-registry.fz-juelich.de/ibg-1/modsim/moovie/moovie:test
 stages:
   - build
   - test
-  - documentation
-  - container
+  - publish
 
 build-cli:
   stage: build
@@ -70,10 +69,10 @@ unit_test:
 
 build-documentation:
   image: sphinxdoc/sphinx:latest
-  stage: documentation
+  stage: build
   before_script:
     - apt-get update -y
-    - apt-get install doxygen
+    - apt-get install -y doxygen
   script:
     - mkdir build-docs
     - cd build-docs
@@ -88,7 +87,7 @@ build-documentation:
 
 publish-documentation:
   image: ubuntu:22.04
-  stage: documentation
+  stage: publish
   script:
     - echo "TODO"
   dependencies:
@@ -99,7 +98,7 @@ publish-documentation:
 
 build-container:
   image: ubuntu:22.04
-  stage: container
+  stage: publish
   before_script:
     - apt-get update
     - apt-get install -y docker.io
