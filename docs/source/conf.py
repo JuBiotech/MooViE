@@ -9,7 +9,7 @@
 project = 'MooViE'
 copyright = '2024, Stratmann, A. and Beyss, M.'
 author = 'Stratmann, A. and Beyss, M.'
-release = 'v0.1'
+release = '1.0.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
