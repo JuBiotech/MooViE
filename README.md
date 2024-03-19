@@ -7,7 +7,9 @@ sets. MooViE comes with a simple graphical user interface (GUI) that allows the 
 data and configure the style. For reproducibility and pipeline integration also a command line interface and an
 API are available.
 
-![](docs/source/images/red.png)
+<div style="text-align: center;">
+<img src="docs/source/images/red.png" alt="MooViE scene" width="500">
+</div>
 
 ## Documentation
 
