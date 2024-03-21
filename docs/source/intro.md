@@ -9,4 +9,4 @@ API are available.
   <img width="300" src="_images/red.png" />
 </p>
 
-For inspiration explore our [Gallery](gallery.md)
+For inspiration explore our [Gallery](gallery.rst)
