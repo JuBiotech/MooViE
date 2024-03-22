@@ -101,7 +101,26 @@ build-container:
     - docker push $CI_REGISTRY/ibg-1/modsim/moovie/moovie:$CI_COMMIT_REF_SLUG
   after_script:
     - docker logout $CI_REGISTRY
-  only:
-    - tags
-  except:
-    - branches
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_TAG != null
+
+retag-container:
+  image: docker:stable
+  services:
+  - docker:dind
+  tags:
+  - docker
+  stage: publish
+  needs: 
+  - build-container
+  before_script:
+    - docker version
+    - docker info
+    - echo "logging in to $CI_REGISTRY"
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker pull $CI_REGISTRY/ibg-1/modsim/moovie/moovie:$CI_COMMIT_REF_SLUG
+    - docker tag $CI_REGISTRY/ibg-1/modsim/moovie/moovie:$CI_COMMIT_REF_SLUG $CI_REGISTRY/ibg-1/modsim/moovie/moovie:latest
+  rules:
+  - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
