@@ -1,4 +1,4 @@
-Sensitivity analysis of compartment models
+Sensitivity of compartment models
 ---
 
 With data from *Kühn et al., 2021* and *Koslow et al.,2022*, parameters of a state-of-the-art SECIR model were analyzed 
