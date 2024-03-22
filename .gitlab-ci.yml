@@ -102,4 +102,4 @@ build-container:
   after_script:
     - docker logout $CI_REGISTRY
   only:
-    - develop
+    - main
