@@ -122,5 +122,6 @@ retag-container:
   script:
     - docker pull $CI_REGISTRY/ibg-1/modsim/moovie/moovie:$CI_COMMIT_REF_SLUG
     - docker tag $CI_REGISTRY/ibg-1/modsim/moovie/moovie:$CI_COMMIT_REF_SLUG $CI_REGISTRY/ibg-1/modsim/moovie/moovie:latest
+    - docker push $CI_REGISTRY/ibg-1/modsim/moovie/moovie:latest
   rules:
   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
