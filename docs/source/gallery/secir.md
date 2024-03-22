@@ -7,9 +7,8 @@ probability on contact (TP) and deaths per critical (DpC), was obtained. It was 
 DpC is high and low to changes in TP.
 
 <p align="center">
-<img style="width: 30%" src="../_images/secir.png">
+    <img style="width: 50%" src="../_images/secir.png">
 <p/>
-<br><br>
 
 The above MooViE scene shows the relationship between the two parameters TP and DpC. High values of DpC lead to high 
 numbers of deaths and low values of DpC lead to to low numbers of deaths. Both high and low numbers of TP can lead to 
