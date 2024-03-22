@@ -7,7 +7,7 @@ probability on contact (TP) and deaths per critical (DpC), was obtained. It was 
 DpC is high and low to changes in TP.
 
 <p align="center">
-<img style="width: 30%" src="_images/secir.png">
+<img style="width: 30%" src="../_images/secir.png">
 <p/>
 <br><br>
 
