@@ -40,8 +40,8 @@ ConfigurationDialog::init_dialog ()
 
   // Line and fill
   m_prop_thick_strength = new ConfDoubleWidget (
-      "Thick line strength", conf.get_prop_thick ().line_width, 0);
-  m_prop_thin_strength = new ConfDoubleWidget ("Thin line strength",
+      "Thick line width", conf.get_prop_thick ().line_width, 0);
+  m_prop_thin_strength = new ConfDoubleWidget ("Thin line width",
 					       conf.get_prop_thin ().line_width,
 					       0);
   QLayout* linefill = m_ui->linefill_grp->layout ();
@@ -61,9 +61,9 @@ ConfigurationDialog::init_dialog ()
 				       conf.get_prop_axis_label ().font_size);
   QLayout* font = m_ui->font_grp->layout ();
   font->addWidget (m_scale_font);
-  font->addWidget (m_axis_fsize);
-  font->addWidget (m_axis_font);
   font->addWidget (m_scale_fsize);
+  font->addWidget (m_axis_font);
+  font->addWidget (m_axis_fsize);
 
   // Output
   m_output_angle_span = new ConfDoubleWidget (
@@ -71,7 +71,7 @@ ConfigurationDialog::init_dialog ()
       360);
   m_output_inner_radius = new ConfDoubleWidget (
       "Start radius of the output grid", conf.get_output_inner_radius (), 0);
-  m_output_thickness = new ConfDoubleWidget ("Thickness of the coloring axis",
+  m_output_thickness = new ConfDoubleWidget ("Thickness of the colored axis",
 					     conf.get_output_thickness (), 0);
   m_grid_size = new ConfDoubleWidget ("Height of the output grid",
 				      conf.get_grid_size (), 0);
@@ -115,11 +115,13 @@ ConfigurationDialog::init_dialog ()
   input->addWidget (m_num_minor_sections_axis);
 
   // Histogram
+  m_histogram_enabled = new ConfBoolWidget ("Enable histograms", conf.is_histograms_enabled());
   m_num_histogram_classes = new ConfIntWidget (
-      "Classes of the histograms", conf.get_num_histogram_classes (), 1);
-  m_histogram_height = new ConfDoubleWidget ("Height of a histogram",
+      "Number of histograms classes", conf.get_num_histogram_classes (), 1);
+  m_histogram_height = new ConfDoubleWidget ("Height of histograms",
 					     conf.get_histogram_height (), 0);
   QLayout* histogram = m_ui->histogram_grp->layout ();
+  histogram->addWidget (m_histogram_enabled);
   histogram->addWidget (m_num_histogram_classes);
   histogram->addWidget (m_histogram_height);
 
@@ -146,9 +148,9 @@ ConfigurationDialog::fill_configuration_values ()
   // Font and font size
   m_scale_font->set_text (
       QString::fromStdString (conf.get_prop_scale_label ().font_name));
+  m_scale_fsize->set_value (conf.get_prop_scale_label ().font_size);
   m_axis_font->set_text (
       QString::fromStdString (conf.get_prop_axis_label ().font_name));
-  m_scale_fsize->set_value (conf.get_prop_scale_label ().font_size);
   m_axis_fsize->set_value (conf.get_prop_axis_label ().font_size);
 
   // Output
@@ -164,10 +166,11 @@ ConfigurationDialog::fill_configuration_values ()
   m_input_inner_radius->set_value (conf.get_input_inner_radius ());
   m_input_thickness->set_value (conf.get_input_thickness ());
   m_input_separation_angle->set_value (conf.get_input_separation_angle ());
-  m_num_major_sections_axis->set_value (conf.get_num_major_sections_grid ());
-  m_num_minor_sections_axis->set_value (conf.get_num_minor_sections_grid ());
+  m_num_major_sections_axis->set_value (conf.get_num_major_sections_axis ());
+  m_num_minor_sections_axis->set_value (conf.get_num_minor_sections_axis ());
 
   // Histogram
+  m_histogram_enabled->set_value (conf.is_histograms_enabled ());
   m_num_histogram_classes->set_value (conf.get_num_histogram_classes ());
   m_histogram_height->set_value (conf.get_histogram_height ());
 
@@ -217,6 +220,7 @@ ConfigurationDialog::update_configuration ()
   conf.set_num_minor_sections_axis (m_num_minor_sections_axis->get_value ());
 
   // Histogram
+  conf.set_histograms_enabled (m_histogram_enabled->get_value ());
   conf.set_num_histogram_classes (m_num_histogram_classes->get_value ());
   conf.set_histogram_height (m_histogram_height->get_value ());
 

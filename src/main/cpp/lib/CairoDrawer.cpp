@@ -11,7 +11,8 @@ const double CairoDrawer::END_RADIUS_MAJOR_FACTOR = 0.25,
 
 const double CairoDrawer::IO_LINE_WIDTH = 0.1,
     CairoDrawer::CONNECTOR_ARC_RATIO = 0.6,
-    CairoDrawer::CONNECTOR_ARROW_HEIGHT = 3;
+    CairoDrawer::CONNECTOR_ARROW_HEIGHT = 3,
+    CairoDrawer::CONNECTOR_ARROW_ANGLE = 0.012;
 
 const double CairoDrawer::INPUT_RADIUS_DELTA = 2.5, CairoDrawer::CONNECTOR_DELTA = 10,
     CairoDrawer::TEXT_DELTA = 0.01, CairoDrawer::ANGLE_DELTA_SMALL = 0.001,
@@ -257,17 +258,21 @@ CairoDrawer::draw_io_vector (const IOVector& iov)
   // Draw links
   for (std::size_t i = 0; i < m_num_inputs; ++i)
     {
-      Polar origin1 (iov[i].coord.radius () - RADIUS_DELTA,
-		     iov[i].coord.angle () - ANGLE_DELTA_SMALL), origin2 (
-	  iov[i].coord.radius () - RADIUS_DELTA,
-	  iov[i].coord.angle () + ANGLE_DELTA_SMALL);
-      draw_link (origin1, origin2, target1, target2, iov[i].prop);
+      if (not std::isnan(iov[i].coord.radius ()) and not std::isnan(iov[i].coord.angle ().value ()))
+      {
+        Polar origin1 (iov[i].coord.radius () - RADIUS_DELTA,
+		       iov[i].coord.angle () - ANGLE_DELTA_SMALL), origin2 (
+	    iov[i].coord.radius () - RADIUS_DELTA,
+	    iov[i].coord.angle () + ANGLE_DELTA_SMALL);
+        draw_link (origin1, origin2, target1, target2, iov[i].prop);
+      }
     }
 
   // Draw line from connector to first output
+  /*
   double connector_distance = (iov[connector_pos + 1].coord.radius ()
       - from.coord.radius ()) * 0.1
-      + Configuration::get_instance ().get_output_thickness ();
+      + Configuration::get_instance ().get_output_thickness ();*/
 	if (iov.size() > connector_pos + 2)
 	{
 		draw_line(from.coord,
@@ -411,6 +416,8 @@ CairoDrawer::draw_link (const Polar& origin1, const Polar& origin2,
   // Draw first Bezier curve from origin to target
   cairo_context->curve_to (CTRL_ORIG1.x (), CTRL_ORIG1.y (), CTRL_TARG1.x (),
 			   CTRL_TARG1.y (), target1_c.x (), target1_c.y ());
+  // draw line to second target point
+  cairo_context->line_to(target2_c.x (), target2_c.y ());
   // Draw second Bezier curve from target to origin
   cairo_context->curve_to (CTRL_TARG2.x (), CTRL_TARG2.y (), CTRL_ORIG2.x (),
 			   CTRL_ORIG2.y (), origin2_c.x (), origin2_c.y ());
@@ -566,8 +573,8 @@ CairoDrawer::draw_arrow (const Polar& start, const DrawerProperties<>& prop)
   // Calculate arrow coordinates
   Polar start_help (start.radius () - height, start.angle ()), direction_help (
       start.radius () - height / 2, start.angle ()), left_help (
-      start.radius () - height, start.angle () - height / 500), right_help (
-      start.radius () - height, start.angle () + height / 500);
+      start.radius () - height, start.angle () - CONNECTOR_ARROW_ANGLE/2), right_help (
+      start.radius () - height, start.angle () + CONNECTOR_ARROW_ANGLE/2);
 
   // Convert arrow coordinates into Cartesian coordinates
   Cartesian start_c, direction_c, left, right;
@@ -802,7 +809,8 @@ CairoDrawer::draw_text_parallel (const Label& label, const Polar& start,
 			    0.5 * t_exts.height);
 
   cairo_context->close_path ();
-  cairo_context->show_text (label.get_text ());
+  cairo_context->text_path (label.get_text ());
+  cairo_context->fill ();
 }
 
 void
@@ -830,7 +838,8 @@ CairoDrawer::draw_text_orthogonal (const Label& label, const Polar& start,
 			    (1 - alignment.ratio) * t_exts.height);
 
   cairo_context->close_path ();
-  cairo_context->show_text (label.get_text ());
+  cairo_context->text_path (label.get_text ());
+  cairo_context->fill ();
 }
 
 void

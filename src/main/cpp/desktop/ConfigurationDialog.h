@@ -10,6 +10,7 @@
 #include "ConfDoubleWidget.h"
 #include "ConfIntWidget.h"
 #include "ConfStringWidget.h"
+#include "ConfBoolWidget.h"
 
 namespace Ui
 {
@@ -55,6 +56,7 @@ private:
   /** Histogram modification values */
   ConfIntWidget* m_num_histogram_classes;
   ConfDoubleWidget* m_histogram_height;
+  ConfBoolWidget* m_histogram_enabled;
 
   /** IOVector modification values */
   ConfIntWidget* m_relevant_places;

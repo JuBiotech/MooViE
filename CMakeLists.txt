@@ -2,18 +2,33 @@ cmake_minimum_required(VERSION 3.4)
 project(MooViE
         VERSION 1.0.0
         DESCRIPTION "Visualization tool for the results of multi-objective optimization"
-        LANGUAGES CXX C)
+        LANGUAGES NONE)
 
 # Set C++ language standard
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 # Set module path for finding external modules
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 # CMake build options
-option(BUILD_GUI "Build QT Gui" ON)
+option(BUILD_LIB "Build the basic library" ON)
 option(BUILD_DOCUMENTATION "Build API documentation" OFF)
-option(BUILD_TESTS "Build tests for the library" OFF)
+
+if (BUILD_LIB)
+  enable_language(CXX C)
+  set(BUILD_GUI "Build QT Gui" ON)
+  set(BUILD_TESTS "Build tests for the library" OFF)
+else()
+  unset(BUILD_GUI CACHE)
+  unset(BUILD_TESTS CACHE)
+endif()
+
+if (BUILD_GUI)
+  set(QT_VERSION QT6 CACHE STRING "Choose QT version")
+  set_property(CACHE QT_VERSION PROPERTY STRINGS QT6 QT5)
+else()
+  unset(QT_VERSION CACHE)
+endif()
 
 # Set install destination variables
 set(DEST_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin)
@@ -24,20 +39,15 @@ set(DEST_DESKTOP_DIR ${CMAKE_INSTALL_PREFIX}/share/applications)
 set(DEST_PIXMAP_DIR ${CMAKE_INSTALL_PREFIX}/share/pixmaps)
 set(CMAKE_INSTALL_RPATH ${DEST_LIB_DIR})
 
-# Availability of unistd.h
-include(CheckIncludeFile)
-check_include_file("unistd.h"  HAVE_UNISTD_H)
-configure_file(moovie_config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/moovie_config.h)
-
-# MSVC support
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-if (CMAKE_GENERATOR MATCHES "Visual Studio")
-    add_definitions(-D_USE_MATH_DEFINES)
-    add_compile_options("/Za")
+# GNU debug flags
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -fno-inline -fprofile-arcs -ftest-coverage --coverage")
 endif()
 
 # MooViE sources
-add_subdirectory(src/main)
+if (BUILD_LIB)
+    add_subdirectory(src/main)
+endif()
 
 # Test sources
 if (BUILD_TESTS)
@@ -55,16 +65,15 @@ if (BUILD_DOCUMENTATION)
                 ALL
                 COMMENT "Generating API documentation with Doxygen" VERBATIM)
         add_custom_command(TARGET doc
-                COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile
-                OUTPUTS ${PROJECT_BINARY_DIR}/doc/man/man3/moovie.3)
-        # Build reference manual using pdflatex
+                COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile)
+        # Build html pages using sphinx
         add_custom_command(TARGET doc
-                           COMMAND make pdf
-                           WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc/latex)
+                COMMAND make html
+                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/docs)
+        add_custom_command(TARGET doc
+                COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/docs/source/images
+                ${PROJECT_SOURCE_DIR}/docs/build/html/_images)
         # Install html pages and reference manual
-        install (DIRECTORY ${PROJECT_BINARY_DIR}/doc/html DESTINATION ${DEST_DOC_DIR})
-        install (FILES ${PROJECT_BINARY_DIR}/doc/latex/refman.pdf DESTINATION ${DEST_DOC_DIR})
-
         # Install README file
         install (FILES README.md DESTINATION ${DEST_DOC_DIR})
     else(DOXYGEN_FOUND)

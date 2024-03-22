@@ -106,8 +106,8 @@ BOOST_AUTO_TEST_SUITE(dataset_test)
     BOOST_CHECK_CLOSE(inputs[0].min, 1, eps);
     BOOST_CHECK_CLOSE(inputs[0].max, 7, eps);
     BOOST_CHECK_EQUAL(inputs[1].name, std::string ("Input2"));
-    BOOST_CHECK_CLOSE(inputs[1].min, 8, eps);
-    BOOST_CHECK_CLOSE(inputs[1].max, 8, eps);
+    BOOST_CHECK_CLOSE(inputs[1].min, 7, eps);
+    BOOST_CHECK_CLOSE(inputs[1].max, 9, eps);
 
     const std::vector<DefVariable> & outputs = set.output_variables ();
     BOOST_CHECK_EQUAL(outputs[0].name, std::string ("Output1"));
@@ -140,6 +140,97 @@ BOOST_AUTO_TEST_SUITE(dataset_test)
 
     BOOST_CHECK_THROW(DefDataSet (cwd + "/input6_nouse.csv"),
 		      std::length_error);
+  }
+
+  BOOST_AUTO_TEST_CASE(blanks)
+  {
+	  std::string cwd = Util::get_cwd ();
+
+	  DefDataSet set (cwd + "/input2.csv");
+	  DefDataSet set_blank (cwd + "/input2_blank.csv");
+
+	  double eps = std::numeric_limits<double>::epsilon ();
+
+	  BOOST_CHECK_EQUAL(set.get_num_rows (), set_blank.get_num_rows ());
+	  BOOST_CHECK_EQUAL(set.get_num_cols (), set_blank.get_num_cols ());
+
+	    for (size_t row_idx = 0; row_idx < set.get_num_rows (); ++row_idx)
+	      {
+		for (size_t col_idx = 0; col_idx < set.get_num_cols (); ++col_idx)
+		  {
+		    BOOST_CHECK_CLOSE(set[row_idx][col_idx].value, set_blank[row_idx][col_idx].value, eps);
+		  }
+	      }
+  }
+
+  BOOST_AUTO_TEST_CASE(nans)
+  {
+	  std::string cwd = Util::get_cwd ();
+
+	  DefDataSet set (cwd + "/input8.csv");
+
+	  double eps = std::numeric_limits<double>::epsilon ();
+
+	  BOOST_CHECK(std::isnan(set[0][0].value));
+	  BOOST_CHECK(std::isnan(set[0][1].value));
+	  BOOST_CHECK(std::isnan(set[0][2].value));
+	  BOOST_CHECK_CLOSE(set[0][3].value, 0, eps);
+	  BOOST_CHECK_CLOSE(set[0][4].value, 1, eps);
+
+	  BOOST_CHECK(std::isnan(set[1][0].value));
+	  BOOST_CHECK(std::isnan(set[1][1].value));
+	  BOOST_CHECK(std::isnan(set[1][2].value));
+	  BOOST_CHECK_CLOSE(set[1][3].value, 2, eps);
+	  BOOST_CHECK_CLOSE(set[1][4].value, 3, eps);
+
+	  BOOST_CHECK(std::isnan(set[2][0].value));
+	  BOOST_CHECK(std::isnan(set[2][1].value));
+	  BOOST_CHECK(std::isnan(set[2][2].value));
+	  BOOST_CHECK_CLOSE(set[2][3].value, 4, eps);
+	  BOOST_CHECK_CLOSE(set[2][4].value, 5, eps);
+
+  }
+
+  BOOST_AUTO_TEST_CASE(extract_header)
+  {
+	  DefDataSet set;
+
+	  auto out = set.extract_header_entry("i#varname");
+	  BOOST_CHECK(std::get<0>(out) == "varname");
+	  BOOST_CHECK(std::get<1>(out).empty());
+	  BOOST_CHECK(std::get<2>(out).empty());
+	  BOOST_CHECK(std::get<3>(out).empty());
+
+	  out = set.extract_header_entry("i#varname [unit]");
+	  BOOST_CHECK(std::get<0>(out) == "varname");
+	  BOOST_CHECK(std::get<1>(out) == "unit");
+	  BOOST_CHECK(std::get<2>(out).empty());
+	  BOOST_CHECK(std::get<3>(out).empty());
+
+	  out = set.extract_header_entry("i#varname (-0.1, 13)");
+	  BOOST_CHECK(std::get<0>(out) == "varname");
+	  BOOST_CHECK(std::get<1>(out).empty());
+	  BOOST_CHECK(std::get<2>(out) == "-0.1");
+	  BOOST_CHECK(std::get<3>(out) == "13");
+
+
+	  out = set.extract_header_entry("i#varname [ unit] (0,7)");
+	  BOOST_CHECK(std::get<0>(out) == "varname");
+	  BOOST_CHECK(std::get<1>(out) == "unit");
+	  BOOST_CHECK(std::get<2>(out) == "0");
+	  BOOST_CHECK(std::get<3>(out) == "7");
+
+	  out = set.extract_header_entry("\"i#varname [ unit] (0,7)\"");
+	  BOOST_CHECK(std::get<0>(out) == "varname");
+	  BOOST_CHECK(std::get<1>(out) == "unit");
+	  BOOST_CHECK(std::get<2>(out) == "0");
+	  BOOST_CHECK(std::get<3>(out) == "7");
+
+	  out = set.extract_header_entry("i#var,name [ unit/other unit] (-0.45,3e9)");
+	  BOOST_CHECK(std::get<0>(out) == "var,name");
+	  BOOST_CHECK(std::get<1>(out) == "unit/other unit");
+	  BOOST_CHECK(std::get<2>(out) == "-0.45");
+	  BOOST_CHECK(std::get<3>(out) == "3e9");
   }
 
   BOOST_AUTO_TEST_SUITE_END()

@@ -3,105 +3,62 @@
 #include <qmath.h>
 #include <QDebug>
 
+#include <memory>
+
 MooViEView::MooViEView (QWidget *parent) :
-    QWebEngineView (parent), m_zoom_active (false), m_cumulative_zoom(0.),
+    QGraphicsView (parent), m_min_gui_size(0), m_svgItem(nullptr),
     m_child(nullptr)
 {
+    setScene(new QGraphicsScene(this));
+    setTransformationAnchor(AnchorUnderMouse);
+    setDragMode(ScrollHandDrag);
+    setViewportUpdateMode(FullViewportUpdate);
+
+    QSize size = this->size();
+    m_min_gui_size = std::min (size.width(), size.height());
+
 }
 
 void
 MooViEView::adjust_zoom_by_svg_size (int width, int height)
 {
   // Using smaller dim sizes (the smaller, the more zoom)
-  m_max_svg_size = std::max (width, height);
+  double max_svg_size = std::max (width, height);
 
-  // Use svg dims to adjust zoom
-  adjust_zoom();
+  // calculate zoom_factor so that the longest axis of the images takes u
+  // ZOOM_INIT portion of the shortest axis of the image field
+  double zoom_factor = ZOOM_INIT * m_min_gui_size / max_svg_size;
+
+  scale (zoom_factor, zoom_factor);
 }
 
 void
 MooViEView::adjust_zoom ()
 {
+  // new size of the gui
   QSize size = this->size();
   double min_gui_size = std::min (size.width(), size.height());
-  double zoom_factor = ZOOM_ADJUST_FACTOR * min_gui_size / m_max_svg_size + m_cumulative_zoom;
 
-  setZoomFactor (zoom_factor);
+  // calculate relative size change of the gui and rescale
+  double zoom_factor = min_gui_size/m_min_gui_size;
+  scale (zoom_factor, zoom_factor);
+
+  // update the new gui size
+  m_min_gui_size = min_gui_size;
 }
 
 bool MooViEView::eventFilter(QObject* obj, QEvent* event)
 {
-  if (event->type()==QEvent::KeyPress)
-  {
-    bool handled = false;
-    QKeyEvent* key = static_cast<QKeyEvent*>(event);
-    switch (key->key ())
-    {
-    case Qt::Key_Control:
-      m_zoom_active = true;
-      handled = true;
-      break;
-    case Qt::Key_Plus:
-      // Only increase if CTRL is pressed
-      if (m_zoom_active)
-	{
-	  setZoomFactor (zoomFactor () + ZOOM_DELTA);
-	  m_cumulative_zoom += ZOOM_DELTA;
-	}
-      break;
-    case Qt::Key_Minus:
-      // Only decrease if CTRL is pressed
-      if (m_zoom_active)
-	{
-	  setZoomFactor (zoomFactor () - ZOOM_DELTA);
-      m_cumulative_zoom -= ZOOM_DELTA;
-	}
-      handled = true;
-      break;
-    default:
-      break;
-    }
-    return handled ? true : QWebEngineView::eventFilter(obj, event);
-  }
-  else if (event->type()==QEvent::KeyRelease)
-  {
-    QKeyEvent* key = static_cast<QKeyEvent*>(event);
-    if (key->key() == Qt::Key_Control)
-    {
-      m_zoom_active = false;
-      return true;
-    }
-    else
-    {
-      return QWebEngineView::eventFilter(obj, event);
-    }
-  }
-  else if (m_zoom_active && event->type() == QEvent::Wheel)
+  if (event->type() == QEvent::Wheel)
   {
     QWheelEvent* wheel = static_cast<QWheelEvent*>(event);
-    qreal factor = qPow(1.2, wheel->delta() / 240.0);
-    qreal zoom = zoomFactor() * factor;
-    m_cumulative_zoom += (zoom - zoomFactor());
-    setZoomFactor(zoom);
-    return true;
-  }
-  // we do not want the context menu, therefore we disable the right mouse button
-  else if (event->type() == QEvent::MouseButtonPress)
-  {
-    QMouseEvent* mouse = static_cast<QMouseEvent*>(event);
-    if (mouse->button() == Qt::RightButton)
-    {
-      return true;
-    }
-    return QWebEngineView::eventFilter(obj, event);
-  }
-  else if (event->type() == QEvent::MouseButtonDblClick)
-  {
+    qreal factor = qPow(1.2, wheel->angleDelta().y() / 240.0);
+    zoomBy(factor);
     return true;
   }
   else
   {
-    QWebEngineView::eventFilter(obj, event);
+    QGraphicsView::eventFilter(obj, event);
   }
   return false;
 }
@@ -119,12 +76,41 @@ bool MooViEView::event(QEvent* ev)
       m_child->installEventFilter(this);
     }
   }
-  return QWebEngineView::event(ev);
+  return QGraphicsView::event(ev);
 }
 
 void MooViEView::resizeEvent(QResizeEvent *event)
 {
-  QWebEngineView::resizeEvent(event);
+  QGraphicsView::resizeEvent(event);
 
   adjust_zoom();
 }
+
+void MooViEView::openFile(const QString &fileName)
+{
+    QGraphicsScene *s = scene();
+
+    auto svgItem = std::make_unique<QGraphicsSvgItem>(fileName);
+    if (!svgItem->renderer()->isValid())
+        return;
+
+    s->clear();
+    resetTransform();
+
+    m_svgItem = svgItem.release();
+    m_svgItem->setFlags(QGraphicsItem::ItemClipsToShape);
+    m_svgItem->setCacheMode(QGraphicsItem::NoCache);
+    m_svgItem->setZValue(0);
+
+    s->addItem(m_svgItem);
+}
+
+void MooViEView::zoomBy(qreal factor)
+{
+    const qreal currentZoom = transform().m11();
+    if ((factor < 1 && currentZoom < ZOOM_MIN) || (factor > 1 && currentZoom > ZOOM_MAX))
+        return;
+    scale(factor, factor);
+}
+
+
