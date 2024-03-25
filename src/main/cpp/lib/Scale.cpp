@@ -68,7 +68,7 @@ MultiScale::make_labels (size_t i) const {
   {
     double val = get_extremes (i).first + j * step;
     std::stringstream ss;
-    ss << val << m_label_suffix;
+    ss << val << m_label_suffix[i];
     label.emplace_back (ss.str (), m_label_prop);
   }
   return label;

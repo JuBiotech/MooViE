@@ -33,7 +33,6 @@ protected:
   size_t m_major_intersections;
   size_t m_minor_intersections;
   TextProperties m_label_prop;
-  std::string m_label_suffix;
 public:
   /** Creates a Scale from major (big) and minor intersections,
    * label properties and a label suffix (unit).
@@ -41,13 +40,11 @@ public:
    * @param major_intersections number of big intersection lines
    * @param minor_intersections number of small intersection lines
    * @param label_prop the style of the label text
-   * @param label_suffix the unit of the presented data
    */
   Scale (size_t major_intersections, size_t minor_intersections,
 	 const TextProperties& label_prop, const std::string& label_suffix = "") :
       m_major_intersections (major_intersections), m_minor_intersections (
-	  minor_intersections), m_label_prop (label_prop), m_label_suffix (
-	  label_suffix)
+	  minor_intersections), m_label_prop (label_prop)
   {
   }
 
@@ -89,6 +86,7 @@ public:
 class SimpleScale : public Scale
 {
 private:
+  std::string m_label_suffix;
   std::pair<double, double> m_extremes;
 public:
   /** Creates a new SimpleScale from major (big) and minor intersections,
@@ -104,8 +102,8 @@ public:
 	       const std::pair<double, double>& extremes,
 	       const TextProperties& label_prop,
 	       const std::string& label_suffix = "") :
-      Scale (major_intersections, minor_intersections, label_prop,
-	     label_suffix), m_extremes (create_rounded_interval(extremes.first, extremes.second))
+      Scale (major_intersections, minor_intersections, label_prop),
+	     m_label_suffix(label_suffix), m_extremes (create_rounded_interval(extremes.first, extremes.second))
   {
   }
 
@@ -137,6 +135,7 @@ public:
 class MultiScale : public Scale
 {
 private:
+  std::vector<std::string> m_label_suffix;
   std::vector<std::pair<double, double>> m_extremes;
 public:
   /** Creates a new MultiScale from major (big) and minor intersections,
@@ -147,23 +146,23 @@ public:
    * @param major_intersections number of big intersection lines
    * @param minor_intersections number of small intersection lines
    * @param label_prop the style of the label text
-   * @param label_suffix the unit of the presented data
    */
   MultiScale (size_t ticks_major, size_t ticks_minor,
-	      const TextProperties& label_prop,
-	      const std::string& label_suffix = "") :
-      Scale (ticks_major, ticks_minor, label_prop, label_suffix)
+	      const TextProperties& label_prop) :
+      Scale (ticks_major, ticks_minor, label_prop)
   {
   }
 
   /** Adds extreme value of another scalable entry to this MultiScale.
    *
    * @param extremes the extreme values
+   * @param label_suffix the unit of the presented data
    */
   inline void
-  add_scale (const std::pair<double, double>& extremes)
+  add_scale (const std::pair<double, double>& extremes, const std::string& label_suffix = "")
   {
     m_extremes.push_back (create_rounded_interval(extremes.first, extremes.second));
+    m_label_suffix.push_back (label_suffix);
   }
 
   /** Returns the number of scales of this MultiScale.
