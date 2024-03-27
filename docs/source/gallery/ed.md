@@ -17,6 +17,7 @@ for two different measurement setups is shown below. The percentages that the in
 taken as design variable (**input**) and several information criteria (D-criterion, E-criterion, A-criterion) and the 
 total costs are taken as objectives (**output**).
 
+<p align="center">
 <div style="float: left; width: 45%; padding: 10px;">
     <img src="../_images/oed-lc.png" alt="LC-MSMS" style="width:100%">
 </div>
@@ -24,6 +25,7 @@ total costs are taken as objectives (**output**).
     <img src="../_images/oed-gc.png" alt="GC-MS" style="width:44%">
 </div>
 <p style="clear: both;">
+<p/>
 
 For both measurement setups, the same kind of tracers are selected for the mixtures. The fractions, however, are 
 different according to the histograms (see Glc#100001 or Glc#111111). While absolute comparison of information criteria
@@ -39,6 +41,7 @@ tracers. For 1,000 sample mixtures, consisting again of the fractional shares of
 D-criterion, the percentage of identifiable fluxes (coverage) and mixture costs were computed. By using MooViE with its 
 GUI in an interactive fashion, the space of possible mixtures can be reduced and valuable information extracted.
 
+<p align="center">
 <div style="float: left; width: 45%; padding: 10px;">
     <img src="../_images/red-begin.png" alt="" style="width:100%">
 </div>
@@ -46,6 +49,7 @@ GUI in an interactive fashion, the space of possible mixtures can be reduced and
     <img src="../_images/red.png" alt="" style="width:38%">
 </div>
 <p style="clear: both;">
+<p/>
 
 On the left, the initially generated MooViE scene is displayed. The scene is quite crowded an difficult to oversee.
 Luckily, MooViE allows to interactively change it. From left to right, nuisance objective (`n_act`) and insensitive 
