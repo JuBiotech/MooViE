@@ -26,6 +26,7 @@ exhale_args = {
 }
 primary_domain = 'cpp'
 highlight_language = 'cpp'
+myst_enable_extensions = ['amsmath', 'dollarmath']
 
 templates_path = ['_templates']
 exclude_patterns = []
