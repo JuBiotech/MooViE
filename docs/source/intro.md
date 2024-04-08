@@ -5,8 +5,6 @@ sets. MooViE comes with a simple graphical user interface (GUI) that allows the 
 data and configure the style. For reproducibility and pipeline integration also a command line interface and an
 API are available.
 
-<p align="center">
-  <img width="300" src="_images/red.png" />
-</p>
+![](videos/moovie_intro.mp4)
 
 For inspiration explore our [Gallery](gallery.rst)
