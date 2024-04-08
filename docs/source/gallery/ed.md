@@ -36,10 +36,11 @@ perfectly anti-correlated.
 While O-ED inherently requires to make assumptions about the actual fluxes, a more robust way to perform to ED
 (R-ED) is obtained by averaging information criteria over the space of possible fluxes. An additional 
 interesting objective in this case is the percentage of fluxes, which can be identified by a given design. Such
-an R-ED was performed for *Streptomyces clavuligerus* by *Beyß et al., 2021* for Glycerol (Glyc) and Arginine (ARG) 
-tracers. For 1,000 sample mixtures, consisting again of the fractional shares of individual tracers (**input*), averaged
-D-criterion, the percentage of identifiable fluxes (coverage) and mixture costs were computed. By using MooViE with its 
-GUI in an interactive fashion, the space of possible mixtures can be reduced and valuable information extracted.
+an R-ED was performed for *Streptomyces clavuligerus* by 
+[*Beyß et al. (2021)*](http://dx.doi.org/10.3389/fbioe.2021.685323) for Glycerol (Glyc) and Arginine (ARG) tracers. For 
+1,000 sample mixtures, consisting again of the fractional shares of individual tracers (**input*), averaged D-criterion, 
+the percentage of identifiable fluxes (coverage) and mixture costs were computed. By using MooViE with its GUI in an 
+interactive fashion, the space of possible mixtures can be reduced and valuable information extracted.
 
 <p align="center">
 <div style="float: left; width: 45%; padding: 10px;">

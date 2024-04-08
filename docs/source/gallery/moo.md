@@ -14,12 +14,13 @@ objectives. Hence, solutions are computed as a set of dominating solutions (Pare
 objective vectors (Pareto front). 
 
 ### Visual summary of problem characteristics
-Two artificial test problems with known solution properties were chosen from *Deb, 2001*. Both map four input variables 
+Two artificial test problems with known solution properties were chosen from *Deb (2001)*. Both map four input variables 
 that each range between 0 and 1 to three objectives. A closer characterization of these problems, namely DTLZ5 and 
-DTLZ7, can be found in the [pymoo documentation](https://pymoo.org/problems/many/dtlz.html?highlight=dtlz). Most importantly, the solution of DTLZ5 satisfies inputs 
-$x_3, x_4$ to be $\frac{1}{2}$ and has a continuous Pareto front. On the other hand, the solution of DTLZ7 satisfies 
-inputs $x_3, x_4$ to be $0$ and has a discontinuous Pareto front. For demonstration, both problems were solved using the
-well-known NSGA-II algorithm and the Pareto-optimal solutions and their objective values displayed using MooViE.
+DTLZ7, can be found in the [pymoo documentation](https://pymoo.org/problems/many/dtlz.html?highlight=dtlz). Most 
+importantly, the solution of DTLZ5 satisfies inputs $x_3, x_4$ to be $\frac{1}{2}$ and has a continuous Pareto front. On
+the other hand, the solution of DTLZ7 satisfies inputs $x_3, x_4$ to be $0$ and has a discontinuous Pareto front. For 
+demonstration, both problems were solved using the well-known NSGA-II algorithm and the Pareto-optimal solutions and 
+their objective values displayed using MooViE.
 
 <p align="center">
 <div style="float: left; width: 45%; padding: 10px;">
