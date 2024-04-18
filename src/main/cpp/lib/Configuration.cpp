@@ -188,6 +188,7 @@ Configuration::save_to_file (const std::string & cpath)
       << std::endl
 	  << MOOVIE_CONF_LINE(num_minor_sections_axis,
 			  std::to_string (instance->m_num_minor_sections_axis))
+	  << std::endl
 	  // Histogram
       << MOOVIE_CONF_LINE(histograms_enabled,
 			  std::to_string (instance->m_histograms_enabled))
